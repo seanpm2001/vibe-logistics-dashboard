@@ -34,4 +34,7 @@ jobs:
         npm install
         npm run build
         aws s3 sync dist/ s3://logistics.vibe.dev/
+        aws cloudfront create-invalidation \
+            --distribution-id E1QRAWF4RAJF91 \
+            --paths "/*"
 
