@@ -8,7 +8,6 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@vue/cli-service": "^4.5.0",
     "axios": "^0.22.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.28",
@@ -17,6 +16,8 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@vue/cli-service": "^4.5.0",
+    "npm": "^8.0.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
