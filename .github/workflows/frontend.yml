@@ -29,5 +29,5 @@ jobs:
         npm install -g @vue/cli@4.5.13
         npm install
         npm run build
-        ls dist
+        aws s3 sync dist/ s3://logistics.vibe.dev/
 
