@@ -2,7 +2,7 @@ name: "Frontend"
 on:
   push:
     branches:
-      - chuzui/deployment-action
+      - master
 jobs:
   build:
     name: Run Tests and check code format
