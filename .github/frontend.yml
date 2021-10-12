@@ -1,0 +1,33 @@
+name: "Frontend"
+on:
+  push:
+    branches:
+      - chuzui/deployment-action
+jobs:
+  build:
+    name: Run Tests and check code format
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: "3.x"
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+    - name: Get yarn cache
+      id: yarn-cache
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - uses: actions/cache@v2
+      with:
+        path: ${{ steps.yarn-cache.outputs.dir }}
+        key: ${{ runner.os }}-yarn-web-node14-${{ hashFiles('apps/web/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-web-node14-
+    - name: Install dependencies
+      run: |
+        npm install -g @vue/cli@4.5.13
+        npm install
+        npm run build
+        ls dist
+
