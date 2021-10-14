@@ -1,10 +1,12 @@
 import {
   ElButton,
-  ElDivider
+  ElForm,
+  ElFormItem,
 } from 'element-plus'
 
 export default (app) => {
   app
     .use(ElButton)
-    .use(ElDivider)
+    .use(ElForm)
+    .use(ElFormItem)
 }

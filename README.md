@@ -1,4 +1,5 @@
-# vibe-logistics
+# vibe-logistics-dashboard
+This website generates front page of new logistics system.
 
 ## Version for
 **npm > ^7.0.0 | ^8.0.0**
