@@ -33,8 +33,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     const token = localStorage.token
-    const isLogined = store.getters['profiles/getIsLogined']
-    !isLogined && store.dispatch('profiles/getUserByToken', token)
+    // const isLogined = store.getters['profiles/getIsLogined']
+    // !isLogined && store.dispatch('profiles/getUserByToken', token)
     if (typeof token !== 'string' || !token) {
       return next('login')
     }

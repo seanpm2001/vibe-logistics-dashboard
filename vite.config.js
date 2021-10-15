@@ -1,14 +1,28 @@
-import { defineConfig } from "vite";  // 帮手函数，这样不用 jsdoc 注解也可以获取类型提示
-import { resolve } from "path"; // 主要用于alias文件路径别名
+import { defineConfig } from "vite"; 
+import { resolve } from "path";
 import vue from '@vitejs/plugin-vue'; 
+import styleImport from 'vite-plugin-style-import';
 
 function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
 }
 
 export default defineConfig({
-  plugins:[vue()], // 配置需要使用的插件列表，这里将vue添加进去
-  // 配置文件别名 这里是将src目录配置别名为 /@ 方便在项目中导入src目录下的文件
+  plugins:[
+    vue(),
+    styleImport({
+      libs: [{
+        libraryName: 'element-plus',
+        resolveStyle: (name) => {
+          name = name.slice(3)   // 这里有个彩蛋，官网居然是用splice的，没错用的是数组方法。
+          return `element-plus/packages/theme-chalk/src/${name}.scss`;
+        },
+        resolveComponent: (name) => {
+          return `element-plus/lib/${name}`;
+        },
+      }]
+    })
+  ],
   resolve: {
       alias: {
         '/@': pathResolve("src"),
@@ -36,7 +50,6 @@ export default defineConfig({
   server: {
     host: process.env.VITE_HOST,
     cors: true,
-    open: true,
     //反向代理配置
     proxy: {
       '/api': {
