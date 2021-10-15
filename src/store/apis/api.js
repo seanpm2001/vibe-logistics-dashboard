@@ -2,7 +2,7 @@
  * API 统一放在该文件，按数据库表名的首字母排序，及同级modules文件下对应的文件顺序
  */
 
- import requester from './requester'
+import requester from './requester'
 
 /* 订单 Order API */
 export async function listOrdersAPI () {
@@ -44,4 +44,30 @@ export async function updateProductAPI (id, updates) {
 }
 export async function deleteProductAPI (id) {
   await requester.delete(`Products/${id}`)
+}
+
+/* 用户配置 profile API 登录注册登出 */
+export async function loginAPI (payload) {
+  const { data } = await requester.post('login', payload)
+  return data
+}
+export async function logoutAPI () {
+  const { data } = await requester.get('logout')
+  return data
+}
+
+export async function getUserByTokenAPI (token) {
+  const { data } = await requester.get('users', {
+    params: {
+      token
+    }
+   })
+   console.log('getUserByTokenAPI data: ', data);
+
+  return data
+}
+
+export async function registerAPI () {
+  const { data } = await requester.get('logout')
+  return data
 }

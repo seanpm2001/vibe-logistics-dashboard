@@ -57,9 +57,9 @@
 import { ElInput, ElMessage } from "element-plus";
 import { defineComponent, reactive, toRefs } from "vue";
 // 局部组件（导入）
-import Captcha from "@/components/Captcha/Index.vue";
+import Captcha from "/@/components/Captcha/Index.vue";
 import { useStore } from "vuex";
-// import router from "@/router";
+// import router from "/@/router";
 
 export default defineComponent({
   name: "Login",

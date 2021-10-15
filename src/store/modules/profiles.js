@@ -1,5 +1,4 @@
 import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../apis/api'
-import router from '@/router'
 
 export const profilesModule = {
   namespaced: true,
