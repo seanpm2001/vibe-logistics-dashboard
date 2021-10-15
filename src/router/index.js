@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import { profileRouter } from '../views/profile/routes'
-import store from '../store'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/Home.vue';
+import { profileRouter } from '../views/profile/routes';
+// import store from '../store';
 
 const routes = [
   {
@@ -22,24 +22,24 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   ...profileRouter
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
 
 /* 路由跳转之前判断 */
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    const token = localStorage.token
+    const token = localStorage.token;
     // const isLogined = store.getters['profiles/getIsLogined']
     // !isLogined && store.dispatch('profiles/getUserByToken', token)
     if (typeof token !== 'string' || !token) {
-      return next('login')
+      return next('login');
     }
   }
-  next()
-})
+  next();
+});
 
-export default router
+export default router;

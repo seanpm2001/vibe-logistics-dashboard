@@ -5,7 +5,7 @@ import {
   ElButton,
   ElForm,
   ElFormItem,
-} from 'element-plus'
+} from 'element-plus';
 
-const components = [ElButton, ElForm, ElFormItem]
-export default components
+const components = [ElButton, ElForm, ElFormItem];
+export default components;

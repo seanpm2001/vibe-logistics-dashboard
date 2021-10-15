@@ -1,7 +1,7 @@
-import { createStore } from 'vuex'
-import { ordersModule } from './modules/orders'
-import { productsModule } from './modules/products'
-import { profilesModule } from './modules/profiles'
+import { createStore } from 'vuex';
+import { ordersModule } from './modules/orders';
+import { productsModule } from './modules/products';
+import { profilesModule } from './modules/profiles';
 
 export default createStore({
   state: {
@@ -15,4 +15,4 @@ export default createStore({
     orders: ordersModule,
     products: productsModule,
   }
-})
+});

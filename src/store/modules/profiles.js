@@ -1,4 +1,5 @@
-import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../apis/api'
+import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../apis/api';
+import router from '/@/router';
 
 export const profilesModule = {
   namespaced: true,
@@ -15,43 +16,41 @@ export const profilesModule = {
   },
   mutations: {
     SET_USER (state, payload) {
-      state.userInfo = payload || {}
+      state.userInfo = payload || {};
     },
     UN_SET_USER (state) {
-      state.userInfo = {}
+      state.userInfo = {};
     },
     SET_IS_LOGINED (state, isLogined) {
-      state.isLogined = isLogined || false
+      state.isLogined = isLogined || false;
     },
     SET_FIRST_LOGIN (state, payload) {
-      state.isFirstLogin = payload
+      state.isFirstLogin = payload;
     }
   },
   actions: {
     /* 登录 */
     async login (store, payload) {
-      const userInfo = await loginAPI(payload)
+      const userInfo = await loginAPI(payload);
       if (userInfo) {
-        localStorage.token = userInfo.token
+        localStorage.token = userInfo.token;
+        router.push('/');
         
-
-          router.push('/')
-
-        return true
+        return true;
       }
-      return false
+      return false;
     },
     /* 退出 */
     async logout (store) {
-      await logoutAPI()
-      store.dispatch('CLEAR_SESSIN_AND_BACK')
+      await logoutAPI();
+      store.dispatch('CLEAR_SESSIN_AND_BACK');
     },
 
     async getUserByToken (store, token) {
-      const userInfo = await getUserByTokenAPI(token)
+      const userInfo = await getUserByTokenAPI(token);
       if (userInfo) {
-        store.commit('SET_IS_LOGINED', true)
-        store.commit('SET_USER', userInfo)
+        store.commit('SET_IS_LOGINED', true);
+        store.commit('SET_USER', userInfo);
       }
 
     },
@@ -76,11 +75,11 @@ export const profilesModule = {
     // },
     /* 注册 */
     async register (store, payload) {
-      const userInfo = await registerAPI(payload)
+      const userInfo = await registerAPI(payload);
       console.log('userInfo: ', userInfo);
     }
   }
   // plugins: [
   //   CREATE_PERSISTED_STATE({ reducer: (s) => ({ user: s.user }) }),
   // ],
-}
+};

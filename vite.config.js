@@ -14,7 +14,7 @@ export default defineConfig({
       libs: [{
         libraryName: 'element-plus',
         resolveStyle: (name) => {
-          name = name.slice(3)   // 这里有个彩蛋，官网居然是用splice的，没错用的是数组方法。
+          name = name.slice(3);   // 这里有个彩蛋，官网居然是用splice的，没错用的是数组方法。
           return `element-plus/packages/theme-chalk/src/${name}.scss`;
         },
         resolveComponent: (name) => {
@@ -24,20 +24,20 @@ export default defineConfig({
     })
   ],
   resolve: {
-      alias: {
-        '/@': pathResolve("src"),
-      }
+    alias: {
+      '/@': pathResolve("src"),
+    }
   },
   // 强制预构建插件包
   optimizeDeps: {
-      include: ['axios'],
+    include: ['axios'],
   },
   // 打包配置
   build: {
-      target: 'modules',
-      outDir: 'dist', //指定输出路径
-      assetsDir: 'assets', // 指定生成静态资源的存放路径
-      minify: 'terser' // 混淆器，terser构建后文件体积更小
+    target: 'modules',
+    outDir: 'dist', //指定输出路径
+    assetsDir: 'assets', // 指定生成静态资源的存放路径
+    minify: 'terser' // 混淆器，terser构建后文件体积更小
   },
   port: process.env.VITE_PORT,
   open: true,
@@ -62,4 +62,4 @@ export default defineConfig({
   define: {
     'process.env': {}
   }
-})
+});

@@ -17,4 +17,4 @@ export const profileRouter = [
     meta: { title: '忘记密码' },
     component: () => import('./Forget.vue')
   }
-]
+];

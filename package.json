@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vite preview --host 0.0.0.0",
+    "dev": "npm run lint && vite --host 0.0.0.0",
+    "serve": "npm run lint && vite preview --host 0.0.0.0",
     "build": "vite build",
-    "lint": "vue-cli-service lint",
-    "dev": "vite --host 0.0.0.0"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.22.0",
@@ -44,7 +44,40 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "jsx-quotes": ["warn", "prefer-single"],
+      "arrow-parens": 0,
+      "generator-star-spacing": 0,
+      "semi": [
+        "error",
+        "always",
+        {
+          "omitLastInOneLineBlock": true
+        }
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "space-before-function-paren": 0,
+      "eol-last": 0,
+      "no-useless-escape": "off",
+      "max-len": [
+          2,
+          200,
+          4,
+          {
+            "ignoreUrls": true
+          }
+      ],
+      "prefer-const": [
+        "error",
+        {
+          "destructuring": "all",
+          "ignoreReadBeforeAssign": false
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",

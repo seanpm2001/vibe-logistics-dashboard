@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 // import { useStore } from 'vuex'
 
 // const store = useStore()
@@ -13,26 +13,26 @@ const requester = axios.create({
     'cache-control': 'no-cache',
     'Authorization': localStorage.token || ''
   }
-})
+});
 
 requester.interceptors.request.use(config => {
-  const token = localStorage.token || ''
+  const token = localStorage.token || '';
   if (token) {
-    config.headers.Authorization = token
+    config.headers.Authorization = token;
   }
   // 在发送请求之前做些什么
   return config;
 }, error => {
   return Promise.reject(error);
-})
+});
 
 
 
 requester.interceptors.response.use(res => {
-  return res.data
+  return res.data;
 }, error => {
-  return Promise.reject(error)
-})
+  return Promise.reject(error);
+});
 
-export default requester
+export default requester;
 

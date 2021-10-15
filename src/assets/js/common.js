@@ -20,8 +20,8 @@ export function isPhone() {
  */
 export function assignBToA(objA, objB) {
   Object.keys(objA).forEach(key => {
-    objA[key] = objB[key] || objA[key]
-  })
+    objA[key] = objB[key] || objA[key];
+  });
 }
 
 /**
@@ -30,11 +30,11 @@ export function assignBToA(objA, objB) {
  * @param {*} obj 对象
  */
 export function objectHumpToLine(obj) {
-  const newObj = {}
+  const newObj = {};
   for (const key in obj) {
-    newObj[key.replace(/([A-Z])/g, '_$1').toLowerCase()] = obj[key]
+    newObj[key.replace(/([A-Z])/g, '_$1').toLowerCase()] = obj[key];
   }
-  return newObj
+  return newObj;
 }
 
 /**
@@ -43,30 +43,30 @@ export function objectHumpToLine(obj) {
  * @param {*} obj 对象
  */
 export function objectLineToHump(obj) {
-  const newObj = {}
+  const newObj = {};
   for (const key in obj) {
-    newObj[key.replace(/_(\w)/g, function (all, letter) {
-      return letter.toUpperCase()
-    })] = obj[key]
+    newObj[key.replace(/_(\w)/g, function(_all, letter) {
+      return letter.toUpperCase();
+    })] = obj[key];
   }
-  return newObj
+  return newObj;
 }
 
 // 封装获取cookie
 export function getCookie(name) {
-  const prefix = name + "="
-  const start = document.cookie.indexOf(prefix)
+  const prefix = name + "=";
+  const start = document.cookie.indexOf(prefix);
 
   if (start === -1) {
     return null;
   }
 
-  let end = document.cookie.indexOf(";", start + prefix.length)
+  let end = document.cookie.indexOf(";", start + prefix.length);
   if (end === -1) {
     end = document.cookie.length;
   }
 
-  const value = document.cookie.substring(start + prefix.length, end)
+  const value = document.cookie.substring(start + prefix.length, end);
   return unescape(value);
 }
 
