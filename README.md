@@ -20,12 +20,15 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
+npm run dev
+npm run dev:mock // API use mockjs
 npm run serve
 ```
 
 ### Compiles and minifies for production
 ```
 npm run build
+npm run build:mock // API use mockjs
 ```
 
 ### Lints and fixes files
@@ -33,5 +36,27 @@ npm run build
 npm run lint
 ```
 
+_____
+## Technology stack
+* CLI:
+  * vite (run and build faster)
+  * vue-cli3 (easier)
+* MVVM framework:
+  * vue3 (virtual dom)
+  * vuex (state management)
+* Router:
+  * vue-router (history pattern)
+* UI framework:
+  * element-plus (sass and less dependence, import indemand)
+* API simulation:
+  * mockjs (import indemand)
+* Js compatibility:
+  * babel (convert js and help element import css indemand)
+* Formatter:
+  * Eslint (formate code)
+
+### See more info in `package.json`
+
+_____
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
