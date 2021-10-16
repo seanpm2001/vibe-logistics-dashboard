@@ -6,12 +6,15 @@
     "dev": "npm run lint && vite --host 0.0.0.0",
     "serve": "npm run lint && vite preview --host 0.0.0.0",
     "build": "vite build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dev:mock": "npm run lint && cross-env USE_MOCK=true vite --host 0.0.0.0",
+    "build:mock": "cross-env USE_CHUNK_MOCK=true vite build"
   },
   "dependencies": {
     "axios": "^0.22.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.28",
+    "mockjs": "^1.1.0",
     "vue": "^3.2.4",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
@@ -25,11 +28,13 @@
     "@vue/cli-service": "^4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "vite": "^2.5.10",
+    "vite-plugin-mock": "^2.9.6",
     "vite-plugin-style-import": "^1.2.1"
   },
   "eslintConfig": {
@@ -45,7 +50,10 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "jsx-quotes": ["warn", "prefer-single"],
+      "jsx-quotes": [
+        "warn",
+        "prefer-single"
+      ],
       "arrow-parens": 0,
       "generator-star-spacing": 0,
       "semi": [
@@ -63,12 +71,12 @@
       "eol-last": 0,
       "no-useless-escape": "off",
       "max-len": [
-          2,
-          200,
-          4,
-          {
-            "ignoreUrls": true
-          }
+        2,
+        200,
+        4,
+        {
+          "ignoreUrls": true
+        }
       ],
       "prefer-const": [
         "error",

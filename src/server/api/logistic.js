@@ -2,7 +2,7 @@
  * API 统一放在该文件，按数据库表名的首字母排序，及同级modules文件下对应的文件顺序
  */
 
-import requester from './requester';
+import requester from '../axios-requester';
 
 /* 订单 Order API */
 export async function listOrdersAPI () {
@@ -62,12 +62,15 @@ export async function getUserByTokenAPI (token) {
       token
     }
   });
-  console.log('getUserByTokenAPI data: ', data);
-
   return data;
 }
 
 export async function registerAPI () {
   const { data } = await requester.get('logout');
+  return data;
+}
+
+export async function getUserAPI () {
+  const { data } = await requester.get('getUser');
   return data;
 }

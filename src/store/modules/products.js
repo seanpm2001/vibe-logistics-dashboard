@@ -1,4 +1,4 @@
-import { createProductAPI, deleteProductAPI, findProductAPI, listProductsAPI, updateProductAPI } from '../apis/api';
+import { createProductAPI, deleteProductAPI, findProductAPI, listProductsAPI, updateProductAPI } from '/@/server/api/logistic';
 
 export const productsModule = {
   namespaced: true,

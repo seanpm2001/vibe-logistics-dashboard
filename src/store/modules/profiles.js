@@ -1,4 +1,4 @@
-import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../apis/api';
+import { getUserAPI, getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../../server/api/logistic';
 import router from '/@/router';
 
 export const profilesModule = {
@@ -35,7 +35,7 @@ export const profilesModule = {
       if (userInfo) {
         localStorage.token = userInfo.token;
         router.push('/');
-        
+
         return true;
       }
       return false;
@@ -47,12 +47,13 @@ export const profilesModule = {
     },
 
     async getUserByToken (store, token) {
+      const test = await getUserAPI();
+      console.log('test: ', test);
       const userInfo = await getUserByTokenAPI(token);
       if (userInfo) {
         store.commit('SET_IS_LOGINED', true);
         store.commit('SET_USER', userInfo);
       }
-
     },
     /* 重新登录 */
     // async relogin (store, payload) { // 弹窗登录--重新登录

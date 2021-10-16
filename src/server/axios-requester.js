@@ -7,6 +7,7 @@ import axios from 'axios';
 const requester = axios.create({
   // baseURL: 'https://xxxxx/api'
   // baseURL: 'http://127.0.0.1:7001/api',
+  baseURL: '/api',
   timeout: 6000, // 设置超时时间
   withCredentials: true, // 允许携带cookie
   headers: { // 解决ie浏览器会自动缓存

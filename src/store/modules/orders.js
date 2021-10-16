@@ -1,4 +1,4 @@
-import { createOrderAPI, deleteOrderAPI, findOrderAPI, listOrdersAPI, updateOrderAPI } from '../apis/api';
+import { createOrderAPI, deleteOrderAPI, findOrderAPI, listOrdersAPI, updateOrderAPI } from '/@/server/api/logistic';
 
 export const ordersModule = {
   namespaced: true,
