@@ -55,8 +55,13 @@ _____
 * Formatter:
   * Eslint (formate code)
 
-### See more info in `package.json`
+### See more info in [package.json](./package.json).
 
 _____
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+See [Vite Configuration Reference](https://vitejs.cn/guide/).
+
+See [Vue-Cli Configuration Reference](https://cli.vuejs.org/config/).
+
+See [Eslint Configuration Reference](https://eslint.bootcss.com/docs/user-guide/getting-started).
+
