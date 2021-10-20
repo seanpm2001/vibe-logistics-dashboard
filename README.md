@@ -53,7 +53,7 @@ _____
 * Js compatibility:
   * babel (convert js and help element import css indemand)
 * Formatter:
-  * Eslint (formate code)
+  * Eslint (format code)
 
 ### See more info in [package.json](./package.json).
 
@@ -64,4 +64,3 @@ See [Vite Configuration Reference](https://vitejs.cn/guide/).
 See [Vue-Cli Configuration Reference](https://cli.vuejs.org/config/).
 
 See [Eslint Configuration Reference](https://eslint.bootcss.com/docs/user-guide/getting-started).
-
