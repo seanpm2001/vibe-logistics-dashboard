@@ -33,7 +33,7 @@ jobs:
       run: |
         npm install -g @vue/cli@4.5.13
         npm install
-        npm run build
+        npm run build:beta
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \
             --distribution-id E1QRAWF4RAJF91 \
@@ -47,7 +47,7 @@ jobs:
       run: |
         npm install -g @vue/cli@4.5.13
         npm install
-        npm run build
+        npm run build:prod
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \
             --distribution-id E1QRAWF4RAJF91 \
