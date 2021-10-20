@@ -47,6 +47,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    console.log('router: ', router);
     const { proxy } = getCurrentInstance();
 
     const data = reactive({

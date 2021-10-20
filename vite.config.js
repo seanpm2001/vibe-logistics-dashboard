@@ -1,4 +1,4 @@
-import { envSettings, developmentEnv, productionEnv } from "./env";
+import { commonEnv, developmentEnv, productionEnv } from "./env";
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import vue from '@vitejs/plugin-vue'; 
@@ -16,13 +16,14 @@ function pathResolve(dir) {
 export default (({command}) => {
   console.log('command: ', command);
   // 加载不同生产环境下的配置
-  process.env = Object.assign(envSettings, process.env);
-  const NODE_ENV =  process.env.NODE_ENV || 'development';
+  const NODE_ENV =  process.env.NODE_ENV || 'development'; // 无local API，默认采用beta API的配置
+  let envSettings = commonEnv;
   if (NODE_ENV === 'development') {
-    process.env = Object.assign(developmentEnv, process.env);
+    envSettings = Object.assign(developmentEnv, commonEnv);
   } else if (NODE_ENV === 'production') {
-    process.env = Object.assign(productionEnv, process.env);
+    envSettings = Object.assign(productionEnv, commonEnv);
   }
+  process.env = Object.assign(envSettings, process.env);
   
   return defineConfig({
     plugins:[

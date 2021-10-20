@@ -1,4 +1,4 @@
-export const envSettings = {
+export const commonEnv = {
   VITE_HOST : '0.0.0.0',
   VITE_PORT : 8080,
   VITE_BASE_URL : './',
