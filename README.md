@@ -22,12 +22,13 @@ npm install
 ```
 npm run dev
 npm run dev:mock // API use mockjs
-npm run serve
+npm run serve // preview prod env
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run build:beta
+npm run build:prod
 npm run build:mock // API use mockjs
 ```
 

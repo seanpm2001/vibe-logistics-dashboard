@@ -12,5 +12,5 @@ export const developmentEnv = {
 
 export const productionEnv = {
   NODE_ENV : 'production',
-  VITE_API_DOMAIN : 'https://vibe.us/api/' // 测试环境API地址
+  VITE_API_DOMAIN : 'https://vibe.us/api/' // 线上环境API地址
 };
