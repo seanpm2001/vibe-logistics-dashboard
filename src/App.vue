@@ -1,13 +1,15 @@
 <template>
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <transition name="slide-fade">
+      <component class="page-transition-view" :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
 <script>
 
 export default {
   name: 'App',
-  components: {
-  }
 };
 </script>
 

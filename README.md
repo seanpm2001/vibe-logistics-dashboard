@@ -20,7 +20,8 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run dev
+// 没对接API的情况下请使用 npm run dev:mock
+npm run dev 
 npm run dev:mock // API use mockjs
 npm run serve // preview prod env
 ```
