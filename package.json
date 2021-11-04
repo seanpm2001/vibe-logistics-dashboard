@@ -6,7 +6,7 @@
     "lint": "vue-cli-service lint",
     "dev": "npm run lint && vite",
     "dev:mock": "npm run lint && cross-env USE_MOCK=true vite",
-    "build:beta": "npm run lint && vite build --mode development",
+    "build:beta": "npm run lint && cross-env USE_MOCK=true vite build --mode development",
     "build:prod": "npm run lint && cross-env vite build --mode production",
     "build:mock": "npm run lint && cross-env USE_MOCK=true vite build --mode development",
     "serve": "npm run build:beta && vite preview"
