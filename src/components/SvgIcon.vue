@@ -1,0 +1,59 @@
+<template>
+  <div v-if="ifExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon"/>
+  <svg v-else :class="svgClass" aria-hidden="true">
+    <use :href="iconName" />
+  </svg>
+</template>
+
+<script setup>
+import { computed, defineProps } from 'vue';
+// doc: https://panjiachen.github.io/vue-element-admin-site/feature/component/svg-icon.html#usage
+import { isExternal } from '/@/assets/utils/validate';
+
+const props = defineProps({
+  iconName: {
+    type: String,
+    required: true
+  },
+  iconClass: {
+    type: String,
+    default: ''
+  }
+});
+
+
+const ifExternal = computed(() => {
+  return isExternal(props.iconName);
+});
+const iconName = computed(() => `#icon-${props.iconName}`);
+
+const svgClass = computed(() => {
+  if (props.iconClass) {
+    return 'svg-icon ' + props.iconClass;
+  } else {
+    return 'svg-icon';
+  }
+});
+const styleExternalIcon = computed(() => {
+  return {
+    mask: `url(${props.iconName}) no-repeat 50% 50%`,
+    '-webkit-mask': `url(${props.iconName}) no-repeat 50% 50%`
+  };
+});
+</script>
+
+<style scoped>
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.svg-external-icon {
+  background-color: currentColor;
+  mask-size: cover!important;
+  display: inline-block;
+}
+</style>
