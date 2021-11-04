@@ -5,7 +5,6 @@ import store from './store';
 import { setupProdMockServer } from './server/mock-prod-server';
 
 import SvgIcon from '/@/components/SvgIcon.vue'; // svg component
-import './icons/index'; // icon
 import './permission'; // permission control
 
 // element scss样式实际由vite.config.js按需引入(styleImport)
