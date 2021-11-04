@@ -3,11 +3,7 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 import vue from '@vitejs/plugin-vue'; 
 import styleImport from 'vite-plugin-style-import';
-import { viteMockServe } from 'vite-plugin-mock';
-
-const localEnabled = process.env.USE_MOCK || false;
-const prodEnabled = process.env.USE_CHUNK_MOCK || false;
-
+import { svgBuilder } from './src/plugins/svgBuilder'; 
 
 function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
@@ -28,27 +24,22 @@ export default (({command}) => {
   return defineConfig({
     plugins:[
       vue(),
-      viteMockServe({
-        mockPath: './src/server/mock',
-        localEnabled: localEnabled,
-        prodEnabled: prodEnabled,
-        // 控制关闭mock的时候不让mock打包到最终代码内
-        injectCode: `
-          import { setupProdMockServer } from './mockProdServer';
-          setupProdMockServer();
-        `,
-        logger: false,
-        supportTs: false
-      }),
       styleImport({
         libs: [{
           libraryName: 'element-plus',
           resolveStyle: (name) => {
             name = name.slice(3);
+            // element-plus scss包名不符
+            switch(name) {
+            case 'sub-menu':
+              name = 'submenu';
+              break;
+            }
             return `element-plus/packages/theme-chalk/src/${name}.scss`;
-          }
+          },
         }]
-      })
+      }),
+      svgBuilder('./src/icons/svg/') // 已经将src/icons/svg/下的svg全部导入，无需再单独导入
     ],
     resolve: {
       alias: {
@@ -87,7 +78,7 @@ export default (({command}) => {
       }
     },
     define: {
-      'process.env': {}
+      'process.env': process.env
     }
   });
 });
