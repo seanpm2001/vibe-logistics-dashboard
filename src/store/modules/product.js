@@ -1,6 +1,6 @@
 import { createProductAPI, deleteProductAPI, findProductAPI, listProductsAPI, updateProductAPI } from '/@/server/api/logistic';
 
-export const productsModule = {
+export const product = {
   namespaced: true,
   state: {
     products: []

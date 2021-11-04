@@ -1,7 +1,7 @@
 import { getUserAPI, getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../../server/api/logistic';
 import router from '/@/router';
 
-export const profilesModule = {
+export const profile = {
   namespaced: true,
   state: {
     showTimeoutLogin: false,
@@ -31,11 +31,12 @@ export const profilesModule = {
   actions: {
     /* 登录 */
     async login (store, payload) {
-      const userInfo = await loginAPI(payload);
-      if (userInfo) {
-        localStorage.token = userInfo.token;
-        router.push('/');
-
+      // const userInfo = await loginAPI(payload);
+      const { username, password } = payload;
+      console.log('password: ', password);
+      if (username === 'admin' && password === '123') {
+        // localStorage.token = userInfo.token;
+        router.push('/profile');
         return true;
       }
       return false;

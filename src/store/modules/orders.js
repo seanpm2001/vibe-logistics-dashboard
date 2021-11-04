@@ -1,6 +1,6 @@
 import { createOrderAPI, deleteOrderAPI, findOrderAPI, listOrdersAPI, updateOrderAPI } from '/@/server/api/logistic';
 
-export const ordersModule = {
+export const order = {
   namespaced: true,
   state: {
     orders: []
@@ -24,10 +24,6 @@ export const ordersModule = {
         state.orders.unshift(order);
       }
     },
-
-    // DELETE_ORDER (state, id) {
-    //   remove(state.orders, item => item.id === id)
-    // }
   },
   actions: {
     async listOrders ({ commit }) {

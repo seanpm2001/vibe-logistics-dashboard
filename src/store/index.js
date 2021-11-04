@@ -1,18 +1,21 @@
 import { createStore } from 'vuex';
-import { ordersModule } from './modules/orders';
-import { productsModule } from './modules/products';
-import { profilesModule } from './modules/profiles';
+import getters from './getters';
+
+// https://vitejs.dev/guide/features.html#glob-import
+const modulesFiles = import.meta.globEager('./modules/*.js');
+
+let modules = {};
+for (const path in modulesFiles) {
+  modules = { ...modules, ...modulesFiles[path] };
+}
 
 export default createStore({
+  getters: getters,
   state: {
   },
   mutations: {
   },
   actions: {
   },
-  modules: {
-    profiles: profilesModule,
-    orders: ordersModule,
-    products: productsModule,
-  }
+  modules: modules
 });
