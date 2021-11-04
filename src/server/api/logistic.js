@@ -71,6 +71,7 @@ export async function registerAPI () {
 }
 
 export async function getUserAPI () {
-  const { data } = await requester.get('getUser');
-  return data;
+  const res = await requester.get('getUser');
+  console.log('res: ', res);
+  return res;
 }
