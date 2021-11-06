@@ -26,33 +26,34 @@ const users = {
 export default [
   // user login
   {
-    url: '/vue-element-admin/user/login',
+    url: '/api/vue-element-admin/user/login',
     type: 'post',
     response: config => {
-      const { username } = config.body;
-      const token = tokens[username];
+      // const { username } = config.body;
+      // const token = tokens[username];
 
       // mock error
-      if (!token) {
-        return {
-          code: 60204,
-          message: 'Account and password are incorrect.'
-        };
-      }
+      // if (!token) {
+      //   return {
+      //     code: 60204,
+      //     message: 'Account and password are incorrect.'
+      //   };
+      // }
 
       return {
         code: 20000,
-        data: token
+        data: 'admin-token'
       };
     }
   },
 
   // get user info
   {
-    url: '/vue-element-admin/user/info\.*',
+    url: RegExp('/api/vue-element-admin/user/info\.*'),
     type: 'get',
     response: config => {
-      const { token } = config.query;
+      // const { token } = config.query;
+      const token = "admin-token"; // test
       const info = users[token];
 
       // mock error
@@ -72,7 +73,7 @@ export default [
 
   // user logout
   {
-    url: '/vue-element-admin/user/logout',
+    url: '/api/vue-element-admin/user/logout',
     type: 'post',
     response: () => {
       return {

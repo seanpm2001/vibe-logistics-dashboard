@@ -1,24 +1,16 @@
-import request from '/@/server/axios-requester';
+import requester from '../axios-requester';
 
-export function login(data) {
-  return request({
-    url: '/vue-element-admin/user/login',
-    method: 'post',
-    data
-  });
+export async function loginAPI(formInfo) {
+  const res = await requester.get('/vue-element-admin/user/login', formInfo);
+  return res;
 }
 
-export function getInfo(token) {
-  return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
-  });
+export async function getInfoAPI(token) {
+  const res = await requester.get('/vue-element-admin/user/info', token);
+  return res;
 }
 
-export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  });
+export async function logoutAPI() {
+  const res = await requester.post('/vue-element-admin/user/logout');
+  return res;
 }

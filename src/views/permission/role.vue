@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">New Role</el-button>
+    <el-button type="primary" @click="handleaddRoleAPI">New Role</el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="Role Key" width="220">
@@ -63,7 +63,7 @@
 import { computed, defineComponent, toRefs, reactive } from 'vue';
 import path from 'path';
 import { deepClone } from '/@/assets/utils/index';
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '../server/api/role';
+import { getRoutesAPI, getRolesAPI, addRoleAPI, deleteRoleAPI, updateRoleAPI } from '/@/server/api/role';
 
 const defaultRole = {
   key: '',
@@ -95,21 +95,21 @@ export default defineComponent({
       };
     }).value;
 
-    const getRoutesFn = async () => {
-      const res = await getRoutes();
+    const getRoutesAPIFn = async () => {
+      const res = await getRoutesAPI();
       this.serviceRoutes = res.data;
       data.routes = this.generateRoutes(res.data);
     };
 
-    const getRolesFn = async () => {
-      const res = await getRoles();
+    const getRolesAPIFn = async () => {
+      const res = await getRolesAPI();
       data.rolesList = res.data;
     };
 
 
     // Mock: get all routes and roles list from server
-    getRoutesFn();
-    getRolesFn();
+    getRoutesAPIFn();
+    getRolesAPIFn();
 
     // Reshape the routes structure so that it looks the same as the sidebar
     const generateRoutes = (routes, basePath = '/') => {
@@ -154,7 +154,7 @@ export default defineComponent({
       return data;
     };
 
-    const handleAddRole = () => {
+    const handleaddRoleAPI = () => {
       data.role = Object.assign({}, defaultRole);
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([]);
@@ -183,7 +183,7 @@ export default defineComponent({
         type: 'warning'
       })
         .then(async() => {
-          await deleteRole(row.key);
+          await deleteRoleAPI(row.key);
           data.rolesList.splice($index, 1);
           this.$message({
             type: 'success',
@@ -218,7 +218,7 @@ export default defineComponent({
       data.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys);
 
       if (isEdit) {
-        await updateRole(data.role.key, data.role);
+        await updateRoleAPI(data.role.key, data.role);
         for (let index = 0; index < data.rolesList.length; index++) {
           if (data.rolesList[index].key === data.role.key) {
             data.rolesList.splice(index, 1, Object.assign({}, data.role));
@@ -226,7 +226,7 @@ export default defineComponent({
           }
         }
       } else {
-        const { data } = await addRole(data.role);
+        const { data } = await addRoleAPI(data.role);
         data.role.key = data.key;
         data.rolesList.push(data.role);
       }
@@ -272,7 +272,7 @@ export default defineComponent({
       // method
       generateRoutes,
       generateArr,
-      handleAddRole,
+      handleaddRoleAPI,
       handleEdit,
       handleDelete,
       generateTree,

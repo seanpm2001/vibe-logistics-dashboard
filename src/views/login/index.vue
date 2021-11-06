@@ -1,8 +1,8 @@
 <template>
-  <el-alert type="info" show-icon class="test-alert">Username: admin | Password: 123</el-alert>
   <div class="container">
+    <el-alert type="info" show-icon class="test-alert">Username: admin | Password: 123</el-alert>
     <div class="form-warp">
-      <el-form ref="form" :rules="formRules" :model="signInForm" class="sign-in-form">
+      <el-form ref="inForm" :rules="formRules" :model="signInForm" class="sign-in-form">
         <h2 class="form-title">登录</h2>
         <div>
           <span class="svg-container">
@@ -28,9 +28,9 @@
           </span>
         </div>
         <Captcha @sliderValidation="moveSlider" />
-        <el-button class="submit-btn" @click="submitLogin">立即登录</el-button>
+        <el-button :loading="btnLoading" class="submit-btn" @click="submitLogin(signInPattern=true)">立即登录</el-button>
       </el-form>
-      <el-form ref="form" :rules="formRules" :model="signUpForm" class="sign-up-form">
+      <el-form ref="upForm" :rules="formRules" :model="signUpForm" class="sign-up-form">
         <h2 class="form-title">注册</h2>
         <div>
           <span class="svg-container">
@@ -47,7 +47,7 @@
             <svg-icon :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'" icon-class="eye" />
           </span>
         </div>
-        <div class="submit-btn">立即注册</div>
+        <el-button :loading="btnLoading" class="submit-btn" @click="submitLogin(signInPattern=false)">立即注册</el-button>
       </el-form>
     </div>
     <div class="desc-warp">
@@ -68,23 +68,26 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, reactive, ref, toRefs } from "vue";
+import { computed, getCurrentInstance, onMounted, reactive, ref, watchEffect } from "vue";
 // 局部组件（导入）
 import Captcha from "/@/components/Captcha/Index.vue";
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ElAlert, ElMessage, ElLoading } from 'element-plus';
 import { validUsername } from '/@/assets/utils/validate';
 
 /* Begin Data */
 const store = useStore();
+const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const validated = ref(false);
 const capsTooltip = ref(false);
 const passwordType = ref('password');
-
+const btnLoading = ref(false);
+const redirect = ref('/');
+const otherQuery = ref('');
 
 const signInForm = reactive({
   username: "admin",
@@ -118,6 +121,7 @@ const formRules = {
 };
 
 /* End Data */
+
 
 /* Method */
 onMounted(() => {
@@ -186,38 +190,44 @@ const getOtherQuery = query => {
   }, {});
 };
 
-const submitLogin = async () => {
-  // const isLogined = store.dispatch("profile/getUserByToken", signInForm);  
+const submitLogin = async signInPattern => {
+  await store.dispatch('profile/getUserByToken');
   // ToDo 逻辑尚未完善
   if (validated.value) {
-    const isLogined = await store.dispatch("profile/login", signInForm);
-    console.log('isLogined: ', isLogined);
-    // 测试
-    // if (signInForm.username === 'admin' && signInForm.password === '123') {
-    //   router.push('/');
-    // }
-    if (isLogined) {
-      // 初始化登录后所需数据
-      console.log("初始化登录后所需数据");
-      const loadingInstance = ElLoading.service({fullscreen: true});
-      setTimeout(() => {
-        loadingInstance.close();
-      }, 1000);
-      ElMessage.success('Login succeed, but no page now', 3);
-      // store.dispatch("users/listUsers"); // 用户管理界面 用户列表
-      // const params = {
-      //   offset: 0,
-      //   limit: 15,
-      //   isSimple: false,
-      // };
-      // store.dispatch("orders/listOrders", params); // 订单管理界面 订单列表
-    } else {
-      ElMessage.error('Wrong username or password.', 3);
-    }
+    proxy.$refs.inForm.validate(valid => {
+      if (valid) {
+        const loadingInstance = ElLoading.service({fullscreen: true});
+        btnLoading.value = true;
+        store.dispatch('user/login', signInForm)
+          .then(() => {
+            loadingInstance.close();
+            router.push({ path: redirect.value || '/', query: otherQuery.value });
+            btnLoading.value = false;
+          })
+          .catch(err => {
+            console.log('err: ', err);
+            btnLoading.value = false;
+          });
+      } else {
+        ElMessage.error('Wrong username or password.', 3);
+        return false;
+      }
+    });
   } else {
     ElMessage.error('Please drag the slider to verify or reflush the page.', 3);
   }
 };
+
+/* watch */
+watchEffect(() => {
+  const query = route.query;
+  if (query) {
+    redirect.value = query.redirect;
+    otherQuery.value = getOtherQuery(query);
+  }
+});
+      
+
 </script>
 
 <style scoped lang="sass">

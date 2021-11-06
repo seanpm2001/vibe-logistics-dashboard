@@ -3,7 +3,7 @@ export const profileRouter = [
     path: '/login',
     name: 'Login',
     meta: { title: '登录' },
-    component: () => import('./Login.vue')
+    component: () => import('../index.vue')
   },
   {
     path: '/register',

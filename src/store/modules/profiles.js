@@ -49,7 +49,6 @@ export const profile = {
 
     async getUserByToken (store, token) {
       const test = await getUserAPI();
-      console.log('test: ', test);
       const userInfo = await getUserByTokenAPI(token);
       if (userInfo) {
         store.commit('SET_IS_LOGINED', true);

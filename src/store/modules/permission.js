@@ -35,6 +35,7 @@ export function filterAsyncRoutes(routes, roles) {
 }
 
 export const permission = {
+  namespaced: true,
   state: {
     routes: [],
     addRoutes: []
@@ -47,6 +48,7 @@ export const permission = {
   },
   actions: {
     generateRoutes({ commit }, roles) {
+      console.log('roles: ', roles);
       return new Promise(resolve => {
         let accessedRoutes;
         if (roles.includes('admin')) {

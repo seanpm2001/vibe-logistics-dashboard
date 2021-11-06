@@ -1,12 +1,14 @@
-// const Mock = require('mockjs');
-// const { param2Obj } = require('/@/assets/utils/index');
+// import { Mock } from 'mockjs';
+// import { param2Obj } from '/@/assets/utils/index';
 
-// const user = require('./user');
-// const role = require('./role');
+// import testMock from "./test";
+// import userMock from "./user";
+// import roleMock from "./role";
 
 // const mocks = [
-//   ...user,
-//   ...role,
+//   ...userMock,
+//   ...roleMock,
+//   ...testMock
 // ];
 
 // // for front mock

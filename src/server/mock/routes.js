@@ -8,18 +8,18 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path*',
-        component: 'views/redirect/index'
+        component: 'views/redirect/index.vue'
       }
     ]
   },
   {
     path: '/login',
-    component: 'views/login/index',
+    component: 'views/login/index.vue',
     hidden: true
   },
   {
     path: '/auth-redirect',
-    component: 'views/login/auth-redirect',
+    component: 'views/login/auth-redirect.vue',
     hidden: true
   },
   {

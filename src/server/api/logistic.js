@@ -72,6 +72,5 @@ export async function registerAPI () {
 
 export async function getUserAPI () {
   const res = await requester.get('getUser');
-  console.log('res: ', res);
   return res;
 }

@@ -94,10 +94,10 @@ export default defineComponent({
       if (isExternal(routePath)) {
         return routePath;
       }
-      if (isExternal(this.basePath)) {
-        return this.basePath;
+      if (isExternal(props.basePath)) {
+        return props.basePath;
       }
-      return path.resolve(this.basePath, routePath);
+      return path.resolve(props.basePath, routePath);
     };
 
     return {

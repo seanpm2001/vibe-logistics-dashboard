@@ -34,12 +34,17 @@ import Layout from '/@/layout/index.vue';
 export const constantRoutes = [
   {
     path: '/',
-    component: () => import('/@/views/login/Login.vue'),
+    component: () => import('/@/views/profile/index.vue'),
+    hidden: true
+  },
+  {
+    path: '/eye-ball',
+    component: () => import('/@/views/cssShow/eye.vue'),
     hidden: true
   },
   {
     path: '/login',
-    component: () => import('/@/views/login/Login.vue'),
+    component: () => import('/@/views/login/index.vue'),
     hidden: true
   },
   {

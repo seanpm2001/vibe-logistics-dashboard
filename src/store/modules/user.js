@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '/@/server/api/user';
+import { loginAPI, logoutAPI, getInfoAPI } from '/@/server/api/user';
 import { getToken, setToken, removeToken } from '/@/assets/utils/auth';
 import router, { resetRouter } from '/@/router';
 
@@ -31,9 +31,10 @@ export const user = {
   actions: {
     // user login
     login({ commit }, userInfo) {
+      console.log('userInfo: ', userInfo);
       const { username, password } = userInfo;
       return new Promise((resolve, reject) => {
-        login({ username: username.trim(), password: password }).then(response => {
+        loginAPI({ username: username.trim(), password: password }).then(response => {
           const { data } = response;
           commit('SET_TOKEN', data.token);
           setToken(data.token);
@@ -47,7 +48,7 @@ export const user = {
     // get user info
     getInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
+        getInfoAPI(state.token).then(response => {
           const { data } = response;
 
           if (!data) {
@@ -75,7 +76,7 @@ export const user = {
     // user logout
     logout({ commit, state, dispatch }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logoutAPI(state.token).then(() => {
           commit('SET_TOKEN', '');
           commit('SET_ROLES', []);
           removeToken();
@@ -116,7 +117,7 @@ export const user = {
       // generate accessible routes map based on roles
       const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
       // dynamically add accessible routes
-      router.addRoutes(accessRoutes);
+      router.addRoute(accessRoutes);
 
       // reset visited views and cached views
       dispatch('tagsView/delAllViews', null, { root: true });

@@ -68,7 +68,7 @@ export default (({command}) => {
     server: {
       host: process.env.VITE_HOST,
       cors: true,
-      //反向代理配置
+      // 反向代理配置
       proxy: {
         '/api': {
           target: process.env.VITE_API_DOMAINS,

@@ -13,7 +13,6 @@ import 'element-plus/packages/theme-chalk/src/base.scss';
 import { useElementPlus } from './plugins/element';
 
 if (process.env.USE_MOCK) setupProdMockServer(); // development mock
-console.log('process.env.USE_MOCK: ', process.env.USE_MOCK);
 
 const app = createApp(App);
 app.component('svg-icon', SvgIcon);
