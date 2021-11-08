@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-
+import { cssShowRouter } from './modules/css-show';
 // import store from '../store';
 /* Layout */
 import Layout from '/@/layout/index.vue';
@@ -32,14 +32,10 @@ import Layout from '/@/layout/index.vue';
  * all roles can be accessed
  */
 export const constantRoutes = [
+  ...cssShowRouter,
   {
     path: '/',
     component: () => import('/@/views/profile/index.vue'),
-    hidden: true
-  },
-  {
-    path: '/eye-ball',
-    component: () => import('/@/views/cssShow/eye.vue'),
     hidden: true
   },
   {

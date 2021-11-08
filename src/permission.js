@@ -9,7 +9,7 @@ import getPageTitle from '/@/assets/utils/get-page-title';
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 let whiteList = ['/login', '/auth-redirect']; // no redirect whitelist
-const cssPageWhiteList = ['/eye-ball'];
+const cssPageWhiteList = ['/eye-ball', '/starry-sky'];
 whiteList = whiteList.concat(cssPageWhiteList);
 console.log('whiteList: ', whiteList);
 
