@@ -75,7 +75,7 @@
       "no-unused-vars": "off",
       "no-useless-escape": "off",
       "max-len": [
-        2,
+        "warn",
         200,
         4,
         {

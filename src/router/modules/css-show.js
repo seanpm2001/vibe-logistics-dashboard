@@ -6,6 +6,11 @@ export const cssShowRouter = [
     hidden: true
   },
   {
+    path: '/hover-card',
+    component: () => import('/@/views/cssShow/hover-card.vue'),
+    hidden: true
+  },
+  {
     path: '/starry-sky',
     component: () => import('/@/views/cssShow/starry-sky.vue'),
     hidden: true
