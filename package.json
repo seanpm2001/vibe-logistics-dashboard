@@ -9,7 +9,7 @@
     "build:beta": "npm run lint && vite build --mode development",
     "build:prod": "npm run lint && cross-env vite build --mode production",
     "build:mock": "npm run lint && cross-env USE_MOCK=true vite build --mode development",
-    "serve": "npm run build:beta && vite preview"
+    "serve": "npm run build:mock && vite preview"
   },
   "dependencies": {
     "axios": "^0.22.0",
@@ -30,6 +30,7 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "^4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "unplugin-vue-components": "^0.17.2",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^6.7.2",
@@ -37,8 +38,7 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "vite": "^2.5.10",
-    "vite-plugin-mock": "^2.9.6",
-    "vite-plugin-style-import": "^1.2.1"
+    "vite-plugin-mock": "^2.9.6"
   },
   "eslintConfig": {
     "root": true,
