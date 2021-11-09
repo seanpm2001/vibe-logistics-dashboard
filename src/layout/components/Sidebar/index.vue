@@ -24,12 +24,11 @@ import { useStore } from 'vuex';
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
 import { useRoute } from 'vue-router';
-import { ElMenu, ElScrollbar } from 'element-plus';
 import { useGetters } from '/@/assets/utils/vuex-helper';
 const route = useRoute();
 const store = useStore();
 const permission_routes = store.getters['permission_routes'];
-console.log('permission_routes: ', permission_routes);
+
 const sidebar = store.getters['sidebar'];
 
 const activeMenu = computed(() => {

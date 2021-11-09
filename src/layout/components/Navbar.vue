@@ -36,7 +36,6 @@
 <script setup>
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
-import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElTooltip } from 'element-plus';
 import Breadcrumb from '/@/components/Breadcrumb.vue';
 
 const store = useStore();

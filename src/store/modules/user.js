@@ -116,6 +116,7 @@ export const user = {
 
       // generate accessible routes map based on roles
       const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
+      console.log('accessRoutes: ', accessRoutes);
       // dynamically add accessible routes
       router.addRoute(accessRoutes);
 

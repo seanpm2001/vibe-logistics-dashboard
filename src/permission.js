@@ -11,7 +11,6 @@ NProgress.configure({ showSpinner: false }); // NProgress Configuration
 let whiteList = ['/login', '/auth-redirect']; // no redirect whitelist
 const cssPageWhiteList = ['/eye-ball', '/hover-card', '/starry-sky'];
 whiteList = whiteList.concat(cssPageWhiteList);
-console.log('whiteList: ', whiteList);
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -43,8 +42,8 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
           // dynamically add accessible routes
           router.addRoute(accessRoutes);
-          
-
+          console.log('to: ', to);
+          console.log('next: ', next);
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true });

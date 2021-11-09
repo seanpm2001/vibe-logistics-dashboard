@@ -8,7 +8,7 @@
         <p>
           With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.
         </p>
-        <a href="#">Learn More</a>
+        <a href="/#/hover-card">Learn More</a>
       </div>
     </div>
     <div class="card">
@@ -19,7 +19,7 @@
         <p>
           With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.
         </p>
-        <a href="#">Learn More</a>
+        <a href="/#/hover-card">Learn More</a>
       </div>
     </div>
     <div class="card">
@@ -30,7 +30,7 @@
         <p>
           With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.
         </p>
-        <a href="#">Learn More</a>
+        <a href="/#/hover-card">Learn More</a>
       </div>
     </div>
   </div>

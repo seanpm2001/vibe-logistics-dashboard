@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import { ElScrollbar } from 'element-plus';
 import { computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
 const tagAndTagSpacing = 4; // tagAndTagSpacing
 

@@ -25,53 +25,30 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, reactive, toRefs } from 'vue';
+<script setup>
+import { defineComponent, ref, toRefs } from 'vue';
+import { useStore } from 'vuex';
 import { useGetters } from '/@/assets/utils/vuex-helper';
 import Timeline from './components/Timeline.vue';
-import { ElCard, ElCol, ElRow, ElTabs, ElTabPane  } from 'element-plus';
 
-export default defineComponent({
-  name: 'Profile',
-  components: {
-    Timeline,
-    ElCard,
-    ElCol,
-    ElRow,
-    ElTabs,
-    ElTabPane,
-  },
-  setup() {
-    const data = reactive({
-      user: {},
-      activeTab: 'activity'
-    });
+const store = useStore();
 
-    const storeData =  {
-      ...useGetters('', [
-        'name',
-        'avatar',
-        'roles'
-      ])
-    };
-    console.log('storeData333: ', storeData.avatar);
+const user = ref({});
+const activeTab = ref('activity');
 
-    const getUser = () => {
-      data.user = {
-        name: storeData.name,
-        role: storeData.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: storeData.avatar
-      };
-    };
+const name = ref(store.getters('name'));
+const avatar = ref(store.getters('avatar'));
+const roles = ref(store.getters('roles'));
 
-    getUser();
 
-    return {
-      ...toRefs(data),
-      storeData,
-      getUser
-    };
-  },
-});
+const getUser = () => {
+  user.value = {
+    name: name.value,
+    role: roles.value.join(' | '),
+    email: 'admin@test.com',
+    avatar: avatar.value
+  };
+};
+
+getUser();
 </script>

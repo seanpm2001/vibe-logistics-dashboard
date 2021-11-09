@@ -42,11 +42,10 @@ const classObj = computed(() => {
 
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
 @import "/@/assets/css/_mixin.sass"
 @import "/@/assets/css/_variables.sass"
-@import '/@/assets/css/sidebar.scss'
-
+@import '/@/assets/css/sidebar.sass'
 .app-wrapper
   @include clearfix
   position: relative
