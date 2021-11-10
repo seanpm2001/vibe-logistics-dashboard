@@ -8,6 +8,12 @@ export const cssShowRouter = [
     meta: { title: 'Eye Ball' }
   },
   {
+    path: '/glxy',
+    component: () => import('/@/views/cssShow/glxy.vue'),
+    name: 'Glxy',
+    meta: { title: 'Glxy' }
+  },
+  {
     path: '/hover-card',
     component: () => import('/@/views/cssShow/hover-card.vue'),
     name: 'HoverCard',
