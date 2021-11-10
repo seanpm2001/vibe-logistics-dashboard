@@ -31,11 +31,12 @@ export const user = {
   actions: {
     // user login
     login({ commit }, userInfo) {
-      console.log('userInfo: ', userInfo);
       const { username, password } = userInfo;
       return new Promise((resolve, reject) => {
         loginAPI({ username: username.trim(), password: password }).then(response => {
           const { data } = response;
+          console.log('response: ', response);
+          console.log('data: ', data);
           commit('SET_TOKEN', data.token);
           setToken(data.token);
           resolve();

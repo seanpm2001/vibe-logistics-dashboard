@@ -44,6 +44,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/auth-redirect',
+    component: () => import('/@/views/login/auth-redirect.vue'),
+    hidden: true
+  },
+  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',

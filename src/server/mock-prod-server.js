@@ -10,6 +10,5 @@ export const mockModules = [
 ];
 
 export function setupProdMockServer() {
-  console.log('mockModules: ', mockModules);
   createProdMockServer(mockModules);
 }

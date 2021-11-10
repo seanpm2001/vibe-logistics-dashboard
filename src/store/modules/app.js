@@ -1,14 +1,14 @@
-import Cookies from 'js-cookie';
+import { getCookie, setCookie } from '/@/assets/utils/auth';
 
 export const app = {
   namespaced: true,
   state: {
     sidebar: {
-      opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+      opened: getCookie('sidebarStatus') ? !!+getCookie('sidebarStatus') : true,
       withoutAnimation: false
     },
     device: 'desktop',
-    size: Cookies.get('size') || 'medium'
+    size: getCookie('size') || 'medium'
   },
   getters: {
     getDevice: state => state.device,
@@ -18,13 +18,13 @@ export const app = {
       state.sidebar.opened = !state.sidebar.opened;
       state.sidebar.withoutAnimation = false;
       if (state.sidebar.opened) {
-        Cookies.set('sidebarStatus', 1);
+        setCookie('sidebarStatus', 1);
       } else {
-        Cookies.set('sidebarStatus', 0);
+        setCookie('sidebarStatus', 0);
       }
     },
     CLOSE_SIDEBAR: (state, withoutAnimation) => {
-      Cookies.set('sidebarStatus', 0);
+      setCookie('sidebarStatus', 0);
       state.sidebar.opened = false;
       state.sidebar.withoutAnimation = withoutAnimation;
     },
@@ -33,7 +33,7 @@ export const app = {
     },
     SET_SIZE: (state, size) => {
       state.size = size;
-      Cookies.set('size', size);
+      setCookie('size', size);
     }
   },
   actions: {

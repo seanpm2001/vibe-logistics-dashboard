@@ -38,7 +38,7 @@ export default [
   // mock get all routes form server
   {
     url: '/api/vue-element-admin/routes',
-    type: 'get',
+    method: 'get',
     response: () => {
       return {
         code: 20000,
@@ -50,7 +50,7 @@ export default [
   // mock get all roles form server
   {
     url: '/api/vue-element-admin/roles',
-    type: 'get',
+    method: 'get',
     response: () => {
       return {
         code: 20000,
@@ -62,7 +62,7 @@ export default [
   // add role
   {
     url: '/api/vue-element-admin/role',
-    type: 'post',
+    method: 'post',
     response: {
       code: 20000,
       data: {
@@ -74,7 +74,7 @@ export default [
   // update role
   {
     url: RegExp('/api/vue-element-admin/role/[A-Za-z0-9]'),
-    type: 'put',
+    method: 'put',
     response: {
       code: 20000,
       data: {
@@ -86,7 +86,7 @@ export default [
   // delete role
   {
     url: RegExp('/api/vue-element-admin/role/[A-Za-z0-9]'),
-    type: 'delete',
+    method: 'delete',
     response: {
       code: 20000,
       data: {

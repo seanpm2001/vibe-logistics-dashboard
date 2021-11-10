@@ -7,6 +7,7 @@ import { svgBuilder } from './src/plugins/svgBuilder';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
+
 function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
 }
@@ -29,21 +30,6 @@ export default (({command}) => {
       Components({
         resolvers: [ElementPlusResolver({importStyle: "sass"})]
       }),
-      // styleImport({
-      //   libs: [{
-      //     libraryName: 'element-plus',
-      //     resolveStyle: (name) => {
-      //       name = name.slice(3);
-      //       // element-plus scss包名不符
-      //       switch(name) {
-      //       case 'sub-menu':
-      //         name = 'submenu';
-      //         break;
-      //       }
-      //       return `element-plus/packages/theme-chalk/src/${name}.scss`;
-      //     },
-      //   }]
-      // }),
       svgBuilder('./src/icons/svg/') // 已经将src/icons/svg/下的svg全部导入，无需再单独导入
     ],
     resolve: {

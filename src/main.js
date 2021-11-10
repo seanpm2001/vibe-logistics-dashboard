@@ -7,10 +7,6 @@ import { setupProdMockServer } from './server/mock-prod-server';
 import SvgIcon from '/@/components/SvgIcon.vue'; // svg component
 import './permission'; // permission control
 
-// element scss样式实际由vite.config.js按需引入(styleImport)
-// import 'element-plus/packages/theme-chalk/src/base.scss';
-// import ElementPlus from 'element-plus';
-
 if (process.env.USE_MOCK) setupProdMockServer(); // development mock
 
 const app = createApp(App);

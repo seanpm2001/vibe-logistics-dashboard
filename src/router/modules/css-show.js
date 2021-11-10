@@ -22,7 +22,7 @@ export const cssShowRouter = [
   {
     path: '/starry-sky',
     component: () => import('/@/views/cssShow/starry-sky.vue'),
-    target: true,
+    hidden: true,
     name: 'StarrySky',
     meta: { title: 'Starry Sky' }
   },

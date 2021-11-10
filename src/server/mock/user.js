@@ -27,7 +27,7 @@ export default [
   // user login
   {
     url: '/api/vue-element-admin/user/login',
-    type: 'post',
+    method: 'post',
     response: config => {
       // const { username } = config.body;
       // const token = tokens[username];
@@ -50,7 +50,7 @@ export default [
   // get user info
   {
     url: RegExp('/api/vue-element-admin/user/info\.*'),
-    type: 'get',
+    method: 'get',
     response: config => {
       // const { token } = config.query;
       const token = "admin-token"; // test
@@ -74,7 +74,7 @@ export default [
   // user logout
   {
     url: '/api/vue-element-admin/user/logout',
-    type: 'post',
+    method: 'post',
     response: () => {
       return {
         code: 20000,
