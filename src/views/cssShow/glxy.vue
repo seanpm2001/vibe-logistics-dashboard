@@ -28,7 +28,7 @@ function setBgPosition() {
 }
 
 onMounted(() => {
-  document.addEventListener('scroll', throttle(setBgPosition, 50));
+  document.addEventListener('scroll', throttle(setBgPosition, 15));
 });
 </script>
 
