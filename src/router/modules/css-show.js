@@ -26,6 +26,12 @@ export const cssShowRouter = [
     name: 'StarrySky',
     meta: { title: 'Starry Sky' }
   },
+  {
+    path: '/streamer',
+    component: () => import('/@/views/cssShow/streamer.vue'),
+    name: 'Streamer',
+    meta: { title: 'Streamer' }
+  },
   // {
   //   path: '/css',
   //   component: Layout,
