@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - master
+permissions:
+  id-token: write
+  contents: read
+  deployments: write
+  statuses: write
 jobs:
   build:
     name: Run Tests and check code format
@@ -24,12 +29,13 @@ jobs:
         key: ${{ runner.os }}-yarn-web-node14-${{ hashFiles('apps/web/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-yarn-web-node14-
+    - name: Configure AWS Credentials (US)
+      uses: aws-actions/configure-aws-credentials@master
+      with:
+        role-to-assume: arn:aws:iam::663354718506:role/GithubDeployLogisticsRole
+        aws-region: us-west-2
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
-      env:
-        AWS_DEFAULT_REGION: us-west-2
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         npm install -g @vue/cli@4.5.13
         npm install
@@ -40,10 +46,6 @@ jobs:
             --paths "/*"
     - name: Install dependencies and deploy production
       if: github.event_name == 'deployment' && github.event.deployment.environment == 'production' && github.ref == 'refs/heads/master'
-      env:
-        AWS_DEFAULT_REGION: us-west-2
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         npm install -g @vue/cli@4.5.13
         npm install
