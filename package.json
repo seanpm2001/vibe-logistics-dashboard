@@ -75,11 +75,12 @@
       "no-unused-vars": "off",
       "no-useless-escape": "off",
       "max-len": [
-        "warn",
+        "error",
         200,
         4,
         {
-          "ignoreUrls": true
+          "ignoreUrls": true,
+          "ignorePattern": "<path.*"
         }
       ],
       "prefer-const": [
