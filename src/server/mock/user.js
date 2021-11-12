@@ -42,7 +42,9 @@ export default [
 
       return {
         code: 20000,
-        data: 'admin-token'
+        data: {
+          token: 'admin-token'
+        }
       };
     }
   },

@@ -40,7 +40,6 @@ export const user = {
       return new Promise((resolve, reject) => {
         loginAPI({ username: username.trim(), password: password }).then(response => {
           const { data } = response;
-          commit('SET_TOKEN', data.token);
           setToken(data.token);
           commit('SET_LOGINED', true);
           resolve();
@@ -92,6 +91,7 @@ export const user = {
           dispatch('tagsView/delAllViews', null, { root: true });
 
           resolve();
+          router.go(0);
         }).catch(error => {
           reject(error);
         });
