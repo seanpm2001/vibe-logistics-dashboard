@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 import { resolve } from '/@/assets/utils/path';
 import { isExternal } from '/@/assets/utils/validate';
 import Item from './Item.vue';
@@ -32,6 +32,7 @@ import AppLink from './Link.vue';
 // import FixiOSBug from './FixiOSBug';
 // import { ElSubMenu, ElMenuItem } from 'element-plus';
 
+// eslint-disable-next-line no-undef
 const props = defineProps({
   // route object
   item: {
@@ -47,7 +48,6 @@ const props = defineProps({
     default: ''
   }
 });
-console.log('props: ', props);
 
 // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
 // TODO: refactor with render function
@@ -64,7 +64,6 @@ const hasOneShowingChild = (children = [], parent) => {
       return true;
     }
   });
-  console.log('showingChildren: ', showingChildren);
 
   // When there is only one child router, the child router is displayed by default
   if (showingChildren.length === 1) {

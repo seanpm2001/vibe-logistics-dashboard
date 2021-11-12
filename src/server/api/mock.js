@@ -10,11 +10,9 @@ const Mock = require("mockjs");
 // const Random = Mock.Random;
 
 Mock.mock(RegExp('/api/users' + ".*"), 'get', options => {
-  console.log('options: ', options);
   const {
     token,
   } = JSON.parse(options);
-  console.log('token: ', token);
   if (token === 'test') {
     return {
       code: 200,

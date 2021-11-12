@@ -52,7 +52,6 @@ export default defineComponent({
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = route;
       var toPath = compile(path);
-      console.log('toPath: ', toPath);
       return toPath(params);
     };
 

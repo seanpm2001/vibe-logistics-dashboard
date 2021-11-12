@@ -6,10 +6,11 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 // doc: https://panjiachen.github.io/vue-element-admin-site/feature/component/svg-icon.html#usage
 import { isExternal } from '/@/assets/utils/validate';
 
+// eslint-disable-next-line no-undef
 const props = defineProps({
   iconName: {
     type: String,

@@ -5,6 +5,7 @@ import router, { resetRouter } from '/@/router';
 export const user = {
   namespaced: true,
   state: {
+    isLogined: false,
     token: getToken(),
     name: '',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
@@ -12,6 +13,10 @@ export const user = {
     roles: []
   },
   mutations: {
+    SET_LOGINED: (state, isLogined) => {
+      console.log('isLogined: ', isLogined);
+      state.isLogined = isLogined;
+    },
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
@@ -35,10 +40,9 @@ export const user = {
       return new Promise((resolve, reject) => {
         loginAPI({ username: username.trim(), password: password }).then(response => {
           const { data } = response;
-          console.log('response: ', response);
-          console.log('data: ', data);
           commit('SET_TOKEN', data.token);
           setToken(data.token);
+          commit('SET_LOGINED', true);
           resolve();
         }).catch(error => {
           reject(error);
@@ -82,7 +86,7 @@ export const user = {
           commit('SET_ROLES', []);
           removeToken();
           resetRouter();
-
+          commit('SET_LOGINED', false);
           // reset visited views and cached views
           // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
           dispatch('tagsView/delAllViews', null, { root: true });

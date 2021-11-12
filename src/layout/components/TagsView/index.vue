@@ -34,7 +34,6 @@ const selectedTag = {};
 const affixTags = [];
 
 const visitedViews = computed(() => state.tagsView.visitedViews);
-console.log('visitedViews: ', visitedViews);
 const routes = computed(() => state.permission.routes);
 
 const isActive = route => {

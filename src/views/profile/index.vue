@@ -36,9 +36,9 @@ const store = useStore();
 const user = ref({});
 const activeTab = ref('activity');
 
-const name = ref(store.getters('name'));
-const avatar = ref(store.getters('avatar'));
-const roles = ref(store.getters('roles'));
+const name = ref(store.getters['name']);
+const avatar = ref(store.getters['avatar']);
+const roles = ref(store.getters['roles']);
 
 
 const getUser = () => {

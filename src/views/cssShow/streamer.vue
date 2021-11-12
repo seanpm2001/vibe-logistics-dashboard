@@ -1,39 +1,25 @@
 <template>
   <div class="streamer-container">
-    <div id='sec' class="sec">
+    <div ref='sec' class="sec" @click="toggleBgColor">
       <video autoplay muted loop>
         <source src="/@/assets/video/run.mp4">
       </video>
       <h2>Run</h2>
-      <div id='dot' class="dot"></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { computed, onMounted, getCurrentInstance } from "vue";
 import throttle from "lodash/throttle";
+const { proxy } = getCurrentInstance();
+const refs = computed(() => proxy.$refs);
 
-function moveDot(e) {
-  const dot = document.getElementById('dot');
-  dot.style.left = e.pageX + 'px';
-  dot.style.top = e.pageY + 'px';
-}
-
-onMounted(() => {
-  const sec = document.getElementById('sec');
-  const dot = document.getElementById('dot');
+const toggleBgColor = () => {
+  refs.value.sec.classList.toggle('is-active');
   const video = document.querySelector('video');
-  dot.addEventListener('click', () => {
-    dot.classList.toggle('is-active');
-    sec.classList.toggle('is-active');
-    video.muted && (video.muted = false);
-  });
-
-
-  document.addEventListener('mousemove', throttle(moveDot, 50));
-});
-
+  video.muted && (video.muted = false);
+};
 </script>
 
 <style lang="sass" scoped>
@@ -42,6 +28,7 @@ onMounted(() => {
   height: 100vh
   box-sizing: border-box
   font-family: 'Poppins', sans-serif
+  cursor: pointer
 
 .sec
   position: absolute

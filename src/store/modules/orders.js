@@ -38,7 +38,6 @@ export const order = {
     },
     async createOrder ({ commit }, orderForm) {
       const order = await createOrderAPI(orderForm);
-      console.log('order: ', order);
       order.code && commit('UPDATE_ORDER', { id: order.id, order: order });
       return order.code; // 0：失败 || 1：成功
     },

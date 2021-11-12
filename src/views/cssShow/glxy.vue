@@ -1,5 +1,5 @@
 <template>
-  <div class="glxy-container">
+  <div class="glxy-page">
     <div id="bg" class="background"><span>Goat</span></div>
     <h2>
         In winter, it is covered with snow and snow. When you climb to Jinding, you can see far and wide, and the
@@ -13,29 +13,36 @@
 
 <script setup>
 import throttle from "lodash/throttle";
-import { getCurrentInstance, onMounted } from "vue";
+import { getCurrentInstance, onMounted, onUnmounted } from "vue";
 const { proxy } = getCurrentInstance();
 
 function setBgPosition() {
   const bg = document.getElementById('bg');
-  const scrollY = window.scrollY;
-
-  if (scrollY !== 0) {
-    bg.style.backgroundPosition = `calc(50% + ${scrollY}px) calc(50% + ${scrollY}px)`;
-  } else {
-    bg.style.backgroundPosition = '';
+  if (bg) {
+    const scrollY = window.scrollY;
+    if (scrollY !== 0) {
+      bg.style.backgroundPosition = `calc(50% + ${scrollY}px) calc(50% + ${scrollY}px)`;
+    } else {
+      bg.style.backgroundPosition = '';
+    }
   }
+  
 }
 
 onMounted(() => {
   document.addEventListener('scroll', throttle(setBgPosition, 15));
 });
+
+onUnmounted(() => {
+  document.removeEventListener('scroll', throttle(setBgPosition, 15));
+});
 </script>
 
 <style lang="sass" scoped>
-.glxy-container
+.glxy-page
   height: 200vh
   overflow-x: hidden
+  user-select: none
 .background
   background-image: url("/@/assets/img/css-show/mountain.jpg")
   background-size: cover

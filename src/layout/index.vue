@@ -8,7 +8,8 @@
       <div :class="{'fixed-header': fixedHeader}">
         <navbar />
         <tags-view v-if="needTagsView" />
-      </div> 
+      </div>
+      <app-main />
     </div>
   </div>
 </template>
@@ -16,7 +17,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { Navbar, SidebarComponent, TagsView } from './components/index';
+import { AppMain, Navbar, SidebarComponent, TagsView } from './components/index';
 // import ResizeMixin from './mixin/ResizeHandler';
 
 const store = useStore();

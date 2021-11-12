@@ -8,8 +8,9 @@
 </template>
 
 <script setup>
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance, computed } from 'vue';
 const { proxy } = getCurrentInstance();
+const refs = computed(() => proxy.$refs);
 
 function setEyePosition(el) {
   const x = (el.getBoundingClientRect().left) + (el.clientWidth / 2);
@@ -19,11 +20,13 @@ function setEyePosition(el) {
   const rotation = (radian * (180 / Math.PI) * -1) + 270;
   el.style.transform = `rotate(${rotation}deg)`;
 }
-const eyeBall = () => {
-  setEyePosition(proxy.$refs.rightEye);
-  setEyePosition(proxy.$refs.leftEye);
-};
 
+
+
+const eyeBall = () => {
+  setEyePosition(refs.value.rightEye);
+  setEyePosition(refs.value.leftEye);
+};
 </script>
 
 <style lang="sass" scoped>
@@ -31,7 +34,7 @@ const eyeBall = () => {
   display: flex
   justify-content: center
   align-items: center
-  width: 100vw
+  width: 100%
   min-height: 100vh
   background: radial-gradient(#f2761e, #ef4921)
 

@@ -13,6 +13,7 @@ const cssPageWhiteList = ['/eye-ball', '/glxy', '/hover-card', '/starry-sky', '/
 whiteList = whiteList.concat(cssPageWhiteList);
 
 router.beforeEach(async(to, from, next) => {
+  console.log('to: ', to);
   // start progress bar
   NProgress.start();
 
