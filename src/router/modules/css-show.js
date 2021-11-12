@@ -13,12 +13,12 @@ export const cssShowRouter = [
     name: 'Streamer',
     meta: { title: 'Css Streamer' }
   },
-  {
-    path: '/parallax-scroll',
-    component: () => import('/@/views/cssShow/parallax-scroll.vue'),
-    name: 'ParallaxScroll',
-    meta: { title: 'Css Parallax Scroll' }
-  },
+  // {
+  //   path: '/parallax-scroll',
+  //   component: () => import('/@/views/cssShow/parallax-scroll.vue'),
+  //   name: 'ParallaxScroll',
+  //   meta: { title: 'Css Parallax Scroll' }
+  // },
   {
     path: '/iphone1',
     component: () => import('/@/views/cssShow/iphone1.vue'),

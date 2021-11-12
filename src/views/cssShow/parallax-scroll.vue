@@ -37,7 +37,7 @@
 import bird1 from "/@/assets/img/parallax/bird2.png";
 import bird2 from "/@/assets/img/parallax/bird2.png";
 import forest from "/@/assets/img/parallax/forest.png";
-import rocks from "/@/assets/img/parallax/rock.png";
+import rocks from "/@/assets/img/parallax/rocks.png";
 </script>
 
 <style lang="sass">
