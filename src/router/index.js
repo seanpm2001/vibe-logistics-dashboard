@@ -35,7 +35,7 @@ export const constantRoutes = [
   ...cssShowRouter,
   {
     path: '/',
-    component: () => import('/@/views/profile/index.vue'),
+    component: () => import('/@/views/login/index.vue'),
     hidden: true
   },
   {

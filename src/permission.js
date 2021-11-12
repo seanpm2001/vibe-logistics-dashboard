@@ -24,9 +24,9 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken();
 
   if (hasToken && hasToken !== 'undefined') {
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path === '/') {
       // if is logged in, redirect to the home page
-      next({ path: '/profile' });
+      next({ path: '/css' });
       NProgress.done(); // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
       // determine whether the user has obtained his permission roles through getInfo
