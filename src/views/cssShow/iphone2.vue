@@ -66,9 +66,10 @@ onMounted(() => {
 
 <style lang="sass" scoped>
 .page
-  background-color: #000
-  margin: 0
   height: 3000px
+  margin: 0
+  background-color: #000
+  overflow: unset
 
 #A13 .chip
   fill: #fff
