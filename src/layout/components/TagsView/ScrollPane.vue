@@ -5,11 +5,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, getCurrentInstance } from 'vue';
 const tagAndTagSpacing = 4; // tagAndTagSpacing
 
 const left = 0;
-const { ctx } = getCurrentInstance();
+const { proxy } = getCurrentInstance();
+const refs = computed(() => proxy.$refs);
+const scrollWrapper = computed(() => refs.value.scrollContainer.$refs.wrap);
 
 
 </script>
