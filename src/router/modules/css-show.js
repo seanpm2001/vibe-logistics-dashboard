@@ -8,17 +8,23 @@ export const cssShowRouter = [
     meta: { title: 'Css Glxy' }
   },
   {
+    path: '/parallax',
+    component: () => import('/@/views/cssShow/parallax.vue'),
+    name: 'Parallax',
+    meta: { title: 'Css Parallax' }
+  },
+  {
     path: '/streamer',
     component: () => import('/@/views/cssShow/streamer.vue'),
     name: 'Streamer',
     meta: { title: 'Css Streamer' }
   },
-  // {
-  //   path: '/parallax-scroll',
-  //   component: () => import('/@/views/cssShow/parallax-scroll.vue'),
-  //   name: 'ParallaxScroll',
-  //   meta: { title: 'Css Parallax Scroll' }
-  // },
+  {
+    path: '/parallax-scroll',
+    component: () => import('/@/views/cssShow/parallax-scroll.vue'),
+    name: 'ParallaxScroll',
+    meta: { title: 'Css Parallax Scroll' }
+  },
   {
     path: '/iphone1',
     component: () => import('/@/views/cssShow/iphone1.vue'),

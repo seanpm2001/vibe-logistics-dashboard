@@ -1,139 +1,161 @@
 <template>
-  <div class="container">
-    <header id="header">
-      <a href="#" class="logo">Vibe</a>
-      <ul>
-        <li><a href="#" class="is-active">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Destination</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </header>
+  <div class="page">
     <section>
-      <h2 id="text"><span>It's time for a new</span><br>Adventure</h2>
-      <img :src="bird1" id="bird1">
-      <img :src="bird2" id="bird2">
-      <img :src="forest" id="forest">
-      <a href="#" id="btn">Explore</a>
-
-      <img :src="rock" id="rock">
+      <div class="box">
+        <h2 data-jarallax-element="0 -200">Parallax Scrolling Demo One</h2>
+        <div class="container">
+          <div class="imgBx jarallax">
+            <img class="jarallax-img" src="https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic1.jpg">
+          </div>
+          <div class="content" data-jarallax-element="-200 0">
+            <p>With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.</p>
+          </div>
+        </div>
+      </div>
     </section>
-    <div class="sec">
-      <h2>Parallax Scrolling Effects</h2>
-      <p>
-        Parallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax 
-        Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling
-       EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax
-        Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling 
-        EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax
-         Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling 
-         EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling EffectsParallax Scrolling Effects
-      </p>
-    </div>
+
+    <section>
+      <div class="box">
+        <h2 data-jarallax-element="0 200">Parallax Scrolling Demo Two</h2>
+        <div class="container">
+          <div class="imgBx jarallax">
+            <img class="jarallax-img" src="https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic2.jpg">
+          </div>
+          <div class="content" data-jarallax-element="-200 0">
+            <p>With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="box">
+        <h2 data-jarallax-element="0 -200">Parallax Scrolling Demo Three</h2>
+        <div class="container">
+          <div class="imgBx jarallax">
+            <img class="jarallax-img" src="https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic3.jpg">
+          </div>
+          <div class="content" data-jarallax-element="-200 0">
+            <p>With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="box">
+        <h2 data-jarallax-element="0 200">Parallax Scrolling Demo Four</h2>
+        <div class="container">
+          <div class="imgBx jarallax">
+            <img class="jarallax-img" src="https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic4.jpg">
+          </div>
+          <div class="content" data-jarallax-element="-200 0">
+            <p>With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import bird1 from "/@/assets/img/parallax/bird2.png";
-import bird2 from "/@/assets/img/parallax/bird2.png";
-import forest from "/@/assets/img/parallax/forest.png";
-import rocks from "/@/assets/img/parallax/rocks.png";
+import { onMounted } from "vue";
+import "/@/assets/js/jarallax";
+import "/@/assets/js/jarallax-element";
+
+onMounted(() => {
+  // eslint-disable-next-line no-undef
+  jarallax(document.getElementsByClassName('jarallax'), {
+    speed: 0.6
+  });
+});
+
 </script>
 
-<style lang="sass">
-.container
-  width: 100%
-  min-height: 100%
-  background: #fff
-  box-sizing: border-box
-  font-family: 'Poppins', sans-serif
+<style lang="sass" scoped>
+.page 
+  background: #111
+  padding-bottom: 50px
   overflow-x: hidden
-
-#header
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  padding: 30px 100px
-  display: flex
-  justify-content: space-around
-  align-items: center
-  z-index: 999
-  .logo
-    color: #094b65
+  box-sizing: border-box
+  &:before
+    content: 'Parallax'
+    position: fixed
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    font-size: 16em
     font-weight: 700
-    font-size: 2em
-    text-decoration: none
-  ul
-    display: flex
-    justify-content: center
-    align-items: center
-    li
-      list-style: none
-      margin-left: 20px
-      a
-        text-decoration: none
-        padding: 6px 15px
-        color: #094b65
-        border-radius: 20px
-        &.is-active, &:hover
-          background: #094b65
-          color: #fff
+    color: transparent
+    -webkit-text-stroke: 1px #555
+
 section
   position: relative
-  width: 100%
-  min-height: 100vh
   display: flex
   justify-content: center
   align-items: center
-  &::before
-    content: ''
+  min-height: 100vh
+
+section h2
+  margin-left: 200px
+  font-size: 4em
+  color: #fff
+  margin-bottom: 20px
+
+section .container
+  position: relative
+  width: 1000px
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+section:nth-child(even) .container
+  flex-direction: row-reverse
+
+section .container .imgBx
+  position: relative
+  width: 800px
+  height: 400px
+  overflow: hidden
+  box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1)
+
+section .container .imgBx img
+  position: absolute
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
+  object-fit: cover
+
+section .container .content
+  position: absolute
+  right: 0
+  margin-top: 200px
+  margin-bottom: 40px
+  padding: 40px
+  background: #333
+  z-index: 1
+  max-width: 400px
+  color: #fff
+  box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1)
+  border-bottom: 6px solid #4ac7ff
+
+section:nth-child(even) .container .content
+  left: 0
+
+.jarallax
+    position: relative
+    z-index: 0
+
+.jarallax > .jarallax-img
     position: absolute
-    bottom: 0
-    left: 0
-    width: 100%
-    height: 100px
-    background: linear-gradient(to top, #f00, transparent)
-    z-index: 10
-  img
-    position: absolute
+    object-fit: cover
+    /* support for plugin https://github.com/bfred-it/object-fit-images */
+    font-family: 'object-fit: cover'
     top: 0
     left: 0
     width: 100%
     height: 100%
-    object-fit: cover
-
-  #text
-    position: absolute
-    color: #094b65
-    font-size: 10vw
-    text-align: center
-    line-height: .55em
-    span
-      font-size: .2em
-      letter-spacing: 2px
-      font-weight: 400       
-      font-family: 'Poppins', sans-serif
-  #btn
-    text-decoration: none
-    display: inline-block
-    padding: 8px 30px
-    color: #094b65
-    font-size: 1.2em
-    font-weight: 500
-    letter-spacing: 2px
-    background: #fff
-    border-radius: 40px
-    transform: translateY(100px)
-.sec
-  position: relative
-  padding: 100px
-  background: #094b65
-  h2
-    font-size: 3.5em
-    color: #fff
-    margin-bottom: 10px
-  p
-    font-size: 1em
+    z-index: -1
 
 </style>

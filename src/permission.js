@@ -8,9 +8,7 @@ import getPageTitle from '/@/assets/utils/get-page-title';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-let whiteList = ['/login', '/auth-redirect']; // no redirect whitelist
-const cssPageWhiteList = ['/eye-ball', '/glxy', '/hover-card', '/starry-sky', '/streamer'];
-whiteList = whiteList.concat(cssPageWhiteList);
+const whiteList = ['/login', '/auth-redirect']; // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   console.log('to: ', to);
