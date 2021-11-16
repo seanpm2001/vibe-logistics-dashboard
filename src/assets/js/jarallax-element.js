@@ -1,5 +1,4 @@
 /* eslint-disable */
-console.log(2);
 /*!
  * Name    : DEPRECATED Elements Extension for Jarallax. Use laxxx instead https://github.com/alexfoxy/laxxx
  * Version : 1.0.0
@@ -209,7 +208,6 @@ console.log(2);
 
         Jarallax.prototype[key] = function () {
           var self = this;
-          console.log('s ', self.$item);
           
           if ('initImg' === key && null !== self.$item.getAttribute('data-jarallax-element')) {
             self.options.type = 'element';
@@ -264,7 +262,6 @@ console.log(2);
 
           case 'onScroll':
             var wnd = self.getWindowData();
-            console.log('self: ', self);
             var centerPercent = (wnd.y + wnd.height / 2 - self.itemData.y - self.itemData.height / 2) / (wnd.height / 2);
             var moveY = centerPercent * self.options.speedY;
             var moveX = centerPercent * self.options.speedX;

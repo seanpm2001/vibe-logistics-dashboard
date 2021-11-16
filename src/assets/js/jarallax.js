@@ -1,5 +1,4 @@
 /* eslint-disable */
-console.log(1);
 /*!
  * Name    : Just Another Parallax [Jarallax]
  * Version : 1.12.5

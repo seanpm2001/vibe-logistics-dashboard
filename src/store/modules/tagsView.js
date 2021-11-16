@@ -73,7 +73,6 @@ export const tagsView = {
       dispatch('addCachedView', view);
     },
     addVisitedView({ commit }, view) {
-      console.log('view: ', view);
       commit('ADD_VISITED_VIEW', view);
     },
     addCachedView({ commit }, view) {

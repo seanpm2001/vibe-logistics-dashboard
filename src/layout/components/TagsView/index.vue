@@ -5,7 +5,7 @@
         v-for="tag in visitedViews"
         :ref="setTagsRef"
         :key="tag.path"
-        :class="isActive(tag)?'active':''"
+        :class="isActive(tag) ? 'is-active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
@@ -32,14 +32,13 @@ import { useRoute, useRouter } from 'vue-router';
 import path from 'path';
 import { useStore } from 'vuex'; 
 
-const { proxy } = getCurrentInstance();
+const { ctx, proxy } = getCurrentInstance();
 
 const store = useStore();
 const state = store.state;
 const route = useRoute();
 const router = useRouter();
 const refs = computed(() => proxy.$refs);
-console.log('refs: ', refs);
 
 const visible = ref(false);
 const top = ref(0);
@@ -49,16 +48,14 @@ const affixTags = ref([]);
 const tagsRef = ref([]);
 
 const setTagsRef = el => {
-  console.log('el: ', el);
   el && tagsRef.value.push(el);
 };
 
 const visitedViews = computed(() => state.tagsView.visitedViews);
-console.log('visitedViews: ', visitedViews);
 const routes = computed(() => state.permission.routes);
 
-const isActive = route => {
-  return route.path === route.path;
+const isActive = tag => {
+  return tag.path === route.path;
 };
 
 const isAffix = tag => {
@@ -89,7 +86,6 @@ const filterAffixTags = (routes, basePath = '/') => {
 
 const initTags = () => {
   const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
-  console.log('affixTagsArr: ', affixTagsArr);
   for (const tag of affixTagsArr) {
     // Must have tag name
     if (tag.name) {
@@ -106,16 +102,12 @@ const addTags = () => {
   return false;
 };
 
-console.log('tagsRef.value: ', tagsRef.value);
-
 const moveToCurrentTag = () => {
   const tags = tagsRef.value;
-  console.log('tags: ', tags);
   proxy.$nextTick(() => {
     for (const tag of tags) {
       if (tag.to.path === route.path) {
-        console.log('refs.value: ', refs.value);
-        refs.value.scrollPane.moveToTarget(tag);
+        refs.value.scrollPane.moveToTarget(tag, tags);
         // when query is different then update
         if (tag.to.fullPath !== route.fullPath) {
           store.dispatch('tagsView/updateVisitedView', route);
@@ -194,8 +186,6 @@ const openMenu = (tag, e) => {
   top.value = e.clientY;
   visible.value = true;
   selectedTag.value = tag;
-  console.log('tag: ', tag);
-  console.log('selectedTag.value: ', selectedTag.value);
 };
 
 const closeMenu = () => {
@@ -221,8 +211,6 @@ watchEffect(() => {
     moveToCurrentTag();
   }
 });
-
-      
 
 onMounted(() => {
   initTags();
@@ -258,7 +246,7 @@ onMounted(() => {
       &:last-of-type
         margin-right: 15px
       
-      &.active
+      &.is-active
         background-color: #42b983
         color: #fff
         border-color: #42b983

@@ -28,7 +28,6 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  console.log('token: ', token);
   return setCookie(TokenKey, token);
 }
 
