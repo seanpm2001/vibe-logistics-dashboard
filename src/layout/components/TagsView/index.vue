@@ -84,13 +84,13 @@ const filterAffixTags = (routes, basePath = '/') => {
 };
 
 const initTags = () => {
-  const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
-  for (const tag of affixTagsArr) {
-    // Must have tag name
-    if (tag.name) {
-      store.dispatch('tagsView/addVisitedView', tag);
-    }
-  }
+  // const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
+  // for (const tag of affixTagsArr) {
+  //   // Must have tag name
+  //   if (tag.name) {
+  //     store.dispatch('tagsView/addVisitedView', tag);
+  //   }
+  // }
 };
 
 
