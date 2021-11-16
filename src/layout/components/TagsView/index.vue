@@ -3,7 +3,6 @@
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
-        :ref="setTagsRef"
         :key="tag.path"
         :class="isActive(tag) ? 'is-active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
@@ -45,11 +44,11 @@ const top = ref(0);
 const left = ref(0);
 const selectedTag = ref({});
 const affixTags = ref([]);
-const tagsRef = ref([]);
 
-const setTagsRef = el => {
-  el && tagsRef.value.push(el);
-};
+// const setTagsRef = el => {
+//   const elPath = el.to.fullPath;
+//   !tagsRef.some(item => item.to.fullPath === elPath) && tagsRef.push(el);
+// };
 
 const visitedViews = computed(() => state.tagsView.visitedViews);
 const routes = computed(() => state.permission.routes);
@@ -94,22 +93,29 @@ const initTags = () => {
   }
 };
 
+
+function isNewTag() {
+  const { path } = route;
+  return !(visitedViews.value.some(item => item.path === path));
+}
+
 const addTags = () => {
-  const { name } = route;
-  if (name) {
+  const { path } = route;
+
+  if (isNewTag()) {
     store.dispatch('tagsView/addView', route);
   }
   return false;
 };
 
 const moveToCurrentTag = () => {
-  const tags = tagsRef.value;
+  const tags = visitedViews.value;
   proxy.$nextTick(() => {
     for (const tag of tags) {
-      if (tag.to.path === route.path) {
+      if (tag.path === route.path) {
         refs.value.scrollPane.moveToTarget(tag, tags);
         // when query is different then update
-        if (tag.to.fullPath !== route.fullPath) {
+        if (tag.fullPath !== route.fullPath) {
           store.dispatch('tagsView/updateVisitedView', route);
         }
         break;
@@ -205,12 +211,12 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (route) {
-    addTags();
-    moveToCurrentTag();
-  }
-});
+// watchEffect(() => {
+//   if (visitedViews.value) {
+//     // addTags();
+//     // moveToCurrentTag();
+//   }
+// });
 
 onMounted(() => {
   initTags();
