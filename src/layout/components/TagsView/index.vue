@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref, watchEffect } from 'vue';
+import { computed, getCurrentInstance, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import ScrollPane from './ScrollPane.vue';
 import { useRoute, useRouter } from 'vue-router';
 import path from 'path';
@@ -39,6 +39,10 @@ const route = useRoute();
 const router = useRouter();
 const refs = computed(() => proxy.$refs);
 
+
+onUpdated(() => {
+  console.log('124: ' + route);
+});
 const visible = ref(false);
 const top = ref(0);
 const left = ref(0);
@@ -211,12 +215,12 @@ watchEffect(() => {
   }
 });
 
-// watchEffect(() => {
-//   if (visitedViews.value) {
-//     // addTags();
-//     // moveToCurrentTag();
-//   }
-// });
+watch(
+  () => route.path,
+  () => {
+    addTags();
+  }
+);
 
 onMounted(() => {
   initTags();
