@@ -237,13 +237,13 @@ watchEffect(() => {
   z-index: 999
 
 
-.container 
+.container
   position: relative
   width: 100%
   min-height: 100vh
   overflow: hidden
 
-.container::before 
+.container::before
   content: " "
   position: absolute
   width: 2000px

@@ -35,7 +35,7 @@ export const constantRoutes = [
   ...cssShowRouter,
   {
     path: '/',
-    component: () => import('/@/views/login/index.vue'),
+    component: () => import('/@/views/Login.vue'),
     hidden: true
   },
   {
@@ -45,18 +45,18 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path*',
-        component: () => import('/@/views/redirect.vue'),
+        component: () => import('/@/views/Redirect.vue'),
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('/@/views/login/index.vue'),
+    component: () => import('/@/views/Login.vue'),
     hidden: true
   },
   {
     path: '/auth-redirect',
-    component: () => import('/@/views/login/auth-redirect.vue'),
+    component: () => import('/@/views/login/auth-Redirect.vue'),
     hidden: true
   },
   {
@@ -67,7 +67,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('/@/views/profile/index.vue'),
+        component: () => import('/@/views/profile/Profile.vue'),
         name: 'Profile',
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
