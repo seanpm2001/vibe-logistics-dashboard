@@ -8,7 +8,7 @@
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
-        <template  v-slot:dropdown>
+        <template v-slot:dropdown>
           <el-dropdown-menu>
             <router-link to="/profile/index">
               <el-dropdown-item>Profile</el-dropdown-item>

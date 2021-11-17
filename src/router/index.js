@@ -35,8 +35,29 @@ export const constantRoutes = [
   ...cssShowRouter,
   {
     path: '/',
-    component: () => import('/@/views/Login.vue'),
-    hidden: true
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('/@/views/dashboard/Dashboard.vue'),
+        name: 'Dashboard',
+        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/ui-refactor',
+    component: Layout,
+    redirect: '/ui-refactor',
+    children: [
+      {
+        path: 'ui-refactor',
+        component: () => import('/@/views/dashboard/UiRefactor.vue'),
+        name: 'Ui-refactor',
+        meta: { title: 'Ui Refactor', icon: 'dashboard', affix: true }
+      }
+    ]
   },
   {
     path: '/redirect',
@@ -54,11 +75,11 @@ export const constantRoutes = [
     component: () => import('/@/views/Login.vue'),
     hidden: true
   },
-  {
-    path: '/auth-redirect',
-    component: () => import('/@/views/login/auth-Redirect.vue'),
-    hidden: true
-  },
+  // {
+  //   path: '/auth-redirect',
+  //   component: () => import('/@/views/login/Auth-Redirect.vue'),
+  //   hidden: true
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -94,7 +115,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'page',
-        component: () => import('/@/views/permission/page.vue'),
+        component: () => import('/@/views/permission/Page.vue'),
         name: 'PagePermission',
         meta: {
           title: 'Page Permission',
@@ -103,7 +124,7 @@ export const asyncRoutes = [
       },
       // {
     //     path: 'directive',
-    //     component: () => import('@/views/permission/directive'),
+    //     component: () => import('@/views/permission/Directive'),
     //     name: 'DirectivePermission',
     //     meta: {
     //       title: 'Directive Permission'
@@ -112,7 +133,7 @@ export const asyncRoutes = [
     //   },
     //   {
     //     path: 'role',
-    //     component: () => import('/@/views/permission/role'),
+    //     component: () => import('/@/views/permission/Role.vue'),
     //     name: 'RolePermission',
     //     meta: {
     //       title: 'Role Permission',

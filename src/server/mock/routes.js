@@ -46,6 +46,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/ui-refactor',
+    component: 'layout/Layout',
+    redirect: '/ui-refactor',
+    children: [
+      {
+        path: 'ui-refactor',
+        component: () => import('/@/views/dashboard/UiRefactor.vue'),
+        name: 'Ui-refactor',
+        meta: { title: 'Ui Refactor', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/documentation',
     component: 'layout/Layout',
     children: [

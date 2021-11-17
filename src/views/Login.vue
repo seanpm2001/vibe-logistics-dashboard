@@ -230,10 +230,26 @@ watchEffect(() => {
 
 </script>
 
+<style lang="sass">
+.test-alert
+  .el-icon-info
+    margin-right: 8px
+  .el-alert__content
+    display: flex
+    align-items: center
+    .el-alert__closebtn
+      margin-left: 8px
+      font-size: 13px
+      border: 1px solid #000
+      border-radius: 50%
+      cursor: pointer
+</style>
+
 <style scoped lang="sass">
 .test-alert
   position: absolute
-  bottom: 0
+  bottom: 8px
+  left: 8px
   z-index: 999
   display: flex
   align-items: center
