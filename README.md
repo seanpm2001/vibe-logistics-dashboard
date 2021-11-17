@@ -55,8 +55,10 @@ _____
   * mockjs (import indemand)
 * Js compatibility:
   * babel (convert js and help element import css indemand)
+* Js efficiency:
+  * lodash
 * Formatter:
-  * Eslint (format code)
+  * eslint (format code)
 
 ### See more info in [package.json](./package.json).
 
