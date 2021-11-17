@@ -235,7 +235,11 @@ watchEffect(() => {
   position: absolute
   bottom: 0
   z-index: 999
-
+  display: flex
+  align-items: center
+  .el-alert__content
+    display: flex
+    align-items: center
 
 .container
   position: relative
