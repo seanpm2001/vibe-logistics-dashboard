@@ -28,10 +28,10 @@
 import { computed, getCurrentInstance, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import ScrollPane from './ScrollPane.vue';
 import { useRoute, useRouter } from 'vue-router';
-import path from 'path';
+import { resolve } from '/@/assets/utils/path';
 import { useStore } from 'vuex'; 
 
-const { ctx, proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 
 const store = useStore();
 const state = store.state;
@@ -39,10 +39,6 @@ const route = useRoute();
 const router = useRouter();
 const refs = computed(() => proxy.$refs);
 
-
-onUpdated(() => {
-  console.log('124: ' + route);
-});
 const visible = ref(false);
 const top = ref(0);
 const left = ref(0);
@@ -69,7 +65,7 @@ const filterAffixTags = (routes, basePath = '/') => {
   let tags = [];
   routes.forEach(route => {
     if (route.meta && route.meta.affix) {
-      const tagPath = path.resolve(basePath, route.path);
+      const tagPath = resolve(basePath, route.path);
       tags.push({
         fullPath: tagPath,
         path: tagPath,
@@ -88,13 +84,13 @@ const filterAffixTags = (routes, basePath = '/') => {
 };
 
 const initTags = () => {
-  // const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
-  // for (const tag of affixTagsArr) {
-  //   // Must have tag name
-  //   if (tag.name) {
-  //     store.dispatch('tagsView/addVisitedView', tag);
-  //   }
-  // }
+  const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
+  for (const tag of affixTagsArr) {
+    // Must have tag name
+    if (tag.name) {
+      store.dispatch('tagsView/addVisitedView', tag);
+    }
+  }
 };
 
 
@@ -129,15 +125,17 @@ const moveToCurrentTag = () => {
 };
 
 const refreshSelectedTag = view => {
-  store.dispatch('tagsView/delCachedView', view).then(() => {
-    const { fullPath } = view;
+  if (view.path === route.path) router.go(0);
+  router.push(view.path);
+  // store.dispatch('tagsView/delCachedView', view).then(() => {
+  //   const { fullPath } = view;
 
-    proxy.$nextTick(() => {
-      router.replace({
-        path: '/redirect' + fullPath
-      });
-    });
-  });
+  //   proxy.$nextTick(() => {
+  //     router.replace({
+  //       path: '/redirect' + fullPath
+  //     });
+  //   });
+  // });
 };
 
 const closeSelectedTag = view => {
@@ -219,6 +217,7 @@ watch(
   () => route.path,
   () => {
     addTags();
+    // moveToCurrentTag();
   }
 );
 

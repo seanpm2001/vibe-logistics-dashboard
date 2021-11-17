@@ -13,7 +13,6 @@
     </div>
     <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
       </el-col>
     </el-row>
   </div>
@@ -21,8 +20,6 @@
 
 <script setup>
 import { computed, ref } from "vue";
-// import PanelGroup from './components/PanelGroup.vue'
-// import BoxCard from './components/BoxCard.vue'
 import { useStore }  from 'vuex';
 import PanThumb from '/@/components/PanThumb.vue';
 import GithubCorner from '/@/components/GithubCorner.vue';
