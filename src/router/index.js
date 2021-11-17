@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { cssShowRouter } from './modules/css-show';
 // import store from '../store';
 /* Layout */
-import Layout from '/@/layout/index.vue';
+import Layout from '/@/layout/Layout.vue';
 
 
 /**
