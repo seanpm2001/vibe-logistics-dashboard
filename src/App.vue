@@ -1,4 +1,5 @@
 <template>
+  <router-view name="backBtn"></router-view>
   <router-view v-slot="{ Component }">
     <transition name="slide-fade">
       <keep-alive>

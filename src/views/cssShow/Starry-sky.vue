@@ -297,6 +297,10 @@ onMounted(() => {
 
 
 <style lang="sass" scoped>
+.sky-container
+  width: 100vw
+  height: 100vh
+
 .sky-container .canvas
   position: absolute
   top: 0
