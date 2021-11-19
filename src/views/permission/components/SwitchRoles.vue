@@ -4,29 +4,25 @@
       Your roles: {{ roles }}
     </div>
     Switch roles:
-    <el-radio-group v-model="switchRoles">
+    <el-radio-group v-model="roles[0]" @change="switchRoles">
       <el-radio-button label="editor" />
       <el-radio-button label="admin" />
     </el-radio-group>
   </div>
 </template>
 
-<script>
-export default {
-  computed: {
-    roles() {
-      return this.$store.getters.roles;
-    },
-    switchRoles: {
-      get() {
-        return this.roles[0];
-      },
-      set(val) {
-        this.$store.dispatch('user/changeRoles', val).then(() => {
-          this.$emit('change');
-        });
-      }
-    }
-  }
+<script setup>
+import { computed, getCurrentInstance } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+const { proxy } = getCurrentInstance();
+
+const roles = computed(() => store.getters['roles']);
+
+const switchRoles = val => {
+  store.dispatch('user/changeRoles', val).then(() => {
+    proxy.$emit('changeRoles');
+  });
 };
 </script>

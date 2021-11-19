@@ -43,6 +43,7 @@ const props = defineProps({
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2)
 
 .pan-info-roles-container
+  width: 100%
   padding: 20px
   text-align: center
 

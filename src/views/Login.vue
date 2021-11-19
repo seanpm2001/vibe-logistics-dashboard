@@ -162,24 +162,24 @@ const showPwd = (signInPattern) => {
   });
 };
 
-const handleLogin = () => {
-  proxy.$refs.loginForm.validate(valid => {
-    if (valid) {
-      this.loading = true;
-      this.$store.dispatch('user/login', this.loginForm)
-        .then(() => {
-          this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    } else {
-      console.log('error submit!!');
-      return false;
-    }
-  });
-};
+// const handleLogin = () => {
+//   proxy.$refs.loginForm.validate(valid => {
+//     if (valid) {
+//       this.loading = true;
+//       this.$store.dispatch('user/login', this.loginForm)
+//         .then(() => {
+//           this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+//           this.loading = false;
+//         })
+//         .catch(() => {
+//           this.loading = false;
+//         });
+//     } else {
+//       console.log('error submit!!');
+//       return false;
+//     }
+//   });
+// };
 
 const getOtherQuery = query => {
   return Object.keys(query).reduce((acc, cur) => {
@@ -191,7 +191,6 @@ const getOtherQuery = query => {
 };
 
 const submitLogin = async signInPattern => {
-  await store.dispatch('profile/getUserByToken');
   // ToDo 逻辑尚未完善
   if (validated.value) {
     proxy.$refs.inForm.validate(valid => {

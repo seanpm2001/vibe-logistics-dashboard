@@ -33,7 +33,6 @@ export const profile = {
     async login (store, payload) {
       // const userInfo = await loginAPI(payload);
       const { username, password } = payload;
-      console.log('password: ', password);
       if (username === 'admin' && password === '123') {
         // localStorage.token = userInfo.token;
         router.push('/profile');
@@ -77,7 +76,6 @@ export const profile = {
     /* 注册 */
     async register (store, payload) {
       const userInfo = await registerAPI(payload);
-      console.log('userInfo: ', userInfo);
     }
   }
   // plugins: [

@@ -14,7 +14,6 @@ export const user = {
   },
   mutations: {
     SET_LOGINED: (state, isLogined) => {
-      console.log('isLogined: ', isLogined);
       state.isLogined = isLogined;
     },
     SET_TOKEN: (state, token) => {
@@ -40,6 +39,7 @@ export const user = {
       return new Promise((resolve, reject) => {
         loginAPI({ username: username.trim(), password: password }).then(response => {
           const { data } = response;
+          commit('SET_TOKEN', data.token);
           setToken(data.token);
           commit('SET_LOGINED', true);
           resolve();
@@ -60,8 +60,6 @@ export const user = {
           }
 
           const { roles, name, avatar, introduction } = data;
-          console.log('roles: ', roles);
-          
 
           // roles must be a non-empty array
           if (!roles || roles.length <= 0) {
@@ -89,7 +87,6 @@ export const user = {
           resetRouter();
           commit('SET_LOGINED', false);
           // reset visited views and cached views
-          // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
           dispatch('tagsView/delAllViews', null, { root: true });
 
           resolve();
@@ -113,22 +110,21 @@ export const user = {
     // dynamically modify permissions
     async changeRoles({ commit, dispatch }, role) {
       const token = role + '-token';
-
       commit('SET_TOKEN', token);
       setToken(token);
-
       const { roles } = await dispatch('getInfo');
 
       resetRouter();
-
       // generate accessible routes map based on roles
+
       const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
-      console.log('accessRoutes: ', accessRoutes);
       // dynamically add accessible routes
-      router.addRoute(accessRoutes);
+      accessRoutes.forEach(item => {
+        router.addRoute(item);
+      });
 
       // reset visited views and cached views
-      dispatch('tagsView/delAllViews', null, { root: true });
+      dispatch('tagsView/delOthersViews', router.currentRoute.value, { root: true});
     }
   }
 };

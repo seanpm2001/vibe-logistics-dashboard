@@ -24,11 +24,9 @@ const emitScroll = () => {
 };
 
 const moveToTarget = (currentTag, tagList) => {
-  console.log('currentTag: ', currentTag);
   const $container = refs.value.scrollContainer.$el;
   const $containerWidth = $container.offsetWidth;
   const $scrollWrapper = scrollWrapper.value;
-  console.log('tagList: ', tagList);
 
   let firstTag = null;
   let lastTag = null;

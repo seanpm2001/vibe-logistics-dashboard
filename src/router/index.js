@@ -67,7 +67,7 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: '/redirect/:path*',
+        path: RegExp('/redirect/:path*'),
         component: () => import('/@/views/Redirect.vue'),
       }
     ]
@@ -106,7 +106,7 @@ export const asyncRoutes = [
   {
     path: '/permission',
     component: Layout,
-    redirect: '/permission/page',
+    redirect: '/permission/directive',
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
     meta: {
@@ -116,45 +116,31 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('/@/views/permission/Page.vue'),
-        name: 'PagePermission',
+        path: 'directive',
+        component: () => import('/@/views/permission/Directive.vue'),
+        name: 'DirectivePermission',
         meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          title: 'Directive Permission',
+          roles: ['admin', 'editor']
+          // if do not set roles, means: this page does not require permission
         }
       },
-      // {
-    //     path: 'directive',
-    //     component: () => import('@/views/permission/Directive'),
-    //     name: 'DirectivePermission',
-    //     meta: {
-    //       title: 'Directive Permission'
-    //       // if do not set roles, means: this page does not require permission
-    //     }
-    //   },
-    //   {
-    //     path: 'role',
-    //     component: () => import('/@/views/permission/Role.vue'),
-    //     name: 'RolePermission',
-    //     meta: {
-    //       title: 'Role Permission',
-    //       roles: ['admin']
-    //     }
-    //   }
+      {
+        path: 'role',
+        component: () => import('/@/views/permission/Role.vue'),
+        name: 'RolePermission',
+        meta: {
+          title: 'Role Permission',
+          roles: ['admin']
+        }
+      }
     ]
   },
 ];
 
-// const createRouter = () => new Router({
-//   // mode: 'history', // require service support
-//   scrollBehavior: () => ({ y: 0 }),
-//   routes: constantRoutes
-// });
-
 const routeConfig = {
   history: createWebHashHistory(process.env.BASE_URL),
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({ top: 0 }),
   routes: constantRoutes
 };
 
@@ -162,8 +148,9 @@ const router = createRouter(routeConfig);
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter(routeConfig);
-  router.matcher = newRouter.matcher; // reset router
+  asyncRoutes.forEach(item => {
+    router.removeRoute(item.name);
+  });
 }
 
 

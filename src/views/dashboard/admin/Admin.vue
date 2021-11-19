@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
-    <div class="clearfix">
-      <pan-thumb :image="avatar" style="float: left;">
+    <div class="f-row">
+      <pan-thumb :image="avatar">
         Your roles:
         <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
       </pan-thumb>
@@ -34,13 +34,21 @@ const roles = computed(() => store.getters['roles']);
 
 <style lang="sass" scoped>
 .dashboard-editor-container
+  position: relative
+  background-color: #e3e3e3
+  min-height: 100vh
   padding: 32px
   background-color: rgb(240, 242, 245)
-  position: relative
-
+  .pan-info-roles
+    font-size: 14px
+    font-weight: 700
+    color: #333
+    display: block
+    
   .info-container
     position: relative
-    margin-left: 190px
+    margin-left: 50px
+    width: 400px
     height: 150px
     line-height: 200px
     .display_name

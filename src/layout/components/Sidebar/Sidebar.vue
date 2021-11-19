@@ -27,9 +27,9 @@ import { useRoute } from 'vue-router';
 import { useGetters } from '/@/assets/utils/vuex-helper';
 const route = useRoute();
 const store = useStore();
-const permission_routes = store.getters['permission_routes'];
+const permission_routes = computed(() => store.getters['permission_routes']);
 
-const sidebar = store.getters['sidebar'];
+const sidebar = computed(() => store.getters['sidebar']);
 
 const activeMenu = computed(() => {
   const { meta, path } = route;
@@ -40,14 +40,8 @@ const activeMenu = computed(() => {
   return path;
 });
 
-// Todo 
-const showLogo = computed (() => {
-  return true; // 暂时写死
-});
-// Todo 
-const isCollapse = computed (() => {
-  return false; // 暂时写死
-});
+const showLogo = computed (() => store.state.setting.sidebarLogo);
+const isCollapse = computed (() => !sidebar.value.opened);
 
 </script>
 

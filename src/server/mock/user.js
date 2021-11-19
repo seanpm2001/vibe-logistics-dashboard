@@ -54,8 +54,8 @@ export default [
     url: RegExp('/api/vue-element-admin/user/info\.*'),
     method: 'get',
     response: config => {
-      // const { token } = config.query;
-      const token = "admin-token"; // test
+      const token = config.headers['x-token'];
+      // const token = "admin-token"; // test
       const info = users[token];
 
       // mock error

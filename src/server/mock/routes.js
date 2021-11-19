@@ -111,7 +111,8 @@ export const asyncRoutes = [
         component: 'views/permission/directive',
         name: 'DirectivePermission',
         meta: {
-          title: 'Directive Permission'
+          title: 'Directive Permission',
+          roles: ['admin, editor']
         }
       },
       {

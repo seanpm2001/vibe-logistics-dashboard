@@ -16,3 +16,22 @@ $vibe-family-body: "Fira Sans", BlinkMacSystemFont, -apple-system, "Microsoft Ya
 $vibe-family-heading: Stratos, BlinkMacSystemFont, -apple-system, "Microsoft YaHei", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
 
 $vibe-bold: 500
+
+.f-row
+  display: flex
+  &.row-center
+    justify-content: center
+  &.col-center
+    align-items: center
+
+.f-col
+  display: flex
+  flex-direction: column
+  &.row-center
+    align-items: center
+  &.col-center
+    justify-content: center
+
+.f-row, .f-col
+  &.warp
+    flex-wrap: wrap

@@ -2,7 +2,6 @@ import { commonEnv, developmentEnv, productionEnv } from "./env";
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import vue from '@vitejs/plugin-vue'; 
-// import styleImport from 'vite-plugin-style-import';
 import { svgBuilder } from './src/plugins/svgBuilder'; 
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';

@@ -14,9 +14,6 @@ export default [
   {
     url: RegExp('/api/users' + ".*"),
     method: "get",
-    request: req => {
-      console.log('req: ', req);
-    },
     response: () => {
       return {
         code: 200,

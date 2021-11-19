@@ -59,11 +59,14 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent, toRefs, reactive } from 'vue';
-import path from 'path';
+<script setup>
+import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
+import { resolve } from '/@/assets/utils/path';
 import { deepClone } from '/@/assets/utils/index';
 import { getRoutesAPI, getRolesAPI, addRoleAPI, deleteRoleAPI, updateRoleAPI } from '/@/server/api/role';
+
+const { proxy } = getCurrentInstance();
+const refs = proxy.$refs;
 
 const defaultRole = {
   key: '',
@@ -72,224 +75,199 @@ const defaultRole = {
   routes: []
 };
 
-export default defineComponent({
-  setup() {
-    const data = reactive({
-      role: Object.assign({}, defaultRole),
-      routes: [],
-      rolesList: [],
-      dialogVisible: false,
-      dialogType: 'new',
-      checkStrictly: false,
-      defaultProps: {
-        children: 'children',
-        label: 'title'
-      }
-    });
+const role = ref(Object.assign({}, defaultRole));
+const routes = ref([]);
+const rolesList = ref([]);
+const dialogVisible = ref(false);
+const dialogType = ref('new');
+const checkStrictly = ref(false);
+const serviceRoutes = ref(null);
 
-    const computedData = computed(() => {
-      return {
-        routesData() {
-          return data.routes;
-        }
-      };
-    }).value;
-
-    const getRoutesAPIFn = async () => {
-      const res = await getRoutesAPI();
-      this.serviceRoutes = res.data;
-      data.routes = this.generateRoutes(res.data);
-    };
-
-    const getRolesAPIFn = async () => {
-      const res = await getRolesAPI();
-      data.rolesList = res.data;
-    };
-
-
-    // Mock: get all routes and roles list from server
-    getRoutesAPIFn();
-    getRolesAPIFn();
-
-    // Reshape the routes structure so that it looks the same as the sidebar
-    const generateRoutes = (routes, basePath = '/') => {
-      const res = [];
-
-      for (let route of routes) {
-        // skip some route
-        if (route.hidden) { continue }
-
-        const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route);
-
-        if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-          route = onlyOneShowingChild;
-        }
-
-        const data = {
-          path: path.resolve(basePath, route.path),
-          title: route.meta && route.meta.title
-
-        };
-
-        // recursive child routes
-        if (route.children) {
-          data.children = this.generateRoutes(route.children, data.path);
-        }
-        res.push(data);
-      }
-      return res;
-    };
-
-    const generateArr = routes => {
-      let data = [];
-      routes.forEach(route => {
-        data.push(route);
-        if (route.children) {
-          const temp = this.generateArr(route.children);
-          if (temp.length > 0) {
-            data = [...data, ...temp];
-          }
-        }
-      });
-      return data;
-    };
-
-    const handleaddRoleAPI = () => {
-      data.role = Object.assign({}, defaultRole);
-      if (this.$refs.tree) {
-        this.$refs.tree.setCheckedNodes([]);
-      }
-      data.dialogType = 'new';
-      data.dialogVisible = true;
-    };
-
-    const handleEdit = scope => {
-      data.dialogType = 'edit';
-      data.dialogVisible = true;
-      data.checkStrictly = true;
-      data.role = deepClone(scope.row);
-      this.$nextTick(() => {
-        const routes = this.generateRoutes(data.role.routes);
-        this.$refs.tree.setCheckedNodes(this.generateArr(routes));
-        // set checked state of a node not affects its father and child nodes
-        data.checkStrictly = false;
-      });
-    };
-
-    const handleDelete = ({ $index, row }) => {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-        .then(async() => {
-          await deleteRoleAPI(row.key);
-          data.rolesList.splice($index, 1);
-          this.$message({
-            type: 'success',
-            message: 'Delete succed!'
-          });
-        })
-        .catch(err => { console.error(err) });
-    };
-
-    const generateTree = (routes, basePath = '/', checkedKeys) => {
-      const res = [];
-
-      for (const route of routes) {
-        const routePath = path.resolve(basePath, route.path);
-
-        // recursive child routes
-        if (route.children) {
-          route.children = this.generateTree(route.children, routePath, checkedKeys);
-        }
-
-        if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
-          res.push(route);
-        }
-      }
-      return res;
-    };
-
-    const confirmRole = async () => {
-      const isEdit = data.dialogType === 'edit';
-
-      const checkedKeys = this.$refs.tree.getCheckedKeys();
-      data.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys);
-
-      if (isEdit) {
-        await updateRoleAPI(data.role.key, data.role);
-        for (let index = 0; index < data.rolesList.length; index++) {
-          if (data.rolesList[index].key === data.role.key) {
-            data.rolesList.splice(index, 1, Object.assign({}, data.role));
-            break;
-          }
-        }
-      } else {
-        const { data } = await addRoleAPI(data.role);
-        data.role.key = data.key;
-        data.rolesList.push(data.role);
-      }
-
-      // const { description, key, name } = data.role
-      data.dialogVisible = false;
-      // this.$notify({
-      //   title: 'Success',
-      //   dangerouslyUseHTMLString: true,
-      //   message: `
-      //       <div>Role Key: ${key}</div>
-      //       <div>Role Name: ${name}</div>
-      //       <div>Description: ${description}</div>
-      //     `,
-      //   type: 'success'
-      // })
-    };
-
-    // reference: src/view/layout/components/Sidebar/SidebarItem.vue
-    const onlyOneShowingChild = (children = [], parent) => {
-      let onlyOneChild = null;
-      const showingChildren = children.filter(item => !item.hidden);
-
-      // When there is only one child route, the child route is displayed by default
-      if (showingChildren.length === 1) {
-        onlyOneChild = showingChildren[0];
-        onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path);
-        return onlyOneChild;
-      }
-
-      // Show parent if there are no child route to display
-      if (showingChildren.length === 0) {
-        onlyOneChild = { ... parent, path: '', noShowingChildren: true };
-        return onlyOneChild;
-      }
-
-      return false;
-    };
-
-    return {
-      ...toRefs(data),
-      ...computedData,
-      // method
-      generateRoutes,
-      generateArr,
-      handleaddRoleAPI,
-      handleEdit,
-      handleDelete,
-      generateTree,
-      confirmRole,
-      onlyOneShowingChild
-    };
-  }
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  children: {
+    type: Object,
+  },
+  label: {
+    type: String,
+  },
 });
+
+const routesData = computed(() => routes.value);
+
+const getRoutesAPIFn = async () => {
+  const res = await getRoutesAPI();
+  serviceRoutes.value = res.data;
+  routes.value = generateRoutes(res.data);
+};
+
+// Reshape the routes structure so that it looks the same as the sidebar
+const generateRoutes = (routes, basePath = '/') => {
+  const res = [];
+
+  for (let route of routes) {
+    // skip some route
+    if (route.hidden) { continue }
+
+    const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route);
+
+    if (route.children && onlyOneShowingChild && !route.alwaysShow) {
+      route = onlyOneShowingChild;
+    }
+
+    const data = {
+      path: resolve(basePath, route.path),
+      title: route.meta && route.meta.title
+
+    };
+
+    // recursive child routes
+    if (route.children) {
+      data.children = generateRoutes(route.children, data.path);
+    }
+    res.push(data);
+  }
+  return res;
+};
+
+
+const getRolesAPIFn = async () => {
+  const res = await getRolesAPI();
+  rolesList.value = res.data;
+};
+
+// Mock: get all routes and roles list from server
+getRoutesAPIFn();
+getRolesAPIFn();
+
+const generateArr = routes => {
+  let data = [];
+  routes.forEach(route => {
+    data.push(route);
+    if (route.children) {
+      const temp = this.generateArr(route.children);
+      if (temp.length > 0) {
+        data = [...data, ...temp];
+      }
+    }
+  });
+  return data;
+};
+
+const handleaddRoleAPI = () => {
+  role.value = Object.assign({}, defaultRole);
+  if (this.$refs.tree) {
+    this.$refs.tree.setCheckedNodes([]);
+  }
+  dialogType.value = 'new';
+  dialogVisible.value = true;
+};
+
+const handleEdit = scope => {
+  dialogType.value = 'edit';
+  dialogVisible.value = true;
+  checkStrictly.value = true;
+  role.value = deepClone(scope.row);
+  proxy.$nextTick(() => {
+    const routes = this.generateRoutes(role.value.routes);
+    this.$refs.tree.setCheckedNodes(this.generateArr(routes));
+    // set checked state of a node not affects its father and child nodes
+    checkStrictly.value = false;
+  });
+};
+
+const handleDelete = ({ $index, row }) => {
+  // proxy.$confirm('Confirm to remove the role?', 'Warning', {
+  //   confirmButtonText: 'Confirm',
+  //   cancelButtonText: 'Cancel',
+  //   type: 'warning'
+  // })
+  //   .then(async() => {
+  //     await deleteRoleAPI(row.key);
+  //     rolesList.value.splice($index, 1);
+  //   })
+  //   .catch(err => { console.error(err) });
+};
+
+const generateTree = (routes, basePath = '/', checkedKeys) => {
+  const res = [];
+
+  for (const route of routes) {
+    const routePath = resolve(basePath, route.path);
+
+    // recursive child routes
+    if (route.children) {
+      route.children = this.generateTree(route.children, routePath, checkedKeys);
+    }
+
+    if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
+      res.push(route);
+    }
+  }
+  return res;
+};
+
+const confirmRole = async () => {
+  const isEdit = dialogType.value === 'edit';
+
+  const checkedKeys = refs.tree.getCheckedKeys();
+  role.value.routes = this.generateTree(deepClone(serviceRoutes), '/', checkedKeys);
+
+  if (isEdit) {
+    await updateRoleAPI(role.value.key, role);
+    for (let index = 0; index < rolesList.value.length; index++) {
+      if (rolesList[index].key === role.value.key) {
+        rolesList.value.splice(index, 1, Object.assign({}, role));
+        break;
+      }
+    }
+  } else {
+    const { data } = await addRoleAPI(role);
+    role.value.key = data.key;
+    rolesList.value.push(role);
+  }
+
+  // const { description, key, name } = role
+  dialogVisible.value = false;
+  // this.$notify({
+  //   title: 'Success',
+  //   dangerouslyUseHTMLString: true,
+  //   message: `
+  //       <div>Role Key: ${key}</div>
+  //       <div>Role Name: ${name}</div>
+  //       <div>Description: ${description}</div>
+  //     `,
+  //   type: 'success'
+  // })
+};
+
+// reference: src/view/layout/components/Sidebar/SidebarItem.vue
+const onlyOneShowingChild = (children = [], parent) => {
+  let onlyOneChild = null;
+  const showingChildren = children.filter(item => !item.hidden);
+
+  // When there is only one child route, the child route is displayed by default
+  if (showingChildren.length === 1) {
+    onlyOneChild = showingChildren[0];
+    onlyOneChild.path = resolve(parent.path, onlyOneChild.path);
+    return onlyOneChild;
+  }
+
+  // Show parent if there are no child route to display
+  if (showingChildren.length === 0) {
+    onlyOneChild = { ... parent, path: '', noShowingChildren: true };
+    return onlyOneChild;
+  }
+
+  return false;
+};
+
 </script>
 
-<style lang="scss" scoped>
-.app-container {
-  .roles-table {
-    margin-top: 30px;
-  }
-  .permission-tree {
-    margin-bottom: 30px;
-  }
-}
+<style lang="sass" scoped>
+.app-container
+  .roles-table
+    margin-top: 30px
+  .permission-tree
+    margin-bottom: 30px
 </style>

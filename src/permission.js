@@ -21,9 +21,9 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken();
 
   if (hasToken && hasToken !== 'undefined') {
-    if (to.path === '/login' || to.path === '/') {
+    if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      next({ path: '/css' });
+      next({ path: '/' });
       NProgress.done(); // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
       // determine whether the user has obtained his permission roles through getInfo
@@ -42,7 +42,9 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
 
           // dynamically add accessible routes
-          router.addRoute(accessRoutes);
+          accessRoutes.forEach(item => {
+            router.addRoute(item);
+          });
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true });
