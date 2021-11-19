@@ -84,7 +84,7 @@ const filterAffixTags = (routes, basePath = '/') => {
 };
 
 const initTags = () => {
-  const affixTagsArr = affixTags.value = filterAffixTags(proxy.routes);
+  const affixTagsArr = affixTags.value = filterAffixTags(router.getRoutes());
   for (const tag of affixTagsArr) {
     // Must have tag name
     if (tag.name) {
