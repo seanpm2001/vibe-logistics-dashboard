@@ -33,6 +33,7 @@
         </el-tag>
       </div>
     </div>
+    <el-input v-model="test"></el-input>
   </div>
 </template>
 
@@ -42,7 +43,7 @@ import { useRouter } from "vue-router";
 import { checkPermission } from '/@/assets/utils/permission'; // 权限判断函数
 import SwitchRoles from './components/SwitchRoles.vue';
 const router = useRouter();
-
+const test = ref(123);
 const key = ref(1); // 切换权限的时重新初始化指令
 const handleRolesChange = () => {
   key.value++;

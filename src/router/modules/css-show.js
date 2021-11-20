@@ -3,16 +3,6 @@ import BackBtn from '/@/components/BackBtn.vue';
 
 export const cssShowRouter = [
   {
-    path: '/parallax-scroll',
-    components: {
-      default: () => import('/@/views/cssShow/Parallax-scroll.vue'),
-      backBtn: BackBtn
-    },
-    name: 'ParallaxScroll',
-    meta: { title: 'Css Parallax Scroll' },
-    hidden: true
-  },
-  {
     path: '/starry-sky',
     components: {
       default: () => import('/@/views/cssShow/Starry-sky.vue'),
@@ -57,6 +47,12 @@ export const cssShowRouter = [
         component: () => import('/@/views/cssShow/Glxy.vue'),
         name: 'Glxy',
         meta: { title: 'Css Glxy' }
+      },
+      {
+        path: 'parallax-scroll',
+        component: () => import('/@/views/cssShow/Parallax-scroll.vue'),
+        name: 'ParallaxScroll',
+        meta: { title: 'Css Parallax Scroll' },
       },
       {
         path: 'parallax',

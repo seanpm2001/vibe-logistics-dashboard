@@ -48,7 +48,7 @@ onUnmounted(() => {
   background-size: cover
   background-position: 50% 50%
   height: 200vh
-  font: 900 39rem ''
+  font: 900 30rem ''
   line-height: 130vh
   -webkit-background-clip: text
   -webkit-text-fill-color: transparent
