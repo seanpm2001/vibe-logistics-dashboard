@@ -5,13 +5,16 @@
       <p>
         You can click link under Css Show or the link with 'Css' in the title to see different styling techniques to get inspiration for UI refactoring.
       </p>
+      <p>
+        Below are some display pages or video effects.
+      </p>
     </div>
     <div class="card-container">
       <el-space alignment="flex-start" wrap>
         <el-card class="box-card" style="width: 250px">
           <template #header>
             <div class="card-header">
-              <span>Bilibili</span>
+              <span>Bilibili (easy to do)</span>
             </div>
           </template>
           <div v-for="(item, index) in iframeUrlData['bilibili']" :key="index" class="text item">
@@ -21,7 +24,7 @@
         <el-card class="box-card" style="width: 250px">
           <template #header>
             <div class="card-header">
-              <span>Top5 Website</span>
+              <span>Website (time to research)</span>
             </div>
           </template>
           <div v-for="(item, index) in iframeUrlData['website']" :key="index" class="text item">
