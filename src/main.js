@@ -14,5 +14,4 @@ if (process.env.USE_MOCK) setupProdMockServer(); // development mock
 export const app = createApp(App);
 app.component('svg-icon', SvgIcon);
 
-// useElementPlus(app);
 app.use(store).use(router).use(vPermission).mount('#app');

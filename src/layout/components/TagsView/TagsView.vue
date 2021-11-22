@@ -62,7 +62,7 @@ const isAffix = tag => {
 };
 
 const filterAffixTags = (routes, basePath = '/') => {
-  let tags = [];
+  const tags = [];
   routes.forEach(route => {
     if (route.meta && route.meta.affix) {
       const tagPath = resolve(basePath, route.path);
@@ -72,12 +72,6 @@ const filterAffixTags = (routes, basePath = '/') => {
         name: route.name,
         meta: { ...route.meta }
       });
-    }
-    if (route.children) {
-      const tempTags = filterAffixTags(route.children, route.path);
-      if (tempTags.length >= 1) {
-        tags = [...tags, ...tempTags];
-      }
     }
   });
   return tags;
@@ -125,17 +119,17 @@ const moveToCurrentTag = () => {
 };
 
 const refreshSelectedTag = view => {
-  if (view.path === route.path) router.go(0);
-  router.push(view.path);
-  // store.dispatch('tagsView/delCachedView', view).then(() => {
-  //   const { fullPath } = view;
+  // if (view.path === route.path) router.go(0);
+  // router.push(view.path);
+  store.dispatch('tagsView/delCachedView', view).then(() => {
+    const { fullPath } = view;
 
-  //   proxy.$nextTick(() => {
-  //     router.replace({
-  //       path: '/redirect' + fullPath
-  //     });
-  //   });
-  // });
+    proxy.$nextTick(() => {
+      router.replace({
+        path: '/redirect' + fullPath
+      });
+    });
+  });
 };
 
 const closeSelectedTag = view => {
@@ -216,6 +210,7 @@ watchEffect(() => {
 watch(
   () => route.path,
   () => {
+    if(route.path.indexOf('redirect') > -1) return;
     addTags();
     // moveToCurrentTag();
   }

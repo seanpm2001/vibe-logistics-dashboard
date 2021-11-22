@@ -37,10 +37,10 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     hidden: true,
-    redirect: '/dashboard',
+    redirect: '/dashboard/index',
     children: [
       {
-        path: 'dashboard',
+        path: 'dashboard/index',
         component: () => import('/@/views/dashboard/Dashboard.vue'),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
@@ -67,7 +67,7 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: RegExp('/redirect/:path*'),
+        path: '/redirect/:path*',
         component: () => import('/@/views/Redirect.vue'),
       }
     ]
