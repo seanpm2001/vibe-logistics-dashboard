@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h>Ui Refactor Page</h>
+    <h1 class="">Ui Refactor Page</h1>
     <div class="content">
       <p>
         You could click the <strong>link under Css Show</strong> or the <strong>link with 'Css' in the title</strong> to see different styling techniques to get inspiration for UI refactoring.
@@ -42,16 +42,13 @@
       destroy-on-close
       center
     >
-      <iframe ref="iframe" class="ui-iframe" :src="iframeUrl"></iframe>
+      <iframe class="ui-iframe" :src="iframeUrl"></iframe>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-// import DialogIframe from "/@/components/DialogIframe.vue";
-import { getCurrentInstance, ref, watch } from "vue";
-
-const { proxy } = getCurrentInstance();
+import { ref, watch } from "vue";
 
 const centerDialogVisible = ref(false);
 const iframeUrl = ref('');
@@ -107,7 +104,7 @@ const openDialog = (idx, name) => {
   min-height: calc(100vh - 150px)
   background-color: rgb(240, 242, 245)
 
-h
+h1
   display: block
   margin-bottom: 1rem
   font-size: 32px

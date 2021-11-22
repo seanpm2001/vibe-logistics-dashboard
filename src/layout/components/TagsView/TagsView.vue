@@ -137,6 +137,7 @@ const closeSelectedTag = view => {
     if (isActive(view)) {
       toLastView(visitedViews, view);
     }
+    closeMenu();
   });
 };
 
