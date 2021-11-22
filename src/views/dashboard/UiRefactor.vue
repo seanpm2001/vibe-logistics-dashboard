@@ -3,7 +3,7 @@
     <h>Ui Refactor Page</h>
     <div class="content">
       <p>
-        You can click link under Css Show or the link with 'Css' in the title to see different styling techniques to get inspiration for UI refactoring.
+        You could click the <strong>link under Css Show</strong> or the <strong>link with 'Css' in the title</strong> to see different styling techniques to get inspiration for UI refactoring.
       </p>
       <p>
         Below are some display pages or video effects.
@@ -113,6 +113,9 @@ h
   font-size: 32px
   font-weight: 700
   color: #333
+
+.content p:not(last-child)
+  margin-bottom: .5rem
 
 .card-container
   margin-top: 32px
