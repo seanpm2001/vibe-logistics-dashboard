@@ -8,7 +8,7 @@ export const user = {
     isLogined: false,
     token: getToken(),
     name: '',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar: '/@/assets/img/common/avatar.gif',
     introduction: '',
     roles: []
   },

@@ -39,6 +39,7 @@ const roles = computed(() => store.getters['roles']);
   min-height: 100vh
   padding: 32px
   background-color: rgb(240, 242, 245)
+
   .pan-info-roles
     font-size: 14px
     font-weight: 700
@@ -51,6 +52,7 @@ const roles = computed(() => store.getters['roles']);
     width: 400px
     height: 150px
     line-height: 200px
+    user-select: none
     .display_name
       font-size: 48px
       line-height: 48px

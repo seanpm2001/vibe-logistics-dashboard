@@ -9,7 +9,7 @@ export const cssShowRouter = [
       backBtn: BackBtn
     },
     name: 'StarrySky',
-    meta: { title: 'Starry Sky' }
+    meta: { title: 'Css Starry Sky' }
   },
   {
     path: '/iphone2',
@@ -46,31 +46,31 @@ export const cssShowRouter = [
         path: 'glxy',
         component: () => import('/@/views/cssShow/Glxy.vue'),
         name: 'Glxy',
-        meta: { title: 'Css Glxy' }
+        meta: { title: 'Glxy' }
       },
       {
         path: 'parallax-scroll',
         component: () => import('/@/views/cssShow/Parallax-scroll.vue'),
         name: 'ParallaxScroll',
-        meta: { title: 'Css Parallax Scroll' },
+        meta: { title: 'Parallax Scroll' },
       },
       {
         path: 'parallax',
         component: () => import('/@/views/cssShow/Parallax.vue'),
         name: 'Parallax',
-        meta: { title: 'Css Parallax' }
+        meta: { title: 'Parallax' }
       },
       {
         path: 'streamer',
         component: () => import('/@/views/cssShow/Streamer.vue'),
         name: 'Streamer',
-        meta: { title: 'Css Streamer' }
+        meta: { title: 'Streamer' }
       },
       {
         path: 'iphone1',
         component: () => import('/@/views/cssShow/Iphone1.vue'),
         name: 'Iphone1',
-        meta: { title: 'Css Iphone1' }
+        meta: { title: 'Iphone1' }
       },
     ]
   }
