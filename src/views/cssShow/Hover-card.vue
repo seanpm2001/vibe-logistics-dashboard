@@ -142,7 +142,7 @@ import buddha2 from "/@/assets/img/css-show/buddha2.jpeg";
   background: #fff
   box-shadow: 0 15px 25px rgba(0, 0, 0, .2)
   transform-style: preserve-3d
-  transition: 1s
+  transition: .7s
   .circle, .content a
     background: #000
   .circle
@@ -178,7 +178,7 @@ import buddha2 from "/@/assets/img/css-show/buddha2.jpeg";
     transform-origin: left
     transform-style: preserve-3d
     background: #000
-    transition: 1s transform
+    transition: 1.2s transform
     img
       position: absolute
       top: 0
