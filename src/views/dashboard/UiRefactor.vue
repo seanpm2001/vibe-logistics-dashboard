@@ -7,15 +7,25 @@
       </p>
     </div>
     <div class="card-container">
-      <el-space wrap>
+      <el-space alignment="flex-start" wrap>
         <el-card class="box-card" style="width: 250px">
           <template #header>
             <div class="card-header">
               <span>Bilibili</span>
             </div>
           </template>
-          <div v-for="(item, index) in iframeUrlArr" :key="index" class="text item">
-            <el-link @click="openDialog(index)">{{ item.name }}</el-link>
+          <div v-for="(item, index) in iframeUrlData['bilibili']" :key="index" class="text item">
+            <el-link @click="openDialog(index, 'bilibili')">{{ item.name }}</el-link>
+          </div>
+        </el-card>
+        <el-card class="box-card" style="width: 250px">
+          <template #header>
+            <div class="card-header">
+              <span>Top5 Website</span>
+            </div>
+          </template>
+          <div v-for="(item, index) in iframeUrlData['website']" :key="index" class="text item">
+            <el-link @click="openDialog(index, 'website')">{{ item.name }}</el-link>
           </div>
         </el-card>
       </el-space>
@@ -36,26 +46,56 @@
 
 <script setup>
 // import DialogIframe from "/@/components/DialogIframe.vue";
-import { ref } from "vue";
+import { getCurrentInstance, ref, watch } from "vue";
+
+const { proxy } = getCurrentInstance();
 
 const centerDialogVisible = ref(false);
 const iframeUrl = ref('');
-const iframeUrlArr = [
-  {
-    name: 'Earth Transition',
-    url: 'https://www.bilibili.com/video/BV1UF411e744?spm_id_from=333.999.0.0'
-  },
-  {
-    name: 'Parallax Demo',
-    url: 'https://www.bilibili.com/video/BV1aU4y1g7oZ?spm_id_from=333.999.0.0'
-  }
-];
+const iframeUrlData = {
+  'bilibili': [
+    {
+      name: 'Earth Transition',
+      url: 'https://www.bilibili.com/video/BV1UF411e744?spm_id_from=333.999.0.0'
+    },
+    {
+      name: 'Parallax Demo',
+      url: 'https://www.bilibili.com/video/BV1aU4y1g7oZ?spm_id_from=333.999.0.0',
+      target: true
+    },
+  ],
+  'website': [
+    {
+      name: 'Rouserlab',
+      url: 'https://www.rouserlab.com/about'
+    },
+    {
+      name: 'The year of greta',
+      url: 'https://theyearofgreta.com/'
+    },
+    {
+      name: 'Use pink',
+      url: 'https://useplink.com/en/',
+      target: true
+    },
+    {
+      name: 'More',
+      url: 'https://www.youtube.com/watch?v=AmHEfTSBXiY',
+      target: true
+    }
+  ] 
+};
 
-const openDialog = idx => {
-  console.log('idx: ', idx);
-  iframeUrl.value = iframeUrlArr[idx].url;
+const openDialog = (idx, name) => {
+  const iframeUrlArr = iframeUrlData[name][idx];
+  if (iframeUrlArr.target) {
+    window.open(iframeUrlArr.url, "_blank");
+    return;
+  }
+  iframeUrl.value = iframeUrlArr.url;
   centerDialogVisible.value = true;
 };
+
 </script>
 
 <style lang="sass" scoped>
@@ -75,7 +115,6 @@ h
   margin-top: 32px
   .el-card .item:not(:last-child)
     margin-bottom: 16px
-  &
     
 .ui-iframe
   width: 100%
