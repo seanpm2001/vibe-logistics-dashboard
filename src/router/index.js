@@ -112,7 +112,6 @@ export const asyncRoutes = [
     meta: {
       title: 'Permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
@@ -121,7 +120,7 @@ export const asyncRoutes = [
         name: 'DirectivePermission',
         meta: {
           title: 'Directive Permission',
-          roles: ['admin', 'editor']
+          roles: ['admin', 'manager', 'editor', 'visitor']
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -131,7 +130,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: 'Role Permission',
-          roles: ['admin']
+          roles: ['admin','manager']
         }
       }
     ]

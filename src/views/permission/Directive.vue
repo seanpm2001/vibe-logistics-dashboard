@@ -4,7 +4,6 @@
     <div :key="key" style="margin-top:30px;">
       <div>
         <span v-permission="['admin']" class="permission-alert">
-          Only
           <el-tag class="permission-tag" size="small">admin</el-tag> can see this
         </span>
         <el-tag v-permission="['admin']" class="permission-sourceCode" type="info">
@@ -14,7 +13,6 @@
 
       <div>
         <span v-permission="['editor']" class="permission-alert">
-          Only
           <el-tag class="permission-tag" size="small">editor</el-tag> can see this
         </span>
         <el-tag v-permission="['editor']" class="permission-sourceCode" type="info">
@@ -23,17 +21,38 @@
       </div>
 
       <div>
-        <span v-permission="['admin','editor']" class="permission-alert">
-          Both
-          <el-tag class="permission-tag" size="small">admin</el-tag> and
+        <span v-permission="['admin','manager']" class="permission-alert">
+          <el-tag class="permission-tag" size="small">admin</el-tag>
+          <el-tag class="permission-tag" size="small">manager</el-tag> can see this
+        </span>
+        <el-tag v-permission="['admin','manager']" class="permission-sourceCode" type="info">
+          v-permission="['admin','manager']"
+        </el-tag>
+      </div>
+
+      <div>
+        <span v-permission="['admin','manager','editor']" class="permission-alert">
+          <el-tag class="permission-tag" size="small">admin</el-tag> 
+          <el-tag class="permission-tag" size="small">manager</el-tag> 
           <el-tag class="permission-tag" size="small">editor</el-tag> can see this
         </span>
-        <el-tag v-permission="['admin','editor']" class="permission-sourceCode" type="info">
-          v-permission="['admin','editor']"
+        <el-tag v-permission="['admin','manager','editor']" class="permission-sourceCode" type="info">
+          v-permission="['admin','manager','editor']"
+        </el-tag>
+      </div>
+
+      <div>
+        <span v-permission="['admin','manager','editor','visitor']" class="permission-alert">
+          <el-tag class="permission-tag" size="small">admin</el-tag>
+          <el-tag class="permission-tag" size="small">manager</el-tag>
+          <el-tag class="permission-tag" size="small">editor</el-tag>
+          <el-tag class="permission-tag" size="small">visitor</el-tag> can see this
+        </span>
+        <el-tag v-permission="['admin','manager','editor','visitor']" class="permission-sourceCode" type="info">
+          v-permission="['admin','manager','editor','visitor']"
         </el-tag>
       </div>
     </div>
-    <el-input v-model="test"></el-input>
   </div>
 </template>
 
@@ -43,7 +62,6 @@ import { useRouter } from "vue-router";
 import { checkPermission } from '/@/assets/utils/permission'; // 权限判断函数
 import SwitchRoles from './components/SwitchRoles.vue';
 const router = useRouter();
-const test = ref(123);
 const key = ref(1); // 切换权限的时重新初始化指令
 const handleRolesChange = () => {
   key.value++;
@@ -54,7 +72,7 @@ const handleRolesChange = () => {
 .page
   padding: 16px
   :deep(.permission-alert)
-    width: 320px
+    width: 340px
     margin-top: 15px
     background-color: #f0f9eb
     color: #67c23a
@@ -64,6 +82,8 @@ const handleRolesChange = () => {
   :deep(.permission-sourceCode)
     margin-left: 15px
   :deep(.permission-tag)
+    &:not(last-child)
+      margin-right: .25rem
     background-color: #ecf5ff
 </style>
 
