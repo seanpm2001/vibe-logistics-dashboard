@@ -27,7 +27,7 @@ export const cssShowRouter = [
     name: 'CssShow',
     meta: {
       title: 'Css Show',
-      icon: 'component'
+      icon: 'css-show'
     },
     children: [
       {

@@ -13,6 +13,7 @@
 
       <div>
         <span v-permission="['editor']" class="permission-alert">
+          <el-tag class="permission-tag" size="small">admin</el-tag>
           <el-tag class="permission-tag" size="small">editor</el-tag> can see this
         </span>
         <el-tag v-permission="['editor']" class="permission-sourceCode" type="info">

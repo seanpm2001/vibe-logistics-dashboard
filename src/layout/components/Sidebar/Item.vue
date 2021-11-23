@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="f-row col-center">
     <span v-if="icon">
       <i v-if="icon.includes('el-icon')" class={[icon, sub-el-icon]} />
       <svg-icon v-else :icon-name="icon" />
@@ -26,10 +26,10 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
-.sub-el-icon {
-  color: currentColor;
-  width: 1em;
-  height: 1em;
-}
+<style lang="sass" scoped>
+.sub-el-icon
+  color: currentColor
+  width: 16px
+  height: 16px
+
 </style>

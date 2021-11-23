@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { cssShowRouter } from './modules/css-show';
+import { logisticRouter } from './modules/logistic';
 // import store from '../store';
 /* Layout */
 import Layout from '/@/layout/Layout.vue';
@@ -33,6 +34,7 @@ import Layout from '/@/layout/Layout.vue';
  */
 export const constantRoutes = [
   ...cssShowRouter,
+  ...logisticRouter,
   {
     path: '/',
     component: Layout,
@@ -111,7 +113,7 @@ export const asyncRoutes = [
     name: 'Permission',
     meta: {
       title: 'Permission',
-      icon: 'lock',
+      icon: 'permission',
     },
     children: [
       {
@@ -119,7 +121,8 @@ export const asyncRoutes = [
         component: () => import('/@/views/permission/Directive.vue'),
         name: 'DirectivePermission',
         meta: {
-          title: 'Directive Permission',
+          title: 'Change Role',
+          icon: 'role-change',
           roles: ['admin', 'manager', 'editor', 'visitor']
           // if do not set roles, means: this page does not require permission
         }
@@ -129,7 +132,8 @@ export const asyncRoutes = [
         component: () => import('/@/views/permission/Role.vue'),
         name: 'RolePermission',
         meta: {
-          title: 'Role Permission',
+          title: 'Manage Role',
+          icon: 'role',
           roles: ['admin','manager']
         }
       }
