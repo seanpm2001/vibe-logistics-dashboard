@@ -1,15 +1,15 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+    <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon || (item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+          <item :icon="onlyOneChild.meta.icon || item.meta?.icon" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
     </template>
     <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template v-slot:title>
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
+        <item v-if="item.meta" :icon="item.meta?.icon" :title="item.meta.title" />
       </template>
       <sidebar-item
         v-for="child in item.children"
@@ -30,7 +30,6 @@ import { isExternal } from '/@/assets/utils/validate';
 import Item from './Item.vue';
 import AppLink from './Link.vue';
 // import FixiOSBug from './FixiOSBug';
-// import { ElSubMenu, ElMenuItem } from 'element-plus';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -49,10 +48,8 @@ const props = defineProps({
   }
 });
 
-// To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
 // TODO: refactor with render function
 const onlyOneChild = ref(null);
-
 
 const hasOneShowingChild = (children = [], parent) => {
   const showingChildren = children.filter(item => {

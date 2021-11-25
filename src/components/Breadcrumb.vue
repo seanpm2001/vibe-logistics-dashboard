@@ -30,18 +30,18 @@ export default defineComponent({
 
     const getBreadcrumb = () => {
       // only show routes with meta.title
-      let matched = route.matched.filter(item => item.meta && item.meta.title);
+      let matched = route.matched.filter(item => item.meta?.title);
       const first = matched[0];
 
       if (!isDashboard(first)) {
         matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched);
       }
 
-      data.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false);
+      data.levelList = matched.filter(item => item.meta?.title && item.meta?.breadcrumb !== false);
     };
 
     const isDashboard = route => {
-      const name = route && route.name;
+      const name = route?.name;
       if (!name) {
         return false;
       }

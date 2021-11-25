@@ -18,6 +18,12 @@ export const logisticRouter = [
         component: () => import('/@/views/logistic/Warehouse.vue'),
         name: 'Warehouse',
         meta: { title: 'Warehouse', icon: 'warehouse' }
+      },
+      {
+        path: 'freight',
+        component: () => import('/@/views/logistic/Freight.vue'),
+        name: 'Freight',
+        meta: { title: 'Freight', icon: 'freight' }
       }
     ]
   },
