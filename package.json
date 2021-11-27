@@ -15,12 +15,14 @@
     "axios": "^0.22.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.1.0-beta.20",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "vue": "^3.2.4",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "xlsx": "^0.17.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
@@ -76,7 +78,7 @@
       "no-useless-escape": "off",
       "max-len": [
         "error",
-        200,
+        800,
         4,
         {
           "ignoreUrls": true,

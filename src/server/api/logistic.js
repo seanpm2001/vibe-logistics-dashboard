@@ -25,26 +25,30 @@ export async function deleteOrderAPI (id) {
   await requester.delete(`Orders/${id}`);
 }
 
-/* 产品 Product API */
-export async function listProductsAPI () {
-  const { data } = await requester.get('Products');
+/* 产品 Freight API */
+export async function listFreightsAPI (params) {
+  const { data } = await requester.get('freights', {
+    params,
+  });
   return data;
 }
-export async function findProductAPI (id) {
-  const { data } = await requester.get(`Products/${id}`);
+export async function findFreightAPI (id) {
+  const { data } = await requester.get(`freights/${id}`);
   return data;
 }
-export async function createProductAPI (Product) {
-  const { data } = await requester.post('Products', Product);
+export async function createFreightAPI (Freight) {
+  const { data } = await requester.post('freights', Freight);
   return data;
 }
-export async function updateProductAPI (id, updates) {
-  const { data } = await requester.put(`Products/${id}`, updates);
+export async function updateFreightAPI (id, updates) {
+  const { data } = await requester.put(`freights/${id}`, updates);
   return data;
 }
-export async function deleteProductAPI (id) {
-  await requester.delete(`Products/${id}`);
+export async function deleteFreightAPI (id) {
+  await requester.delete(`freights/${id}`);
 }
+
+
 
 /* 用户配置 profile API 登录注册登出 */
 export async function loginAPI (payload) {

@@ -3,7 +3,6 @@ import '/@/assets/css/wave.sass';
 const context = '@@wavesContext';
 
 function handleClick(el, binding) {
-  console.log('el: ', el);
   function handle(e) {
     const customOpts = Object.assign({}, binding.value);
     const opts = Object.assign({
@@ -61,7 +60,6 @@ export default {
   install (app) {
     app.directive('wave', {
       beforeMount (el, binding) {
-        console.log('el: ', el);
         el.addEventListener('click', handleClick(el, binding), false);
       },
       update(el, binding) {

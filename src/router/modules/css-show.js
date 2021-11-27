@@ -72,6 +72,12 @@ export const cssShowRouter = [
         name: 'Iphone1',
         meta: { title: 'Iphone1', icon: 'css-style' }
       },
+      {
+        path: 'countdown',
+        component: () => import('/@/views/cssShow/Countdown.vue'),
+        name: 'Countdown',
+        meta: { title: 'Countdown', icon: 'css-style' }
+      },
     ]
   }
 ];
