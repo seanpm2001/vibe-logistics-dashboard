@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="Title" style="width: 200px;" class="filter-item" @keyup.enter="handleFilter" />
+      <el-input v-model="listQuery.title" placeholder="BN" style="width: 100px;" class="filter-item" @keyup.enter="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
@@ -44,15 +44,10 @@
           <span>{{ row.timestamp }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="BN" width="100px">
         <template v-slot="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ row.type }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
-        <template v-slot="{row}">
-          <span>{{ row.author }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
@@ -73,21 +68,21 @@
       </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
         <template v-slot="{row}">
-          <el-tag :type="row.status === 'published' ? 'success' : 'info'">
+          <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="330px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
+          <el-button v-if="row.status!='In Transit'" size="mini" type="success" @click="handleModifyStatus(row,'In Transit')">
+            In Transit
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
+          <el-button v-if="row.status!='Delivered'" size="mini" @click="handleModifyStatus(row,'Delivered')">
+            Delivered
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
@@ -114,7 +109,7 @@
         <el-form-item label="Date" prop="timestamp">
           <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
         </el-form-item>
-        <el-form-item label="Title" prop="title">
+        <el-form-item label="BN" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
         <el-form-item label="Status">
@@ -184,7 +179,7 @@ const calendarTypeOptions = ref([
   { key: 'EU', display_name: 'Eurozone' }
 ]);
 const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
-const statusOptions = ref(['published', 'draft', 'deleted']);
+const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
 const showReviewer = ref(false);
 
 const tableKey = ref(0);
@@ -213,7 +208,7 @@ const temp = ref({
   timestamp: new Date(),
   title: '',
   type: '',
-  status: 'published'
+  status: 'In Transit'
 });
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -273,7 +268,7 @@ const resetTemp = () => {
     remark: '',
     timestamp: new Date(),
     title: '',
-    status: 'published',
+    status: 'In Transit',
     type: ''
   };
 };
