@@ -1,8 +1,7 @@
 <template>
   <div class="page">
-    Order page
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="Title" style="width: 200px;" class="filter-item" @keyup.enter="handleFilter" />
+      <el-input v-model="listQuery.title" placeholder="BN" style="width: 100px;" class="filter-item" @keyup.enter="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
@@ -12,20 +11,19 @@
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
       <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
         reviewer
       </el-checkbox>
     </div>
-
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -37,59 +35,54 @@
       @sort-change="sortChange"
     >
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template v-slot:{row}>
+        <template v-slot="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Date" width="150px" align="center">
-        <template v-slot:{row}>
+        <template v-slot="{row}">
           <span>{{ row.timestamp }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title" min-width="150px">
-        <template v-slot:{row}>
+      <el-table-column label="BN" width="100px">
+        <template v-slot="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ row.type }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
-        <template v-slot:{row}>
-          <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
       <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template v-slot:{row}>
+        <template v-slot="{row}">
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Imp" width="80px">
-        <template v-slot:{row}>
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+        <template v-slot="{row}">
+          <svg-icon v-for="n in row.importance" :key="n" icon-name="star" class="meta-item__icon" />
         </template>
       </el-table-column>
       <el-table-column label="Readings" align="center" width="95">
-        <template v-slot:{row}>
+        <template v-slot="{row}">
           <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
           <span v-else>0</span>
         </template>
       </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
-        <template v-slot:{row}>
-          <el-tag :type="row.status">
+        <template v-slot="{row}">
+          <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
-        <template v-slot:{row,$index}>
+      <el-table-column label="Actions" align="center" width="330px" class-name="small-padding fixed-width">
+        <template v-slot="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
+          <el-button v-if="row.status!='In Transit'" size="mini" type="success" @click="handleModifyStatus(row,'In Transit')">
+            In Transit
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
+          <el-button v-if="row.status!='Delivered'" size="mini" @click="handleModifyStatus(row,'Delivered')">
+            Delivered
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
@@ -98,10 +91,16 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" v-model:page="listQuery.page" v-model:limit="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      v-model:page="listQuery.page"
+      v-model:limit="listQuery.limit"
+      @pagination="handlePagination"
+    />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" v-model:model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="Type" prop="type">
           <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
             <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
@@ -110,7 +109,7 @@
         <el-form-item label="Date" prop="timestamp">
           <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
         </el-form-item>
-        <el-form-item label="Title" prop="title">
+        <el-form-item label="BN" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
         <el-form-item label="Status">
@@ -137,7 +136,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model:visible="dialogPvVisible" title="Reading statistics">
+    <el-dialog v-model="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
         <el-table-column prop="pv" label="Pv" />
@@ -147,28 +146,233 @@
           <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
         </span>
       </template>
+
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-// import { fetchList, fetchPv, createArticle, updateArticle } from '/@/api/article';
-// import waves from '/@/directive/waves'; // waves directive
-// import { parseTime } from '/@/assets/utils';
-// import Pagination from '/@/components/Pagination'; // secondary package based on el-pagination
+import { getCurrentInstance, ref } from "vue";
+import { useStore } from "vuex";
+import { ElMessage } from "element-plus";
+import { parseTime } from '/@/assets/utils/index';
+import Pagination from '/@/components/Pagination.vue';
+import { listFreightsAPI } from "/@/server/api/logistic";
 
-const calendarTypeOptions = [
+const store = useStore();
+const { proxy } = getCurrentInstance();
+
+const listQuery = ref({
+  page: 1,
+  limit: 20,
+  importance: undefined,
+  title: undefined,
+  type: undefined,
+  sort: '+id'
+});
+
+const importanceOptions = ref([1, 2, 3]);
+const calendarTypeOptions = ref([
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
   { key: 'JP', display_name: 'Japan' },
   { key: 'EU', display_name: 'Eurozone' }
-];
+]);
+const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
+const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
+const showReviewer = ref(false);
+
+const tableKey = ref(0);
+const list = ref(null);
+const total = ref(0);
+const listLoading = ref(true);
+const dialogFormVisible = ref(false);
+const dialogStatus = ref('');
+const textMap= ref({
+  update: 'Edit',
+  create: 'Create'
+});
+const dialogPvVisible = ref(false);
+const pvData = ref([]);
+const rules = ref({
+  type: [{ required: true, message: 'type is required', trigger: 'change' }],
+  timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
+  title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+});
+const downloadLoading = ref(false);
+
+const temp = ref({
+  id: undefined,
+  importance: 1,
+  remark: '',
+  timestamp: new Date(),
+  title: '',
+  type: '',
+  status: 'In Transit'
+});
 
 // arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
+const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name;
   return acc;
 }, {});
+
+const getList = () => {
+  listLoading.value = true;
+  listFreightsAPI(listQuery.value).then(data => {
+    list.value = data.items;
+    total.value = data.total;
+
+    // Just to simulate the time of the request
+    setTimeout(() => {
+      listLoading.value = false;
+    }, 1.5 * 1000);
+  });
+};
+
+const handlePagination = config => {
+  listQuery.value = Object.assign(listQuery.value, config);
+  getList();
+};
+
+const handleFilter = () => {
+  listQuery.value.page = 1;
+  getList();
+};
+
+const handleModifyStatus = (row, status) => {
+  ElMessage.success('操作Success', 3);
+  row.status = status;
+};
+
+const sortChange = data => {
+  const { prop, order } = data;
+  if (prop === 'id') {
+    sortByID(order);
+  }
+};
+
+const sortByID = order => {
+  if (order === 'ascending') {
+    listQuery.value.sort = '+id';
+  } else {
+    listQuery.value.sort = '-id';
+  }
+  handleFilter();
+};
+
+const resetTemp = () => {
+  temp.value = {
+    id: undefined,
+    importance: 1,
+    remark: '',
+    timestamp: new Date(),
+    title: '',
+    status: 'In Transit',
+    type: ''
+  };
+};
+
+const handleCreate = () => {
+  resetTemp();
+  dialogStatus.value = 'create';
+  dialogFormVisible.value = true;
+  proxy.$nextTick(() => {
+    proxy.$refs['dataForm'].clearValidate();
+  });
+};
+
+const createData = () => {
+  proxy.$refs['dataForm'].validate((valid) => {
+    if (valid) {
+      temp.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
+      temp.value.author = 'vibe';
+      // createArticle(temp.value).then(() => {
+      //   list.value.unshift(temp.value)
+      //   dialogFormVisible.value = false
+      //   ElMessage.success('Create Successfully', 3)
+      // })
+    }
+  });
+};
+
+const handleUpdate = row => {
+  temp.value = Object.assign({}, row); // copy obj
+  temp.value.timestamp = new Date(temp.value.timestamp);
+  dialogStatus.value = 'update';
+  dialogFormVisible.value = true;
+  proxy.$nextTick(() => {
+    proxy.$refs['dataForm'].clearValidate();
+  });
+};
+
+const updateData = () => {
+  proxy.$refs['dataForm'].validate((valid) => {
+    if (valid) {
+      const tempData = Object.assign({}, temp.value);
+      tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      // updateArticle(tempData).then(() => {
+      //   const index = list.value.findIndex(v => v.id === temp.value.id)
+      //   list.value.splice(index, 1, temp.value)
+      //   dialogFormVisible.value = false
+      //   ElMessage.success('Update Successfully', 3)
+      // })
+    }
+  });
+};
+
+const handleDelete = (row, index) => {
+  ElMessage.success('Delete Successfully', 3);
+  list.value.splice(index, 1);
+};
+
+const handleFetchPv = pv => {
+  console.log('pv: ', pv);
+  // fetchPv(pv).then(response => {
+  //   pvData.value = response.data.pvData
+  //   dialogPvVisible.value = true
+  // })
+};
+
+const handleDownload = () => {
+  downloadLoading.value = true;
+  import('/@/assets/utils/Export2Excel').then(excel => {
+    const tHeader = ['timestamp', 'title', 'type', 'importance', 'status'];
+    const filterVal = ['timestamp', 'title', 'type', 'importance', 'status'];
+    const data = formatJson(filterVal);
+    excel.export_json_to_excel({
+      header: tHeader,
+      data,
+      filename: 'table-list'
+    });
+    downloadLoading.value = false;
+  });
+};
+
+const formatJson = filterVal => {
+  return list.value.map(v => filterVal.map(j => {
+    if (j === 'timestamp') {
+      return parseTime(v[j]);
+    } else {
+      return v[j];
+    }
+  }));
+};
+
+const getSortClass = key => {
+  const sort = listQuery.value.sort;
+  return sort === `+${key}` ? 'ascending' : 'descending';
+};
+
+// const handleSizeChange = val => {
+//   listQuery.value.limit = val;
+// };
+
+// const handleCurrentChange = val => {
+//   listQuery.value.page = val;
+// };
+
+getList();
 </script>
 
 <style lang="sass" scoped>
