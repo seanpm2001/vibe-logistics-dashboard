@@ -2,8 +2,8 @@
   <div class="page">
     <div class="filter-container">
       <el-input v-model="listQuery.title" placeholder="BN" style="width: 100px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      <el-select v-model="listQuery.content" placeholder="Content" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in contentOptions" :key="item" :label="item" :value="item" />
       </el-select>
       <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
@@ -39,12 +39,7 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
-        <template v-slot="{row}">
-          <span>{{ row.timestamp }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="BN" width="100px">
+      <el-table-column label="BN" width="80px" align="center">
         <template v-slot="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ row.type }}</el-tag>
@@ -55,17 +50,6 @@
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Imp" width="80px">
-        <template v-slot="{row}">
-          <svg-icon v-for="n in row.importance" :key="n" icon-name="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
-        <template v-slot="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
         <template v-slot="{row}">
           <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
@@ -73,7 +57,43 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="330px" class-name="small-padding fixed-width">
+      <el-table-column label="ETA WH" width="120px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.eta_wh, '{m}/{d}/{y}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="ATA WH" width="120px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.ata_wh, '{m}/{d}/{y}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="ETA POD" width="120px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.eta_pod, '{m}/{d}/{y}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Pickup" width="120px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.pickup, '{m}/{d}/{y}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="content-column" label="Content" width="200px">
+        <template v-slot="{row}">
+          <div v-if="row.content.board55_v1">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>Board: <span class="count">{{ row.content.board55_v1 }}</span></span>
+          </div>
+          <div v-if="row.content.stand55_v1">
+            <svg-icon icon-name="stand-white" class="content-icon" />
+            <span>White stand: <span class="count">{{ row.content.stand55_v1 }}</span></span>
+          </div>
+          <div v-if="row.content.board75_pro">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>Board 75: <span class="count">{{ row.content.board75_pro }}</span></span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
@@ -117,8 +137,8 @@
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
+        <el-form-item label="Content">
+          <el-rate v-model="temp.content" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
         </el-form-item>
         <el-form-item label="Remark">
           <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -165,13 +185,13 @@ const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
   limit: 20,
-  importance: undefined,
+  content: undefined,
   title: undefined,
   type: undefined,
   sort: '+id'
 });
 
-const importanceOptions = ref([1, 2, 3]);
+const contentOptions = ref([1, 2, 3]);
 const calendarTypeOptions = ref([
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
@@ -203,7 +223,7 @@ const downloadLoading = ref(false);
 
 const temp = ref({
   id: undefined,
-  importance: 1,
+  content: {},
   remark: '',
   timestamp: new Date(),
   title: '',
@@ -264,7 +284,7 @@ const sortByID = order => {
 const resetTemp = () => {
   temp.value = {
     id: undefined,
-    importance: 1,
+    content: {},
     remark: '',
     timestamp: new Date(),
     title: '',
@@ -337,8 +357,8 @@ const handleFetchPv = pv => {
 const handleDownload = () => {
   downloadLoading.value = true;
   import('/@/assets/utils/Export2Excel').then(excel => {
-    const tHeader = ['timestamp', 'title', 'type', 'importance', 'status'];
-    const filterVal = ['timestamp', 'title', 'type', 'importance', 'status'];
+    const tHeader = ['timestamp', 'title', 'type', 'content', 'status'];
+    const filterVal = ['timestamp', 'title', 'type', 'content', 'status'];
     const data = formatJson(filterVal);
     excel.export_json_to_excel({
       header: tHeader,
@@ -380,4 +400,24 @@ getList();
   padding: 16px
   background-color: #e3e3e3
   min-height: calc(100vh - 118px)
+
+.filter-container
+  margin-bottom: .5rem
+  > .el-button
+    margin-left: .5rem
+
+.content-column
+  .count
+    vertical-align: baseline
+    padding: 1px 8px
+    font-size: 75%
+    font-weight: 700
+    line-height: 1
+    text-align: center
+    white-space: nowrap
+    color: #212529
+    border-radius: 0.25rem
+    background-color: #f8f9fa
+  .content-icon
+    margin-right: .25rem
 </style>
