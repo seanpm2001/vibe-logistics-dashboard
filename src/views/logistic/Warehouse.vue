@@ -184,7 +184,7 @@ const { proxy } = getCurrentInstance();
 
 const listQuery = ref({
   page: 1,
-  limit: 20,
+  limit: 10,
   content: undefined,
   title: undefined,
   type: undefined,
