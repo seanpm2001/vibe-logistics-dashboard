@@ -32,6 +32,7 @@ export async function listFreightsAPI (params) {
   });
   return data;
 }
+
 export async function findFreightAPI (id) {
   const { data } = await requester.get(`freights/${id}`);
   return data;
@@ -48,7 +49,13 @@ export async function deleteFreightAPI (id) {
   await requester.delete(`freights/${id}`);
 }
 
-
+/* 库存 Inventory API */
+export async function listWarehousesAPI (params) {
+  const { data } = await requester.get('warehouses', {
+    params,
+  });
+  return data;
+}
 
 /* 用户配置 profile API 登录注册登出 */
 export async function loginAPI (payload) {

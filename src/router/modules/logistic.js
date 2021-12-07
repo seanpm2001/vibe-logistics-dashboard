@@ -14,10 +14,10 @@ export const logisticRouter = [
         meta: { title: 'Order', icon: 'order' }
       },
       {
-        path: 'warehouse',
-        component: () => import('/@/views/logistic/Warehouse.vue'),
-        name: 'Warehouse',
-        meta: { title: 'Warehouse', icon: 'warehouse' }
+        path: 'inventory',
+        component: () => import('/@/views/logistic/Inventory.vue'),
+        name: 'Inventory',
+        meta: { title: 'Inventory', icon: 'warehouse' }
       },
       {
         path: 'freight',

@@ -51,6 +51,15 @@ const styleExternalIcon = computed(() => {
   fill: currentColor
   overflow: hidden
 
+svg
+  &.is-current
+    fill: currentColor
+    fill-rule: evenodd
+  &.is-red
+    fill: #ff6666
+  &.is-grey
+    fill: #000
+
 .svg-external-icon
   background-color: currentColor
   mask-size: cover !important

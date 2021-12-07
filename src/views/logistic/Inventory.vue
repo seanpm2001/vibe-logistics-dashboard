@@ -1,13 +1,7 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="BN" style="width: 100px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.content" placeholder="Content" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in contentOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" class="filter-item" @keyup.enter="handleFilter" />
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
@@ -34,62 +28,152 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="Warehouse" width="150px" align="center">
         <template v-slot="{row}">
-          <span>{{ row.id }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.warehouse_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="BN" width="80px" align="center">
+      <el-table-column class-name="content-column" label="In Stock" width="200px">
         <template v-slot="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template v-slot="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
-        <template v-slot="{row}">
-          <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="ETA WH" width="120px" align="center">
-        <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_wh, '{m}/{d}/{y}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="ATA WH" width="120px" align="center">
-        <template v-slot="{row}">
-          <span>{{ parseTime(row.ata_wh, '{m}/{d}/{y}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="ETA POD" width="120px" align="center">
-        <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_pod, '{m}/{d}/{y}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pickup" width="120px" align="center">
-        <template v-slot="{row}">
-          <span>{{ parseTime(row.pickup, '{m}/{d}/{y}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="content-column" label="Content" width="200px">
-        <template v-slot="{row}">
-          <div v-if="row.content.board55_v1">
+          <div v-if="row.in_stock.board55_v1">
             <svg-icon icon-name="board" class="content-icon" />
-            <span>Board: <span class="count">{{ row.content.board55_v1 }}</span></span>
+            <span>55″ Board: <span class="count">{{ row.in_stock.board55_v1 }}</span></span>
           </div>
-          <div v-if="row.content.stand55_v1">
-            <svg-icon icon-name="stand-white" class="content-icon" />
-            <span>White stand: <span class="count">{{ row.content.stand55_v1 }}</span></span>
+          <div v-if="row.in_stock.stand_white55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-current" />
+            <span>55″ White Stand: <span class="count">{{ row.in_stock.stand_white55_v1 }}</span></span>
           </div>
-          <div v-if="row.content.board75_pro">
+          <div v-if="row.in_stock.stand_red55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-red" />
+            <span>55″ Red Stand: <span class="count">{{ row.in_stock.stand_red55_v1 }}</span></span>
+          </div>
+          <div v-if="row.in_stock.stylus55_x2">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Stylus ×2: <span class="count">{{ row.in_stock.stylus55_x2 }}</span></span>
+          </div>
+          <div v-if="row.in_stock.stylus55_active">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Active Stylus: <span class="count">{{ row.in_stock.stylus55_active }}</span></span>
+          </div>
+          <div v-if="row.in_stock.board75_pro">
             <svg-icon icon-name="board" class="content-icon" />
-            <span>Board 75: <span class="count">{{ row.content.board75_pro }}</span></span>
+            <span>75″ Board: <span class="count">{{ row.in_stock.board75_pro }}</span></span>
+          </div>
+          <div v-if="row.in_stock.stand75_pro">
+            <svg-icon icon-name="stand" class="content-icon is-grey" />
+            <span>75″ Grey Stand: <span class="count">{{ row.in_stock.stand75_pro }}</span></span>
+          </div>
+          <div v-if="row.in_stock.ops75_pro">
+            <svg-icon icon-name="ops-75" class="content-icon" />
+            <span>75″ OPS: <span class="count">{{ row.in_stock.ops75_pro }}</span></span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="content-column" label="Avaliable" width="200px">
+        <template v-slot="{row}">
+          <div v-if="row.available.board55_v1">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>55″ Board: <span class="count">{{ row.available.board55_v1 }}</span></span>
+          </div>
+          <div v-if="row.available.stand_white55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-current" />
+            <span>55″ White Stand: <span class="count">{{ row.available.stand_white55_v1 }}</span></span>
+          </div>
+          <div v-if="row.available.stand_red55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-red" />
+            <span>55″ Red Stand: <span class="count">{{ row.available.stand_red55_v1 }}</span></span>
+          </div>
+          <div v-if="row.available.stylus55_x2">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Stylus ×2: <span class="count">{{ row.available.stylus55_x2 }}</span></span>
+          </div>
+          <div v-if="row.available.stylus55_active">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Active Stylus: <span class="count">{{ row.available.stylus55_active }}</span></span>
+          </div>
+          <div v-if="row.available.board75_pro">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>75″ Board: <span class="count">{{ row.available.board75_pro }}</span></span>
+          </div>
+          <div v-if="row.available.stand75_pro">
+            <svg-icon icon-name="stand" class="content-icon is-grey" />
+            <span>75″ Grey Stand: <span class="count">{{ row.available.stand75_pro }}</span></span>
+          </div>
+          <div v-if="row.available.ops75_pro">
+            <svg-icon icon-name="ops-75" class="content-icon" />
+            <span>75″ OPS: <span class="count">{{ row.available.ops75_pro }}</span></span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="content-column" label="Pending In" width="200px">
+        <template v-slot="{row}">
+          <div v-if="row.pending_in.board55_v1">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>55″ Board: <span class="count">{{ row.pending_in.board55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_in.stand_white55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-current" />
+            <span>55″ White Stand: <span class="count">{{ row.pending_in.stand_white55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_in.stand_red55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-red" />
+            <span>55″ Red Stand: <span class="count">{{ row.pending_in.stand_red55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_in.stylus55_x2">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Stylus ×2: <span class="count">{{ row.pending_in.stylus55_x2 }}</span></span>
+          </div>
+          <div v-if="row.pending_in.stylus55_active">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Active Stylus: <span class="count">{{ row.pending_in.stylus55_active }}</span></span>
+          </div>
+          <div v-if="row.pending_in.board75_pro">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>75″ Board: <span class="count">{{ row.pending_in.board75_pro }}</span></span>
+          </div>
+          <div v-if="row.pending_in.stand75_pro">
+            <svg-icon icon-name="stand" class="content-icon is-grey" />
+            <span>75″ Grey Stand: <span class="count">{{ row.pending_in.stand75_pro }}</span></span>
+          </div>
+          <div v-if="row.pending_in.ops75_pro">
+            <svg-icon icon-name="ops-75" class="content-icon" />
+            <span>75″ OPS: <span class="count">{{ row.pending_in.ops75_pro }}</span></span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="content-column" label="Pending Out" width="200px">
+        <template v-slot="{row}">
+          <div v-if="row.pending_out.board55_v1">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>55″ Board: <span class="count">{{ row.pending_out.board55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_out.stand_white55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-current" />
+            <span>55″ White Stand: <span class="count">{{ row.pending_out.stand_white55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_out.stand_red55_v1">
+            <svg-icon icon-name="stand" class="content-icon is-red" />
+            <span>55″ Red Stand: <span class="count">{{ row.pending_out.stand_red55_v1 }}</span></span>
+          </div>
+          <div v-if="row.pending_out.stylus55_x2">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Stylus ×2: <span class="count">{{ row.pending_out.stylus55_x2 }}</span></span>
+          </div>
+          <div v-if="row.pending_out.stylus55_active">
+            <svg-icon icon-name="stylus" class="content-icon" />
+            <span>55″ Active Stylus: <span class="count">{{ row.pending_out.stylus55_active }}</span></span>
+          </div>
+          <div v-if="row.pending_out.board75_pro">
+            <svg-icon icon-name="board" class="content-icon" />
+            <span>75″ Board: <span class="count">{{ row.pending_out.board75_pro }}</span></span>
+          </div>
+          <div v-if="row.pending_out.stand75_pro">
+            <svg-icon icon-name="stand" class="content-icon is-grey" />
+            <span>75″ Grey Stand: <span class="count">{{ row.pending_out.stand75_pro }}</span></span>
+          </div>
+          <div v-if="row.pending_out.ops75_pro">
+            <svg-icon icon-name="ops-75" class="content-icon" />
+            <span>75″ OPS: <span class="count">{{ row.pending_out.ops75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
@@ -97,12 +181,6 @@
         <template v-slot="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
-          </el-button>
-          <el-button v-if="row.status!='In Transit'" size="mini" type="success" @click="handleModifyStatus(row,'In Transit')">
-            In Transit
-          </el-button>
-          <el-button v-if="row.status!='Delivered'" size="mini" @click="handleModifyStatus(row,'Delivered')">
-            Delivered
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
@@ -177,7 +255,7 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
-import { listFreightsAPI } from "/@/server/api/logistic";
+import { listWarehousesAPI } from "/@/server/api/logistic";
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
@@ -239,7 +317,7 @@ const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
 
 const getList = () => {
   listLoading.value = true;
-  listFreightsAPI(listQuery.value).then(data => {
+  listWarehousesAPI(listQuery.value).then(data => {
     list.value = data.items;
     total.value = data.total;
 

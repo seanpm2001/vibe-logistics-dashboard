@@ -18,5 +18,3 @@ plugins:
 
 - removeAttrs:
     attrs:
-      - 'fill'
-      - 'fill-rule'

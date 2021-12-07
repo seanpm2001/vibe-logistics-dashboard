@@ -84,7 +84,7 @@
             <span>Board: <span class="count">{{ row.content.board55_v1 }}</span></span>
           </div>
           <div v-if="row.content.stand55_v1">
-            <svg-icon icon-name="stand-white" class="content-icon" />
+            <svg-icon icon-name="stand" class="content-icon is-current" />
             <span>White stand: <span class="count">{{ row.content.stand55_v1 }}</span></span>
           </div>
           <div v-if="row.content.board75_pro">
