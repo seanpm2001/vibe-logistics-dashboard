@@ -95,15 +95,16 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='In Transit'" size="mini" type="success" @click="handleModifyStatus(row,'In Transit')">
-            In Transit
+          <el-button type="success" size="mini" @click="handleUpdate(row)">
+            View detail
           </el-button>
-          <el-button v-if="row.status!='Delivered'" size="mini" @click="handleModifyStatus(row,'Delivered')">
-            Delivered
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            Delete
-          </el-button>
+          <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled" icon-color="red" title="Are you sure to delete this?">
+            <template #reference>
+              <el-button v-if="row.status!='deleted'" size="mini" type="danger">
+                Delete
+              </el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -117,22 +118,44 @@
     />
 
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="180px" style="width: 600px; margin-left:50px;">
+        <el-form-item label="Vendor" prop="vendor">
+          <el-select v-model="temp.vendor" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="BN" prop="title">
-          <el-input v-model="temp.title" />
+        <el-form-item label="Destination Warehouse" prop="destination">
+          <el-select v-model="temp.destination" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
         </el-form-item>
         <el-form-item label="Status">
           <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="Mode">
+          <el-select v-model="temp.mode" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Batch number">
+          <el-input v-model="temp.batch" />
+        </el-form-item>
+        <el-form-item label="ETA Warehouse" prop="eta">
+          <el-date-picker v-model="temp.eta" type="datetime" placeholder="Please pick a date" />
+        </el-form-item>
+        <el-form-item label="ATA Warehouse" prop="ata">
+          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+        </el-form-item>
+        <el-form-item label="ETD Origin Port" prop="etd">
+          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+        </el-form-item>
+        <el-form-item label="ATD Origin Port" prop="atd">
+          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+        </el-form-item>
+        <el-form-item label="Vibe Board 55in">
+          <el-input-number v-model="temp.board55in" :min="1" :max="99" controls-position="right"  @change="handleChange" />
         </el-form-item>
         <el-form-item label="Content">
           <el-rate v-model="temp.content" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
@@ -189,6 +212,13 @@ const listQuery = ref({
 });
 
 const contentOptions = ref([1, 2, 3]);
+const warehouseOptions = ref([
+  { key: 'FBA-AU', display_name: 'FBA-AU' },
+  { key: 'FBA-CA', display_name: 'FBA-CA' },
+  { key: 'HH', display_name: 'HH' },
+  { key: 'IWIN', display_name: 'IWIN' },
+  { key: 'ZA', display_name: 'ZA' }
+]);
 const calendarTypeOptions = ref([
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
@@ -196,7 +226,8 @@ const calendarTypeOptions = ref([
   { key: 'EU', display_name: 'Eurozone' }
 ]);
 const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
-const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
+const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked up'];
+const modeOptions = ['Ocean', 'Air', 'Truck'];
 const showReviewer = ref(false);
 
 const tableKey = ref(0);
@@ -212,7 +243,9 @@ const textMap= ref({
 const dialogPvVisible = ref(false);
 const pvData = ref([]);
 const rules = ref({
-  type: [{ required: true, message: 'type is required', trigger: 'change' }],
+  vendor: [{ required: true, message: 'type is required', trigger: 'change' }],
+  destination: [{ required: true, message: 'type is required', trigger: 'change' }],
+  status: [{ required: true, message: 'type is required', trigger: 'change' }],
   timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
   title: [{ required: true, message: 'title is required', trigger: 'blur' }]
 });
@@ -255,11 +288,6 @@ const handlePagination = config => {
 const handleFilter = () => {
   listQuery.value.page = 1;
   getList();
-};
-
-const handleModifyStatus = (row, status) => {
-  ElMessage.success('操作Success', 3);
-  row.status = status;
 };
 
 const sortChange = data => {
@@ -402,6 +430,9 @@ getList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
+
+.el-form-item__content div
+  width: 100%
 
 .content-column
   .count
