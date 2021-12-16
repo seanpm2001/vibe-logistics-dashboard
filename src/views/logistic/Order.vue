@@ -118,51 +118,63 @@
     />
 
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="180px" style="width: 600px; margin-left:50px;">
-        <el-form-item label="Vendor" prop="vendor">
-          <el-select v-model="temp.vendor" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Destination Warehouse" prop="destination">
-          <el-select v-model="temp.destination" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Mode">
-          <el-select v-model="temp.mode" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Batch number">
-          <el-input v-model="temp.batch" />
-        </el-form-item>
-        <el-form-item label="ETA Warehouse" prop="eta">
-          <el-date-picker v-model="temp.eta" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="ATA Warehouse" prop="ata">
-          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="ETD Origin Port" prop="etd">
-          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="ATD Origin Port" prop="atd">
-          <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="Vibe Board 55in">
-          <el-input-number v-model="temp.board55in" :min="1" :max="99" controls-position="right"  @change="handleChange" />
-        </el-form-item>
-        <el-form-item label="Content">
-          <el-rate v-model="temp.content" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
+      <div class="dialog-header">Common</div>
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="180px" style="min-width: 600px; margin-right:32px; margin-left:32px;">
+        <el-row>
+          <el-form-item label="Vendor" prop="vendor">
+            <el-select v-model="temp.vendor" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Destination Warehouse" prop="destination">
+            <el-select v-model="temp.destination" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Status">
+            <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Mode">
+            <el-select v-model="temp.mode" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Batch number">
+            <el-input v-model="temp.batch" />
+          </el-form-item>
+          <el-form-item label="Ocean Freight Cost">
+            <el-input v-model="temp.ocean_freight_cost" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETA Warehouse" prop="eta">
+            <el-date-picker v-model="temp.eta" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATA Warehouse" prop="ata">
+            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETD Origin Port" prop="etd">
+            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATD Origin Port" prop="atd">
+            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-divider></el-divider>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" @click="handleAddSubBatch">
+          Add Sub-Batch
+        </el-button>
+        <div ref="sub-batch-box" v-for="(item, index) in subBatchArr" :key="index">
+          <sub-batch :subBatchIdx=index :warehouseOptions=warehouseOptions @deleteSubBatch="deleteSubBatch"></sub-batch>
+        </div>
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
@@ -186,18 +198,18 @@
           <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
         </span>
       </template>
-
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import { defineAsyncComponent, getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
 import { listFreightsAPI } from "/@/server/api/logistic";
+import subBatch from './components/SubBatch.vue';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
@@ -210,6 +222,8 @@ const listQuery = ref({
   type: undefined,
   sort: '+id'
 });
+
+const subBatchArr = ref([]);
 
 const contentOptions = ref([1, 2, 3]);
 const warehouseOptions = ref([
@@ -417,6 +431,14 @@ const getSortClass = key => {
 //   listQuery.value.page = val;
 // };
 
+const deleteSubBatch = idx => {
+  subBatchArr.value.splice(idx, 1);
+};
+
+const handleAddSubBatch = () => {
+  subBatchArr.value.push({});
+};
+
 getList();
 </script>
 
@@ -426,10 +448,26 @@ getList();
   background-color: #e3e3e3
   min-height: calc(100vh - 118px)
 
+.dialog-header
+  margin-left: 2rem
+  margin-bottom: 1rem
+  font-size: 18px
+  font-weight: 500
+
 .filter-container
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
+
+:deep(.el-dialog)
+  width: 80%
+
+.el-row
+  justify-content: space-between
+  margin-right: 2rem
+  margin-left: 2rem
+  .el-form-item
+    width: 42%
 
 .el-form-item__content div
   width: 100%
