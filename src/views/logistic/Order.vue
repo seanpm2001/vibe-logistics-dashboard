@@ -98,7 +98,7 @@
           <el-button type="success" size="mini" @click="handleUpdate(row)">
             View detail
           </el-button>
-          <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" :icon="InfoFilled" icon-color="red" title="Are you sure to delete this?">
+          <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
               <el-button v-if="row.status!='deleted'" size="mini" type="danger">
                 Delete
