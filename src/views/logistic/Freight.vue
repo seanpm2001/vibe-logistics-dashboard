@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="BN" style="width: 100px;" class="filter-item" @keyup.enter="handleFilter" />
+      <el-input v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
       <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
       </el-select>
@@ -36,9 +36,9 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="BN" width="80px" align="center">
+      <el-table-column label="Batch Number" width="140px" align="center">
         <template v-slot="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.batch_number }}</span>
           <el-tag>{{ row.type }}</el-tag>
         </template>
       </el-table-column>
@@ -116,16 +116,10 @@
       v-model:limit="listQuery.limit"
       @pagination="handlePagination"
     />
-
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <div class="dialog-header">Common</div>
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="180px" style="min-width: 600px; margin-right:32px; margin-left:32px;">
         <el-row>
-          <el-form-item label="Vendor" prop="vendor">
-            <el-select v-model="temp.vendor" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-            </el-select>
-          </el-form-item>
           <el-form-item label="Destination Warehouse" prop="destination">
             <el-select v-model="temp.destination" class="filter-item" placeholder="Please select">
               <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
@@ -146,7 +140,7 @@
         </el-row>
         <el-row>
           <el-form-item label="Batch number">
-            <el-input v-model="temp.batch" />
+            <el-input v-model="temp.batch_number" />
           </el-form-item>
           <el-form-item label="Ocean Freight Cost">
             <el-input v-model="temp.ocean_freight_cost" />
@@ -257,7 +251,6 @@ const textMap= ref({
 const dialogPvVisible = ref(false);
 const pvData = ref([]);
 const rules = ref({
-  vendor: [{ required: true, message: 'type is required', trigger: 'change' }],
   destination: [{ required: true, message: 'type is required', trigger: 'change' }],
   status: [{ required: true, message: 'type is required', trigger: 'change' }],
   timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
