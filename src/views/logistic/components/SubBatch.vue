@@ -12,9 +12,11 @@
         </el-select>
       </el-form-item>
       <el-row>
-        Total Purchase Cost:<el-input style="width: 50px; margin-left: 1rem;" disabled v-model="subBatch.sku" placeholder="0"/>
+        Total Purchase Cost:
+        <el-input style="width: 80px; margin-left: 1rem;" disabled v-model="totalPurchaseCost" placeholder=""/>
         &emsp;
-        Total Quantity count:<el-input style="width: 50px; margin-left: 1rem;" disabled v-model="subBatch.sku" placeholder="0"/>
+        Total Quantity count:
+        <el-input type="number" style="width: 80px; margin-left: 1rem;" disabled v-model="totalQuantityCount" placeholder=""/>
       </el-row>
     </el-row>
     <div class="form-upload-row" style="margin: 0 2rem 1.5rem;">
@@ -55,14 +57,19 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog v-model="dialogExcelVisible">
-
+    <el-dialog v-model="dialogExcelVisible" :before-close="closePreviewDialog">
+      <div class="dialog-header">Excel Preview</div>
+      <el-table :data="previewExcelTable" border fit highlight-current-row style="width: 80%; margin: 0 auto;">
+        <el-table-column type="index" width="100" />
+        <el-table-column prop="SKU" label="SKU" />
+        <el-table-column prop="Serial Number" label="Serial Number" />
+      </el-table>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { file2Xcel } from '/@/assets/utils/excel';
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -84,7 +91,20 @@ const props = defineProps({
 const emit = defineEmits(['deleteSubBatch']);
 
 const count = ref(props.subBatchIdx + 1);
-const totalQuantity = ref(0);
+const totalQuantityCount = computed(() => {
+  let total = 0;
+  for (const key in subBatch.value.products) {
+    total += subBatch.value.products[key].quantityCount;
+  }
+  return total;
+});
+const totalPurchaseCost = computed(() => {
+  let total = 0;
+  for (const key in subBatch.value.products) {
+    total += +subBatch.value.products[key].purchaseCost;
+  }
+  return total;
+});
 const previewExcelTable = ref([]);
 const dialogExcelVisible = ref(false);
 const subBatch = ref({
@@ -94,6 +114,10 @@ const subBatch = ref({
 
 const xmlFileList = ref([]);
 
+const closePreviewDialog = (done) => {
+  previewExcelTable.value = [];
+  done();
+};
 const deleteSubBatch = () => {
   emit('deleteSubBatch', props.subBatchIdx);
 };
@@ -120,7 +144,12 @@ const handleUpdate = (file, fileList) => {
   updateSubBatchProducts("add", file);
 };
 const handlePreview = (file) => {
-  console.log(file);
+  file2Xcel(file).then(dataArr => {
+    dataArr.forEach(item => {
+      previewExcelTable.value = previewExcelTable.value.concat(item.sheet);
+    });
+    dialogExcelVisible.value = true;
+  });
 };
 const handleExceed = (files, fileList) => {
   ElMessage.warning(
@@ -153,7 +182,6 @@ const beforeRemove = (file, fileList) => {
     );
   });
 };
-
 </script>
 
 <style lang="sass" scoped>
@@ -163,12 +191,21 @@ const beforeRemove = (file, fileList) => {
   font-size: 16px
   font-weight: 500
 
+.dialog-header
+  margin-left: 2rem
+  margin-bottom: 2rem
+  font-size: 18px
+  font-weight: 500
+
 .form-upload-row
   > .el-row
     justify-content: space-around
     margin-left: 0 !important
     :deep(.el-upload-dragger)
       width: 310px
+
+:deep(.el-upload-list__item)
+  cursor: pointer
 
 .icon
   margin-right: .25rem
