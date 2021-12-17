@@ -38,7 +38,7 @@
         >
           <el-icon class="el-icon-upload"></el-icon>
           <div class="el-upload__text">
-            Drop xls/xlsx files here or <em>click to upload</em>
+            Drag xls/xlsx files here or <em>click to upload</em>
           </div>
         </el-upload>
         <el-col :span="11">

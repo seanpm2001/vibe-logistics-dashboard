@@ -5,7 +5,7 @@ export const logisticRouter = [
     path: '/logistic',
     component: Layout,
     redirect: '/logistic/order',
-    meta: { title: 'Logisitc', icon: 'logistics', noCache: true },
+    meta: { title: 'Logistics', icon: 'logistics', noCache: true },
     children: [
       {
         path: 'order',
