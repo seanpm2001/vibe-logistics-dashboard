@@ -434,7 +434,7 @@ const handleFetchPv = pv => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import('/@/assets/utils/Export2Excel').then(excel => {
+  import('/@/assets/utils/excel').then(excel => {
     const tHeader = ['timestamp', 'title', 'type', 'content', 'status'];
     const filterVal = ['timestamp', 'title', 'type', 'content', 'status'];
     const data = formatJson(filterVal);

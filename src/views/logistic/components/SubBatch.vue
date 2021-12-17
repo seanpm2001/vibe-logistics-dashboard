@@ -11,16 +11,19 @@
           <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Purchase cost">
-        <el-input v-model="subBatch.sku" placeholder="Purchase cost"/>
-      </el-form-item>
+      <el-row>
+        Total Purchase Cost:<el-input style="width: 50px; margin-left: 1rem;" disabled v-model="subBatch.sku" placeholder="0"/>
+        &emsp;
+        Total Quantity count:<el-input style="width: 50px; margin-left: 1rem;" disabled v-model="subBatch.sku" placeholder="0"/>
+      </el-row>
     </el-row>
     <div class="form-upload-row" style="margin: 0 2rem 1.5rem;">
       <el-divider />
-      <el-row :gutter="80">
+      <el-row :gutter="40">
         <el-upload
           action=""
           class="upload-serial"
+          accept=".xlsx, .xls"
           :auto-upload="false"
           :on-preview="handlePreview"
           :on-change="handleUpdate"
@@ -33,28 +36,35 @@
         >
           <el-icon class="el-icon-upload"></el-icon>
           <div class="el-upload__text">
-            Drop file here or <em>click to upload</em>
+            Drop xls/xlsx files here or <em>click to upload</em>
           </div>
         </el-upload>
-        <el-col :span="12">
-          <div v-for="(item, idx) in subBatch.skuArr" :key="item.key">
-            <el-divider v-if="idx !== 0" />
-            <el-form-item :label="'SKU'+(idx+1)">
+        <el-col :span="11">
+          <div class="freight-product-box" v-for="(item, key) in subBatch.products" :key="key">
+            <el-divider />
+            <el-form-item :label="'SKU'">
               <el-input disabled v-model="item.sku" placeholder="SKU"/>
             </el-form-item>
-            <el-form-item label="Quantity total count:">
-              <el-input disabled v-model="totalQuantity" placeholder="Quantity total count"/>
+            <el-form-item label="Quantity Count:">
+              <el-input disabled v-model="item.quantityCount" placeholder="Quantity Count"/>
+            </el-form-item>
+            <el-form-item label="Purchase Cost">
+              <el-input v-model="item.purchaseCost" placeholder="Purchase Cost"/>
             </el-form-item>
           </div>
         </el-col>
       </el-row>
     </div>
+    <el-dialog v-model="dialogExcelVisible">
+
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
+import { file2Xcel } from '/@/assets/utils/excel';
 import "element-plus/theme-chalk/src/message-box.scss";
 import "element-plus/theme-chalk/src/message.scss";
 
@@ -75,42 +85,39 @@ const emit = defineEmits(['deleteSubBatch']);
 
 const count = ref(props.subBatchIdx + 1);
 const totalQuantity = ref(0);
+const previewExcelTable = ref([]);
+const dialogExcelVisible = ref(false);
 const subBatch = ref({
   source: "",
-  skuArr: [
-    { sku: 'abc-test' },
-    { sku: 'bbb-test' },
-    { sku: 'ccc-test' }
-  ]
+  products: {}
 });
 
-const xmlFileList = [
-  {
-    name: 'food.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
-  {
-    name: 'food2.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
-  {
-    name: 'food2.jpeg',
-    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-  },
-];
-
-const handleSku = (idx, type) => {
-  const skuArr = subBatch.value.skuArr;
-  type === "add" ? skuArr.push({}) : skuArr.splice(idx, 1);
-};
+const xmlFileList = ref([]);
 
 const deleteSubBatch = () => {
   emit('deleteSubBatch', props.subBatchIdx);
 };
 
+const updateSubBatchProducts = (type, file) => {
+  file2Xcel(file).then(dataArr => {
+    if (dataArr && dataArr.length > 0) {
+      dataArr.forEach(item => {
+        const sku = item.sheetName;
+        if (type === "add") {
+          subBatch.value.products[sku] ? 
+            subBatch.value.products[sku].quantityCount += item.sheet.length :
+            subBatch.value.products[sku] = {sku, quantityCount: item.sheet.length, purchaseCost: ""};
+        } else {
+          subBatch.value.products[sku].quantityCount -= item.sheet.length;
+          subBatch.value.products[sku].quantityCount <= 0 && delete subBatch.value.products[sku];
+        }
+      });
+    }
+  });
+};
+
 const handleUpdate = (file, fileList) => {
-  console.log('fileList: ', fileList.indexOf(file));
-  subBatch.value.skuArr.push({sku: 'new-test'});
+  updateSubBatchProducts("add", file);
 };
 const handlePreview = (file) => {
   console.log(file);
@@ -133,10 +140,10 @@ const beforeRemove = (file, fileList) => {
         type: 'warning',
         callback: (action) => {
           if (action === "confirm") {
+            // 移除文件时重置sub batch products
+            updateSubBatchProducts('remove', file);
             resolve(action);
             ElMessage.success('Delete completed');
-            // 删除文件成功同时删除对应的sku值
-            subBatch.value.skuArr.splice(fileList.indexOf(file), 1);
           } else if (action === "cancel") {
             reject();
             ElMessage.info('Delete canceled');
@@ -146,6 +153,7 @@ const beforeRemove = (file, fileList) => {
     );
   });
 };
+
 </script>
 
 <style lang="sass" scoped>
@@ -169,6 +177,10 @@ const beforeRemove = (file, fileList) => {
     float: right
     width: 24px
     height: 24px
+
+.freight-product-box
+  &:first-child .el-divider
+    display: none
 
 .visible-hidden
   visibility: hidden

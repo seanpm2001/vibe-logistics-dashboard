@@ -218,3 +218,28 @@ export function export_json_to_excel({
     type: "application/octet-stream"
   }), `${filename}.${bookType}`);
 }
+
+/**
+ * 解析文件为excel
+ * @param {Object} file
+ */
+ export function file2Xcel(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const data = e.target.result;
+      const wb = XLSX.read(data, {
+        type: "binary"
+      });
+      const result = [];
+      wb.SheetNames.forEach(sheetName => {
+        result.push({
+          sheetName: sheetName,
+          sheet: XLSX.utils.sheet_to_json(wb.Sheets[sheetName])
+        });
+      });
+      resolve(result);
+    };
+    reader.readAsBinaryString(file.raw);
+  });
+}
