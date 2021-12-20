@@ -14,8 +14,8 @@
       <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showMode" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        Mode
+      <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        Multiple Selection
       </el-checkbox>
     </div>
     <el-table
@@ -26,9 +26,11 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      height="600"
+      height="580"
       @sort-change="sortChange"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column v-if="showMultSelection" type="selection" width="50" height="40" align="center" />
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template v-slot="{row}">
           <span>{{ row.id }}</span>
@@ -45,13 +47,6 @@
         <template v-slot="{row}">
           <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
             {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showMode" label="Mode" width="80px" align="center">
-        <template v-slot="{row}">
-          <el-tag>
-            <span>{{ row.mode }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -269,7 +264,7 @@ const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked up'];
 const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
 const modeOptions = ['Ocean', 'Air', 'Truck'];
 const containerOptions = ['20GP', '40GP', '40HQ', '45HQ', 'LCL'];
-const showMode = ref(false);
+const showMultSelection = ref(false);
 
 const tableKey = ref(0);
 const list = ref(null);
@@ -277,6 +272,7 @@ const total = ref(0);
 const listLoading = ref(true);
 const dialogFormVisible = ref(false);
 const dialogStatus = ref('');
+const multipleSelection = ref([]);
 const textMap= ref({
   update: 'Edit',
   create: 'Create'
@@ -358,6 +354,11 @@ const sortChange = data => {
   if (prop === 'id') {
     sortByID(order);
   }
+};
+
+const handleSelectionChange = selectedArr => {
+  console.log('selectedArr: ', selectedArr);
+  multipleSelection.value = selectedArr;
 };
 
 const sortByID = order => {
@@ -487,7 +488,7 @@ fetchList();
 .page
   padding: 16px
   background-color: #e3e3e3
-  min-height: calc(100vh - 118px)
+  min-height: calc(100vh - 91px - 32px)
 
 .dialog-header
   margin-left: 2rem
@@ -499,6 +500,12 @@ fetchList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
+
+:deep(.el-table thead tr > th.el-table__cell .cell)
+  height: 14px
+  line-height: 14px
+  .el-checkbox
+    height: 14px
 
 :deep(.el-dialog)
   width: 80%

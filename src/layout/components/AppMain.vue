@@ -36,11 +36,11 @@ const key = computed(() => route.path);
 
 .hasTagsView
   .app-main
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px)
+    /* 91 = navbar + tags-view = 50 + 41 */
+    min-height: calc(100vh - 91px)
 
   .fixed-header+.app-main
-    padding-top: 84px
+    padding-top: 91px
 </style>
 
 <style lang="sass">

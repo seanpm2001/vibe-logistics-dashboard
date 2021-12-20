@@ -487,7 +487,7 @@ fetchList();
 .page
   padding: 16px
   background-color: #e3e3e3
-  min-height: calc(100vh - 118px)
+  min-height: calc(100vh - 91px - 32px)
 
 .dialog-header
   margin-left: 2rem

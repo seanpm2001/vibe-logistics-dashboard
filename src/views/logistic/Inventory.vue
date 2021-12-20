@@ -477,7 +477,7 @@ getList();
 .page
   padding: 16px
   background-color: #e3e3e3
-  min-height: calc(100vh - 118px)
+  min-height: calc(100vh - 91px - 32px)
 
 .filter-container
   margin-bottom: .5rem
