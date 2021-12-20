@@ -8,7 +8,7 @@
     "dev:mock": "npm run lint && cross-env USE_MOCK=true vite",
     "build:beta": "npm run lint && vite build --mode development",
     "build:prod": "npm run lint && cross-env vite build --mode production",
-    "build:mock": "npm run lint && cross-env USE_MOCK=true vite build --mode development",
+    "build:mock": "npm run lint && cross-env USE_MOCK=true vite build --mode production",
     "serve": "npm run build:mock && vite preview"
   },
   "dependencies": {
