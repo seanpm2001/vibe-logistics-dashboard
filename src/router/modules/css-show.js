@@ -43,6 +43,12 @@ export const cssShowRouter = [
         meta: { title: 'Hover Card', icon: 'css-style' }
       },
       {
+        path: 'hover-style',
+        component: () => import('/@/views/cssShow/Hover-style.vue'),
+        name: 'HoverStyle',
+        meta: { title: 'Hover Style', icon: 'css-style' }
+      },
+      {
         path: 'glxy',
         component: () => import('/@/views/cssShow/Glxy.vue'),
         name: 'Glxy',
