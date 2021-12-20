@@ -14,20 +14,18 @@ for (let i = 0; i < count; i++) {
     eta_pod: +Mock.Random.date('T'),
     pickup: +Mock.Random.date('T'),
     reviewer: '@first',
-    batch_number: '@title(3, 5)',
-    content_short: 'mock data',
-    forecast: '@float(0, 100, 2, 2)',
+    'batch_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+    'source|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+    'target|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+    freight_cost: '@float(0, 100, 2, 2)',
     content: {
       'board55_v1':'@integer(0, 40)',
       'stand55_v1':'@integer(0, 40)',
       'board75_pro':'@integer(0, 40)'
     },
     'type|1': ['CN', 'US', 'JP', 'EU'],
+    'mode|1': ['Air', 'Ocean', 'Truck'],
     'status|1': ['In Transit', 'Delivered'],
-    display_time: '@datetime',
-    comment_disabled: true,
-    image_uri,
-    platforms: ['a-platform']
   }));
 }
 
@@ -35,21 +33,23 @@ freightObj = Mock.mock({
   id: '@increment',
   eta_wh: +Mock.Random.date('T'),
   ata_wh: +Mock.Random.date('T'),
-  eta_pod: +Mock.Random.date('T'),
+  ata_dp: +Mock.Random.date('T'),
+  eta_dp: +Mock.Random.date('T'),
+  etd_op: +Mock.Random.date('T'),
+  atd_op: +Mock.Random.date('T'),
   pickup: +Mock.Random.date('T'),
-  reviewer: '@first',
-  batch_number: '@title(3, 5)',
-  content_short: 'mock data',
-  forecast: '@float(0, 100, 2, 2)',
+  'batch_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+  ocean_forwarder: '@float(0, 100, 2, 2)',
   content: {
     'board55_v1':'@integer(0, 40)',
     'stand55_v1':'@integer(0, 40)',
     'board75_pro':'@integer(0, 40)'
   },
   batch_subs: {
-
   },
   'type|1': ['CN', 'US', 'JP', 'EU'],
+  'mode|1': ['Air', 'Ocean', 'Truck'],
+  'transit_time_type|1': ['day', 'week'],
   'status|1': ['In Transit', 'Delivered'],
 });
 

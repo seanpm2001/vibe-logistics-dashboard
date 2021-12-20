@@ -8,7 +8,7 @@
     <el-row justify="space-between" style="margin: 2rem 2rem 0;">
       <el-form-item label="Source">
         <el-select v-model="subBatch.source" class="filter-item" placeholder="Please select">
-          <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
       <el-row>

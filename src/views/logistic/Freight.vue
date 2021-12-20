@@ -2,9 +2,6 @@
   <div class="page">
     <div class="filter-container">
       <el-input v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
@@ -17,8 +14,8 @@
       <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        reviewer
+      <el-checkbox v-model="showMode" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        Mode
       </el-checkbox>
     </div>
     <el-table
@@ -29,6 +26,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      height="600"
       @sort-change="sortChange"
     >
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
@@ -38,19 +36,22 @@
       </el-table-column>
       <el-table-column label="Batch Number" width="140px" align="center">
         <template v-slot="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.batch_number }}</span>
-          <el-tag>{{ row.type }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template v-slot="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
+          <el-tag>
+            #<span class="link-type" @click="handleUpdate(row)">{{ row.batch_number }}</span>
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
         <template v-slot="{row}">
           <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
             {{ row.status }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showMode" label="Mode" width="80px" align="center">
+        <template v-slot="{row}">
+          <el-tag>
+            <span>{{ row.mode }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -90,7 +91,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
@@ -116,50 +117,93 @@
       v-model:limit="listQuery.limit"
       @pagination="handlePagination"
     />
+
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <div class="dialog-header">Common</div>
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="180px" style="min-width: 600px; margin-right:32px; margin-left:32px;">
+      <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px" style="min-width: 600px; margin-right:32px; margin-left:32px;">
         <el-row>
           <el-form-item label="Destination Warehouse" prop="destination">
-            <el-select v-model="temp.destination" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Status">
-            <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Mode">
-            <el-select v-model="temp.mode" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
+            <el-select v-model="freightForm.destination" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Batch number">
-            <el-input v-model="temp.batch_number" />
+            <el-input v-model="freightForm.batch_number" />
           </el-form-item>
           <el-form-item label="Ocean Freight Cost">
-            <el-input v-model="temp.ocean_freight_cost" />
+            <el-input v-model="freightForm.freight_cost" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="ETA Warehouse" prop="eta">
-            <el-date-picker v-model="temp.eta" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="Status">
+            <el-select v-model="freightForm.status" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="ATA Warehouse" prop="ata">
-            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="Ocean Forwarder">
+            <el-select v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in forwarderOptions" :key="item" :label="item" :value="item" />
+            </el-select>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="ETD Origin Port" prop="etd">
-            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="Origin Port" prop="ori_port">
+            <el-select v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="ATD Origin Port" prop="atd">
-            <el-date-picker v-model="temp.ata" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="Destination Port" prop="dest_port">
+            <el-select v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Container Type">
+            <el-select v-model="freightForm.container" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in containerOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Mode">
+            <el-select v-model="freightForm.mode" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETA Warehouse" prop="eta_wh">
+            <el-date-picker v-model="freightForm.eta_wh" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATA Warehouse" prop="ata_wh" ref="ataWh">
+            <el-date-picker v-model="freightForm.ata_wh" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETD Origin Port" prop="etd_op">
+            <el-date-picker v-model="freightForm.etd_op" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATD Origin Port" prop="atd_op" ref="atdOp">
+            <el-date-picker v-model="freightForm.atd_op" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETA Destination Port" prop="eta_dp">
+            <el-date-picker v-model="freightForm.eta_dp" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATA Destination Port" prop="ata_dp">
+            <el-date-picker v-model="freightForm.ata_dp" type="datetime" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Transit Time">
+            <el-input disabled v-model="transitTime" placeholder=""/>
+          </el-form-item>
+          <el-form-item label="Transit Options">
+            <el-select v-model="freightForm.transit_time_type" class="filter-item" placeholder="Please select" ref="transitOption">
+              <el-option v-for="item in transitTimeOptions" :key="item" :label="item" :value="item" />
+            </el-select>
           </el-form-item>
         </el-row>
         <el-divider></el-divider>
@@ -172,6 +216,9 @@
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
+          <el-button @click="resetForm">
+            Reset
+          </el-button>
           <el-button @click="dialogFormVisible = false">
             Cancel
           </el-button>
@@ -182,22 +229,11 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="dialogPvVisible" title="Reading statistics">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <template v-slot:footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { defineAsyncComponent, getCurrentInstance, ref } from "vue";
+import { computed, defineAsyncComponent, getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
@@ -207,6 +243,7 @@ import subBatch from './components/SubBatch.vue';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
+const refs = proxy.$refs;
 
 const listQuery = ref({
   page: 1,
@@ -219,24 +256,20 @@ const listQuery = ref({
 
 const subBatchArr = ref([]);
 
-const contentOptions = ref([1, 2, 3]);
-const warehouseOptions = ref([
-  { key: 'FBA-AU', display_name: 'FBA-AU' },
-  { key: 'FBA-CA', display_name: 'FBA-CA' },
-  { key: 'HH', display_name: 'HH' },
-  { key: 'IWIN', display_name: 'IWIN' },
-  { key: 'ZA', display_name: 'ZA' }
-]);
-const calendarTypeOptions = ref([
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
-]);
-const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
+const warehouseOptions = ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'];
+// const calendarTypeOptions = ref([
+//   { key: 'CN', display_name: 'China' },
+//   { key: 'US', display_name: 'USA' },
+//   { key: 'JP', display_name: 'Japan' },
+//   { key: 'EU', display_name: 'Eurozone' }
+// ]);
+const transitTimeOptions = ['day', 'week'];
+const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked up'];
+const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
 const modeOptions = ['Ocean', 'Air', 'Truck'];
-const showReviewer = ref(false);
+const containerOptions = ['20GP', '40GP', '40HQ', '45HQ', 'LCL'];
+const showMode = ref(false);
 
 const tableKey = ref(0);
 const list = ref(null);
@@ -248,8 +281,6 @@ const textMap= ref({
   update: 'Edit',
   create: 'Create'
 });
-const dialogPvVisible = ref(false);
-const pvData = ref([]);
 const rules = ref({
   destination: [{ required: true, message: 'type is required', trigger: 'change' }],
   status: [{ required: true, message: 'type is required', trigger: 'change' }],
@@ -258,23 +289,48 @@ const rules = ref({
 });
 const downloadLoading = ref(false);
 
-const temp = ref({
+const transitTime = computed(() => {
+  const time = '123';
+  const transitOption = refs['transitOption'];
+  console.log('transitOption: ', transitOption);
+  refs['ataWh'];
+  console.log('ref ', refs['ataWh']);
+  refs['atdOp'];
+  console.log('atdO: ', refs['atdOp']);
+  return time;
+});
+
+const freightForm = ref({
   id: undefined,
-  content: {},
-  remark: '',
-  timestamp: new Date(),
-  title: '',
+  eta_wh: '',
+  ata_wh: '',
+  ata_dp: '',
+  eta_dp: '',
+  etd_op: '',
+  atd_op: '',
+  pickup: '',
+  batch_number: '',
+  ocean_forwarder: '',
+  content: {
+    'board55_v1': '',
+    'stand55_v1': '',
+    'board75_pro': ''
+  },
+  batch_subs: {
+  },
   type: '',
-  status: 'In Transit'
+  mode: '',
+  transit_time_type: '',
+  status: '',
 });
 
 // arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name;
-  return acc;
-}, {});
+// const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
+//   acc[cur.key] = cur.display_name;
+//   return acc;
+// }, {});
 
-const getList = () => {
+const fetchList = () => {
   listLoading.value = true;
   listFreightsAPI(listQuery.value).then(data => {
     list.value = data.items;
@@ -289,12 +345,12 @@ const getList = () => {
 
 const handlePagination = config => {
   listQuery.value = Object.assign(listQuery.value, config);
-  getList();
+  fetchList();
 };
 
 const handleFilter = () => {
   listQuery.value.page = 1;
-  getList();
+  fetchList();
 };
 
 const sortChange = data => {
@@ -313,34 +369,34 @@ const sortByID = order => {
   handleFilter();
 };
 
-const resetTemp = () => {
-  temp.value = {
+const resetForm = () => {
+  freightForm.value = {
     id: undefined,
     content: {},
     remark: '',
     timestamp: new Date(),
     title: '',
-    status: 'In Transit',
+    status: '',
     type: ''
   };
 };
 
 const handleCreate = () => {
-  resetTemp();
+  resetForm();
   dialogStatus.value = 'create';
   dialogFormVisible.value = true;
   proxy.$nextTick(() => {
-    proxy.$refs['dataForm'].clearValidate();
+    refs['dataForm'].clearValidate();
   });
 };
 
 const createData = () => {
-  proxy.$refs['dataForm'].validate((valid) => {
+  refs['dataForm'].validate((valid) => {
     if (valid) {
-      temp.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
-      temp.value.author = 'vibe';
-      // createArticle(temp.value).then(() => {
-      //   list.value.unshift(temp.value)
+      freightForm.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
+      freightForm.value.author = 'vibe';
+      // createArticle(freightForm.value).then(() => {
+      //   list.value.unshift(freightForm.value)
       //   dialogFormVisible.value = false
       //   ElMessage.success('Create Successfully', 3)
       // })
@@ -349,23 +405,23 @@ const createData = () => {
 };
 
 const handleUpdate = row => {
-  temp.value = Object.assign({}, row); // copy obj
-  temp.value.timestamp = new Date(temp.value.timestamp);
+  freightForm.value = Object.assign({}, row); // copy obj
+  freightForm.value.timestamp = new Date(freightForm.value.timestamp);
   dialogStatus.value = 'update';
   dialogFormVisible.value = true;
   proxy.$nextTick(() => {
-    proxy.$refs['dataForm'].clearValidate();
+    refs['dataForm'].clearValidate();
   });
 };
 
 const updateData = () => {
-  proxy.$refs['dataForm'].validate((valid) => {
+  refs['dataForm'].validate((valid) => {
     if (valid) {
-      const tempData = Object.assign({}, temp.value);
+      const tempData = Object.assign({}, freightForm.value);
       tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       // updateArticle(tempData).then(() => {
-      //   const index = list.value.findIndex(v => v.id === temp.value.id)
-      //   list.value.splice(index, 1, temp.value)
+      //   const index = list.value.findIndex(v => v.id === freightForm.value.id)
+      //   list.value.splice(index, 1, freightForm.value)
       //   dialogFormVisible.value = false
       //   ElMessage.success('Update Successfully', 3)
       // })
@@ -376,14 +432,6 @@ const updateData = () => {
 const handleDelete = (row, index) => {
   ElMessage.success('Delete Successfully', 3);
   list.value.splice(index, 1);
-};
-
-const handleFetchPv = pv => {
-  console.log('pv: ', pv);
-  // fetchPv(pv).then(response => {
-  //   pvData.value = response.data.pvData
-  //   dialogPvVisible.value = true
-  // })
 };
 
 const handleDownload = () => {
@@ -432,7 +480,7 @@ const handleAddSubBatch = () => {
   subBatchArr.value.push({});
 };
 
-getList();
+fetchList();
 </script>
 
 <style lang="sass" scoped>
