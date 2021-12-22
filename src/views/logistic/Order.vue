@@ -14,8 +14,8 @@
       <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showMode" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        Mode
+      <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+        Multiple Selection
       </el-checkbox>
     </div>
     <el-table
@@ -26,9 +26,11 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      height="600"
+      height="580"
       @sort-change="sortChange"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column v-if="showMultSelection" type="selection" width="50" height="40" align="center" />
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template v-slot="{row}">
           <span>{{ row.id }}</span>
@@ -48,13 +50,6 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="showMode" label="Mode" width="80px" align="center">
-        <template v-slot="{row}">
-          <el-tag>
-            <span>{{ row.mode }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="ETA WH" width="120px" align="center">
         <template v-slot="{row}">
           <span>{{ parseTime(row.eta_wh, '{m}/{d}/{y}') }}</span>
@@ -65,9 +60,9 @@
           <span>{{ parseTime(row.ata_wh, '{m}/{d}/{y}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="ETA POD" width="120px" align="center">
+      <el-table-column label="ETA DP" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_pod, '{m}/{d}/{y}') }}</span>
+          <span>{{ parseTime(row.eta_dp, '{m}/{d}/{y}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Pickup" width="120px" align="center">
@@ -238,7 +233,7 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
-import { listFreightsAPI } from "/@/server/api/logistic";
+import { findFreightAPI, listFreightsAPI } from "/@/server/api/logistic";
 import subBatch from './components/SubBatch.vue';
 
 const store = useStore();
@@ -269,7 +264,7 @@ const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked up'];
 const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
 const modeOptions = ['Ocean', 'Air', 'Truck'];
 const containerOptions = ['20GP', '40GP', '40HQ', '45HQ', 'LCL'];
-const showMode = ref(false);
+const showMultSelection = ref(false);
 
 const tableKey = ref(0);
 const list = ref(null);
@@ -277,6 +272,7 @@ const total = ref(0);
 const listLoading = ref(true);
 const dialogFormVisible = ref(false);
 const dialogStatus = ref('');
+const multipleSelection = ref([]);
 const textMap= ref({
   update: 'Edit',
   create: 'Create'
@@ -284,24 +280,24 @@ const textMap= ref({
 const rules = ref({
   destination: [{ required: true, message: 'type is required', trigger: 'change' }],
   status: [{ required: true, message: 'type is required', trigger: 'change' }],
-  timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-  title: [{ required: true, message: 'title is required', trigger: 'blur' }]
 });
 const downloadLoading = ref(false);
 
 const transitTime = computed(() => {
   const time = '123';
-  const transitOption = refs['transitOption'];
-  console.log('transitOption: ', transitOption);
-  refs['ataWh'];
-  console.log('ref ', refs['ataWh']);
-  refs['atdOp'];
-  console.log('atdO: ', refs['atdOp']);
+  // const transitOption = refs['transitOption'];
+  // console.log('transitOption: ', transitOption);
+  // refs['ataWh'];
+  // console.log('ref ', refs['ataWh']);
+  // refs['atdOp'];
+  // console.log('atdO: ', refs['atdOp']);
   return time;
 });
 
 const freightForm = ref({
   id: undefined,
+  destination: '',
+  batch_number: '',
   eta_wh: '',
   ata_wh: '',
   ata_dp: '',
@@ -309,20 +305,23 @@ const freightForm = ref({
   etd_op: '',
   atd_op: '',
   pickup: '',
-  batch_number: '',
+  target_id: '',
+  status: '',
+  mode: '',
+  ori_port: '',
+  dest_port: '',
+  container: '',
+  freight_cost: 0,
   ocean_forwarder: '',
+  transit_time_type: '',
   content: {
     'board55_v1': '',
     'stand55_v1': '',
     'board75_pro': ''
   },
-  batch_subs: {
-  },
-  type: '',
-  mode: '',
-  transit_time_type: '',
-  status: '',
+  // batch_subs: []
 });
+const emptyForm = freightForm.value;
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
@@ -339,7 +338,13 @@ const fetchList = () => {
     // Just to simulate the time of the request
     setTimeout(() => {
       listLoading.value = false;
-    }, 1.5 * 1000);
+    }, 500);
+  });
+};
+
+const findFreight = id => {
+  findFreightAPI(id).then(data => {
+    freightForm.value = Object.assign({}, data); // copy obj
   });
 };
 
@@ -360,6 +365,11 @@ const sortChange = data => {
   }
 };
 
+const handleSelectionChange = selectedArr => {
+  console.log('selectedArr: ', selectedArr);
+  multipleSelection.value = selectedArr;
+};
+
 const sortByID = order => {
   if (order === 'ascending') {
     listQuery.value.sort = '+id';
@@ -370,15 +380,7 @@ const sortByID = order => {
 };
 
 const resetForm = () => {
-  freightForm.value = {
-    id: undefined,
-    content: {},
-    remark: '',
-    timestamp: new Date(),
-    title: '',
-    status: '',
-    type: ''
-  };
+  freightForm.value = emptyForm;
 };
 
 const handleCreate = () => {
@@ -405,8 +407,7 @@ const createData = () => {
 };
 
 const handleUpdate = row => {
-  freightForm.value = Object.assign({}, row); // copy obj
-  freightForm.value.timestamp = new Date(freightForm.value.timestamp);
+  findFreight(row.id);
   dialogStatus.value = 'update';
   dialogFormVisible.value = true;
   proxy.$nextTick(() => {
@@ -418,7 +419,6 @@ const updateData = () => {
   refs['dataForm'].validate((valid) => {
     if (valid) {
       const tempData = Object.assign({}, freightForm.value);
-      tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       // updateArticle(tempData).then(() => {
       //   const index = list.value.findIndex(v => v.id === freightForm.value.id)
       //   list.value.splice(index, 1, freightForm.value)
@@ -437,8 +437,8 @@ const handleDelete = (row, index) => {
 const handleDownload = () => {
   downloadLoading.value = true;
   import('/@/assets/utils/excel').then(excel => {
-    const tHeader = ['timestamp', 'title', 'type', 'content', 'status'];
-    const filterVal = ['timestamp', 'title', 'type', 'content', 'status'];
+    const tHeader = [ 'title', 'type', 'content', 'status'];
+    const filterVal = [ 'title', 'type', 'content', 'status'];
     const data = formatJson(filterVal);
     excel.export_json_to_excel({
       header: tHeader,
@@ -499,6 +499,12 @@ fetchList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
+
+:deep(.el-table thead tr > th.el-table__cell .cell)
+  height: 14px
+  line-height: 14px
+  .el-checkbox
+    height: 14px
 
 :deep(.el-dialog)
   width: 80%

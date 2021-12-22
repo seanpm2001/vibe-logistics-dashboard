@@ -49,7 +49,6 @@ for (let i = 0; i < count; i++) {
   }));
 }
 
-console.log('inventoryList: ', inventoryList);
 export default [
   // mock get all routes form server
   {
