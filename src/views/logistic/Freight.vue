@@ -17,6 +17,9 @@
       <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
         Multiple Selection
       </el-checkbox>
+      <el-button v-if="showMultSelection" class="filter-item" style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
+        Delete Selected Item
+      </el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -132,12 +135,12 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="Status">
+          <el-form-item label="Status" prop="status">
             <el-select v-model="freightForm.status" class="filter-item" placeholder="Please select">
               <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Ocean Forwarder">
+          <el-form-item label="Ocean Forwarder" prop="ocean_forwarder">
             <el-select v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
               <el-option v-for="item in forwarderOptions" :key="item" :label="item" :value="item" />
             </el-select>
@@ -156,12 +159,12 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="Container Type">
+          <el-form-item label="Container Type" prop="container">
             <el-select v-model="freightForm.container" class="filter-item" placeholder="Please select">
               <el-option v-for="item in containerOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Mode">
+          <el-form-item label="Mode" prop="mode">
             <el-select v-model="freightForm.mode" class="filter-item" placeholder="Please select">
               <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
             </el-select>
@@ -243,9 +246,7 @@ const refs = proxy.$refs;
 const listQuery = ref({
   page: 1,
   limit: 10,
-  content: undefined,
-  title: undefined,
-  type: undefined,
+  batch_number: undefined,
   sort: '+id'
 });
 
@@ -311,7 +312,7 @@ const freightForm = ref({
   ori_port: '',
   dest_port: '',
   container: '',
-  freight_cost: 0,
+  freight_cost: '',
   ocean_forwarder: '',
   transit_time_type: '',
   content: {
@@ -365,10 +366,6 @@ const sortChange = data => {
   }
 };
 
-const handleSelectionChange = selectedArr => {
-  console.log('selectedArr: ', selectedArr);
-  multipleSelection.value = selectedArr;
-};
 
 const sortByID = order => {
   if (order === 'ascending') {
@@ -430,8 +427,22 @@ const updateData = () => {
 };
 
 const handleDelete = (row, index) => {
-  ElMessage.success('Delete Successfully', 3);
   list.value.splice(index, 1);
+  ElMessage.success('Delete Successfully', 3);
+};
+
+const handleSelectionChange = selectedArr => {
+  multipleSelection.value = selectedArr.sort((pre, next) => next.id - pre.id);
+};
+
+const handleDelSelected = () => {
+  multipleSelection.value.forEach(item => {
+    const idx = list.value.indexOf(item);
+    list.value.splice(idx, 1);
+  });
+  ElMessage.success('Delete Successfully', 3);
+  multipleSelection.value = [];
+  // fetchList();
 };
 
 const handleDownload = () => {
