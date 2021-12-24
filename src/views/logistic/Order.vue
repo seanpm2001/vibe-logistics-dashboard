@@ -29,7 +29,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      height="580"
+      height="68vh"
       @sort-change="sortChange"
       @selection-change="handleSelectionChange"
     >
@@ -39,16 +39,26 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Batch Number" width="140px" align="center">
+      <el-table-column label="Batch Number" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            #<span class="link-type" @click="handleUpdate(row)">{{ row.batch_number }}</span>
+            #<span class="link-type" @click="viewDetailRow(row)">{{ row.batch_number }}</span>
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="Source" width="110px" align="center">
+        <template v-slot="{row}">
+          <el-tag>{{ row.source }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="Target" width="110px" align="center">
+        <template v-slot="{row}">
+          <el-tag>{{ row.target }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="100">
         <template v-slot="{row}">
-          <el-tag :type="row.status === 'In Transit' ? 'success' : 'info'">
+          <el-tag :type="statusTypeDict[row.status]">
             {{ row.status }}
           </el-tag>
         </template>
@@ -91,10 +101,10 @@
       </el-table-column>
       <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" @click="viewDetailRow(row)">
             Edit
           </el-button>
-          <el-button type="success" size="mini" @click="handleUpdate(row)">
+          <el-button type="success" size="mini" @click="viewDetailRow(row)">
             View detail
           </el-button>
           <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
@@ -118,7 +128,7 @@
 
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <div class="dialog-header">Common</div>
-      <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px" style="min-width: 600px; margin-right:32px; margin-left:32px;">
+      <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
           <el-form-item label="Destination Warehouse" prop="destination">
             <el-select v-model="freightForm.destination" class="filter-item" placeholder="Please select">
@@ -236,18 +246,16 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
-import { findFreightAPI, listFreightsAPI } from "/@/server/api/logistic";
+import { createFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI } from "/@/server/api/logistic";
 import subBatch from './components/SubBatch.vue';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
-const refs = proxy.$refs;
-
 const listQuery = ref({
   page: 1,
   limit: 10,
   batch_number: undefined,
-  sort: '+id'
+  sort: '-id'
 });
 
 const subBatchArr = ref([]);
@@ -261,11 +269,18 @@ const warehouseOptions = ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWI
 // ]);
 const transitTimeOptions = ['day', 'week'];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
-const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked up'];
+const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked Up'];
 const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
 const modeOptions = ['Ocean', 'Air', 'Truck'];
 const containerOptions = ['20GP', '40GP', '40HQ', '45HQ', 'LCL'];
 const showMultSelection = ref(false);
+
+const statusTypeDict = {
+  'Picked Up': 'success',
+  'In Transit': 'info',
+  'Delivered': 'info',
+  'Cancelled': 'danger',
+};
 
 const tableKey = ref(0);
 const list = ref(null);
@@ -286,12 +301,12 @@ const downloadLoading = ref(false);
 
 const transitTime = computed(() => {
   const time = '123';
-  // const transitOption = refs['transitOption'];
+  // const transitOption = proxy.$refs['transitOption'];
   // console.log('transitOption: ', transitOption);
-  // refs['ataWh'];
-  // console.log('ref ', refs['ataWh']);
-  // refs['atdOp'];
-  // console.log('atdO: ', refs['atdOp']);
+  // proxy.$refs['ataWh'];
+  // console.log('ref ', proxy.$refs['ataWh']);
+  // proxy.$refs['atdOp'];
+  // console.log('atdO: ', proxy.$refs['atdOp']);
   return time;
 });
 
@@ -343,12 +358,6 @@ const fetchList = () => {
   });
 };
 
-const findFreight = id => {
-  findFreightAPI(id).then(data => {
-    freightForm.value = Object.assign({}, data); // copy obj
-  });
-};
-
 const handlePagination = config => {
   listQuery.value = Object.assign(listQuery.value, config);
   fetchList();
@@ -377,7 +386,21 @@ const sortByID = order => {
 };
 
 const resetForm = () => {
+  proxy.$nextTick(() => {
+    proxy.$refs['dataForm'].resetFields();
+  });
   freightForm.value = emptyForm;
+};
+
+const viewDetailRow = row => {
+  findFreightAPI(row.id).then(data => {
+    freightForm.value = Object.assign({}, data); // copy obj
+  });
+  dialogStatus.value = 'update';
+  dialogFormVisible.value = true;
+  proxy.$nextTick(() => {
+    proxy.$refs['dataForm'].clearValidate();
+  });
 };
 
 const handleCreate = () => {
@@ -385,49 +408,42 @@ const handleCreate = () => {
   dialogStatus.value = 'create';
   dialogFormVisible.value = true;
   proxy.$nextTick(() => {
-    refs['dataForm'].clearValidate();
+    proxy.$refs['dataForm'].clearValidate();
   });
 };
 
 const createData = () => {
-  refs['dataForm'].validate((valid) => {
+  proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
-      freightForm.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
-      freightForm.value.author = 'vibe';
-      // createArticle(freightForm.value).then(() => {
-      //   list.value.unshift(freightForm.value)
-      //   dialogFormVisible.value = false
-      //   ElMessage.success('Create Successfully', 3)
-      // })
+      freightForm.value.id = parseInt(list.value[total.value - 1].id) + 1; // mock a id
+      createFreightAPI(freightForm.value).then(() => {
+        list.value.push(freightForm.value);
+        total.value++;
+        dialogFormVisible.value = false;
+        ElMessage.success('Create Successfully', 3);
+      });
     }
   });
 };
 
-const handleUpdate = row => {
-  findFreight(row.id);
-  dialogStatus.value = 'update';
-  dialogFormVisible.value = true;
-  proxy.$nextTick(() => {
-    refs['dataForm'].clearValidate();
-  });
-};
-
 const updateData = () => {
-  refs['dataForm'].validate((valid) => {
+  proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
-      const tempData = Object.assign({}, freightForm.value);
-      // updateArticle(tempData).then(() => {
-      //   const index = list.value.findIndex(v => v.id === freightForm.value.id)
-      //   list.value.splice(index, 1, freightForm.value)
-      //   dialogFormVisible.value = false
-      //   ElMessage.success('Update Successfully', 3)
-      // })
+      const updates = freightForm.value;
+      const tempData = Object.assign({}, updates);
+      updateFreightAPI(updates.id, tempData).then(() => {
+        const index = list.value.findIndex(v => v.id === updates.id);
+        list.value.splice(index, 1, updates);
+        dialogFormVisible.value = false;
+        ElMessage.success('Update Successfully', 3);
+      });
     }
   });
 };
 
 const handleDelete = (row, index) => {
   list.value.splice(index, 1);
+  total.value--;
   ElMessage.success('Delete Successfully', 3);
 };
 
@@ -439,6 +455,7 @@ const handleDelSelected = () => {
   multipleSelection.value.forEach(item => {
     const idx = list.value.indexOf(item);
     list.value.splice(idx, 1);
+    total.value--;
   });
   ElMessage.success('Delete Successfully', 3);
   multipleSelection.value = [];
@@ -510,6 +527,7 @@ fetchList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
+
 
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 14px

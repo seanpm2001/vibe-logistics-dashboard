@@ -11,16 +11,11 @@ for (let i = 0; i < count; i++) {
     id: '@increment',
     eta_wh: String(+Mock.Random.date('T')),
     ata_wh: String(+Mock.Random.date('T')),
-    ata_dp: String(+Mock.Random.date('T')),
     eta_dp: String(+Mock.Random.date('T')),
-    etd_op: String(+Mock.Random.date('T')),
-    atd_op: String(+Mock.Random.date('T')),
     pickup: String(+Mock.Random.date('T')),
-    freight_cost: '@float(0, 100, 2, 2)',
     'batch_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-    'source|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-    'target|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-    ocean_forwarder: '@float(0, 100, 2, 2)',
+    'source|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
+    'target|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
     content: {
       'board55_v1':'@integer(0, 40)',
       'stand55_v1':'@integer(0, 40)',
@@ -28,10 +23,7 @@ for (let i = 0; i < count; i++) {
     },
     batch_subs: {
     },
-    'type|1': ['CN', 'US', 'JP', 'EU'],
-    'mode|1': ['Air', 'Ocean', 'Truck'],
-    'transit_time_type|1': ['day', 'week'],
-    'status|1': ['In Transit', 'Delivered'],
+    'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
   }));
 }
 
@@ -47,7 +39,7 @@ freightObj = Mock.mock({
   atd_op: String(+Mock.Random.date('T')),
   pickup: String(+Mock.Random.date('T')),
   'target_id|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-  'status|1': ['In Transit', 'Delivered'],
+  'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
   'mode|1': ['Air', 'Ocean', 'Truck'],
   'ori_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
   'dest_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
@@ -55,14 +47,19 @@ freightObj = Mock.mock({
   freight_cost: '@float(0, 100, 2, 2)',
   'source|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
   'target|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-  ocean_forwarder: '@float(0, 100, 2, 2)',
+  'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
   'transit_time_type|1': ['day', 'week'],
+  freight_products: [
+    {
+      'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W/WOS'],
+      'quantity': '@integer(1, 40)',
+      'purchase_cost'
+    }
+  ],
   content: {
     'board55_v1':'@integer(0, 40)',
     'stand55_v1':'@integer(0, 40)',
     'board75_pro':'@integer(0, 40)'
-  },
-  batch_subs: {
   },
 });
 
