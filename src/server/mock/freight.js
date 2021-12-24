@@ -49,13 +49,13 @@ freightObj = Mock.mock({
   'target|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
   'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
   'transit_time_type|1': ['day', 'week'],
-  freight_products: [
-    {
-      'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W/WOS'],
-      'quantity': '@integer(1, 40)',
-      'purchase_cost'
-    }
-  ],
+  // 'freight_products|1-5': [
+  //   {
+  //     'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W/WOS'],
+  //     'quantity': '@integer(1, 40)',
+  //     'purchase_cost'
+  //   },
+  // ],
   content: {
     'board55_v1':'@integer(0, 40)',
     'stand55_v1':'@integer(0, 40)',
