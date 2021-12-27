@@ -13,7 +13,7 @@ for (let i = 0; i < count; i++) {
     ata_wh: String(+Mock.Random.date('T')),
     eta_dp: String(+Mock.Random.date('T')),
     pickup: String(+Mock.Random.date('T')),
-    'batch_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+    'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
     'source|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
     'target|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
     content: {
@@ -26,11 +26,12 @@ for (let i = 0; i < count; i++) {
     'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
   }));
 }
+console.log('freightsList: ', freightsList);
 
 freightObj = Mock.mock({
   id: '@increment',
   'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-  'batch_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+  'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
   eta_wh: String(+Mock.Random.date('T')),
   ata_wh: String(+Mock.Random.date('T')),
   ata_dp: String(+Mock.Random.date('T')),
@@ -45,10 +46,7 @@ freightObj = Mock.mock({
   'dest_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
   'container|1': ['20GP', '40GP', '40HQ', '45HQ', 'LCL'],
   freight_cost: '@float(0, 100, 2, 2)',
-  'source|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-  'target|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
   'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
-  'transit_time_type|1': ['day', 'week'],
   // 'freight_products|1-5': [
   //   {
   //     'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W/WOS'],

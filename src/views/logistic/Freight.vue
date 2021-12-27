@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+      <el-input :disabled="viewOnlyPattern" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
+      <el-select :disabled="viewOnlyPattern" v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
       <el-button v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -42,7 +42,7 @@
       <el-table-column label="Batch Number" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            #<span class="link-type" @click="viewDetailRow(row)">{{ row.batch_number }}</span>
+            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{ row.freight_number }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -101,10 +101,10 @@
       </el-table-column>
       <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
-          <el-button type="primary" size="mini" @click="viewDetailRow(row)">
+          <el-button type="primary" size="mini" @click="handleDetailRow(row, 'edit')">
             Edit
           </el-button>
-          <el-button type="success" size="mini" @click="viewDetailRow(row)">
+          <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
             View detail
           </el-button>
           <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
@@ -131,77 +131,77 @@
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
           <el-form-item label="Destination Warehouse" prop="destination">
-            <el-select v-model="freightForm.destination" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.destination" class="filter-item" placeholder="Please select">
               <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Batch number">
-            <el-input v-model="freightForm.batch_number" />
+            <el-input :disabled="viewOnlyPattern" v-model="freightForm.freight_number" />
           </el-form-item>
           <el-form-item label="Ocean Freight Cost">
-            <el-input v-model="freightForm.freight_cost" />
+            <el-input :disabled="viewOnlyPattern" v-model="freightForm.freight_cost" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Status" prop="status">
-            <el-select v-model="freightForm.status" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.status" class="filter-item" placeholder="Please select">
               <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item label="Ocean Forwarder" prop="ocean_forwarder">
-            <el-select v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
               <el-option v-for="item in forwarderOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Origin Port" prop="ori_port">
-            <el-select v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
               <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item label="Destination Port" prop="dest_port">
-            <el-select v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
               <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="Container Type" prop="container">
-            <el-select v-model="freightForm.container" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.container" class="filter-item" placeholder="Please select">
               <el-option v-for="item in containerOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item label="Mode" prop="mode">
-            <el-select v-model="freightForm.mode" class="filter-item" placeholder="Please select">
+            <el-select :disabled="viewOnlyPattern" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
               <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="ETA Warehouse" prop="eta_wh">
-            <el-date-picker v-model="freightForm.eta_wh" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.eta_wh" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
-          <el-form-item label="ATA Warehouse" prop="ata_wh" ref="ataWh">
-            <el-date-picker v-model="freightForm.ata_wh" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="ATA Warehouse" prop="ata_wh">
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.ata_wh" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="ETD Origin Port" prop="etd_op">
-            <el-date-picker v-model="freightForm.etd_op" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.etd_op" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
-          <el-form-item label="ATD Origin Port" prop="atd_op" ref="atdOp">
-            <el-date-picker v-model="freightForm.atd_op" type="datetime" placeholder="Please pick a date" />
+          <el-form-item label="ATD Origin Port" prop="atd_op">
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.atd_op" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="ETA Destination Port" prop="eta_dp">
-            <el-date-picker v-model="freightForm.eta_dp" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.eta_dp" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATA Destination Port" prop="ata_dp">
-            <el-date-picker v-model="freightForm.ata_dp" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="viewOnlyPattern" v-model="freightForm.ata_dp" type="datetime" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -209,22 +209,27 @@
             <el-input disabled v-model="transitTime" placeholder=""/>
           </el-form-item>
           <el-form-item label="Transit Options">
-            <el-select v-model="freightForm.transit_time_type" class="filter-item" placeholder="Please select" ref="transitOption">
-              <el-option v-for="item in transitTimeOptions" :key="item" :label="item" :value="item" />
+            <el-select :default="1" :disabled="viewOnlyPattern" v-model="transit_time_base" class="filter-item" placeholder="Please select" ref="transitOption">
+              <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-divider></el-divider>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" @click="handleAddSubBatch">
-          Add Sub-Batch
-        </el-button>
-        <div ref="sub-batch-box" v-for="(item, index) in subBatchArr" :key="index">
-          <sub-batch :subBatchIdx=index :warehouseOptions=warehouseOptions @deleteSubBatch="deleteSubBatch"></sub-batch>
+        <div ref="batch-box" v-for="(item, index) in batchArr" :key="index">
+          <batch :batchIdx=index :warehouseOptions=warehouseOptions @deleteBatch="deleteBatch"></batch>
+        </div>
+        <div class="f-row">
+          <el-button class="filter-item" :disabled="viewOnlyPattern && disableNewBatch" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
+            Add Sub-Batch
+          </el-button>
+          <el-button :disabled="viewOnlyPattern && !disableNewBatch" class="filter-item" style="margin-left: 10px;" type="primary" @click="submitBatch(row)">
+            Submit
+          </el-button>
         </div>
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
-          <el-button @click="resetForm">
+          <el-button  @click="resetForm">
             Reset
           </el-button>
           <el-button @click="dialogFormVisible = false">
@@ -236,7 +241,6 @@
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
@@ -247,18 +251,18 @@ import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
 import { createFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI } from "/@/server/api/logistic";
-import subBatch from './components/SubBatch.vue';
+import batch from './components/Batch.vue';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
   limit: 10,
-  batch_number: undefined,
+  freight_number: undefined,
   sort: '-id'
 });
 
-const subBatchArr = ref([]);
+const batchArr = ref([]);
 
 const warehouseOptions = ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'];
 // const calendarTypeOptions = ref([
@@ -267,7 +271,7 @@ const warehouseOptions = ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWI
 //   { key: 'JP', display_name: 'Japan' },
 //   { key: 'EU', display_name: 'Eurozone' }
 // ]);
-const transitTimeOptions = ['day', 'week'];
+const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked Up'];
 const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
@@ -288,32 +292,30 @@ const total = ref(0);
 const listLoading = ref(true);
 const dialogFormVisible = ref(false);
 const dialogStatus = ref('');
+const viewOnlyPattern = computed(() => dialogStatus.value === 'view');
 const multipleSelection = ref([]);
 const textMap= ref({
+  view: 'View',
   update: 'Edit',
-  create: 'Create'
+  create: 'Create',
 });
 const rules = ref({
   destination: [{ required: true, message: 'type is required', trigger: 'change' }],
   status: [{ required: true, message: 'type is required', trigger: 'change' }],
 });
 const downloadLoading = ref(false);
+const disableNewBatch = ref(false);
 
 const transitTime = computed(() => {
-  const time = '123';
-  // const transitOption = proxy.$refs['transitOption'];
-  // console.log('transitOption: ', transitOption);
-  // proxy.$refs['ataWh'];
-  // console.log('ref ', proxy.$refs['ataWh']);
-  // proxy.$refs['atdOp'];
-  // console.log('atdO: ', proxy.$refs['atdOp']);
-  return time;
+  const formData = freightForm.value;
+  return Math.abs(+formData.ata_wh - +formData.atd_op)/transit_time_base.value;
 });
+const transit_time_base = ref(1);
 
 const freightForm = ref({
   id: undefined,
   destination: '',
-  batch_number: '',
+  freight_number: '',
   eta_wh: '',
   ata_wh: '',
   ata_dp: '',
@@ -329,7 +331,6 @@ const freightForm = ref({
   container: '',
   freight_cost: '',
   ocean_forwarder: '',
-  transit_time_type: '',
   content: {
     'board55_v1': '',
     'stand55_v1': '',
@@ -392,13 +393,13 @@ const resetForm = () => {
   freightForm.value = emptyForm;
 };
 
-const viewDetailRow = row => {
+const handleDetailRow = (row, type) => {
   findFreightAPI(row.id).then(data => {
     freightForm.value = Object.assign({}, data); // copy obj
   });
-  dialogStatus.value = 'update';
+  dialogStatus.value = type;
   dialogFormVisible.value = true;
-  proxy.$nextTick(() => {
+  type === 'edit' && proxy.$nextTick(() => {
     proxy.$refs['dataForm'].clearValidate();
   });
 };
@@ -500,12 +501,17 @@ const getSortClass = key => {
 //   listQuery.value.page = val;
 // };
 
-const deleteSubBatch = idx => {
-  subBatchArr.value.splice(idx, 1);
+const deleteBatch = idx => {
+  batchArr.value.splice(idx, 1);
 };
 
-const handleAddSubBatch = () => {
-  subBatchArr.value.push({});
+const handleAddBatch = () => {
+  batchArr.value.push({});
+  disableNewBatch.value = true;
+};
+
+const submitBatch = freightId => {
+  console.log('freightId: ', freightId);
 };
 
 fetchList();

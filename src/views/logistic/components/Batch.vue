@@ -3,20 +3,17 @@
     <el-divider></el-divider>
     <span class="f-row header">
       Sub-Batch {{count}}: 
-      <svg-icon class="icon close-icon" icon-name="close" @click="deleteSubBatch"></svg-icon>
+      <svg-icon class="icon close-icon" icon-name="close" @click="deleteBatch"></svg-icon>
     </span>
     <el-row justify="space-between" style="margin: 2rem 2rem 0;">
       <el-form-item label="Source">
-        <el-select v-model="subBatch.source" class="filter-item" placeholder="Please select">
+        <el-select v-model="batch.source" class="filter-item" placeholder="Please select">
           <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
       <el-row>
         Total Purchase Cost:
         <el-input style="width: 80px; margin-left: 1rem;" disabled v-model="totalPurchaseCost" placeholder=""/>
-        &emsp;
-        Total Quantity count:
-        <el-input type="number" style="width: 80px; margin-left: 1rem;" disabled v-model="totalQuantityCount" placeholder=""/>
       </el-row>
     </el-row>
     <div class="form-upload-row" style="margin: 0 2rem 1.5rem;">
@@ -42,7 +39,7 @@
           </div>
         </el-upload>
         <el-col :span="11">
-          <div class="freight-product-box" v-for="(item, key) in subBatch.products" :key="key">
+          <div class="freight-product-box" v-for="(item, key) in batch.products" :key="key">
             <el-divider />
             <el-form-item :label="'SKU'">
               <el-input disabled v-model="item.sku" placeholder="SKU"/>
@@ -77,7 +74,7 @@ import "element-plus/theme-chalk/src/message.scss";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  subBatchIdx: {
+  batchIdx: {
     type: Number,
     required: true
   },
@@ -88,26 +85,26 @@ const props = defineProps({
 });
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['deleteSubBatch']);
+const emit = defineEmits(['deleteBatch']);
 
-const count = ref(props.subBatchIdx + 1);
+const count = ref(props.batchIdx + 1);
 const totalQuantityCount = computed(() => {
   let total = 0;
-  for (const key in subBatch.value.products) {
-    total += subBatch.value.products[key].quantityCount;
+  for (const key in batch.value.products) {
+    total += batch.value.products[key].quantityCount;
   }
   return total;
 });
 const totalPurchaseCost = computed(() => {
   let total = 0;
-  for (const key in subBatch.value.products) {
-    total += +subBatch.value.products[key].purchaseCost;
+  for (const key in batch.value.products) {
+    total += +batch.value.products[key].purchaseCost;
   }
   return total;
 });
 const previewExcelTable = ref([]);
 const dialogExcelVisible = ref(false);
-const subBatch = ref({
+const batch = ref({
   source: "",
   products: {}
 });
@@ -118,22 +115,22 @@ const closePreviewDialog = (done) => {
   previewExcelTable.value = [];
   done();
 };
-const deleteSubBatch = () => {
-  emit('deleteSubBatch', props.subBatchIdx);
+const deleteBatch = () => {
+  emit('deleteBatch', props.batchIdx);
 };
 
-const updateSubBatchProducts = (type, file) => {
+const updateBatchProducts = (type, file) => {
   file2Xcel(file).then(dataArr => {
     if (dataArr && dataArr.length > 0) {
       dataArr.forEach(item => {
         const sku = item.sheetName;
         if (type === "add") {
-          subBatch.value.products[sku] ? 
-            subBatch.value.products[sku].quantityCount += item.sheet.length :
-            subBatch.value.products[sku] = {sku, quantityCount: item.sheet.length, purchaseCost: ""};
+          batch.value.products[sku] ? 
+            batch.value.products[sku].quantityCount += item.sheet.length :
+            batch.value.products[sku] = {sku, quantityCount: item.sheet.length, purchaseCost: ""};
         } else {
-          subBatch.value.products[sku].quantityCount -= item.sheet.length;
-          subBatch.value.products[sku].quantityCount <= 0 && delete subBatch.value.products[sku];
+          batch.value.products[sku].quantityCount -= item.sheet.length;
+          batch.value.products[sku].quantityCount <= 0 && delete batch.value.products[sku];
         }
       });
     }
@@ -141,7 +138,7 @@ const updateSubBatchProducts = (type, file) => {
 };
 
 const handleUpdate = (file, fileList) => {
-  updateSubBatchProducts("add", file);
+  updateBatchProducts("add", file);
 };
 const handlePreview = (file) => {
   file2Xcel(file).then(dataArr => {
@@ -170,7 +167,7 @@ const beforeRemove = (file, fileList) => {
         callback: (action) => {
           if (action === "confirm") {
             // 移除文件时重置sub batch products
-            updateSubBatchProducts('remove', file);
+            updateBatchProducts('remove', file);
             resolve(action);
             ElMessage.success('Delete completed');
           } else if (action === "cancel") {
