@@ -60,22 +60,22 @@
       </el-table-column>
       <el-table-column label="ETA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_wh, '{m}/{d}/{y}') }}</span>
+          <span>{{ parseTime(row.eta_wh, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ATA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.ata_wh, '{m}/{d}/{y}') }}</span>
+          <span>{{ parseTime(row.ata_wh, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ETA DP" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_dp, '{m}/{d}/{y}') }}</span>
+          <span>{{ parseTime(row.eta_dp, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Pickup" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.pickup, '{m}/{d}/{y}') }}</span>
+          <span>{{ parseTime(row.pickup, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="content-column" label="Content" width="200px">
@@ -102,7 +102,7 @@
           <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
             View detail
           </el-button>
-          <el-popconfirm @confirm="handleDelete(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
+          <el-popconfirm @confirm="deleteFreight(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
               <el-button v-if="row.status!='deleted'" size="mini" type="danger">
                 Delete
@@ -177,26 +177,26 @@
         </el-row>
         <el-row>
           <el-form-item label="ETA Warehouse" prop="eta_wh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_wh" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_wh" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATA Warehouse" prop="ata_wh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_wh" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_wh" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="ETD Origin Port" prop="etd_op">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etd_op" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etd_op" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATD Origin Port" prop="atd_op">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.atd_op" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.atd_op" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="ETA Destination Port" prop="eta_dp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_dp" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_dp" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATA Destination Port" prop="ata_dp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_dp" type="datetime" placeholder="Please pick a date" />
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_dp" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -274,7 +274,7 @@ const batchArr = ref([]);
 
 const warehouseOptions = ref([]);
 const oriPortOptions = ['Calgary', 'California', 'Fuzhou', 'Hamburg', 'Xiamen', 'Yantian'];
-const destPortOptions = ['Calgary', 'Felixtowe', 'Fuzhou', 'Hamburg', 'LA/LB ', 'Melbourne']
+const destPortOptions = ['Calgary', 'Felixtowe', 'Fuzhou', 'Hamburg', 'LA/LB ', 'Melbourne'];
 const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked Up'];
@@ -319,13 +319,13 @@ const freightForm = ref({
   id: undefined,
   destination: '',
   freight_number: '',
-  eta_wh: '',
-  ata_wh: '',
-  ata_dp: '',
-  eta_dp: '',
-  etd_op: '',
-  atd_op: '',
-  pickup: '',
+  eta_wh: null,
+  ata_wh: null,
+  ata_dp: null,
+  eta_dp: null,
+  etd_op: null,
+  atd_op: null,
+  pickup: null,
   target_id: '',
   status: '',
   mode: '',
@@ -343,6 +343,8 @@ const freightForm = ref({
 });
 
 const emptyForm = Object.assign({}, freightForm.value);
+
+const datePropertyArr = ['ata_dp', 'atd_op', 'eta_dp', 'etd_op', 'pickup', 'ata_wh', 'eta_wh'];
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
@@ -382,7 +384,6 @@ const sortChange = data => {
   }
 };
 
-
 const sortByID = order => {
   if (order === 'ascending') {
     listQuery.value.sort = '+id';
@@ -416,12 +417,21 @@ const showCreateDialog = () => {
   resetForm();
 };
 
+const formatDate = arr => {
+  datePropertyArr.forEach(key => {
+    arr[key] = parseTime(arr[key], '{y}-{m}-{d}');
+  });
+  return arr;
+};
+
 const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
       freightForm.value.id = total.value + 1; // mock a id
-      createFreightAPI(freightForm.value).then(() => {
-        list.value.push(freightForm.value);
+      const formData = formatDate(freightForm.value);
+      console.log('formData: ', formData);
+      createFreightAPI(formData).then(() => {
+        list.value.push(formData);
         total.value++;
         dialogFormVisible.value = false;
         dialogStatus.value = 'edit';
@@ -433,19 +443,17 @@ const createFreight = () => {
 
 const updateFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
-    console.log('valid: ', valid);
     if (valid) {
       const updates = freightForm.value;
       const tempData = Object.assign({}, updates);
       updateFreightAPI(updates.id, tempData).then(data => {
-        dialogFormVisible.value = false;
         ElMessage.success('Update Successfully', 3);
       });
     }
   });
 };
 
-const handleDelete = (row, index) => {
+const deleteFreight = (row, index) => {
   deleteFreightAPI(row.id).then(() => {
     list.value.splice(index, 1);
     total.value--;
