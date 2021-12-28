@@ -34,7 +34,6 @@ export async function listFreightsAPI (params) {
 }
 export async function createFreightAPI (Freight) {
   const { data } = await requester.post('freights', Freight);
-  console.log('data: ', data);
   return data;
 }
 export async function findFreightAPI (id) {
@@ -42,7 +41,6 @@ export async function findFreightAPI (id) {
   return data;
 }
 export async function updateFreightAPI (id, updates) {
-  console.log('id: ', id);
   const { data } = await requester.put(`freights/${id}`, updates);
   return data;
 }
@@ -50,9 +48,17 @@ export async function deleteFreightAPI (id) {
   await requester.delete(`freights/${id}`);
 }
 
-/* 库存 Inventory API */
+/* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
-  const { data } = await requester.get('warehouses', {
+  const { items } = await requester.get('warehouses', {
+    params,
+  });
+  return items;
+}
+
+/* 库存 Inventory API */
+export async function listInventoriesAPI (params) {
+  const { data } = await requester.get('inventories', {
     params,
   });
   return data;

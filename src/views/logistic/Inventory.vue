@@ -255,7 +255,7 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
-import { listWarehousesAPI } from "/@/server/api/logistic";
+import { listInventoriesAPI } from "/@/server/api/logistic";
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
@@ -317,7 +317,7 @@ const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
 
 const getList = () => {
   listLoading.value = true;
-  listWarehousesAPI(listQuery.value).then(data => {
+  listInventoriesAPI(listQuery.value).then(data => {
     list.value = data.items;
     total.value = data.total;
 

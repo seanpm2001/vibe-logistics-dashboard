@@ -125,9 +125,9 @@
       <div class="dialog-header">Common</div>
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
-          <el-form-item label="Destination Warehouse" prop="destination">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.destination" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
+          <el-form-item label="Destination Warehouse" prop="target_id">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.target_id" class="filter-item" placeholder="Please select">
+              <el-option v-for="item in warehouseOptions" :key="item" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-row>
@@ -154,12 +154,12 @@
         <el-row>
           <el-form-item label="Origin Port" prop="ori_port">
             <el-select :disabled="dialogPattern('view')" v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in oriPortOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item label="Destination Port" prop="dest_port">
             <el-select :disabled="dialogPattern('view')" v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in destPortOptions" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
         </el-row>
@@ -258,7 +258,7 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/index';
 import Pagination from '/@/components/Pagination.vue';
-import { createFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI, deleteFreightAPI } from "/@/server/api/logistic";
+import { listWarehousesAPI, createFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI, deleteFreightAPI } from "/@/server/api/logistic";
 import batch from './components/Batch.vue';
 
 const store = useStore();
@@ -272,13 +272,9 @@ const listQuery = ref({
 
 const batchArr = ref([]);
 
-const warehouseOptions = ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'];
-// const calendarTypeOptions = ref([
-//   { key: 'CN', display_name: 'China' },
-//   { key: 'US', display_name: 'USA' },
-//   { key: 'JP', display_name: 'Japan' },
-//   { key: 'EU', display_name: 'Eurozone' }
-// ]);
+const warehouseOptions = ref([]);
+const oriPortOptions = ['Calgary', 'California', 'Fuzhou', 'Hamburg', 'Xiamen', 'Yantian'];
+const destPortOptions = ['Calgary', 'Felixtowe', 'Fuzhou', 'Hamburg', 'LA/LB ', 'Melbourne']
 const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked Up'];
@@ -307,7 +303,7 @@ const titleMap= ref({
   create: 'Create',
 });
 const rules = ref({
-  destination: [{ required: true, message: 'type is required', trigger: 'change' }],
+  target_id: [{ required: true, message: 'destination is required', trigger: 'change' }],
   status: [{ required: true, message: 'type is required', trigger: 'change' }],
 });
 const downloadLoading = ref(false);
@@ -400,7 +396,6 @@ const resetForm = () => {
   proxy.$nextTick(() => {
     proxy.$refs['dataForm'].clearValidate();
     freightForm.value = Object.assign({}, emptyForm);
-    console.log('Object.assign({}, emptyForm): ', Object.assign({}, emptyForm));
   });
 };
 
@@ -420,7 +415,6 @@ const showCreateDialog = () => {
   dialogFormVisible.value = true;
   resetForm();
 };
-
 
 const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
@@ -533,6 +527,15 @@ const submitBatch = freightId => {
   console.log('freightId: ', freightForm.value);
 };
 
+const init = () => {
+  listWarehousesAPI().then(data => {
+    warehouseOptions.value = data.map(item => {
+      return { id: item.id, name: item.name };
+    });
+  });
+};
+
+init();
 fetchList();
 </script>
 

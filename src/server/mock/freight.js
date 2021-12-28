@@ -124,7 +124,6 @@ export default [
     url: '/api/freights',
     method: 'get',
     response: config => {
-      console.log('config: ', config);
       const { content, type, title, page = 1, limit = 20, sort } = config.query;
 
       let mockList = freightsList.filter(item => {

@@ -6,7 +6,6 @@ import { svgBuilder } from './src/plugins/svgBuilder';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
-
 function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
 }
@@ -61,7 +60,7 @@ export default (({command}) => {
       // 反向代理配置
       proxy: {
         '/api': {
-          target: process.env.VITE_API_DOMAINS,
+          target: process.env.VITE_API_DOMAIN,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }

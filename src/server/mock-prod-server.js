@@ -3,14 +3,14 @@ import testMock from "./mock/test";
 import userMock from "./mock/user";
 import roleMock from "./mock/role";
 import freightMock from "./mock/freight";
-import warehouseMock from "./mock/warehouse";
+import inventoryMock from "./mock/inventory";
 
 export const mockModules = [
   ...testMock,
   ...userMock,
   ...roleMock,
   ...freightMock,
-  ...warehouseMock,
+  ...inventoryMock,
 ];
 
 export function setupProdMockServer() {
