@@ -112,10 +112,11 @@ export default [
     url: '/api/freights/',
     method: 'post',
     response: config => {
-      console.log('config: ', config);
+      console.log('post config: ', config);
+      freightsList.push(config.body);
       return {
         code: 20000,
-        data: freightObj
+        data: config.body
       };
     }
   },

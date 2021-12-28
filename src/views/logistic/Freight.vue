@@ -121,7 +121,7 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
+    <el-dialog :title="titleMap[dialogStatus]" v-model="dialogFormVisible">
       <div class="dialog-header">Common</div>
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
@@ -132,10 +132,10 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="Batch number">
+          <el-form-item label="Batch number" prop="freight_number">
             <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_number" />
           </el-form-item>
-          <el-form-item label="Ocean Freight Cost">
+          <el-form-item label="Ocean Freight Cost" prop="freight_cost">
             <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_cost" />
           </el-form-item>
         </el-row>
@@ -210,7 +210,7 @@
           </el-form-item>
         </el-row>
         <div class="f-row controls" v-if="!dialogPattern('view')">
-          <el-button v-if="dialogPattern('create')" style="margin-left: 10px;" type="primary" @click="submitFreight">
+          <el-button v-if="dialogPattern('create')" style="margin-left: 10px;" type="primary" @click="createFreight">
             Submit Common Section
           </el-button>
           <el-button v-if="dialogPattern('edit')" style="margin-left: 10px;" type="primary" @click="updateFreight">
@@ -230,7 +230,7 @@
           <batch :batchIdx=index :warehouseOptions=warehouseOptions @deleteBatch="deleteBatch"></batch>
         </div>
         <div class="f-row">
-          <el-button class="filter-item" v-if="!dialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
+          <el-button class="filter-item" v-if="!dialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" @click="addBatch">
             Add Sub-Batch
           </el-button>
           <el-button v-if="!dialogPattern('view')" :disabled="!disableNewBatch" class="filter-item" style="margin-left: 10px;" type="primary" @click="submitBatch">
@@ -301,7 +301,7 @@ const listLoading = ref(true);
 const dialogFormVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
-const textMap= ref({
+const titleMap= ref({
   view: 'View',
   update: 'Edit',
   create: 'Create',
@@ -345,6 +345,7 @@ const freightForm = ref({
   },
   // batch_subs: []
 });
+
 const emptyForm = Object.assign({}, freightForm.value);
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -354,7 +355,6 @@ const emptyForm = Object.assign({}, freightForm.value);
 // }, {});
 
 const dialogPattern = type => dialogStatus.value === type;
-
 
 const fetchList = () => {
   listLoading.value = true;
@@ -398,9 +398,9 @@ const sortByID = order => {
 
 const resetForm = () => {
   proxy.$nextTick(() => {
-    freightForm.value = emptyForm;
     proxy.$refs['dataForm'].clearValidate();
-    proxy.$refs['dataForm'].resetFields();
+    freightForm.value = Object.assign({}, emptyForm);
+    console.log('Object.assign({}, emptyForm): ', Object.assign({}, emptyForm));
   });
 };
 
@@ -410,9 +410,9 @@ const handleDetailRow = (row, type) => {
   });
   dialogStatus.value = type;
   dialogFormVisible.value = true;
-  type === 'edit' && proxy.$nextTick(() => {
-    proxy.$refs['dataForm'].clearValidate();
-  });
+  // type === 'edit' && proxy.$nextTick(() => {
+  //   resetForm();
+  // });
 };
 
 const showCreateDialog = () => {
@@ -421,14 +421,16 @@ const showCreateDialog = () => {
   resetForm();
 };
 
-const createData = () => {
+
+const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
-      freightForm.value.id = parseInt(list.value[total.value - 1].id) + 1; // mock a id
+      freightForm.value.id = total.value + 1; // mock a id
       createFreightAPI(freightForm.value).then(() => {
         list.value.push(freightForm.value);
         total.value++;
         dialogFormVisible.value = false;
+        dialogStatus.value = 'edit';
         ElMessage.success('Create Successfully', 3);
       });
     }
@@ -437,12 +439,11 @@ const createData = () => {
 
 const updateFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
+    console.log('valid: ', valid);
     if (valid) {
       const updates = freightForm.value;
-      console.log('updates: ', updates);
       const tempData = Object.assign({}, updates);
       updateFreightAPI(updates.id, tempData).then(data => {
-        console.log('data: ', data);
         dialogFormVisible.value = false;
         ElMessage.success('Update Successfully', 3);
       });
@@ -519,18 +520,13 @@ const deleteBatch = idx => {
   disableNewBatch.value = false;
 };
 
-const handleAddBatch = () => {
+const addBatch = () => {
   if (!freightForm.value.id) {
     ElMessage.error('You need to "Submit Common Section" before "Add Sub-Batch"', 3);
     return;
   }
   batchArr.value.push({});
   disableNewBatch.value = true;
-};
-
-const submitFreight = () => {
-  dialogStatus.value = 'edit';
-  createFreightAPI(freightForm.value);
 };
 
 const submitBatch = freightId => {
