@@ -14,19 +14,33 @@ for (let i = 0; i < count; i++) {
     eta_dp: String(+Mock.Random.date('T')),
     pickup: String(+Mock.Random.date('T')),
     'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-    'source|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
     'target|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
     content: {
       'board55_v1':'@integer(0, 40)',
       'stand55_v1':'@integer(0, 40)',
       'board75_pro':'@integer(0, 40)'
     },
-    batch_subs: {
-    },
     'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
   }));
 }
-console.log('freightsList: ', freightsList);
+
+// const detailArr = JSON.parse(JSON.stringify(freightsList));
+// detailArr.forEach(item => {
+//   item = Object.assign(item, Mock.mock({
+//     'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+//     'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+//     ata_dp: String(+Mock.Random.date('T')),
+//     pickup: String(+Mock.Random.date('T')),
+//     'target_id|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+//     'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
+//     'mode|1': ['Air', 'Ocean', 'Truck'],
+//     'ori_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
+//     'dest_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
+//     'container|1': ['20GP', '40GP', '40HQ', '45HQ', 'LCL'],
+//     freight_cost: '@float(0, 100, 2, 2)',
+//     'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
+//   }));
+// });
 
 freightObj = Mock.mock({
   id: '@increment',
@@ -65,7 +79,7 @@ export default [
   // mock get all routes form server
   {
     url: RegExp('/api/freights/[0-9]+'),
-    type: 'get',
+    method: 'get',
     response: config => {
       return {
         code: 20000,
@@ -74,9 +88,42 @@ export default [
     }
   },
   {
-    url: '/api/freights',
-    type: 'get',
+    url: RegExp('/api/freights/[0-9]+'),
+    method: 'put',
     response: config => {
+      freightObj = config.body;
+      return {
+        code: 20000,
+        data: freightObj
+      };
+    }
+  },
+  {
+    url: RegExp('/api/freights/[0-9]+'),
+    method: 'delete',
+    response: config => {
+      return {
+        code: 20000,
+        data: freightObj
+      };
+    }
+  },
+  {
+    url: '/api/freights/',
+    method: 'post',
+    response: config => {
+      console.log('config: ', config);
+      return {
+        code: 20000,
+        data: freightObj
+      };
+    }
+  },
+  {
+    url: '/api/freights',
+    method: 'get',
+    response: config => {
+      console.log('config: ', config);
       const { content, type, title, page = 1, limit = 20, sort } = config.query;
 
       let mockList = freightsList.filter(item => {

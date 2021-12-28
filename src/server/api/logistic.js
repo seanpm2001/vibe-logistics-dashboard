@@ -32,16 +32,17 @@ export async function listFreightsAPI (params) {
   });
   return data;
 }
-
+export async function createFreightAPI (Freight) {
+  const { data } = await requester.post('freights', Freight);
+  console.log('data: ', data);
+  return data;
+}
 export async function findFreightAPI (id) {
   const { data } = await requester.get(`freights/${id}`);
   return data;
 }
-export async function createFreightAPI (Freight) {
-  const { data } = await requester.post('freights', Freight);
-  return data;
-}
 export async function updateFreightAPI (id, updates) {
+  console.log('id: ', id);
   const { data } = await requester.put(`freights/${id}`, updates);
   return data;
 }

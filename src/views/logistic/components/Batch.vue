@@ -125,9 +125,9 @@ const updateBatchProducts = (type, file) => {
       dataArr.forEach(item => {
         const sku = item.sheetName;
         if (type === "add") {
-          batch.value.products[sku] ? 
+          item.sheet.length && (batch.value.products[sku] ? 
             batch.value.products[sku].quantityCount += item.sheet.length :
-            batch.value.products[sku] = {sku, quantityCount: item.sheet.length, purchaseCost: ""};
+            batch.value.products[sku] = {sku, quantityCount: item.sheet.length, purchaseCost: ""});
         } else {
           batch.value.products[sku].quantityCount -= item.sheet.length;
           batch.value.products[sku].quantityCount <= 0 && delete batch.value.products[sku];
