@@ -172,8 +172,8 @@
           <el-form-item label="Batch number" prop="number">
             <el-input :disabled="dialogPattern('view')" v-model="freightForm.number" />
           </el-form-item>
-          <el-form-item label="Ocean Freight Cost" prop="freight_cost">
-            <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_cost" />
+          <el-form-item label="Ocean Freight Cost" prop="cost">
+            <el-input :disabled="dialogPattern('view')" v-model="freightForm.cost" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -330,7 +330,7 @@ const freightForm = ref({
   ori_port: '',
   dest_port: '',
   container: '',
-  freight_cost: '',
+  cost: '',
   ocean_forwarder: '',
   // content: {
   //   'board55_v1': '',

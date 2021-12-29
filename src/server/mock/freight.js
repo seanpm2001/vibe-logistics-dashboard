@@ -37,7 +37,7 @@ for (let i = 0; i < count; i++) {
 //     'ori_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
 //     'dest_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
 //     'container|1': ['20GP', '40GP', '40HQ', '45HQ', 'LCL'],
-//     freight_cost: '@float(0, 100, 2, 2)',
+//     cost: '@float(0, 100, 2, 2)',
 //     'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
 //   }));
 // });
@@ -59,7 +59,7 @@ freightObj = Mock.mock({
   'ori_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
   'dest_port|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
   'container|1': ['20GP', '40GP', '40HQ', '45HQ', 'LCL'],
-  freight_cost: '@float(0, 100, 2, 2)',
+  cost: '@float(0, 100, 2, 2)',
   'ocean_forwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
   // 'freight_products|1-5': [
   //   {
@@ -108,44 +108,44 @@ export default [
       };
     }
   },
-  // {
-  //   url: '/api/freights/',
-  //   method: 'post',
-  //   response: config => {
-  //     console.log('post config: ', config);
-  //     freightsList.push(config.body);
-  //     return {
-  //       code: 20000,
-  //       data: config.body
-  //     };
-  //   }
-  // }
-  // {
-  //   url: '/api/freights',
-  //   method: 'get',
-  //   response: config => {
-  //     const { content, type, title, page = 1, limit = 20, sort } = config.query;
+  {
+    url: '/api/freights/',
+    method: 'post',
+    response: config => {
+      console.log('post config: ', config);
+      freightsList.push(config.body);
+      return {
+        code: 20000,
+        data: config.body
+      };
+    }
+  }
+  {
+    url: '/api/freights',
+    method: 'get',
+    response: config => {
+      const { content, type, title, page = 1, limit = 20, sort } = config.query;
 
-  //     let mockList = freightsList.filter(item => {
-  //       if (content && item?.content !== content) return false;
-  //       if (type && item?.type !== type) return false;
-  //       if (title && item?.title.indexOf(title) < 0) return false;
-  //       return true;
-  //     });
+      let mockList = freightsList.filter(item => {
+        if (content && item?.content !== content) return false;
+        if (type && item?.type !== type) return false;
+        if (title && item?.title.indexOf(title) < 0) return false;
+        return true;
+      });
 
-  //     if (sort === '-id') {
-  //       mockList = mockList.reverse();
-  //     }
+      if (sort === '-id') {
+        mockList = mockList.reverse();
+      }
 
-  //     const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1));
+      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1));
 
-  //     return {
-  //       code: 20000,
-  //       data: {
-  //         total: mockList.length,
-  //         items: pageList
-  //       }
-  //     };
-  //   }
-  // },
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          items: pageList
+        }
+      };
+    }
+  },
 ];

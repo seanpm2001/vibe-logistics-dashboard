@@ -10,7 +10,7 @@ export async function listOrdersAPI () {
   return data;
 }
 export async function findOrderAPI (id) {
-  const { data } = await requester.get(`Orders/${id}`);
+  const { data } = await requester.get(`Order/${id}`);
   return data;
 }
 export async function createOrderAPI (Order) {
@@ -18,7 +18,7 @@ export async function createOrderAPI (Order) {
   return data;
 }
 export async function updateOrderAPI (id, updates) {
-  const { data } = await requester.put(`Orders/${id}`, updates);
+  const { data } = await requester.put(`Order/${id}`, updates);
   return data;
 }
 export async function deleteOrderAPI (id) {
@@ -37,15 +37,15 @@ export async function createFreightAPI (Freight) {
   return item;
 }
 export async function findFreightAPI (id) {
-  const { data } = await requester.get(`freights/${id}`);
+  const { data } = await requester.get(`freight/${id}`);
   return data;
 }
 export async function updateFreightAPI (id, updates) {
-  const { item } = await requester.put(`freights/${id}`, updates);
+  const { item } = await requester.put(`freight/${id}`, updates);
   return item;
 }
 export async function deleteFreightAPI (id) {
-  await requester.delete(`freights/${id}`);
+  await requester.delete(`freight/${id}`);
 }
 
 /* 仓库 Warehouse API */

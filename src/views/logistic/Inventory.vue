@@ -253,7 +253,7 @@
 import { getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-import { parseTime } from '/@/assets/utils/index';
+import { parseTime } from '/@/assets/utils/format';
 import Pagination from '/@/components/Pagination.vue';
 import { listInventoriesAPI } from "/@/server/api/logistic";
 
