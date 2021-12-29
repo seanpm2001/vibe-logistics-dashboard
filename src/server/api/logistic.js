@@ -27,22 +27,22 @@ export async function deleteOrderAPI (id) {
 
 /* 产品 Freight API */
 export async function listFreightsAPI (params) {
-  const { data } = await requester.get('freights', {
+  const { items } = await requester.get('freights', {
     params,
   });
-  return data;
+  return items;
 }
 export async function createFreightAPI (Freight) {
-  const { data } = await requester.post('freights', Freight);
-  return data;
+  const { item } = await requester.post('freights', Freight);
+  return item;
 }
 export async function findFreightAPI (id) {
   const { data } = await requester.get(`freights/${id}`);
   return data;
 }
 export async function updateFreightAPI (id, updates) {
-  const { data } = await requester.put(`freights/${id}`, updates);
-  return data;
+  const { item } = await requester.put(`freights/${id}`, updates);
+  return item;
 }
 export async function deleteFreightAPI (id) {
   await requester.delete(`freights/${id}`);
@@ -50,6 +50,7 @@ export async function deleteFreightAPI (id) {
 
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
+  // const { items } = await requester.get('https://logistics.vibe.dev/api/warehouses', {
   const { items } = await requester.get('warehouses', {
     params,
   });

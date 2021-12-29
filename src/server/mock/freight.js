@@ -13,8 +13,8 @@ for (let i = 0; i < count; i++) {
     ata_wh: String(+Mock.Random.date('T')),
     eta_dp: String(+Mock.Random.date('T')),
     pickup: String(+Mock.Random.date('T')),
-    'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-    'target|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
+    'number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+    target_id: '@integer(1, 18)',
     content: {
       'board55_v1':'@integer(0, 40)',
       'stand55_v1':'@integer(0, 40)',
@@ -28,7 +28,7 @@ for (let i = 0; i < count; i++) {
 // detailArr.forEach(item => {
 //   item = Object.assign(item, Mock.mock({
 //     'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-//     'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+//     'number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
 //     ata_dp: String(+Mock.Random.date('T')),
 //     pickup: String(+Mock.Random.date('T')),
 //     'target_id|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
@@ -45,7 +45,7 @@ for (let i = 0; i < count; i++) {
 freightObj = Mock.mock({
   id: '@increment',
   'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-  'freight_number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
+  'number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
   eta_wh: String(+Mock.Random.date('T')),
   ata_wh: String(+Mock.Random.date('T')),
   ata_dp: String(+Mock.Random.date('T')),
@@ -108,44 +108,44 @@ export default [
       };
     }
   },
-  {
-    url: '/api/freights/',
-    method: 'post',
-    response: config => {
-      console.log('post config: ', config);
-      freightsList.push(config.body);
-      return {
-        code: 20000,
-        data: config.body
-      };
-    }
-  },
-  {
-    url: '/api/freights',
-    method: 'get',
-    response: config => {
-      const { content, type, title, page = 1, limit = 20, sort } = config.query;
+  // {
+  //   url: '/api/freights/',
+  //   method: 'post',
+  //   response: config => {
+  //     console.log('post config: ', config);
+  //     freightsList.push(config.body);
+  //     return {
+  //       code: 20000,
+  //       data: config.body
+  //     };
+  //   }
+  // }
+  // {
+  //   url: '/api/freights',
+  //   method: 'get',
+  //   response: config => {
+  //     const { content, type, title, page = 1, limit = 20, sort } = config.query;
 
-      let mockList = freightsList.filter(item => {
-        if (content && item?.content !== content) return false;
-        if (type && item?.type !== type) return false;
-        if (title && item?.title.indexOf(title) < 0) return false;
-        return true;
-      });
+  //     let mockList = freightsList.filter(item => {
+  //       if (content && item?.content !== content) return false;
+  //       if (type && item?.type !== type) return false;
+  //       if (title && item?.title.indexOf(title) < 0) return false;
+  //       return true;
+  //     });
 
-      if (sort === '-id') {
-        mockList = mockList.reverse();
-      }
+  //     if (sort === '-id') {
+  //       mockList = mockList.reverse();
+  //     }
 
-      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1));
+  //     const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1));
 
-      return {
-        code: 20000,
-        data: {
-          total: mockList.length,
-          items: pageList
-        }
-      };
-    }
-  },
+  //     return {
+  //       code: 20000,
+  //       data: {
+  //         total: mockList.length,
+  //         items: pageList
+  //       }
+  //     };
+  //   }
+  // },
 ];

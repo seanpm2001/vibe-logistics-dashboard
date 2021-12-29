@@ -42,55 +42,55 @@
       <el-table-column label="Batch Number" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{ row.freight_number }}</span>
+            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{ row.number }}</span>
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Target" width="110px" align="center">
         <template v-slot="{row}">
-          <el-tag>{{ row.target }}</el-tag>
+          <el-tag>{{ warehouseOptions[row.target_id] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
+      <el-table-column label="Status" width="100" align="center">
         <template v-slot="{row}">
           <el-tag :type="statusTypeDict[row.status]">
-            {{ row.status }}
+            {{ statusOptions[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="ETA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_wh, '{y}-{m}-{d}') }}</span>
+          <span>{{ row.eta_wh.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ATA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.ata_wh, '{y}-{m}-{d}') }}</span>
+          <span>{{ row.ata_wh.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ETA DP" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.eta_dp, '{y}-{m}-{d}') }}</span>
+          <span>{{ row.eta_dp.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Pickup" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ parseTime(row.pickup, '{y}-{m}-{d}') }}</span>
+          <span>{{ row.pickup.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="content-column" label="Content" width="200px">
         <template v-slot="{row}">
-          <div v-if="row.content.board55_v1">
+          <div v-if="row.content?.board55_v1">
             <svg-icon icon-name="board" class="content-icon" />
-            <span>Board: <span class="count">{{ row.content.board55_v1 }}</span></span>
+            <span>Board: <span class="count">{{ row.content?.board55_v1 }}</span></span>
           </div>
-          <div v-if="row.content.stand55_v1">
+          <div v-if="row.content?.stand55_v1">
             <svg-icon icon-name="stand" class="content-icon is-current" />
-            <span>White stand: <span class="count">{{ row.content.stand55_v1 }}</span></span>
+            <span>White stand: <span class="count">{{ row.content?.stand55_v1 }}</span></span>
           </div>
-          <div v-if="row.content.board75_pro">
+          <div v-if="row.content?.board75_pro">
             <svg-icon icon-name="board" class="content-icon" />
-            <span>Board 75: <span class="count">{{ row.content.board75_pro }}</span></span>
+            <span>Board 75: <span class="count">{{ row.content?.board75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
@@ -121,58 +121,17 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog :title="titleMap[dialogStatus]" v-model="dialogFormVisible">
+    <el-dialog :title="titleMap[dialogStatus]" v-model="dialogFormVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
       <div class="dialog-header">Common</div>
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
           <el-form-item label="Destination Warehouse" prop="target_id">
             <el-select :disabled="dialogPattern('view')" v-model="freightForm.target_id" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in warehouseOptions" :key="item" :label="item.name" :value="item.id" />
+              <el-option v-for="(item, key) in warehouseOptions" :key="key" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Batch number" prop="freight_number">
-            <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_number" />
-          </el-form-item>
-          <el-form-item label="Ocean Freight Cost" prop="freight_cost">
-            <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_cost" />
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Status" prop="status">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.status" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Ocean Forwarder" prop="ocean_forwarder">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in forwarderOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Origin Port" prop="ori_port">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in oriPortOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Destination Port" prop="dest_port">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in destPortOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="Container Type" prop="container">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.container" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in containerOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Mode" prop="mode">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
-              <el-option v-for="item in modeOptions" :key="item" :label="item" :value="item" />
-            </el-select>
+          <el-form-item label="Pick Up" prop="pickup">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.pickup" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -206,6 +165,50 @@
           <el-form-item label="Transit Options">
             <el-select :default="1" :disabled="dialogPattern('view')" v-model="transit_time_base" class="filter-item" placeholder="Please select" ref="transitOption">
               <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Batch number" prop="number">
+            <el-input :disabled="dialogPattern('view')" v-model="freightForm.number" />
+          </el-form-item>
+          <el-form-item label="Ocean Freight Cost" prop="freight_cost">
+            <el-input :disabled="dialogPattern('view')" v-model="freightForm.freight_cost" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Status" prop="status">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.status" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in statusOptions" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Ocean Forwarder" prop="ocean_forwarder">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in forwarderOptions" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Origin Port" prop="ori_port">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in oriPortOptions" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Destination Port" prop="dest_port">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in destPortOptions" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="Container Type" prop="container">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.container" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in containerOptions" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Mode" prop="mode">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
+              <el-option v-for="(item, key) in modeOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
@@ -253,34 +256,30 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, getCurrentInstance, ref } from "vue";
+import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { ElMessage } from "element-plus";
-import { parseTime } from '/@/assets/utils/index';
+import { ElMessage, ElMessageBox } from "element-plus";
+import { parseTime } from '/@/assets/utils/format';
 import Pagination from '/@/components/Pagination.vue';
 import { listWarehousesAPI, createFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI, deleteFreightAPI } from "/@/server/api/logistic";
 import batch from './components/Batch.vue';
+import { statusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions } from './enum/freight';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
-  limit: 10,
-  freight_number: undefined,
+  per_page: 10,
+  number: undefined,
   sort: '-id'
 });
 
 const batchArr = ref([]);
 
-const warehouseOptions = ref([]);
-const oriPortOptions = ['Calgary', 'California', 'Fuzhou', 'Hamburg', 'Xiamen', 'Yantian'];
-const destPortOptions = ['Calgary', 'Felixtowe', 'Fuzhou', 'Hamburg', 'LA/LB ', 'Melbourne'];
+const warehouseOptions = ref({});
 const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
-const statusOptions = ['In Transit', 'Delivered', 'Canceled', 'Picked Up'];
-const forwarderOptions = ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'];
-const modeOptions = ['Ocean', 'Air', 'Truck'];
-const containerOptions = ['20GP', '40GP', '40HQ', '45HQ', 'LCL'];
+
 const showMultSelection = ref(false);
 
 const statusTypeDict = {
@@ -311,14 +310,13 @@ const disableNewBatch = ref(false);
 
 const transitTime = computed(() => {
   const formData = freightForm.value;
-  return Math.abs(+formData.ata_wh - +formData.atd_op)/transit_time_base.value;
+  return Math.abs(+formData.ata_wh - +formData.atd_op)/(86400*1000*transit_time_base.value);
 });
 const transit_time_base = ref(1);
 
 const freightForm = ref({
   id: undefined,
-  destination: '',
-  freight_number: '',
+  number: '',
   eta_wh: null,
   ata_wh: null,
   ata_dp: null,
@@ -334,15 +332,16 @@ const freightForm = ref({
   container: '',
   freight_cost: '',
   ocean_forwarder: '',
-  content: {
-    'board55_v1': '',
-    'stand55_v1': '',
-    'board75_pro': ''
-  },
+  // content: {
+  //   'board55_v1': '',
+  //   'stand55_v1': '',
+  //   'board75_pro': ''
+  // },
   // batch_subs: []
 });
 
 const emptyForm = Object.assign({}, freightForm.value);
+let contrastData = null;
 
 const datePropertyArr = ['ata_dp', 'atd_op', 'eta_dp', 'etd_op', 'pickup', 'ata_wh', 'eta_wh'];
 
@@ -357,8 +356,8 @@ const dialogPattern = type => dialogStatus.value === type;
 const fetchList = () => {
   listLoading.value = true;
   listFreightsAPI(listQuery.value).then(data => {
-    list.value = data.items;
-    total.value = data.total;
+    list.value = data;
+    total.value = data.length;
 
     // Just to simulate the time of the request
     setTimeout(() => {
@@ -393,6 +392,29 @@ const sortByID = order => {
   handleFilter();
 };
 
+const beforeCloseDialog = done => {
+  if (dialogStatus.value !== 'edit') {
+    done();
+    return;
+  }
+  const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightForm.value);
+  !isChanged && done();
+  isChanged && ElMessageBox.confirm(
+    `Unsaved changes, are you sure to leave?`,
+    'Warning',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === "confirm") {
+          done();
+        }
+      },
+    }
+  );
+};
+
 const resetForm = () => {
   proxy.$nextTick(() => {
     proxy.$refs['dataForm'].clearValidate();
@@ -403,12 +425,10 @@ const resetForm = () => {
 const handleDetailRow = (row, type) => {
   findFreightAPI(row.id).then(data => {
     freightForm.value = Object.assign({}, data); // copy obj
+    type === 'edit' && (contrastData = Object.assign({}, data));
   });
   dialogStatus.value = type;
   dialogFormVisible.value = true;
-  // type === 'edit' && proxy.$nextTick(() => {
-  //   resetForm();
-  // });
 };
 
 const showCreateDialog = () => {
@@ -427,9 +447,7 @@ const formatDate = arr => {
 const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
-      freightForm.value.id = total.value + 1; // mock a id
       const formData = formatDate(freightForm.value);
-      console.log('formData: ', formData);
       createFreightAPI(formData).then(() => {
         list.value.push(formData);
         total.value++;
@@ -481,8 +499,8 @@ const handleDelSelected = () => {
 const handleDownload = () => {
   downloadLoading.value = true;
   import('/@/assets/utils/excel').then(excel => {
-    const tHeader = [ 'title', 'type', 'content', 'status'];
-    const filterVal = [ 'title', 'type', 'content', 'status'];
+    const tHeader = [ 'title', 'type', 'status'];
+    const filterVal = [ 'title', 'type', 'status'];
     const data = formatJson(filterVal);
     excel.export_json_to_excel({
       header: tHeader,
@@ -537,14 +555,16 @@ const submitBatch = freightId => {
 
 const init = () => {
   listWarehousesAPI().then(data => {
-    warehouseOptions.value = data.map(item => {
-      return { id: item.id, name: item.name };
+    data.forEach(item => {
+      warehouseOptions.value[item.id] = item.name;
     });
   });
 };
 
-init();
 fetchList();
+onMounted(() => {
+  init();
+});
 </script>
 
 <style lang="sass" scoped>
