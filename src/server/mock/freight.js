@@ -119,7 +119,7 @@ export default [
         data: config.body
       };
     }
-  }
+  },
   {
     url: '/api/freights',
     method: 'get',

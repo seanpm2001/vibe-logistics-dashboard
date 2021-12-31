@@ -1,4 +1,4 @@
-import { createFreightAPI, deleteFreightAPI, findFreightAPI, listFreightsAPI, updateFreightAPI } from '/@/server/api/logistic';
+import { createFreightAPI, deleteFreightAPI, findFreightAPI, queryFreightsAPI, updateFreightAPI } from '/@/server/api/logistic';
 
 export const freight = {
   namespaced: true,
@@ -32,7 +32,7 @@ export const freight = {
   actions: {
     async listFreights ({ commit }) {
       return new Promise(resolve => {
-        const { rows } = listFreightsAPI();
+        const { rows } = queryFreightsAPI();
         rows && rows.forEach((item) => {
           commit('UPDATE_FREIGHT', item);
         });
