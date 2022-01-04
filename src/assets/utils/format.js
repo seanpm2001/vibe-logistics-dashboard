@@ -90,60 +90,54 @@ export function formatTime(time, option) {
   }
 }
 
-// export const freightAPIEnum = {
-//   status: {
-//     IN_TRANSIT: 'In Transit',
-//     DELIVERED: 'Delivered',
-//     CANCELLED: 'Cancelled',
-//     PICKED_UP: 'Picked Up'
-//   },
-//   mode: {
-//     AIR: 'Air',
-//     OCEAN: 'Ocean',
-//     TRUCK: 'Truck'
-//   },
-//   container: {
-//     GP20: '20GP',
-//     GP40: '40GP',
-//     HQ40: '40HQ',
-//     HQ45: '45HQ',
-//     LCL: 'LCL'
-//   },
-//   forwarder: {
-//     FPL: "FPL",
-//     FLEXPORT: "FLEXPORT",
-//     LIGHTNING: "LIGHTNING",
-//     AGL: "AGL",
-//     SF: "SF"
-//   },
-//   ori_port: {
-//     FUZHOU: "Fuzhou",
-//     XIAMEN: "Xiamen",
-//     YANTIAN: "Yantian",
-//     CALIFORNIA: "California",
-//     CALGARY: "Calgary",
-//   },
-//   dest_port: {
-//     LAX: "LAX",
-//     FELIXTOWE: "Felixtowe",
-//     HAM: "HAM",
-//     MELBOURNE: "Melbourne",
-//     CALGARY: "Calgary",
-//     FUZHOU: "Fuzhou"
-//   }
-// };
-
-// function toggleObjKey2Value (obj){
-//   const result = JSON.parse(JSON.stringify(obj));
-//   for (const key in result) {
-//     for (const key2 in result[key]) {
-//       const value = result[key][key2];
-//       result[key][value] = key2;
-//       delete result[key][key2];
-//     }
-//   }
-//   return result;
-// }
-
-
-// export const freightDataEnum = toggleObjKey2Value(freightAPIEnum);
+// 字符串的下划线格式转驼峰格式，eg：hello_world => helloWorld
+function underline2Hump(s) {
+  return s.replace(/_(\w)/g, function(all, letter) {
+    return letter.toUpperCase();
+  });
+}
+ 
+// 字符串的驼峰格式转下划线格式，eg：helloWorld => hello_world
+function hump2Underline(s) {
+  return s.replace(/([A-Z])/g, '_$1').toLowerCase();
+}
+ 
+// JSON对象的key值转换为驼峰式
+export function jsonToHump(obj) {
+  if (obj instanceof Array) {
+    obj.forEach(function(v, i) {
+      jsonToHump(v);
+    });
+  } else if (obj instanceof Object) {
+    Object.keys(obj).forEach(function(key) {
+      const newKey = underline2Hump(key);
+      if (newKey !== key) {
+        obj[newKey] = obj[key];
+        delete obj[key];
+      }
+      jsonToHump(obj[newKey]);
+    });
+  }
+}
+ 
+// JSON对象的key值转换为下划线格式 顺便删除‘空字段’
+export function jsonToUnderline(obj) {
+  if (obj instanceof Array) {
+    obj.forEach(function(v, i) {
+      jsonToUnderline(v);
+    });
+  } else if (obj instanceof Object) {
+    Object.keys(obj).forEach(function(key) {
+      if (!obj[key]) {
+        delete obj[key];
+        return;
+      }
+      const newKey = hump2Underline(key);
+      if (newKey !== key) {
+        obj[newKey] = obj[key];
+        delete obj[key];
+      }
+      jsonToUnderline(obj[newKey]);
+    });
+  }
+}

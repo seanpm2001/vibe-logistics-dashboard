@@ -3,6 +3,7 @@
  */
 
 import requester from '../axios-requester';
+import { jsonToUnderline } from '/@/assets/utils/format';
 
 /* 订单 Order API */
 export async function listOrdersAPI () {
@@ -18,7 +19,7 @@ export async function createOrderAPI (Order) {
   return data;
 }
 export async function updateOrderAPI (id, updates) {
-  const { data } = await requester.put(`Order/${id}`, updates);
+  const { data } = await requester.put(`Order/${id}`, jsonToUnderline(updates));
   return data;
 }
 export async function deleteOrderAPI (id) {
@@ -27,13 +28,14 @@ export async function deleteOrderAPI (id) {
 
 /* 产品 Freight API */
 export async function queryFreightsAPI (params) {
-  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const res = await requester.get('freights', {
     params,
   });
   return res;
 }
 export async function createFreightAPI (data) {
+  jsonToUnderline(data);
   const { item } = await requester.post('freights', data);
   return item;
 }
@@ -42,6 +44,7 @@ export async function findFreightAPI (id) {
   return item;
 }
 export async function updateFreightAPI (id, updates) {
+  jsonToUnderline(updates);
   const { item } = await requester.put(`freight/${id}`, updates);
   return item;
 }
@@ -55,6 +58,7 @@ export async function listBatchesAPI (freightId) {
   return items;
 }
 export async function createBatchAPI (freightId, data) {
+  jsonToUnderline(data);
   const { item } = await requester.post(`freight/${freightId}/batches`, data);
   return item;
 }
@@ -63,6 +67,7 @@ export async function createBatchAPI (freightId, data) {
 //   return item;
 // }
 export async function updateBatchAPI (id, updates) {
+  jsonToUnderline(updates);
   const { item } = await requester.put(`batch/${id}`, updates);
   return item;
 }
@@ -72,7 +77,7 @@ export async function deleteBatchAPI (id) {
 
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
-  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   // const { items } = await requester.get('https://logistics.vibe.dev/api/warehouses', {
   const { items } = await requester.get('warehouses', {
     params,

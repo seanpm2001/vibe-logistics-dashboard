@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column label="Target" width="110px" align="center">
         <template v-slot="{row}">
-          <el-tag>{{ warehouseOptions[row.target_id] }}</el-tag>
+          <el-tag>{{ warehouseOptions[row.targetId] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Status" width="100" align="center">
@@ -60,17 +60,17 @@
       </el-table-column>
       <el-table-column label="ETA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ row.eta_wh?.split('T')[0] }}</span>
+          <span>{{ row.etaWh?.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ATA WH" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ row.ata_wh?.split('T')[0] }}</span>
+          <span>{{ row.ataWh?.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="ETA DP" width="120px" align="center">
         <template v-slot="{row}">
-          <span>{{ row.eta_dp?.split('T')[0] }}</span>
+          <span>{{ row.etaDp?.split('T')[0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Pickup" width="120px" align="center">
@@ -111,7 +111,7 @@
       v-show="total>0"
       :total="total"
       v-model:page="listQuery.page"
-      v-model:limit="listQuery.per_page"
+      v-model:limit="listQuery.perPage"
       @pagination="handlePagination"
     />
 
@@ -119,8 +119,8 @@
       <div class="dialog-header">Common</div>
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row>
-          <el-form-item label="Destination Warehouse" prop="target_id">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.target_id" class="filter-item" placeholder="Please select">
+          <el-form-item label="Destination Warehouse" prop="targetId">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.targetId" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in warehouseOptions" :key="key" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
@@ -144,20 +144,20 @@
               <el-option v-for="(item, key) in modeOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Ocean Forwarder" prop="ocean_forwarder">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ocean_forwarder" class="filter-item" placeholder="Please select">
+          <el-form-item label="Ocean Forwarder" prop="oceanForwarder">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.oceanForwarder" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in forwarderOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="Origin Port" prop="ori_port">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.ori_port" class="filter-item" placeholder="Please select">
+          <el-form-item label="Origin Port" prop="oriPort">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.oriPort" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in oriPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Destination Port" prop="dest_port">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.dest_port" class="filter-item" placeholder="Please select">
+          <el-form-item label="Destination Port" prop="destPort">
+            <el-select :disabled="dialogPattern('view')" v-model="freightForm.destPort" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in destPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
@@ -173,27 +173,27 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="ETA Warehouse" prop="eta_wh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_wh" type="date" placeholder="Please pick a date" />
+          <el-form-item label="ETA Warehouse" prop="etaWh">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaWh" type="date" placeholder="Please pick a date" />
           </el-form-item>
-          <el-form-item label="ATA Warehouse" prop="ata_wh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_wh" type="date" placeholder="Please pick a date" />
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="ETD Origin Port" prop="etd_op">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etd_op" type="date" placeholder="Please pick a date" />
-          </el-form-item>
-          <el-form-item label="ATD Origin Port" prop="atd_op">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.atd_op" type="date" placeholder="Please pick a date" />
+          <el-form-item label="ATA Warehouse" prop="ataWh">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataWh" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="ETA Destination Port" prop="eta_dp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.eta_dp" type="date" placeholder="Please pick a date" />
+          <el-form-item label="ETD Origin Port" prop="etdOp">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etdOp" type="date" placeholder="Please pick a date" />
           </el-form-item>
-          <el-form-item label="ATA Destination Port" prop="ata_dp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ata_dp" type="date" placeholder="Please pick a date" />
+          <el-form-item label="ATD Origin Port" prop="atdOp">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.atdOp" type="date" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETA Destination Port" prop="etaDp">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaDp" type="date" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATA Destination Port" prop="ataDp">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataDp" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -201,7 +201,7 @@
             <el-input disabled v-model="transitTime" placeholder=""/>
           </el-form-item>
           <el-form-item label="Transit Options">
-            <el-select :default="1" :disabled="dialogPattern('view')" v-model="transit_time_base" class="filter-item" placeholder="Please select">
+            <el-select :default="1" :disabled="dialogPattern('view')" v-model="transitTimeBase" class="filter-item" placeholder="Please select">
               <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
             </el-select>
           </el-form-item>
@@ -276,7 +276,7 @@ const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
-  per_page: 10,
+  perPage: 10,
 });
 
 const batchArr = ref([]);
@@ -307,7 +307,7 @@ const titleMap= ref({
   create: 'Create',
 });
 const rules = ref({
-  target_id: [{ required: true, message: 'destination is required', trigger: 'change' }],
+  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
   number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
 });
 const downloadLoading = ref(false);
@@ -315,34 +315,34 @@ const disableNewBatch = ref(true);
 
 const transitTime = computed(() => {
   const formData = freightForm.value;
-  return Math.abs(+formData.ata_wh - +formData.atd_op)/(86400*1000*transit_time_base.value);
+  return Math.abs(+formData.ataWh - +formData.atdOp)/(86400*1000*transitTimeBase.value);
 });
-const transit_time_base = ref(1);
+const transitTimeBase = ref(1);
 
 const freightForm = ref({
   id: undefined,
   number: '',
-  eta_wh: null,
-  ata_wh: null,
-  ata_dp: null,
-  eta_dp: null,
-  etd_op: null,
-  atd_op: null,
+  etaWh: null,
+  ataWh: null,
+  ataDp: null,
+  etaDp: null,
+  etdOp: null,
+  atdOp: null,
   pickup: null,
-  target_id: '',
+  targetId: '',
   status: '',
   mode: '',
-  ori_port: '',
-  dest_port: '',
+  oriPort: '',
+  destPort: '',
   container: '',
   cost: '',
-  ocean_forwarder: '',
+  oceanForwarder: '',
 });
 
 const emptyForm = Object.assign({}, freightForm.value);
 let contrastData = null;
 
-const datePropertyArr = ['ata_dp', 'atd_op', 'eta_dp', 'etd_op', 'pickup', 'ata_wh', 'eta_wh'];
+const datePropertyArr = ['ataDp', 'atdOp', 'etaDp', 'etdOp', 'pickup', 'ataWh', 'etaWh'];
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
@@ -422,6 +422,7 @@ const resetForm = () => {
 };
 
 const showCreateDialog = () => {
+  batchArr.value = [];
   dialogStatus.value = 'create';
   dialogFormVisible.value = true;
   resetForm();
@@ -438,6 +439,7 @@ const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
       const formData = formatDate(freightForm.value);
+      console.log('formData: ', formData);
       createFreightAPI(formData).then(data => {
         freightForm.value = data;
         dialogStatus.value = 'edit';
@@ -557,7 +559,7 @@ const addBatch = () => {
     ElMessage.error('You need to "Submit Common Section" before "Add Sub-Batch"', 3);
     return;
   }
-  batchArr.value.push({costs: {}, source_id: '', items: []});
+  batchArr.value.push({costs: {}, sourceId: '', items: []});
   disableNewBatch.value = true;
 };
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '/@/store';
 import { getToken } from '/@/assets/utils/auth';
 import { ElMessage } from 'element-plus';
+import { jsonToHump } from '/@/assets/utils/format';
 // import { useStore } from 'vuex'
 
 
@@ -53,8 +54,11 @@ requester.interceptors.response.use(
     const res = response.data;
 
     if (!res.code) {
+      res.items && jsonToHump(res.items);
+      res.item && jsonToHump(res.item);
       return res;
     }
+
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       ElMessage({

@@ -8,8 +8,8 @@
       <svg-icon class="icon close-icon" icon-name="close" @click="deleteBatch"></svg-icon>
     </span>
     <el-row justify="space-between" style="margin: 2rem 2rem 0;">
-      <el-form-item label="Source">
-        <el-select :disabled="dialogPattern('view')" v-model="batch.source_id" placeholder="Please select">
+      <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Source">
+        <el-select :disabled="dialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>

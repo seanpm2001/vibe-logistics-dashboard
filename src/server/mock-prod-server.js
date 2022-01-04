@@ -1,12 +1,12 @@
 import { createProdMockServer } from "vite-plugin-mock/es/createProdMockServer";
-import testMock from "./mock/test";
+import orderMock from "./mock/order";
 import userMock from "./mock/user";
 import roleMock from "./mock/role";
 // import freightMock from "./mock/freight";
 import inventoryMock from "./mock/inventory";
 
 export const mockModules = [
-  ...testMock,
+  ...orderMock,
   ...userMock,
   ...roleMock,
   // ...freightMock,
