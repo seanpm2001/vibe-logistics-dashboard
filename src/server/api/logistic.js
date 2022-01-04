@@ -27,6 +27,7 @@ export async function deleteOrderAPI (id) {
 
 /* 产品 Freight API */
 export async function queryFreightsAPI (params) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const res = await requester.get('freights', {
     params,
   });
@@ -71,6 +72,7 @@ export async function deleteBatchAPI (id) {
 
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   // const { items } = await requester.get('https://logistics.vibe.dev/api/warehouses', {
   const { items } = await requester.get('warehouses', {
     params,
@@ -97,7 +99,6 @@ export async function logoutAPI () {
 }
 
 export async function getUserByTokenAPI (token) {
-  requester.defaults.baseURL = '/api';
   const { data } = await requester.get('/users', {
     params: {
       token
