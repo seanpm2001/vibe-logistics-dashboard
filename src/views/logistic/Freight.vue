@@ -495,12 +495,13 @@ const findBatch = (freightId, callback) => {
 };
 
 const handleDetailRow = (row, type) => {
+  disableNewBatch.value = true;
   const loadingInstance = ElLoading.service({fullscreen: true});
   findFreightAPI(row.id).then(data => {
+    loadingInstance.close();
     freightForm.value = Object.assign({}, data); // copy obj
     type === 'edit' && (contrastData = Object.assign({}, data));
     batchArr.value = [];
-    loadingInstance.close();
     findBatch(row.id, () => disableNewBatch.value = false);
     dialogStatus.value = type;
     dialogFormVisible.value = true;

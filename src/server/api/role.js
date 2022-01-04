@@ -1,26 +1,26 @@
 import requester from '../axios-requester';
 
 export async function getRoutesAPI() {
-  const res = await requester.get('/vue-element-admin/routes');
+  const res = await requester.get('/routes');
   return res;
 }
 
 export async function getRolesAPI() {
-  const res = await requester.get('/vue-element-admin/roles');
+  const res = await requester.get('/roles');
   return res;
 }
 
 export async function addRoleAPI(data) {
-  const res = await requester.post('/vue-element-admin/role', data);
+  const res = await requester.post('/role', data);
   return res;
 }
 
 export async function updateRoleAPI(id, data) {
-  const res = await requester.post(`/vue-element-admin/role/${id}`, data);
+  const res = await requester.post(`/role/${id}`, data);
   return res;
 }
 
 export async function deleteRoleAPI(id) {
-  const res = await requester.delete(`/vue-element-admin/role/${id}`);
+  const res = await requester.delete(`/role/${id}`);
   return res;
 }

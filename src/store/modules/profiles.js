@@ -1,4 +1,4 @@
-import { getUserAPI, getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../../server/api/logistic';
+import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../../server/api/logistic';
 import router from '/@/router';
 
 export const profile = {
@@ -47,7 +47,6 @@ export const profile = {
     },
 
     async getUserByToken (store, token) {
-      const test = await getUserAPI();
       const userInfo = await getUserByTokenAPI(token);
       if (userInfo) {
         store.commit('SET_IS_LOGINED', true);

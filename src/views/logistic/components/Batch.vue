@@ -73,7 +73,7 @@
     </div>
     <el-dialog v-model="dialogExcelVisible" :before-close="closePreviewDialog">
       <div class="dialog-header">Excel Preview</div>
-      <el-table :data="batch.items" border fit highlight-current-row style="width: 80%; margin: 0 auto;">
+      <el-table :data="previewExcelArr" border fit highlight-current-row style="width: 80%; margin: 0 auto;">
         <el-table-column type="index" width="100" />
         <el-table-column prop="sku" label="SKU" />
         <el-table-column prop="serial" label="Serial Number" />
@@ -115,6 +115,7 @@ const props = defineProps({
 });
 
 const batch = ref(props.batchItem);
+const previewExcelArr = [].concat(batch.value?.items);
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['deleteBatch', 'submitBatch', 'editBatch']);
@@ -129,11 +130,11 @@ const fetchProducts = () => {
       const temp = { sku: key, quantityCount: quantity, cost: costs[key]};
       products.value[key] = products.value[key] ? Object.assign(products.value[key], temp) : temp;
     }
+    delete batch.value.items;
   }
-  console.log('products.value: ', products.value);
 };
 
-batch.value?.id && fetchProducts();
+batch.value?.id && fetchProducts(); // 若为数据库中的batch，加载products信息
 
 const totalCost = computed(() => {
   let total = 0;
@@ -214,10 +215,10 @@ const updateBatchProducts = (type, file) => {
 };
 
 const handleBatch = (type) => {
+  for (const key in products.value) { // 更新costs
+    batch.value.costs[key] = products.value[key].cost || 0;
+  }
   if (type === "create") {
-    for (const key in products.value) {
-      batch.value.costs[key] = products.value[key].cost || 0;
-    }
     createBatchAPI(props.freightId, batch.value).then(data => {
       batch.value = data;
       emit('submitBatch', data, props.freightId ,props.batchIdx);

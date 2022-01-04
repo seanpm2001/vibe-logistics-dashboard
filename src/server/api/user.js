@@ -1,16 +1,19 @@
 import requester from '../axios-requester';
 
 export async function loginAPI(formInfo) {
-  const res = await requester.post('/vue-element-admin/user/login', formInfo);
+  requester.defaults.baseURL = '/api';
+  const res = await requester.post('/user/login', formInfo);
   return res;
 }
 
 export async function getInfoAPI(token) {
-  const res = await requester.get('/vue-element-admin/user/info', token);
+  requester.defaults.baseURL = '/api';
+  const res = await requester.get('/user/info', token);
   return res;
 }
 
 export async function logoutAPI() {
-  const res = await requester.post('/vue-element-admin/user/logout');
+  requester.defaults.baseURL = '/api';
+  const res = await requester.post('/user/logout');
   return res;
 }

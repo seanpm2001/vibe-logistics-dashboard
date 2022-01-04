@@ -38,7 +38,7 @@ const users = {
 export default [
   // user login
   {
-    url: '/api/vue-element-admin/user/login',
+    url: '/api/user/login',
     method: 'post',
     response: config => {
       // const { username } = config.body;
@@ -63,7 +63,7 @@ export default [
 
   // get user info
   {
-    url: RegExp('/api/vue-element-admin/user/info\.*'),
+    url: RegExp('/api/user/info\.*'),
     method: 'get',
     response: config => {
       const token = config.headers['x-token'];
@@ -87,7 +87,7 @@ export default [
 
   // user logout
   {
-    url: '/api/vue-element-admin/user/logout',
+    url: '/api/user/logout',
     method: 'post',
     response: () => {
       return {

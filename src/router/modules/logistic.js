@@ -7,12 +7,12 @@ export const logisticRouter = [
     redirect: '/logistic/order',
     meta: { title: 'Logistics', icon: 'logistics', noCache: true },
     children: [
-      {
-        path: 'order',
-        component: () => import('/@/views/logistic/Order.vue'),
-        name: 'Order',
-        meta: { title: 'Order', icon: 'order' }
-      },
+      // {
+      //   path: 'order',
+      //   component: () => import('/@/views/logistic/Order.vue'),
+      //   name: 'Order',
+      //   meta: { title: 'Order', icon: 'order' }
+      // },
       {
         path: 'inventory',
         component: () => import('/@/views/logistic/Inventory.vue'),

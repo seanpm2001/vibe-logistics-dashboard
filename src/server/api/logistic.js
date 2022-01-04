@@ -88,16 +88,17 @@ export async function listInventoriesAPI (params) {
 
 /* 用户配置 profile API 登录注册登出 */
 export async function loginAPI (payload) {
-  const { data } = await requester.post('login', payload);
+  const { data } = await requester.post('/login', payload);
   return data;
 }
 export async function logoutAPI () {
-  const { data } = await requester.get('logout');
+  const { data } = await requester.get('/logout');
   return data;
 }
 
 export async function getUserByTokenAPI (token) {
-  const { data } = await requester.get('users', {
+  requester.defaults.baseURL = '/api';
+  const { data } = await requester.get('/users', {
     params: {
       token
     }
@@ -106,11 +107,11 @@ export async function getUserByTokenAPI (token) {
 }
 
 export async function registerAPI () {
-  const { data } = await requester.get('logout');
+  const { data } = await requester.get('/logout');
   return data;
 }
 
-export async function getUserAPI () {
-  const res = await requester.get('getUser');
-  return res;
-}
+// export async function getUserAPI () {
+//   const res = await requester.get('getUser');
+//   return res;
+// }
