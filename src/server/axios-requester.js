@@ -12,7 +12,7 @@ const requester = axios.create({
   withCredentials: true, // 允许携带cookie
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
-    'withCredentials': true,
+    'withCredentials': false,
     'Authorization': localStorage.token || ''
   }
 });
