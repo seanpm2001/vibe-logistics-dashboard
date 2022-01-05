@@ -69,3 +69,17 @@ See [Vite Configuration Reference](https://vitejs.cn/guide/).
 See [Vue-Cli Configuration Reference](https://cli.vuejs.org/config/).
 
 See [Eslint Configuration Reference](https://eslint.bootcss.com/docs/user-guide/getting-started).
+
+_____
+### Specification
+#### File name
+* js: `keba-case` (In addition to some special cases)
+* vue: `upper-camel-case`
+* directory: `camel-case`
+#### Function name
+* API related (query/find/create/update/delete)
+* Operation related (view/edit/submit/remove)
+
+#### API data name
+* list: `{ items: [], total: 0 }`
+* single: `{ item: {} }`
