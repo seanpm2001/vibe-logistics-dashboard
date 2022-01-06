@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <el-alert type="info" show-icon class="test-alert">Username: admin | Password: 123</el-alert>
     <div class="form-warp">
       <el-form ref="inForm" :rules="formRules" :model="signInForm" class="sign-in-form">
         <h2 class="form-title">登录</h2>
@@ -8,7 +7,7 @@
           <span class="svg-container">
             <svg-icon icon-name="user" />
           </span>
-          <el-input ref="inUsername" v-model="signInForm.username" placeholder="用户名" />
+          <el-input ref="inUsername" v-model="signInForm.email" placeholder="用户名" />
         </div>
         <div prop="password">
           <span class="svg-container">
@@ -36,7 +35,7 @@
           <span class="svg-container">
             <svg-icon icon-name="user" />
           </span>
-          <el-input ref="upUsername" v-model="signUpForm.username" placeholder="用户名" />
+          <el-input ref="upUsername" v-model="signUpForm.email" placeholder="用户名" />
         </div>
         <div>
           <span class="svg-container">
@@ -90,12 +89,12 @@ const redirect = ref('/');
 const otherQuery = ref('');
 
 const signInForm = reactive({
-  username: "admin",
+  email: "admin@vibe.us",
   password: "",
 });
 
 const signUpForm = reactive({
-  username: "",
+  email: "",
   password: "",
 });
 
@@ -116,7 +115,7 @@ const validatePassword = (rule, value, callback) => {
 };
 
 const formRules = {
-  username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+  email: [{ required: true, trigger: 'blur', validator: validateUsername }],
   password: [{ required: true, trigger: 'blur', validator: validatePassword }]
 };
 
@@ -129,11 +128,11 @@ onMounted(() => {
 });
 
 function focusForm(signInPattern, refs) {
-  const username = signInPattern ? 'inUsername' : 'upUsername';
+  const email = signInPattern ? 'inUsername' : 'upUsername';
   const password = signInPattern ? 'inPassword' : 'upPassword';
 
-  if (refs[username].modelValue === '') {
-    refs[username].focus();
+  if (refs[email].modelValue === '') {
+    refs[email].focus();
   } else if (refs[password].modelValue === '') {
     refs[password].focus();
   }
@@ -208,7 +207,7 @@ const submitLogin = async signInPattern => {
             btnLoading.value = false;
           });
       } else {
-        ElMessage.error('Wrong username or password.', 3);
+        ElMessage.error('Wrong email or password.', 3);
         return false;
       }
     });

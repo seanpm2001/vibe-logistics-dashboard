@@ -24,24 +24,6 @@ for (let i = 0; i < count; i++) {
   }));
 }
 
-// const detailArr = JSON.parse(JSON.stringify(freightsList));
-// detailArr.forEach(item => {
-//   item = Object.assign(item, Mock.mock({
-//     'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-//     'number|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-//     ataDp: String(+Mock.Random.date('T')),
-//     pickup: String(+Mock.Random.date('T')),
-//     'targetId|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],
-//     'status|1': ['Picked Up', 'In Transit', 'Delivered', 'Cancelled'],
-//     'mode|1': ['Air', 'Ocean', 'Truck'],
-//     'oriPort|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
-//     'destPort|1': ['FBA-US', 'FBA-CA', 'FBA-DE', 'FBA-UK', 'FBA-JP', 'IWIN', 'RED STAG', 'VIBE BEL', 'FPL-CA', 'FPL-AU', 'TOYOND', 'TCL', 'SF (Fuqing)', 'Jiguang', 'HH', 'Zhongao', 'TPV', 'Customer'],
-//     'container|1': ['20GP', '40GP', '40HQ', '45HQ', 'LCL'],
-//     cost: '@float(0, 100, 2, 2)',
-//     'oceanForwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
-//   }));
-// });
-
 freightObj = Mock.mock({
   id: '@increment',
   'destination|1': ['LOT-80', 'LOT-79', 'CA-16', 'EU-18', 'AGL-8'],

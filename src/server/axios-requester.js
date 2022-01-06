@@ -5,7 +5,6 @@ import { ElMessage } from 'element-plus';
 import { jsonToHump } from '/@/assets/utils/format';
 // import { useStore } from 'vuex'
 
-
 const requester = axios.create({
   // baseURL: 'https://logistics.vibe.dev/api'
   baseURL: '/api',
@@ -14,7 +13,6 @@ const requester = axios.create({
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
     'withCredentials': false,
-    'Authorization': localStorage.token || ''
   }
 });
 
@@ -22,12 +20,8 @@ const requester = axios.create({
 requester.interceptors.request.use(
   config => {
     // do something before request is sent
-
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken();
+      config.headers['Authorization'] = 'Bearer ' + getToken();
     }
     return config;
   },
@@ -52,6 +46,13 @@ requester.interceptors.response.use(
    */
   response => {
     const res = response.data;
+
+    if (response.status === 401) {
+      store.dispatch('user/resetToken').then(() => {
+        location.reload();
+      });
+      return Promise.reject(new Error(response.msg || 'Error'));
+    }
 
     if (!res.code) {
       res.items && jsonToHump(res.items);

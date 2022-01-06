@@ -76,6 +76,10 @@ _____
 * js: `keba-case` (In addition to some special cases)
 * vue: `upper-camel-case`
 * directory: `camel-case`
+#### Import order
+1. node-modules `dependency`
+2. `.vue` file
+3. `.js` file
 #### Function name
 * API related (query/find/create/update/delete)
 * Operation related (view/edit/submit/remove)

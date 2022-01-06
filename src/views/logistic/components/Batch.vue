@@ -118,7 +118,7 @@ const batch = ref(props.batchItem);
 const previewExcelArr = [].concat(batch.value?.items);
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['deleteBatch', 'submitBatch', 'editBatch']);
+const emit = defineEmits(['removeBatch', 'submitBatch', 'editBatch']);
 
 const products = ref({});
 
@@ -175,7 +175,7 @@ const deleteBatch = () => {
         callback: (action) => {
           if (action === "confirm") {
             deleteBatchAPI(batchId).then(() => {
-              emit('deleteBatch', props.batchIdx);
+              emit('removeBatch', props.batchIdx);
               ElMessage.success('Delete completed');
             });
           } else if (action === "cancel") {
@@ -186,7 +186,7 @@ const deleteBatch = () => {
     );
     return;
   }
-  emit('deleteBatch', props.batchIdx); // 删除新创建还未提交的batch
+  emit('removeBatch', props.batchIdx); // 删除新创建还未提交的batch
 };
 
 const updateBatchProducts = (type, file) => {

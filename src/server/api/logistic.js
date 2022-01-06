@@ -26,7 +26,7 @@ export async function deleteOrderAPI (id) {
   await requester.delete(`Orders/${id}`);
 }
 
-/* 产品 Freight API */
+/* 海运 Freight API */
 export async function queryFreightsAPI (params) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const res = await requester.get('freights', {
@@ -78,12 +78,37 @@ export async function deleteBatchAPI (id) {
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
-  // const { items } = await requester.get('https://logistics.vibe.dev/api/warehouses', {
   const { items } = await requester.get('warehouses', {
     params,
   });
   return items;
 }
+
+/* 物流 Shipment API */
+export async function queryShipmentsAPI (params) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  const res = await requester.get('shipments', {
+    params,
+  });
+  return res.data;
+}
+
+export async function deleteShipmentAPI (id) {
+  await requester.delete(`shipment/${id}`);
+}
+
+/* 批次 Shipment Package API */
+export async function listShipPackagesAPI (shipmentId) {
+  requester.defaults.baseURL = '/api';
+  const res = await requester.get(`shipment/${shipmentId}/packages`);
+  return res.data.items;
+}
+
+export async function findItemSerialAPI (id) {
+  const res = await requester.get(`items/${id}`);
+  return res.data.item;
+}
+
 
 /* 库存 Inventory API */
 export async function listInventoriesAPI (params) {

@@ -1,7 +1,7 @@
-const TokenKey = 'Admin-Token';
+const TokenKey = 'vibeToken';
 
 export function setCookie(name,value){  
-  const Days = 30;  
+  const Days = 1;  
   const exp  = new Date();  
   exp.setTime(exp.getTime() + Days*24*60*60*1000);  
   document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();  

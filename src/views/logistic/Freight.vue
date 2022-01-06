@@ -2,16 +2,16 @@
   <div class="page">
     <div class="filter-container">
       <el-input :disabled="dialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select :disabled="dialogPattern('view')" v-model="listQuery.sort" style="width: 150px" class="filter-item" @change="handleFilter">
+      <el-select :disabled="dialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button disabled v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="showCreateDialog">
         Add
       </el-button>
-      <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button disabled v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
       <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
@@ -34,11 +34,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column v-if="showMultSelection" type="selection" width="50" height="40" align="center" />
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template v-slot="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')" />
       <el-table-column label="Batch Number" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
@@ -89,14 +85,14 @@
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
-        <template v-slot="{row,$index}">
+        <template v-slot="{row}">
           <el-button type="primary" size="mini" @click="handleDetailRow(row, 'edit')">
             Edit
           </el-button>
           <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
             View detail
           </el-button>
-          <el-popconfirm @confirm="deleteFreight(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
+          <el-popconfirm @confirm="handleDetailRow(row, 'remove')" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
               <el-button v-if="row.status!='deleted'" size="mini" type="danger">
                 Delete
@@ -173,14 +169,6 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="ETA Warehouse" prop="etaWh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaWh" type="date" placeholder="Please pick a date" />
-          </el-form-item>
-          <el-form-item label="ATA Warehouse" prop="ataWh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataWh" type="date" placeholder="Please pick a date" />
-          </el-form-item>
-        </el-row>
-        <el-row>
           <el-form-item label="ETD Origin Port" prop="etdOp">
             <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etdOp" type="date" placeholder="Please pick a date" />
           </el-form-item>
@@ -194,6 +182,14 @@
           </el-form-item>
           <el-form-item label="ATA Destination Port" prop="ataDp">
             <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataDp" type="date" placeholder="Please pick a date" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="ETA Warehouse" prop="etaWh">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaWh" type="date" placeholder="Please pick a date" />
+          </el-form-item>
+          <el-form-item label="ATA Warehouse" prop="ataWh">
+            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataWh" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row>
@@ -232,8 +228,8 @@
             :batchItem=item
             :warehouseOptions=warehouseOptions
             :dialogStatus=dialogStatus
-            @deleteBatch="deleteBatch"
-            @submitBatch="createBatch"
+            @deleteBatch="removeBatch"
+            @createBatch="submitBatch"
             @editBatch="updateBatch"
           />
         </template>
@@ -262,15 +258,16 @@
 import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
-import { parseTime } from '/@/assets/utils/format';
 import Pagination from '/@/components/Pagination.vue';
+import Batch from './components/Batch.vue';
+import { parseTime } from '/@/assets/utils/format';
 import {
   listWarehousesAPI,
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listBatchesAPI, deleteBatchAPI
 } from "/@/server/api/logistic";
-import batch from './components/Batch.vue';
-import { statusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions, productMap, productIconMap } from './enum/freight';
+import { statusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions } from './enum/freight';
+import { productMap, productIconMap } from './enum/product';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
@@ -357,11 +354,7 @@ const fetchList = () => {
   queryFreightsAPI(listQuery.value).then(data => {
     list.value = data.items;
     total.value = data.total;
-
-    // Just to simulate the time of the request
-    setTimeout(() => {
-      listLoading.value = false;
-    }, 100);
+    listLoading.value = false;
   });
 };
 
@@ -439,10 +432,10 @@ const createFreight = () => {
   proxy.$refs['dataForm'].validate((valid) => {
     if (valid) {
       const formData = formatDate(freightForm.value);
-      console.log('formData: ', formData);
       createFreightAPI(formData).then(data => {
         freightForm.value = data;
         dialogStatus.value = 'edit';
+        disableNewBatch.value = false;
         fetchList();
         ElMessage.success('Create Successfully', 3);
       });
@@ -456,19 +449,9 @@ const updateFreight = () => {
       const updates = freightForm.value;
       updateFreightAPI(updates.id, updates).then(data => {
         freightForm.value = data;
-        ElMessage.success('Update Successfully', 3);
+        ElMessage.success(`Update Freight ${updates.id}(ID) Successfully`, 3);
       });
     }
-  });
-};
-
-const deleteFreight = (row, index) => {
-  deleteFreightAPI(row.id).then(() => {
-    ElMessage.success('Delete Successfully', 3);
-  }).catch(() => {
-    ElMessage.error(`Failed to delete Freight ${row.id}(ID)`, 3);
-  }).finally(() => {
-    fetchList();
   });
 };
 
@@ -479,9 +462,10 @@ const handleSelectionChange = selectedArr => {
 const handleDelSelected = () => {
   let succeed = true;
   multipleSelection.value.forEach(item => {
-    deleteFreightAPI(item.id).catch(() => {
+    const freightId = item.id;
+    deleteFreightAPI(freightId).catch(() => {
       succeed = false;
-      ElMessage.error(`Failed to delete Freight ${item.id}(ID)`, 3);
+      ElMessage.error(`Failed to delete Freight ${freightId}(ID)`, 3);
     });
   });
   succeed && ElMessage.success('Delete Successfully', 3);
@@ -497,17 +481,26 @@ const findBatch = (freightId, callback) => {
 };
 
 const handleDetailRow = (row, type) => {
-  disableNewBatch.value = true;
   const loadingInstance = ElLoading.service({fullscreen: true});
-  findFreightAPI(row.id).then(data => {
-    loadingInstance.close();
+  const freightId = row.id;
+  if (type === 'remove') {
+    deleteFreightAPI(freightId).then(() => {
+      ElMessage.success(`Delete Freight ${freightId}(ID) Successfully`, 3);
+      fetchList();
+    }).catch(() => ElMessage.error(`Failed to delete Freight ${freightId}(ID)`, 3))
+      .finally(() => loadingInstance.close());
+    return;
+  }
+  findFreightAPI(freightId).then(data => {
     freightForm.value = Object.assign({}, data); // copy obj
     type === 'edit' && (contrastData = Object.assign({}, data));
     batchArr.value = [];
-    findBatch(row.id, () => disableNewBatch.value = false);
+    findBatch(freightId, () => disableNewBatch.value = false);
     dialogStatus.value = type;
+    disableNewBatch.value = true;
     dialogFormVisible.value = true;
-  });
+  }).catch(() => ElMessage.error(`Failed to find Freight ${freightId}(ID)`, 3))
+    .finally(() => loadingInstance.close());
 };
 
 const handleDownload = () => {
@@ -548,7 +541,7 @@ const getSortClass = key => {
 //   listQuery.value.page = val;
 // };
 
-const deleteBatch = (idx, batchId) => {
+const removeBatch = (idx, batchId) => {
   batchArr.value.splice(idx, 1);
   disableNewBatch.value = false;
   fetchList();
@@ -563,7 +556,7 @@ const addBatch = () => {
   disableNewBatch.value = true;
 };
 
-const createBatch = (batch, freightId, batchIdx) => {
+const submitBatch = (batch, freightId, batchIdx) => {
   ElMessage.success('Create Sub-Batch successfully', 3);
   disableNewBatch.value = false;
   fetchList();
@@ -582,8 +575,8 @@ const init = () => {
   });
 };
 
-fetchList();
 onMounted(() => {
+  fetchList();
   init();
 });
 </script>

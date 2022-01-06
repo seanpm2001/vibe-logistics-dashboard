@@ -37,38 +37,37 @@ const users = {
 
 export default [
   // user login
-  {
-    url: '/api/user/login',
-    method: 'post',
-    response: config => {
-      // const { username } = config.body;
-      // const token = tokens[username];
+  // {
+  //   url: '/api/user/login',
+  //   method: 'post',
+  //   response: config => {
+  //     // const { username } = config.body;
+  //     // const token = tokens[username];
 
-      // mock error
-      // if (!token) {
-      //   return {
-      //     code: 60204,
-      //     message: 'Account and password are incorrect.'
-      //   };
-      // }
+  //     // mock error
+  //     // if (!token) {
+  //     //   return {
+  //     //     code: 60204,
+  //     //     message: 'Account and password are incorrect.'
+  //     //   };
+  //     // }
 
-      return {
-        code: 20000,
-        data: {
-          token: 'admin-token'
-        }
-      };
-    }
-  },
+  //     return {
+  //       code: 20000,
+  //       data: {
+  //         token: 'admin-token'
+  //       }
+  //     };
+  //   }
+  // },
 
   // get user info
   {
     url: RegExp('/api/user/info\.*'),
     method: 'get',
     response: config => {
-      const token = config.headers['x-token'];
       // const token = "admin-token"; // test
-      const info = users[token];
+      const info = users['admin-token'];
 
       // mock error
       if (!info) {
