@@ -6,20 +6,23 @@ import requester from '../axios-requester';
 import { jsonToUnderline } from '/@/assets/utils/format';
 
 /* 订单 Order API */
-export async function listOrdersAPI () {
-  const { data } = await requester.get('Orders');
-  return data;
+export async function queryOrdersAPI (params) {
+  requester.defaults.baseURL = '/api';
+  const res = await requester.get('orders', {
+    params,
+  });
+  return res.data;
 }
 export async function findOrderAPI (id) {
-  const { data } = await requester.get(`Order/${id}`);
+  const { data } = await requester.get(`order/${id}`);
   return data;
 }
 export async function createOrderAPI (Order) {
-  const { data } = await requester.post('Orders', Order);
+  const { data } = await requester.post('orders', Order);
   return data;
 }
 export async function updateOrderAPI (id, updates) {
-  const { data } = await requester.put(`Order/${id}`, jsonToUnderline(updates));
+  const { data } = await requester.put(`order/${id}`, jsonToUnderline(updates));
   return data;
 }
 export async function deleteOrderAPI (id) {
@@ -103,8 +106,9 @@ export async function listShipPackagesAPI (shipmentId) {
   return res.data.items;
 }
 
-export async function findItemSerialAPI (id) {
-  const res = await requester.get(`items/${id}`);
+/* 单个商品 Unit API */
+export async function findUnitAPI (id) {
+  const res = await requester.get(`unit/${id}`);
   return res.data.item;
 }
 

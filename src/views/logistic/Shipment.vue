@@ -85,7 +85,6 @@
     <el-dialog title="Shipment Package" v-model="dialogTableVisible" :close-on-click-modal="false">
       <ShipPackage
         :packageList="packageList"
-        @getItemSerialId="findItemSerial"
       />
       <template v-slot:footer>
         <div class="dialog-footer">
@@ -95,23 +94,6 @@
         </div>
       </template>
     </el-dialog>
-    <el-drawer
-      v-model="drawerSerialVisible"
-      title="Item Info"
-      size="50%"
-      direction="ltr"
-      :before-close="handleCloseDrawer"
-      :close-on-click-modal="false"
-    >
-      item info
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="drawerSerialVisible = false">
-            Close
-          </el-button>
-        </div>
-      </template>
-    </el-drawer>
   </div>
 </template>
 
@@ -122,7 +104,7 @@ import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/assets/utils/format';
-import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI, findItemSerialAPI } from "/@/server/api/logistic";
+import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/server/api/logistic";
 import { statusOptions, whTypeOptions } from './enum/shipment';
 import { productMap, productIconMap } from './enum/product';
 
@@ -200,16 +182,7 @@ const handleDetailRow = (row, type) => {
     .finally(() => loadingInstance.close());
 };
 
-const findItemSerial = itemId => {
-  // findItemSerialAPI(itemId).then(() => {
-  drawerSerialVisible.value = true;
-  // });
-  
-};
-
-onMounted(() => {
-  fetchList();
-});
+fetchList();
 
 </script>
 

@@ -1,4 +1,4 @@
-import { createOrderAPI, deleteOrderAPI, findOrderAPI, listOrdersAPI, updateOrderAPI } from '/@/server/api/logistic';
+import { createOrderAPI, deleteOrderAPI, findOrderAPI, queryOrdersAPI, updateOrderAPI } from '/@/server/api/logistic';
 
 export const order = {
   namespaced: true,
@@ -27,7 +27,7 @@ export const order = {
   },
   actions: {
     async listOrders ({ commit }) {
-      const { rows } = await listOrdersAPI();
+      const { rows } = await queryOrdersAPI();
       rows && rows.forEach((item) => {
         commit('UPDATE_ORDER', item);
       });
