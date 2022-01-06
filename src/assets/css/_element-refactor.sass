@@ -1,0 +1,44 @@
+// dialog__header && drawer__header
+.app-main .el-dialog__header, .app-main .el-drawer__header
+  background-image: linear-gradient(-303deg,#00a4bd,#00afb2 56%,#00bda5)
+  margin-bottom: 0
+  padding-bottom: 20px
+  span
+    font-family: Avenir Next W02,Helvetica,Arial,sans-serif
+    font-size: 20px
+    font-weight: 600
+    color: #fff
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+  span
+    font-family: Avenir Next W02,Helvetica,Arial,sans-serif
+    font-size: 20px
+    font-weight: 600
+    color: #fff
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+  .el-drawer__close-btn
+    position: relative
+  .el-drawer__close-btn, .el-dialog__headerbtn
+    line-height: 1
+    color: #fff
+    &::after
+      transition: background 150ms ease-out 0s
+      border-radius: 100%
+      content: " "
+      left: 50%
+      padding: 20px
+      position: absolute
+      top: 50%
+      background: rgba(255, 255, 255, 0)
+      transform: translate(-50%, -50%)
+    &:hover i
+      color: #fff
+    &:hover::after
+      background: rgba(255, 255, 255, .2)
+
+    .el-icon-close.el-icon
+      font-size: 22px
+      color: #fff
+      &::before
+        font-weight: 600

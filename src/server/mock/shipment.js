@@ -21,7 +21,7 @@ for (let i = 0; i < count; i++) {
 
 for (let i = 0; i < 3; i++) {
   dataItemList.push(Mock.mock({
-    'tracking_number|1': ['', '55658899', '54554465'],
+    'tracking_number|1': ['52358899', '55658899', '54554465'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     'last_modified': '2020-05-22T00:00:00',
     content: {

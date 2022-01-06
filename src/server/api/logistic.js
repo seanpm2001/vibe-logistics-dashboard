@@ -86,7 +86,7 @@ export async function listWarehousesAPI (params) {
 
 /* 物流 Shipment API */
 export async function queryShipmentsAPI (params) {
-  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = '/api';
   const res = await requester.get('shipments', {
     params,
   });
@@ -99,7 +99,6 @@ export async function deleteShipmentAPI (id) {
 
 /* 批次 Shipment Package API */
 export async function listShipPackagesAPI (shipmentId) {
-  requester.defaults.baseURL = '/api';
   const res = await requester.get(`shipment/${shipmentId}/packages`);
   return res.data.items;
 }

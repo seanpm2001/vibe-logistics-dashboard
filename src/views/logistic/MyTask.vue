@@ -115,7 +115,7 @@ import {
   listBatchesAPI, deleteBatchAPI
 } from "/@/server/api/logistic";
 import batch from './components/Batch.vue';
-import { statusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions, productMap, productIconMap } from './enum/freight';
+import { statusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions } from './enum/freight';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();

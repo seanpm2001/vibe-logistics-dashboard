@@ -95,16 +95,23 @@
         </div>
       </template>
     </el-dialog>
-    <el-dialog title="Item Info" v-model="dialogSerialVisible" :close-on-click-modal="false">
+    <el-drawer
+      v-model="drawerSerialVisible"
+      title="Item Info"
+      size="50%"
+      direction="ltr"
+      :before-close="handleCloseDrawer"
+      :close-on-click-modal="false"
+    >
       item info
       <template v-slot:footer>
         <div class="dialog-footer">
-          <el-button @click="dialogSerialVisible = false">
+          <el-button @click="drawerSerialVisible = false">
             Close
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </el-drawer>
   </div>
 </template>
 
@@ -140,7 +147,7 @@ const packageList = ref([]);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogTableVisible = ref(false);
-const dialogSerialVisible = ref(false);
+const drawerSerialVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
 const titleMap= ref({
@@ -170,6 +177,10 @@ const handlePagination = config => {
   fetchList();
 };
 
+const handleCloseDrawer = done => {
+  done();
+};
+
 const handleDetailRow = (row, type) => {
   const loadingInstance = ElLoading.service({fullscreen: true});
   const shipmentId = row.id;
@@ -191,7 +202,7 @@ const handleDetailRow = (row, type) => {
 
 const findItemSerial = itemId => {
   // findItemSerialAPI(itemId).then(() => {
-  dialogSerialVisible.value = true;
+  drawerSerialVisible.value = true;
   // });
   
 };
