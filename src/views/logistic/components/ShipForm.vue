@@ -84,7 +84,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
-import "element-plus/theme-chalk/src/message-box.scss";
 import { file2Xcel } from '/@/assets/utils/excel';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/server/api/logistic';
 

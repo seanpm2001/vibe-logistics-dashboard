@@ -87,3 +87,7 @@ _____
 #### API data name
 * list: `{ items: [], total: 0 }`
 * single: `{ item: {} }`
+
+#### Tips
+* Use `Uppercase Component Name` in `template`, like `<Batch />` for readability.
+* Import missing style like `element-plus/theme-chalk/src/message.scss` once in single root page, don't import it in components like `Batch.vue` again.

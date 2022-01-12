@@ -72,7 +72,7 @@ import { computed, getCurrentInstance, onMounted, reactive, ref, watchEffect } f
 import Captcha from "/@/components/Captcha/Index.vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from 'vue-router';
-import { ElAlert, ElMessage, ElLoading } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import { validUsername } from '/@/assets/utils/validate';
 
 /* Begin Data */
@@ -194,11 +194,9 @@ const submitLogin = async signInPattern => {
   if (validated.value) {
     proxy.$refs.inForm.validate(valid => {
       if (valid) {
-        const loadingInstance = ElLoading.service({fullscreen: true});
         btnLoading.value = true;
         store.dispatch('user/login', signInForm)
           .then(() => {
-            loadingInstance.close();
             router.push({ path: redirect.value || '/', query: otherQuery.value });
             btnLoading.value = false;
           })
@@ -207,7 +205,6 @@ const submitLogin = async signInPattern => {
             btnLoading.value = false;
           });
       } else {
-        ElMessage.error('Wrong email or password.', 3);
         return false;
       }
     });

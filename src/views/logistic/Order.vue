@@ -1,18 +1,29 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <div class="left">
+      <el-row class="left" align="middle" :gutter="3">
         <el-input placeholder="Order ID" style="width: 120px;" />
-        <el-button disabled v-wave class="filter-item" type="primary" icon="el-icon-search">
+        <el-button disabled v-wave type="primary" icon="el-icon-search">
           Search
         </el-button>
-      </div>
-      <div>
-        <el-button type="primary" @click="assignSelected">
+        <el-select placeholder="Assigned Order" v-model="isAssigned" style="width: 155px" @change="handleFilter">
+          <el-option v-for="(item, key) in {'Assigned': true, 'Unassigned': false}" :key="item" :label="key" :value="item" />
+        </el-select>
+        <el-select disabled placeholder="Order From" v-model="listQuery.orderFrom" style="width: 130px" @change="handleFilter">
+          <el-option v-for="item in ['AFN', 'Shopify', 'MFN']" :key="item" :label="item" :value="item" />
+        </el-select>
+      </el-row>
+      <div v-if="!isAssigned">
+        <el-button type="primary" @click="showAssignDialog('assignSelected')">
           Assign Selected
         </el-button>
-        <el-button type="primary" @click="combineAndAssign">
+        <el-button type="primary" @click="showAssignDialog('combineAndAssign')">
           Combine & Assign Selected
+        </el-button>
+      </div>
+      <div v-else>
+        <el-button type="primary" @click="unassignSelected()">
+          Unassign Selected
         </el-button>
       </div>
     </div>
@@ -28,138 +39,250 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50" height="40" align="center" />
-      <el-table-column label="Order" width="180px" align="center">
+      <el-table-column label="Order" width="240px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{ row.order_id }}</span>
+            #<span class="link-type">{{ row.id }}</span>
           </el-tag>
-          <p align="left">{{row.last_modified}}</p>
+          <p>{{row.createdAt}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="Shipment Info" width="180px" align="center">
+      <el-table-column label="Shipment Info" width="300px" align="center">
         <template v-slot="{row}">
-          <p align="left">ATTN: Adrian Balfour envorso</p>
-          <p align="left">2925 State route 247</p>
-          <div align="left" class="link">{{row.email}}</div>
+          <div class="ship" align="left">
+            <el-tag size="small" v-if="row.shippingName">
+              ATTN: {{row.shippingName}}
+            </el-tag>
+            <el-tag size="small" v-if="row.shippingCompany">{{row.shippingCompany}}</el-tag>
+            <el-tag size="small" v-if="row.shippingAddress1">{{row.shippingAddress1}}</el-tag>
+            <el-tag size="small" v-if="row.shippingAddress2">{{row.shippingAddress2}}</el-tag>
+            
+            <el-tag size="small" v-if="row.shippingCity || row.shippingState || row.shippingZip || row.shippingCountry">
+              {{row.shippingCity}}, {{row.shippingState}}, {{row.shippingZip}}, {{row.shippingCountry}}
+            </el-tag>
+            <p style="visibility:hidden">placeholder</p>
+            <el-tag size="small" v-if="row.shippingPhone">
+              TEL: {{row.shippingPhone}}
+            </el-tag>
+            <a :href="'mailto:' + row.email" class="link" target="_blank">{{ row.email }}</a>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="WH Tasks & Units" width="180px" align="center">
+      <el-table-column class-name="product-column" label="WH Tasks & Units" width="210px" align="center">
         <template v-slot="{row}">
-          task1 
-          <template v-for="item in row.serials" :key="item">
-            <p class="link">{{item.serial}}</p>
+          <template v-for="(item, key) in row.items" :key="item">
+            <div align="left">
+              <svg-icon :icon-name="productIconMap[key]"  />
+              <span class="mgl-5">{{productMap[key]}}:<el-tag class="mgl-5" size="small">{{ item }}</el-tag></span>
+            </div>
           </template>
         </template>
       </el-table-column>
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ statusOptions[row.status] }}
+            {{ orderStatusOptions[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
-        <template v-slot="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleDetailRow(row, 'edit')">
-            Assign
+      <el-table-column fixed="right" label="Actions" align="center" min-width="200px" class-name="small-padding fixed-width">
+        <template v-slot="{row}">
+          <el-button v-if="!isAssigned" type="primary" size="mini" @click="showAssignDialog('assign', row.id)">
+            Assign & Add 1st WH Task
           </el-button>
-          <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
+          <el-button v-if="isAssigned" type="danger" size="mini" @click="unassignOrders(row.id)">
+            unAssign
+          </el-button>
+          <el-button v-if="isAssigned" type="success" size="mini" @click="addWarehouseTask(row.id)">
             Add WH Task
           </el-button>
-          <el-popconfirm @confirm="deleteFreight(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
-            <template #reference>
-              <el-button v-if="row.status!='deleted'" size="mini" type="danger">
-                Delete
-              </el-button>
-            </template>
-          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
+    <Pagination
       v-show="total>0"
       :total="total"
       v-model:page="listQuery.page"
-      v-model:limit="listQuery.per_page"
+      v-model:limit="listQuery.perPage"
       @pagination="handlePagination"
     />
 
-    <el-dialog :title="titleMap[dialogStatus]" v-model="dialogFormVisible" :close-on-click-modal="false">
-      <div class="dialog-header">Common</div>
-      <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
-        123
-      </el-form>
+    <el-dialog width="32%" title="Assign Warehouse" v-model="dialogAssignVisible" :close-on-click-modal="false">
+      <el-row align="middle">
+        Target Warehouse: &ensp;
+        <el-select v-model="targetId" placeholder="Please select">
+          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+        </el-select>
+      </el-row>
       <template v-slot:footer>
         <div class="dialog-footer">
-          <el-button v-if="dialogPattern('create')"  @click="resetForm">
-            Reset
+          <el-button type="primary" @click="assignOrders()">
+            submit
           </el-button>
-          <el-button @click="dialogFormVisible = false">
+        </div>
+      </template>
+    </el-dialog>
+    <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
+      <TaskForm
+        :warehouseOptions="warehouseOptions"
+        :taskForm="taskForm"
+      />
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogTaskVisible = false">
             Close
           </el-button>
         </div>
       </template>
     </el-dialog>
+
+    <el-drawer
+      v-model="drawerSerialVisible"
+      title="Unit Info"
+      size="50%"
+      direction="ltr"
+    >
+      <unit-description
+        :unitItem="unitItem"
+      />
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
+import TaskForm from './components/TaskForm.vue';
+import UnitDescription from './components/UnitDescription.vue';
 import {
-  queryOrdersAPI,
+  queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI,
+  listWarehousesAPI, findUnitAPI
 } from "/@/server/api/logistic";
-import { statusOptions } from './enum/shipment';
+import { parseTime } from '/@/assets/utils/format';
+import { orderStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
-  per_page: 10,
+  perPage: 10,
+  orderFrom: null
 });
+
 
 const tableKey = ref(0);
 const dataList = ref(null);
 const total = ref(0);
+const isAssigned = ref(null);
 const listLoading = ref(true);
-const dialogFormVisible = ref(false);
-const dialogStatus = ref('');
+const dialogAssignVisible = ref(false);
+const dialogTaskVisible = ref(false);
+const drawerSerialVisible = ref(false);
 const multipleSelection = ref([]);
-const titleMap= ref({
-  view: 'View',
-  update: 'Edit',
-  create: 'Create',
-});
+const warehouseOptions = ref({});
+const showAssignedTable = ref(false);
+const assignPattern = ref('');
+const assignOrderId = ref(null);
+const targetId = ref(null);
 
-const dialogPattern = type => dialogStatus.value === type;
+const taskForm = ref({});
+const unitItem = ref(null);
 
 const fetchList = () => {
   listLoading.value = true;
-  queryOrdersAPI(listQuery.value).then(data => {
-    console.log('data: ', data);
+  (isAssigned.value ?
+    queryAssignedOrdersAPI(listQuery.value) : queryOrdersAPI(listQuery.value)
+  ).then(data => {
     dataList.value = data.items;
     total.value = data.total;
     listLoading.value = false;
   });
 };
 
-const assignSelected = () => {
-  multipleSelection.value.forEach(item => {
-    console.log('item: ', item);
+const handleFilter = () => {
+  listQuery.value.page = 1;
+  fetchList();
+};
+
+const viewItemSerial = unitId => {
+  findUnitAPI(unitId).then(data => {
+    unitItem.value = data;
+    drawerSerialVisible.value = true;
   });
 };
 
-const combineAndAssign = () => {
+const showAssignDialog = (type, orderId) => {
+  assignPattern.value = type;
+  assignOrderId.value = orderId || null;
+  dialogAssignVisible.value = true;
+};
+
+function assignSelectedOrders(targetWHId, selectedArr) {
+  if (!selectedArr.length) {
+    ElMessage.error('Please at least select an order!', 3);
+    return;
+  }
   multipleSelection.value.forEach(item => {
-    console.log('item: ', item);
+    assignOrdersAPI(targetWHId, [item.id]);
   });
+}
+
+const assignOrders = () => {
+  const targetWHId = targetId.value;
+  const selectedArr = multipleSelection.value;
+  if (!targetWHId) {
+    ElMessage.error('Please select a target warehouse!', 3);
+    return;
+  }
+  const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
+  const orderArr = [];
+  if (pattern === 'assignSelected') { // 单独处理assign多个，不展示warehouse task dialog
+    assignSelectedOrders(targetWHId, selectedArr);
+    dialogAssignVisible.value = false;
+    return;
+  } else if (pattern === 'combineAndAssign') { // 批量assign
+    multipleSelection.value.forEach(item => {
+      orderArr.push(item.id);
+    });
+  } else { // assign单个
+    orderArr.push(assignOrderId.value);
+  }
+  // 调用assign orders API
+  assignOrdersAPI(targetWHId, orderArr).then(data => {
+    dialogAssignVisible.value = false;
+    dialogTaskVisible.value = true;
+  }).catch(() => {
+    dialogAssignVisible.value = false;
+    dialogTaskVisible.value = true;
+  }).finally(() => {
+    fetchList();
+  });
+};
+
+const unassignOrders = orderId => {
+  unassignOrdersAPI(orderId).then(data => {
+    console.log('data: ', data);
+  });
+};
+
+const unassignSelected = () => {
+  multipleSelection.value.forEach(item => {
+    unassignOrders(item.id);
+  });
+  multipleSelection.value = [];
+  fetchList();
+};
+
+const addWarehouseTask = orderId => {
+  dialogTaskVisible.value = true;
 };
 
 const handleSelectionChange = selectedArr => {
-  multipleSelection.value = selectedArr.sort((pre, next) => next.id - pre.id);
+  multipleSelection.value = selectedArr.sort((pre, next) => next.orderId > pre.orderId);
 };
 
 const handlePagination = config => {
@@ -167,7 +290,18 @@ const handlePagination = config => {
   fetchList();
 };
 
-fetchList();
+const init = () => {
+  listWarehousesAPI().then(data => {
+    fetchList(); // fetch list
+    data.forEach(item => {
+      warehouseOptions.value[item.id] = item.name;
+    });
+  });
+};
+
+onMounted(() => {
+  init();
+});
 
 </script>
 
@@ -177,17 +311,12 @@ fetchList();
   background-color: #e3e3e3
   min-height: calc(100vh - 91px - 32px)
 
-.dialog-header
-  margin-left: 1rem
-  margin-bottom: 1rem
-  font-size: 18px
-  font-weight: 500
 
 .filter-container
   display: flex
   justify-content: space-between
   margin-bottom: .5rem
-  .left > .el-button
+  .left > :not(:first-child)
     margin-left: .5rem
 
 .f-row.controls
@@ -205,33 +334,10 @@ fetchList();
     height: 14px
     vertical-align: middle
 
-:deep(.el-dialog)
-  width: 80%
-
-.el-row
-  justify-content: space-between
-  margin-right: 2rem
-  margin-left: 2rem
-  .el-form-item
-    width: 42%
-
 .el-form-item__content div
   width: 100%
 
-.content-column
-  .count
-    vertical-align: baseline
-    padding: 1px 8px
-    font-size: 75%
-    font-weight: 700
-    line-height: 1
-    text-align: center
-    white-space: nowrap
-    color: #212529
-    border-radius: 0.25rem
-    background-color: #f8f9fa
-  .content-icon
-    margin-right: .25rem
+
 
 .link
   color: #66c

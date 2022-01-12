@@ -1,9 +1,26 @@
 import axios from 'axios';
+import { ElMessage, ElLoading } from 'element-plus';
+import 'element-plus/theme-chalk/src/loading.scss';
 import store from '/@/store';
 import { getToken } from '/@/assets/utils/auth';
-import { ElMessage } from 'element-plus';
 import { jsonToHump } from '/@/assets/utils/format';
 // import { useStore } from 'vuex'
+
+/* start 将同一时刻的请求合并。*/
+let loadingInstance = null;
+let needLoadingRequestCount = 0;
+const startLoading = () => loadingInstance = ElLoading.service({fullscreen: true});
+const endLoading = () => loadingInstance.close();
+
+const showFullScreenLoading = () => {
+  needLoadingRequestCount++ === 0 && startLoading();
+};
+
+const tryHideFullScreenLoading = () => {
+  if (needLoadingRequestCount <= 0) return;
+  --needLoadingRequestCount === 0 && endLoading();
+};
+/* end 将同一时刻的请求合并。*/
 
 const requester = axios.create({
   // baseURL: 'https://logistics.vibe.dev/api'
@@ -12,21 +29,24 @@ const requester = axios.create({
   withCredentials: true, // 允许携带cookie
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
-    'withCredentials': false,
   }
 });
 
 // request interceptor
 requester.interceptors.request.use(
   config => {
+    const { method, url } = config;
     // do something before request is sent
     if (store.getters.token) {
       config.headers['Authorization'] = 'Bearer ' + getToken();
     }
+    if (method === 'get' && url.includes('s')) return config; // query API 不触发全屏loading
+    showFullScreenLoading();
     return config;
   },
   error => {
     // do something with request error
+    tryHideFullScreenLoading();
     console.log(error); // for debug
     return Promise.reject(error);
   }
@@ -41,10 +61,10 @@ requester.interceptors.response.use(
 
   /**
    * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
    */
   response => {
+    // eslint-disable-next-line no-undef
+    tryHideFullScreenLoading();
     const res = response.data;
 
     if (response.status === 401) {
@@ -87,6 +107,8 @@ requester.interceptors.response.use(
     }
   },
   error => {
+    // eslint-disable-next-line no-undef
+    tryHideFullScreenLoading();
     console.log('err' + error); // for debug
     ElMessage({
       message: error.message,

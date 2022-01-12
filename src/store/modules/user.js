@@ -1,4 +1,4 @@
-import { loginAPI, logoutAPI, getInfoAPI } from '/@/server/api/user';
+import { loginAPI, logoutAPI, getInfoAPI } from '/@/server/api/logistic';
 import { getToken, setToken, removeToken } from '/@/assets/utils/auth';
 import router, { resetRouter } from '/@/router';
 

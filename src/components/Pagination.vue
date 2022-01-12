@@ -30,6 +30,10 @@ const props = defineProps({
     type: Number,
     default: 1
   },
+  perPage: {
+    type: Number,
+    default: 10
+  },
   pageSizes: {
     type: Array,
     default() {
@@ -58,17 +62,16 @@ const props = defineProps({
 const emit = defineEmits(['pagination']);
 
 const currentPage = computed(val => props.page);
-
-const pageSize = computed(val => props.limit);
+const pageSize = computed(val => props.perPage);
 
 const handleSizeChange = val => {
-  emit('pagination', { page: props.page, limit: val });
+  emit('pagination', { page: props.page, perPage: val });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
 };
 const handleCurrentChange = val => {
-  emit('pagination', { page: val, limit: props.pageSize });
+  emit('pagination', { page: val, perPage: props.pageSize });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }

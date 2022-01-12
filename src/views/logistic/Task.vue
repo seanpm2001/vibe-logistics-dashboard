@@ -28,7 +28,16 @@
           <el-tag>#<span class="link-type">{{ row.id }}</span></el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Carrier" prop="shippingCarrier" sortable="custom" align="center" width="80" />
+      <el-table-column label="Source" width="110px" align="center">
+        <template v-slot="{row}">
+          {{ warehouseOptions[row.sourceId] }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Target" width="110px" align="center">
+        <template v-slot="{row}">
+          {{ warehouseOptions[row.targetId] }}
+        </template>
+      </el-table-column>
       <el-table-column label="WT Type" width="110px" align="center">
         <template v-slot="{row}">
           <el-tag>
@@ -61,7 +70,7 @@
       <el-table-column fixed="right" label="Actions" align="center" min-width="200px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
           <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
-            View detail
+            See Unit Serials
           </el-button>
           <el-popconfirm @confirm="handleDetailRow(row, 'remove')" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
@@ -85,6 +94,7 @@
     <el-dialog title="Shipment Package" v-model="dialogTableVisible" :close-on-click-modal="false">
       <ShipPackage
         :packageList="packageList"
+        @fetchList="fetchList"
       />
       <template v-slot:footer>
         <div class="dialog-footer">
@@ -101,11 +111,8 @@
 import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
-import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
-import ShipPackage from './components/ShipPackage.vue';
-import { parseTime } from '/@/assets/utils/format';
-import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/server/api/logistic";
+import { queryTasksAPI, listWarehousesAPI } from "/@/server/api/logistic";
 import { orderStatusOptions, whTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
@@ -116,38 +123,20 @@ const listQuery = ref({
   perPage: 10,
 });
 
-const statusTypeDict = {
-  'Picked Up': 'success',
-  'In Transit': 'info',
-  'Delivered': 'info',
-  'Cancelled': 'danger',
-};
-
 const tableKey = ref(0);
 const dataList = ref(null);
 const packageList = ref([]);
 const total = ref(0);
 const listLoading = ref(true);
-const dialogTableVisible = ref(false);
-const drawerSerialVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
-const titleMap= ref({
-  view: 'View',
-  update: 'Edit',
-  create: 'Create',
-});
-const rules = ref({
-  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
-  number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
-});
 const downloadLoading = ref(false);
-const disableNewBatch = ref(true);
 
-const dialogPattern = type => dialogStatus.value === type;
+const warehouseOptions = ref([]);
+
 const fetchList = () => {
   listLoading.value = true;
-  queryShipmentsAPI(listQuery.value).then(data => {
+  queryTasksAPI(listQuery.value).then(data => {
     dataList.value = data.items;
     total.value = data.total;
     listLoading.value = false;
@@ -163,22 +152,18 @@ const handleCloseDrawer = done => {
   done();
 };
 
-const handleDetailRow = (row, type) => {
-  const shipmentId = row.id;
-  if (type === 'remove') {
-    deleteShipmentAPI(shipmentId).then(() => {
-      fetchList();
+const init = () => {
+  listWarehousesAPI().then(data => {
+    fetchList(); // fetch list
+    data.forEach(item => {
+      warehouseOptions.value[item.id] = item.name;
     });
-    return;
-  }
-  
-  listShipPackagesAPI(row.id).then(data => {
-    packageList.value = data;
-    dialogTableVisible.value = true;
   });
 };
 
-fetchList();
+onMounted(() => {
+  init();
+});
 
 </script>
 

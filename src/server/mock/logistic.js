@@ -3,15 +3,16 @@ import Mock from 'mockjs';
 const shipmentList = [];
 const shipPackageList = [];
 const orderList = [];
+const taskList = [];
 const count = 20;
 
 for (let i = 0; i < count; i++) {
   shipmentList.push(Mock.mock({
     id: '@increment',
-    order_id: 1,
-    'shipping_carrier|1': ['UPS', 'GLS', 'Daylight'],
-    'warehouse_task_type|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
-    'last_modified': '2020-05-22T00:00:00',
+    orderId: 1,
+    'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
+    'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
+    'lastModified': '2020-05-22T00:00:00',
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     content: {
       '55V1B': 270,
@@ -22,9 +23,9 @@ for (let i = 0; i < count; i++) {
 
 for (let i = 0; i < 3; i++) {
   shipPackageList.push(Mock.mock({
-    'tracking_number|1': ['52358899', '55658899', '54554465'],
+    'trackingNumber|1': ['52358899', '55658899', '54554465'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    'last_modified': '2020-05-22T00:00:00',
+    'lastModified': '2020-05-22T00:00:00',
     content: {
       '55V1B': 90,
       '55V1WS': 20
@@ -38,24 +39,40 @@ for (let i = 0; i < 3; i++) {
 
 const unitObj = Mock.mock({
   'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033'],
-  'used_age|1': ['', 'within_3_months', '3_to_12_months'],
+  'usedAge|1': ['within_3_months', '3_to_12_months', ''],
   'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR'],
-  'produced_date': '2021-07-15',
+  'producedDate': '2021-07-15',
   'condition|1': ['Dam P only', 'Dam I only', 'Dam P & I'],
-  'owner_id': 'COI-4564',
+  'ownerId': 'COI-4564',
   'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
 });
 
 for (let i = 0; i < count; i++) {
   orderList.push(Mock.mock({
-    order_id: '@increment',
-    'last_modified|1': ['2020-05-22 by Vibe', '2020-05-22 by Warehouse'],
+    orderId: '@increment',
+    'lastModified|1': ['2020-05-22 by Vibe', '2020-05-22 by Warehouse'],
     'email|1': ['admin@vibe.us', 'test@vibe.us', 'guest@vibe.us'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     'serials|2-4': [{
       id: '@increment',
       'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033']
     }]
+  }));
+}
+
+for (let i = 0; i < count; i++) {
+  taskList.push(Mock.mock({
+    id: '@increment',
+    orderId: 1,
+    'sourceId': '@integer(1, 18)',
+    'targetId': '@integer(1, 18)',
+    'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
+    'lastModified': '2020-05-22T00:00:00',
+    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
+    content: {
+      '55V1B': 270,
+      '55V1WS': 60
+    }
   }));
 }
 
@@ -100,18 +117,45 @@ export default [
       };
     }
   },
+  // {
+  //   url: '/api/orders',
+  //   type: 'get',
+  //   response: config => {
+
+  //     return {
+  //       code: 20000,
+  //       data: {
+  //         items: orderList,
+  //         total: orderList.length
+  //       }
+  //     };
+  //   }
+  // },
+  // {
+  //   url: '/api/orders/assign',
+  //   type: 'post',
+  //   response: config => {
+
+  //     return {
+  //       code: 20000,
+  //       data: {
+  //         items: [],
+  //         msg: 'success'
+  //       }
+  //     };
+  //   }
+  // },
   {
-    url: '/api/orders',
+    url: '/api/tasks',
     type: 'get',
     response: config => {
-
       return {
         code: 20000,
         data: {
-          items: orderList,
-          total: orderList.length
+          total: taskList.length,
+          items: taskList
         }
       };
     }
-  }
+  },
 ];

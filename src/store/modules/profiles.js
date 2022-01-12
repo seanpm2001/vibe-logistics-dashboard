@@ -1,4 +1,4 @@
-import { getUserByTokenAPI, loginAPI, logoutAPI, registerAPI } from '../../server/api/logistic';
+import { loginAPI, logoutAPI } from '../../server/api/logistic';
 import router from '/@/router';
 
 export const profile = {
@@ -46,13 +46,6 @@ export const profile = {
       store.dispatch('CLEAR_SESSIN_AND_BACK');
     },
 
-    async getUserByToken (store, token) {
-      const userInfo = await getUserByTokenAPI(token);
-      if (userInfo) {
-        store.commit('SET_IS_LOGINED', true);
-        store.commit('SET_USER', userInfo);
-      }
-    },
     /* 重新登录 */
     // async relogin (store, payload) { // 弹窗登录--重新登录
     //   try {
@@ -73,9 +66,9 @@ export const profile = {
     //   }
     // },
     /* 注册 */
-    async register (store, payload) {
-      const userInfo = await registerAPI(payload);
-    }
+    // async register (store, payload) {
+    //   const userInfo = await registerAPI(payload);
+    // }
   }
   // plugins: [
   //   CREATE_PERSISTED_STATE({ reducer: (s) => ({ user: s.user }) }),
