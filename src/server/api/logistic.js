@@ -20,18 +20,6 @@ const handleReqElMsg = async (fn, action, name, id) => {
   return item;
 };
 
-// const handleReqListElMsg = async (fn, name) => {
-//   let res = null;
-//   await fn
-//     .then(data => {
-//       res = data;
-//       ElMessage.success(`Query ${name} successfully.`, 3);
-//     })
-//     .catch(() => ElMessage.error(`Query ${name} failed.`, 3));
-  
-//   return res;
-// };
-
 /* 海运 Freight API */
 export async function queryFreightsAPI (params) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
@@ -48,22 +36,22 @@ export async function createFreightAPI (data) {
   );
   return item;
 }
-export async function findFreightAPI (id) {
+export async function findFreightAPI (freightId) {
   const item = handleReqElMsg(
-    requester.get(`freight/${id}`), 'Find', 'Freight', id
+    requester.get(`freight/${freightId}`), 'Find', 'Freight', freightId
   );
   return item;
 }
-export async function updateFreightAPI (id, updates) {
+export async function updateFreightAPI (freightId, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`freight/${id}`, updates), 'Update', 'Freight', id
+    requester.put(`freight/${freightId}`, updates), 'Update', 'Freight', freightId
   );
   return item;
 }
-export async function deleteFreightAPI (id) {
+export async function deleteFreightAPI (freightId) {
   handleReqElMsg(
-    requester.delete(`freight/${id}`), 'Delete', 'Freight', id
+    requester.delete(`freight/${freightId}`), 'Delete', 'Freight', freightId
   );
 }
 
@@ -79,19 +67,15 @@ export async function createBatchAPI (freightId, data) {
   );
   return item;
 }
-// export async function findBatchAPI (id) {
-//   const { item } = await requester.get(`batch/${id}`);
-//   return item;
-// }
-export async function updateBatchAPI (id, updates) {
+export async function updateBatchAPI (batchId, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`batch/${id}`, updates), 'Update', 'Sub-Batch', id
+    requester.put(`batch/${batchId}`, updates), 'Update', 'Sub-Batch', batchId
   );
   return item;
 }
-export async function deleteBatchAPI (id) {
-  handleReqElMsg(requester.delete(`batch/${id}`), 'Delete', 'Sub-Batch', id);
+export async function deleteBatchAPI (batchId) {
+  handleReqElMsg(requester.delete(`batch/${batchId}`), 'Delete', 'Sub-Batch', batchId);
 }
 
 /* 订单 Order API */
@@ -114,12 +98,13 @@ export async function queryAssignedOrdersAPI (params) {
 }
 export async function assignOrdersAPI (targetId, orderArr) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
-  handleReqElMsg(
+  const item = handleReqElMsg(
     requester.post('orders/assign', {
       assigned_to: targetId,
       raw_orders: orderArr,
     }), 'Assign', 'Order', orderArr
   );
+  return item;
 }
 export async function unassignOrdersAPI (orderId) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
@@ -147,6 +132,29 @@ export async function queryTasksAPI (params) {
   });
   return res.data;
 }
+export async function listTaskShipmentsAPI (orderId) {
+  const { items } = await requester.get(`order/${orderId}/shipments`);
+  return items;
+}
+
+export async function findTaskAPI (orderId) {
+  const item = handleReqElMsg(
+    requester.get(`orders/${orderId}/tasks`), 'Find', 'Warehouse Task', orderId
+  );
+  return item;
+}
+export async function updateTaskAPI (taskId, updates) {
+  jsonToUnderline(updates);
+  const item = handleReqElMsg(
+    requester.put(`tasks/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
+  );
+  return item;
+}
+export async function deleteTaskAPI (taskId) {
+  handleReqElMsg(
+    requester.delete(`tasks/${taskId}`), 'Delete', 'Warehouse Task', taskId
+  );
+}
 
 /* 物流 Shipment API */
 export async function queryShipmentsAPI (params) {
@@ -158,9 +166,9 @@ export async function queryShipmentsAPI (params) {
   return res.data;
 }
 
-export async function deleteShipmentAPI (id) {
+export async function deleteShipmentAPI (shipmentId) {
   handleReqElMsg(
-    requester.delete(`shipment/${id}`), 'Delete', 'Shipment', id
+    requester.delete(`shipment/${shipmentId}`), 'Delete', 'Shipment', shipmentId
   );
 }
 
@@ -171,19 +179,19 @@ export async function listShipPackagesAPI (shipmentId) {
 }
 
 /* 单个商品 Unit API */
-export async function findUnitAPI (id) {
+export async function findUnitAPI (unitId) {
   // const item = handleReqElMsg(
-  //   requester.get(`unit/${id}`), 'Find', 'Unit', id
+  //   requester.get(`unit/${unitId}`), 'Find', 'Unit', unitId
   // );
   requester.defaults.baseURL = '/api';
   let item = null;
-  await requester.get(`unit/${id}`)
+  await requester.get(`unit/${unitId}`)
     .then(data => {
       console.log('data: ', data);
       item = data.data.item;
-      ElMessage.success(`Find Unit (ID: ${id}) successfully.`, 3);
+      ElMessage.success(`Find Unit (ID: ${unitId}) successfully.`, 3);
     })
-    .catch(() => ElMessage.error(`Find Order (ID: ${id}) failed.`, 3));
+    .catch(() => ElMessage.error(`Find Order (ID: ${unitId}) failed.`, 3));
   return item;
 }
 

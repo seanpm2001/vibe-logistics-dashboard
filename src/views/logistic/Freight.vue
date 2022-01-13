@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input :disabled="dialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select :disabled="dialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" class="filter-item" @change="handleFilter">
+      <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
+      <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
       <el-button disabled v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -74,7 +74,7 @@
           <span>{{ row.pickup?.split('T')[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Content" width="200px">
+      <el-table-column class-name="product-column" label="Content" width="240px">
         <template v-slot="{row}">
           <template v-for="(item, key) in row.content" :key="item">
             <div>
@@ -111,84 +111,84 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog width="80%" :title="titleMap[dialogStatus]" v-model="dialogFormVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
+    <el-dialog width="80%" :title="titleMap[dialogStatus]" v-model="dialogFreightVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Destination Warehouse" prop="targetId">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.targetId" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.targetId" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in warehouseOptions" :key="key" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
           <el-form-item label="Batch number" prop="number">
-            <el-input :disabled="dialogPattern('view')" v-model="freightForm.number" />
+            <el-input :disabled="isDialogPattern('view')" v-model="freightForm.number" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Status" prop="status">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.status" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.status" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in freightStatusOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Ocean Freight Cost" prop="cost">
-            <el-input :disabled="dialogPattern('view')" v-model="freightForm.cost" />
+            <el-input :disabled="isDialogPattern('view')" v-model="freightForm.cost" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Mode" prop="mode">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in modeOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Ocean Forwarder" prop="oceanForwarder">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.oceanForwarder" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oceanForwarder" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in forwarderOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Origin Port" prop="oriPort">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.oriPort" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oriPort" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in oriPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Destination Port" prop="destPort">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.destPort" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.destPort" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in destPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Container Type" prop="container">
-            <el-select :disabled="dialogPattern('view')" v-model="freightForm.container" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.container" class="filter-item" placeholder="Please select">
               <el-option v-for="(item, key) in containerOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Pick Up" prop="pickup">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.pickup" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.pickup" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="ETD Origin Port" prop="etdOp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etdOp" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.etdOp" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATD Origin Port" prop="atdOp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.atdOp" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.atdOp" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="ETA Destination Port" prop="etaDp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaDp" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.etaDp" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATA Destination Port" prop="ataDp">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataDp" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.ataDp" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="ETA Warehouse" prop="etaWh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.etaWh" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.etaWh" type="date" placeholder="Please pick a date" />
           </el-form-item>
           <el-form-item label="ATA Warehouse" prop="ataWh">
-            <el-date-picker :disabled="dialogPattern('view')" v-model="freightForm.ataWh" type="date" placeholder="Please pick a date" />
+            <el-date-picker :disabled="isDialogPattern('view')" v-model="freightForm.ataWh" type="date" placeholder="Please pick a date" />
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
@@ -196,16 +196,16 @@
             <el-input disabled v-model="transitTime" placeholder=""/>
           </el-form-item>
           <el-form-item label="Transit Options">
-            <el-select :default="1" :disabled="dialogPattern('view')" v-model="transitTimeBase" class="filter-item" placeholder="Please select">
+            <el-select :default="1" :disabled="isDialogPattern('view')" v-model="transitTimeBase" class="filter-item" placeholder="Please select">
               <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-row>
-        <div class="f-row controls" v-if="!dialogPattern('view')">
-          <el-button v-if="dialogPattern('create')" style="margin-left: 10px;" type="primary" @click="createFreight">
+        <div class="f-row controls" v-if="!isDialogPattern('view')">
+          <el-button v-if="isDialogPattern('create')" style="margin-left: 10px;" type="primary" @click="createFreight">
             Submit Common Section
           </el-button>
-          <el-button v-if="dialogPattern('edit')" style="margin-left: 10px;" type="primary" @click="updateFreight">
+          <el-button v-if="isDialogPattern('edit')" style="margin-left: 10px;" type="primary" @click="updateFreight">
             Update Common Section
           </el-button>
           <el-tooltip
@@ -234,20 +234,18 @@
         </template>
 
         <div class="f-row">
-          <el-button class="filter-item" v-if="!dialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 26px;" type="primary" icon="el-icon-circle-plus" @click="addBatch">
+          <el-button class="filter-item" v-if="!isDialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 26px;" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
             Add Sub-Batch
           </el-button>
         </div>
       </el-form>
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button v-if="dialogPattern('create')"  @click="resetForm">
-            Reset
-          </el-button>
-          <el-button @click="dialogFormVisible = false">
-            Close
-          </el-button>
-        </div>
+        <el-button v-if="isDialogPattern('create')"  @click="resetForm">
+          Reset
+        </el-button>
+        <el-button @click="dialogFreightVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -295,7 +293,7 @@ const tableKey = ref(0);
 const list = ref(null);
 const total = ref(0);
 const listLoading = ref(true);
-const dialogFormVisible = ref(false);
+const dialogFreightVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
 const titleMap= {
@@ -347,7 +345,7 @@ const datePropertyArr = ['ataDp', 'atdOp', 'etaDp', 'etdOp', 'pickup', 'ataWh', 
 //   return acc;
 // }, {});
 
-const dialogPattern = type => dialogStatus.value === type;
+const isDialogPattern = type => dialogStatus.value === type;
 
 const fetchList = () => {
   listLoading.value = true;
@@ -417,7 +415,7 @@ const resetForm = () => {
 const showCreateDialog = () => {
   batchArr.value = [];
   dialogStatus.value = 'create';
-  dialogFormVisible.value = true;
+  dialogFreightVisible.value = true;
   resetForm();
 };
 
@@ -466,7 +464,7 @@ const handleDelSelected = () => {
   fetchList();
 };
 
-const findBatch = (freightId, callback) => {
+const listBatches = (freightId, callback) => {
   listBatchesAPI(freightId).then(data => {
     batchArr.value = data;
     callback && callback();
@@ -483,10 +481,10 @@ const handleDetailRow = (row, type) => {
     freightForm.value = Object.assign({}, data); // copy obj
     type === 'edit' && (contrastData = Object.assign({}, data));
     batchArr.value = [];
-    findBatch(freightId, () => disableNewBatch.value = false);
+    listBatches(freightId, () => disableNewBatch.value = false);
     dialogStatus.value = type;
     disableNewBatch.value = true;
-    dialogFormVisible.value = true;
+    dialogFreightVisible.value = true;
   });
 };
 
@@ -534,7 +532,7 @@ const removeBatch = (idx, batchId) => {
   fetchList();
 };
 
-const addBatch = () => {
+const handleAddBatch = () => {
   if (!freightForm.value.id) {
     ElMessage.error('You need to "Submit Common Section" before "Add Sub-Batch"', 3);
     return;

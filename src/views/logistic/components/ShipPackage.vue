@@ -59,7 +59,7 @@
   </el-table>
 
   <el-drawer
-    v-model="drawerSerialVisible"
+    v-model="drawerUnitVisible"
     title="Unit Info"
     size="50%"
     direction="ltr"
@@ -86,14 +86,14 @@ const props = defineProps({
   },
 });
 
-const drawerSerialVisible = ref(false);
+const drawerUnitVisible = ref(false);
 const unitItem = ref({});
 const ifCheckUnit = ref(null);
 
 const viewItemSerial = unitId => {
   findUnitAPI(unitId).then(data => {
     unitItem.value = data;
-    drawerSerialVisible.value = true;
+    drawerUnitVisible.value = true;
   });
 };
 

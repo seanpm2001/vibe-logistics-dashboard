@@ -76,13 +76,26 @@ _____
 * js: `keba-case` (In addition to some special cases)
 * vue: `upper-camel-case`
 * directory: `camel-case`
+
 #### Import order
 1. node-modules `dependency`
 2. `.vue` file
 3. `.js` file
 #### Function name
 * API related (query/find/create/update/delete)
+* Click/Change/Confirm Event: (handleXXX) @click="handleXXX"
 * Operation related (view/edit/submit/remove)
+
+
+#### Other
+* Html template `""` , JS `''`
+* Couputed value must return a value!!!
+* v-for must set v-key (unique value like id)
+* don't use v-for and v-if in the same element
+* use simple expression in vue template
+* use multi-words for components name
+* component style declarations are scoped like `.unit-page .button`
+
 
 #### API data name
 * list: `{ items: [], total: 0 }`

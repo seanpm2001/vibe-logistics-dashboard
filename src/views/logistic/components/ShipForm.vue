@@ -9,7 +9,7 @@
     </span>
     <el-row justify="space-between" style="margin: 2rem 2rem 0;">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Source">
-        <el-select :disabled="dialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
+        <el-select :disabled="isDialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
@@ -29,7 +29,7 @@
             accept=".xlsx, .xls"
             drag
             multiple
-            v-if="dialogPattern('edit')"
+            v-if="isDialogPattern('edit')"
             :auto-upload="false"
             :on-preview="handlePreview"
             :on-change="handleUpdate"
@@ -44,13 +44,13 @@
             </div>
           </el-upload>
           <el-row style="margin: .75rem 0 0 -1rem">
-            <el-button v-if="!batch?.id && dialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('create')">
+            <el-button v-if="!batch?.id && isDialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('create')">
               Submit Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id && dialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('update')">
+            <el-button v-if="batch?.id && isDialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('update')">
               Update Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id" class="mgl-10" :style="dialogPattern('view')?'margin-left: -26px;':''" type="success" @click="dialogExcelVisible=true">
+            <el-button v-if="batch?.id" class="mgl-10" :style="isDialogPattern('view')?'margin-left: -26px;':''" type="success" @click="dialogExcelVisible=true">
               Show Serial Excel
             </el-button>
           </el-row>
@@ -154,7 +154,7 @@ const dialogExcelVisible = ref(false);
 
 const xmlFileList = ref([]);
 
-const dialogPattern = type => props.dialogStatus === type;
+const isDialogPattern = type => props.dialogStatus === type;
 
 const closePreviewDialog = (done) => {
   done();

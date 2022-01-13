@@ -87,11 +87,9 @@
         :packageList="packageList"
       />
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogTableVisible = false">
-            Close
-          </el-button>
-        </div>
+        <el-button @click="dialogTableVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -129,7 +127,7 @@ const packageList = ref([]);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogTableVisible = ref(false);
-const drawerSerialVisible = ref(false);
+const drawerUnitVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
 const titleMap= ref({
@@ -143,8 +141,8 @@ const rules = ref({
 });
 const downloadLoading = ref(false);
 const disableNewBatch = ref(true);
+const isDialogPattern = type => dialogStatus.value === type;
 
-const dialogPattern = type => dialogStatus.value === type;
 const fetchList = () => {
   listLoading.value = true;
   queryShipmentsAPI(listQuery.value).then(data => {

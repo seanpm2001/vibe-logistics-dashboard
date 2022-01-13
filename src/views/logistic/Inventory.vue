@@ -223,14 +223,12 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
-            Cancel
-          </el-button>
-          <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-            Confirm
-          </el-button>
-        </div>
+        <el-button @click="dialogFormVisible = false">
+          Cancel
+        </el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+          Confirm
+        </el-button>
       </template>
     </el-dialog>
 

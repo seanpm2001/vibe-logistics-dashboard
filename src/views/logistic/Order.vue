@@ -2,11 +2,11 @@
   <div class="page">
     <div class="filter-container">
       <el-row class="left" align="middle" :gutter="3">
-        <el-input placeholder="Order ID" style="width: 120px;" />
-        <el-button disabled v-wave type="primary" icon="el-icon-search">
+        <el-input v-model="listQuery.search" placeholder="Order Info" style="width: 120px;" />
+        <el-button @click="handleFilter" v-wave type="primary" icon="el-icon-search">
           Search
         </el-button>
-        <el-select placeholder="Assigned Order" v-model="isAssigned" style="width: 155px" @change="handleFilter">
+        <el-select :disabled="listLoading" placeholder="Assigned Order" v-model="isAssigned" style="width: 155px" @change="handleFilter">
           <el-option v-for="(item, key) in {'Assigned': true, 'Unassigned': false}" :key="item" :label="key" :value="item" />
         </el-select>
         <el-select disabled placeholder="Order From" v-model="listQuery.orderFrom" style="width: 130px" @change="handleFilter">
@@ -44,19 +44,23 @@
           <el-tag>
             #<span class="link-type">{{ row.id }}</span>
           </el-tag>
+          <div v-if="row.rawOrders">
+            <template v-for="item in row.rawOrders" :key="item.id">
+              <el-tag>#{{ item.id }}</el-tag>
+            </template>
+          </div>
           <p>{{row.createdAt}}</p>
         </template>
       </el-table-column>
       <el-table-column label="Shipment Info" width="300px" align="center">
         <template v-slot="{row}">
-          <div class="ship" align="left">
+          <div class="shipment-info" align="left">
             <el-tag size="small" v-if="row.shippingName">
               ATTN: {{row.shippingName}}
             </el-tag>
             <el-tag size="small" v-if="row.shippingCompany">{{row.shippingCompany}}</el-tag>
             <el-tag size="small" v-if="row.shippingAddress1">{{row.shippingAddress1}}</el-tag>
             <el-tag size="small" v-if="row.shippingAddress2">{{row.shippingAddress2}}</el-tag>
-            
             <el-tag size="small" v-if="row.shippingCity || row.shippingState || row.shippingZip || row.shippingCountry">
               {{row.shippingCity}}, {{row.shippingState}}, {{row.shippingZip}}, {{row.shippingCountry}}
             </el-tag>
@@ -64,17 +68,28 @@
             <el-tag size="small" v-if="row.shippingPhone">
               TEL: {{row.shippingPhone}}
             </el-tag>
+            <br>
             <a :href="'mailto:' + row.email" class="link" target="_blank">{{ row.email }}</a>
           </div>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="WH Tasks & Units" width="210px" align="center">
+      <el-table-column class-name="product-column" label="WH Tasks & Units" width="240px" align="center">
         <template v-slot="{row}">
-          <template v-for="(item, key) in row.items" :key="item">
-            <div align="left">
-              <svg-icon :icon-name="productIconMap[key]"  />
-              <span class="mgl-5">{{productMap[key]}}:<el-tag class="mgl-5" size="small">{{ item }}</el-tag></span>
-            </div>
+          <template v-if="isAssigned">
+            <template v-for="(item, key) in row.products" :key="key">
+              <div align="left">
+                <svg-icon :icon-name="productIconMap[key] || 'other'"  />
+                <span class="mgl-5">{{productMap[key] || key}}:<el-tag class="mgl-5" size="small">{{ item }}</el-tag></span>
+              </div>
+            </template>
+          </template>
+          <template v-else>
+            <template v-for="item in row.items" :key="item.productCode">
+              <div align="left">
+                <svg-icon :icon-name="productIconMap[item.productCode] || 'other'"  />
+                <span class="mgl-5">{{productMap[item.productCode] || item.productCode}}:<el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag></span>
+              </div>
+            </template>
           </template>
         </template>
       </el-table-column>
@@ -116,24 +131,21 @@
         </el-select>
       </el-row>
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="assignOrders()">
-            submit
-          </el-button>
-        </div>
+        <el-button type="primary" @click="assignOrders()">
+          submit
+        </el-button>
       </template>
     </el-dialog>
     <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
       <TaskForm
         :warehouseOptions="warehouseOptions"
         :taskForm="taskForm"
+        :dialogStatus="dialogStatus"
       />
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogTaskVisible = false">
-            Close
-          </el-button>
-        </div>
+        <el-button @click="dialogTaskVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
 
@@ -170,6 +182,7 @@ const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
   perPage: 10,
+  search: null,
   orderFrom: null
 });
 
@@ -177,20 +190,52 @@ const listQuery = ref({
 const tableKey = ref(0);
 const dataList = ref(null);
 const total = ref(0);
-const isAssigned = ref(null);
 const listLoading = ref(true);
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
 const drawerSerialVisible = ref(false);
-const multipleSelection = ref([]);
-const warehouseOptions = ref({});
-const showAssignedTable = ref(false);
+
+const isAssigned = ref(null);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const targetId = ref(null);
+const dialogStatus = ref(null);
 
-const taskForm = ref({});
+const multipleSelection = ref([]);
+const warehouseOptions = ref({});
 const unitItem = ref(null);
+const taskForm = ref({
+  id: null,
+  orderId: null,
+  sourceId: null,
+  targetId: null,
+  type: null,
+  status: null,
+});
+const contrastData = ref(null);
+
+// 合并products array为一个{productCode: totalQuantity}的对象
+const combineSameProductQuantity = (arr => {
+  const result = {};
+  const productArr = [];
+  arr.forEach(item => {
+    const code = item.productCode;
+    result[code] = (result[code] + item.quantity) || item.quantity;
+  });
+  return result;
+});
+
+const formatAssignedOrderItem = orderItem => {
+  const raws = orderItem.rawOrders;
+  const originId = orderItem.id;
+  let productsArr = [];
+  raws.forEach(item => {
+    productsArr = productsArr.concat(item.items); // products array [{product_code: 'ABC', quantity: 1}]
+  });
+  orderItem = Object.assign(orderItem, raws[0]);
+  orderItem.id = originId;
+  orderItem.products = combineSameProductQuantity(productsArr); // {productCode: totalQuantity}
+};
 
 const fetchList = () => {
   listLoading.value = true;
@@ -198,6 +243,11 @@ const fetchList = () => {
     queryAssignedOrdersAPI(listQuery.value) : queryOrdersAPI(listQuery.value)
   ).then(data => {
     dataList.value = data.items;
+    if (isAssigned.value) {
+      dataList.value.forEach(item => {
+        formatAssignedOrderItem(item);
+      });
+    }
     total.value = data.total;
     listLoading.value = false;
   });
@@ -253,12 +303,11 @@ const assignOrders = () => {
   }
   // 调用assign orders API
   assignOrdersAPI(targetWHId, orderArr).then(data => {
+    console.log('data: ', data);
     dialogAssignVisible.value = false;
-    dialogTaskVisible.value = true;
-  }).catch(() => {
-    dialogAssignVisible.value = false;
-    dialogTaskVisible.value = true;
+    addWarehouseTask(data.id);
   }).finally(() => {
+    dialogAssignVisible.value = false;
     fetchList();
   });
 };
@@ -278,6 +327,8 @@ const unassignSelected = () => {
 };
 
 const addWarehouseTask = orderId => {
+  taskForm.value.orderId = orderId;
+  taskForm.value.type = 'FULFILLMENT';
   dialogTaskVisible.value = true;
 };
 
@@ -334,10 +385,12 @@ onMounted(() => {
     height: 14px
     vertical-align: middle
 
+.shipment-info
+  .el-tag
+    margin-right: 50%
+
 .el-form-item__content div
   width: 100%
-
-
 
 .link
   color: #66c

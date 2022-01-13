@@ -1,9 +1,9 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-button v-wave class="filter-item" type="primary" icon="el-icon-search">
-        Search
-      </el-button>
+      <el-select placeholder="Task type" v-model="showTaskPattern" style="width: 155px" @change="handleFilter">
+        <el-option v-for="(item, key) in taskPatternOptions" :key="item" :label="item" :value="key" />
+      </el-select>
     </div>
     <el-table
       :key="tableKey"
@@ -57,7 +57,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Content" width="200px">
+      <el-table-column class-name="product-column" label="Content" width="240px">
         <template v-slot="{row}">
           <template v-for="(item, key) in row.content" :key="item">
             <div>
@@ -67,10 +67,13 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="Actions" align="center" min-width="200px" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="Actions" align="center" min-width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
+          <el-button type="primary" size="mini" @click="handleDetailRow(row, 'edit')">
+            Edit
+          </el-button>
           <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
-            See Unit Serials
+            View Detail
           </el-button>
           <el-popconfirm @confirm="handleDetailRow(row, 'remove')" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
@@ -91,17 +94,16 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog title="Shipment Package" v-model="dialogTableVisible" :close-on-click-modal="false">
-      <ShipPackage
-        :packageList="packageList"
-        @fetchList="fetchList"
+    <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
+      <TaskForm
+        :warehouseOptions="warehouseOptions"
+        :taskForm="taskForm"
+        :dialogStatus="dialogStatus"
       />
       <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogTableVisible = false">
-            Close
-          </el-button>
-        </div>
+        <el-button @click="dialogTaskVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -112,7 +114,8 @@ import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } fr
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import { queryTasksAPI, listWarehousesAPI } from "/@/server/api/logistic";
+import TaskForm from './components/TaskForm.vue';
+import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listTaskShipmentsAPI } from "/@/server/api/logistic";
 import { orderStatusOptions, whTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
@@ -126,13 +129,31 @@ const listQuery = ref({
 const tableKey = ref(0);
 const dataList = ref(null);
 const packageList = ref([]);
+
 const total = ref(0);
 const listLoading = ref(true);
 const dialogStatus = ref('');
-const multipleSelection = ref([]);
 const downloadLoading = ref(false);
+const disableNewShipment = ref(true);
+const dialogTaskVisible = ref(false);
 
-const warehouseOptions = ref([]);
+const multipleSelection = ref([]);
+const warehouseOptions = ref({});
+const shipmentArr = ref([]);
+const taskForm = ref({
+  id: null,
+  orderId: null,
+  sourceId: null,
+  targetId: null,
+  type: null,
+  status: null,
+});
+// let contrastData = null;
+const showTaskPattern = ref(null);
+const taskPatternOptions = {
+  'MY-ONLY': 'My task only',
+  'ALL': 'All tasks'
+};
 
 const fetchList = () => {
   listLoading.value = true;
@@ -143,6 +164,11 @@ const fetchList = () => {
   });
 };
 
+const handleFilter = () => {
+  listQuery.value.page = 1;
+  fetchList();
+};
+
 const handlePagination = config => {
   listQuery.value = Object.assign(listQuery.value, config);
   fetchList();
@@ -150,6 +176,30 @@ const handlePagination = config => {
 
 const handleCloseDrawer = done => {
   done();
+};
+
+const listShipments = (orderId, callback) => {
+  listTaskShipmentsAPI(orderId).then(data => {
+    shipmentArr.value = data;
+    callback && callback();
+  });
+};
+
+const handleDetailRow = (row, type) => {
+  const orderId = row.id;
+  if (type === 'remove') {
+    deleteTaskAPI(orderId).then(() => fetchList());
+    return;
+  }
+  dialogTaskVisible.value = true;
+  // findTaskAPI(orderId).then(data => {
+  //   taskForm.value = Object.assign({}, data); // copy obj
+  //   type === 'edit' && (contrastData = Object.assign({}, data));
+  //   // listShipments(orderId, () => disableNewShipment.value = false);
+  //   dialogStatus.value = type;
+  //   disableNewShipment.value = true;
+  //   dialogTaskVisible.value = true;
+  // });
 };
 
 const init = () => {

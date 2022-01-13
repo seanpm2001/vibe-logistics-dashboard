@@ -1,28 +1,31 @@
 <template>
   <el-form ref="dataForm" :model="formData" label-position="left" label-width="140px">
     <el-row justify="space-between" :gutter="3">
+        <el-form-item label="Type">
+        <el-select v-model="formData.type" :disabled="isDialogPattern('view')" placeholder="Please select">
+          <el-option v-for="(item, key) in whTypeOptions" :key="item" :label="item" :value="key" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="Source Warehouse">
-        <el-select v-model="formData.sourceId" placeholder="Please select">
+        <el-select v-model="formData.sourceId" :disabled="isDialogPattern('view')" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
       <el-form-item label="Target Warehouse">
-        <el-select v-model="formData.targetId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Type">
-        <el-select v-model="formData.type" placeholder="Please select">
+        <el-select v-model="formData.targetId" :disabled="isDialogPattern('view')" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
     </el-row>
     <el-row justify="space-between" :gutter="3">
+      <el-form-item label="Order ID">
+        <el-input v-model="formData.orderId" :disabled="isDialogPattern('view')" placeholder="Order Id" />
+      </el-form-item>
       <el-form-item label="Task Status">
-        <el-input disabled v-model="formData.status" placeholder="Task Status" style="width: 120px;" />
+        <el-input v-model="formData.status" :disabled="isDialogPattern('view')" placeholder="Task Status"  />
       </el-form-item>
       <el-form-item label="On hold">
-        <el-switch v-model="isOnHold" @click="onHoldTask">
+        <el-switch v-model="isOnHold" :disabled="isDialogPattern('view')" @click="onHoldTask">
           On hold:
         </el-switch>
       </el-form-item>
@@ -52,6 +55,7 @@
 import { ref } from 'vue';
 import { ElMessage } from "element-plus";
 import ShipForm from './ShipForm.vue';
+import { whTypeOptions } from '/@/assets/enum/logistic';
 // eslint-disable-next-line no-undef
 const props = defineProps({
   taskForm: {
@@ -62,6 +66,10 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  dialogStatus: {
+    type: String,
+    required: true
+  }
 });
 
 // eslint-disable-next-line no-undef
@@ -72,6 +80,7 @@ const shipArr = ref([]);
 
 const isOnHold = ref(false);
 const disableNewShip = ref(false);
+const isDialogPattern = type => props.dialogStatus === type;
 
 const removeShip = (idx, shipId) => {
   shipArr.value.splice(idx, 1);
