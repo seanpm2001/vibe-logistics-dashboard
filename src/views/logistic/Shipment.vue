@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -177,7 +177,6 @@ const handleDetailRow = (row, type) => {
 };
 
 fetchList();
-
 </script>
 
 <style lang="sass" scoped>

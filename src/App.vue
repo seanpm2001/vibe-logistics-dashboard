@@ -10,6 +10,17 @@
 </template>
 
 <script setup>
+import { listWarehousesAPI } from "/@/server/api/logistic";
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+// 初始化2个以上物流页面都需要的enum/固定的数据
+const init = () => {
+  if (store.getters.token && JSON.stringify(store.getters.warehouseOptions) === '{}')
+    store.dispatch('logistic/setWarehouseOptions');
+};
+init();
 </script>
 
 <style lang="sass">

@@ -95,6 +95,9 @@ _____
 * use simple expression in vue template
 * use multi-words for components name
 * component style declarations are scoped like `.unit-page .button`
+* Content in element components
+  * <el-dialog>: <table>, <form>   
+  * <el-drawer>: <description>(item info)
 
 
 #### API data name

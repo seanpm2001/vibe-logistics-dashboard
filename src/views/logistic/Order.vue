@@ -39,14 +39,15 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50" height="40" align="center" />
-      <el-table-column label="Order" width="240px" align="center">
+      <el-table-column class-name="order-info" label="Order" width="240px" align="center">
         <template v-slot="{row}">
-          <el-tag>
+          <el-tag @click="showOrderDrawer(row)">
             #<span class="link-type">{{ row.id }}</span>
           </el-tag>
           <div v-if="row.rawOrders">
             <template v-for="item in row.rawOrders" :key="item.id">
-              <el-tag>#{{ item.id }}</el-tag>
+              <el-tag @click="showOrderDrawer(item)">#{{ item.id }}</el-tag>
+              <br>
             </template>
           </div>
           <p>{{row.createdAt}}</p>
@@ -150,13 +151,13 @@
     </el-dialog>
 
     <el-drawer
-      v-model="drawerSerialVisible"
-      title="Unit Info"
-      size="50%"
+      v-model="drawerOrderVisible"
+      title="Order Info"
+      size="60%"
       direction="ltr"
     >
-      <unit-description
-        :unitItem="unitItem"
+      <OrderDescription
+        :orderItem="orderItem"
       />
     </el-drawer>
   </div>
@@ -169,15 +170,16 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
-import UnitDescription from './components/UnitDescription.vue';
+import OrderDescription from './components/OrderDescription.vue';
 import {
-  queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI,
-  listWarehousesAPI, findUnitAPI
+  queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
 } from "/@/server/api/logistic";
 import { parseTime } from '/@/assets/utils/format';
 import { orderStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 const store = useStore();
+const warehouseOptions = store.getters.warehouseOptions;
+
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
@@ -186,14 +188,13 @@ const listQuery = ref({
   orderFrom: null
 });
 
-
 const tableKey = ref(0);
 const dataList = ref(null);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
-const drawerSerialVisible = ref(false);
+const drawerOrderVisible = ref(false);
 
 const isAssigned = ref(null);
 const assignPattern = ref('');
@@ -202,8 +203,7 @@ const targetId = ref(null);
 const dialogStatus = ref(null);
 
 const multipleSelection = ref([]);
-const warehouseOptions = ref({});
-const unitItem = ref(null);
+const orderItem = ref(null);
 const taskForm = ref({
   id: null,
   orderId: null,
@@ -258,11 +258,10 @@ const handleFilter = () => {
   fetchList();
 };
 
-const viewItemSerial = unitId => {
-  findUnitAPI(unitId).then(data => {
-    unitItem.value = data;
-    drawerSerialVisible.value = true;
-  });
+const showOrderDrawer = orderRaw => {
+  console.log('raw: ', orderRaw);
+  orderItem.value = orderRaw;
+  drawerOrderVisible.value = true;
 };
 
 const showAssignDialog = (type, orderId) => {
@@ -341,19 +340,7 @@ const handlePagination = config => {
   fetchList();
 };
 
-const init = () => {
-  listWarehousesAPI().then(data => {
-    fetchList(); // fetch list
-    data.forEach(item => {
-      warehouseOptions.value[item.id] = item.name;
-    });
-  });
-};
-
-onMounted(() => {
-  init();
-});
-
+fetchList();
 </script>
 
 <style lang="sass" scoped>
@@ -384,6 +371,11 @@ onMounted(() => {
   .el-checkbox
     height: 14px
     vertical-align: middle
+
+.order-info
+  .el-tag
+    margin-right: 50%
+    cursor: pointer
 
 .shipment-info
   .el-tag

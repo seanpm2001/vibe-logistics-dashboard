@@ -252,7 +252,7 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
@@ -268,6 +268,8 @@ import {
 } from '/@/assets/enum/logistic';
 
 const store = useStore();
+const warehouseOptions = store.getters.warehouseOptions;
+
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
@@ -276,7 +278,6 @@ const listQuery = ref({
 
 const batchArr = ref([]);
 
-const warehouseOptions = ref({});
 const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 
@@ -550,18 +551,7 @@ const updateBatch = (data, batchIdx) => {
   fetchList();
 };
 
-const init = () => {
-  listWarehousesAPI().then(data => {
-    fetchList(); // fetch list
-    data.forEach(item => {
-      warehouseOptions.value[item.id] = item.name;
-    });
-  });
-};
-
-onMounted(() => {
-  init();
-});
+fetchList();
 </script>
 
 <style lang="sass" scoped>

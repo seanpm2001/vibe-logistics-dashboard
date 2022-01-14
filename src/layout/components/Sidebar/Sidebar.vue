@@ -12,7 +12,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item v-for="route in permissionRroutes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -27,7 +27,7 @@ import { useRoute } from 'vue-router';
 import { useGetters } from '/@/assets/utils/vuex-helper';
 const route = useRoute();
 const store = useStore();
-const permission_routes = computed(() => store.getters['permission_routes']);
+const permissionRroutes = computed(() => store.getters['permissionRroutes']);
 
 const sidebar = computed(() => store.getters['sidebar']);
 
