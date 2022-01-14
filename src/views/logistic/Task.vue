@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
@@ -120,7 +120,7 @@ import { orderStatusOptions, whTypeOptions, productMap, productIconMap } from '/
 
 
 const store = useStore();
-const warehouseOptions = store.getters.warehouseOptions;
+const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({

@@ -178,7 +178,7 @@ import { parseTime } from '/@/assets/utils/format';
 import { orderStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 const store = useStore();
-const warehouseOptions = store.getters.warehouseOptions;
+const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
