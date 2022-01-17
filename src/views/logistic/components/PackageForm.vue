@@ -133,9 +133,6 @@ const handlePackage = type => {
 </script>
 
 <style lang="sass" scoped>
-.f-row.controls
-  margin-left: 32px
-
 .el-checkbox__label .el-form-item
   margin-bottom: 0
 

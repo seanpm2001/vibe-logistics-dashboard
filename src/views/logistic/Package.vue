@@ -219,15 +219,6 @@ fetchList();
     width: 1em
     height: 1em
 
-.f-row.controls
-  align-items: center
-  margin-left: 1rem
-  .tips
-    margin-left: 1rem
-    width: 20px
-    height: 20px
-    cursor: pointer
-
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px
   .el-checkbox

@@ -42,13 +42,13 @@
             </div>
           </el-upload>
           <el-row style="margin: .75rem 0 0 -1rem">
-            <el-button v-if="!batch?.id && isDialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('create')">
+            <el-button v-if="!batch?.id && isDialogPattern('edit')" type="primary" @click="handleBatch('create')">
               Submit Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id && isDialogPattern('edit')" class="mgl-10" type="primary" @click="handleBatch('update')">
+            <el-button v-if="batch?.id && isDialogPattern('edit')" type="primary" @click="handleBatch('update')">
               Update Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id" class="mgl-10" :style="isDialogPattern('view')?'margin-left: -26px;':''" type="success" @click="dialogExcelVisible=true">
+            <el-button v-if="batch?.id" type="success" @click="dialogExcelVisible=true">
               Show Serial Excel
             </el-button>
           </el-row>

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-button v-wave class="filter-item" type="primary" icon="el-icon-search">
+      <el-button v-wave type="primary" icon="el-icon-search">
         Search
       </el-button>
     </div>
@@ -195,15 +195,6 @@ fetchList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
-
-.f-row.controls
-  align-items: center
-  margin-left: 1rem
-  .tips
-    margin-left: 1rem
-    width: 20px
-    height: 20px
-    cursor: pointer
 
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px

@@ -1,22 +1,19 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+      <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" @keyup.enter="handleFilter" />
+      <el-select v-model="listQuery.sort" style="width: 140px" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
       </el-button>
-      <el-button v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        reviewer
-      </el-checkbox>
     </div>
     <el-table
       :key="tableKey"
@@ -200,7 +197,7 @@
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
+          <el-select v-model="temp.type" placeholder="Please select">
             <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -211,7 +208,7 @@
           <el-input v-model="temp.title" />
         </el-form-item>
         <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
+          <el-select v-model="temp.status" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
@@ -276,7 +273,6 @@ const calendarTypeOptions = ref([
 ]);
 const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
 const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
-const showReviewer = ref(false);
 
 const tableKey = ref(0);
 const list = ref(null);

@@ -141,12 +141,4 @@ const onHoldTask = () => {
 .el-form .el-row
   padding: 0 1rem
 
-.f-row.controls
-  align-items: center
-  margin-left: 1rem
-  .tips
-    margin-left: 1rem
-    width: 20px
-    height: 20px
-    cursor: pointer
 </style>

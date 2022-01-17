@@ -1,23 +1,23 @@
 <template>
   <div class="page">
     <div class="filter-container">
-      <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" class="filter-item" @keyup.enter="handleFilter" />
-      <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" class="filter-item" @change="handleFilter">
+      <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" @keyup.enter="handleFilter" />
+      <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button disabled v-wave class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button disabled v-wave type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="showCreateDialog">
+      <el-button  type="primary" icon="el-icon-edit" @click="showCreateDialog">
         Add
       </el-button>
-      <el-button disabled v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button disabled v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;">
+      <el-checkbox v-model="showMultSelection" style="margin-left:15px;">
         Multiple Selection
       </el-checkbox>
-      <el-button v-if="showMultSelection" class="filter-item" style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
+      <el-button v-if="showMultSelection" style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
         Delete Selected Item
       </el-button>
     </div>
@@ -111,11 +111,11 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog width="80%" :title="titleMap[dialogStatus]" v-model="dialogFreightVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
+    <el-dialog width="80%" title="Freight" v-model="dialogFreightVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
       <el-form ref="dataForm" :rules="rules" :model="freightForm" label-position="left" label-width="180px">
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Destination Warehouse" prop="targetId">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.targetId" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.targetId" placeholder="Please select">
               <el-option v-for="(item, key) in warehouseOptions" :key="key" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
@@ -125,7 +125,7 @@
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Status" prop="status">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.status" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.status" placeholder="Please select">
               <el-option v-for="(item, key) in freightStatusOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
@@ -135,31 +135,31 @@
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Mode" prop="mode">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.mode" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.mode" placeholder="Please select">
               <el-option v-for="(item, key) in modeOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Ocean Forwarder" prop="oceanForwarder">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oceanForwarder" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oceanForwarder" placeholder="Please select">
               <el-option v-for="(item, key) in forwarderOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Origin Port" prop="oriPort">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oriPort" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.oriPort" placeholder="Please select">
               <el-option v-for="(item, key) in oriPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Destination Port" prop="destPort">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.destPort" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.destPort" placeholder="Please select">
               <el-option v-for="(item, key) in destPortOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Container Type" prop="container">
-            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.container" class="filter-item" placeholder="Please select">
+            <el-select :disabled="isDialogPattern('view')" v-model="freightForm.container" placeholder="Please select">
               <el-option v-for="(item, key) in containerOptions" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
@@ -196,16 +196,16 @@
             <el-input disabled v-model="transitTime" placeholder=""/>
           </el-form-item>
           <el-form-item label="Transit Options">
-            <el-select :default="1" :disabled="isDialogPattern('view')" v-model="transitTimeBase" class="filter-item" placeholder="Please select">
+            <el-select :default="1" :disabled="isDialogPattern('view')" v-model="transitTimeBase" placeholder="Please select">
               <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-row>
         <div class="f-row controls" v-if="!isDialogPattern('view')">
-          <el-button v-if="isDialogPattern('create')" style="margin-left: 10px;" type="primary" @click="createFreight">
+          <el-button v-if="isDialogPattern('create')" type="primary" @click="createFreight">
             Submit Common Section
           </el-button>
-          <el-button v-if="isDialogPattern('edit')" style="margin-left: 10px;" type="primary" @click="updateFreight">
+          <el-button v-if="isDialogPattern('edit')" type="primary" @click="updateFreight">
             Update Common Section
           </el-button>
           <el-tooltip
@@ -234,11 +234,9 @@
           </template>
         </el-card>
         
-        <div class="f-row">
-          <el-button class="filter-item" v-if="!isDialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 26px;" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
-            Add Sub-Batch
-          </el-button>
-        </div>
+        <el-button v-if="!isDialogPattern('view')" :disabled="disableNewBatch" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
+          Add Sub-Batch
+        </el-button>
       </el-form>
       <template v-slot:footer>
         <el-button v-if="isDialogPattern('create')"  @click="resetForm">
@@ -298,11 +296,7 @@ const listLoading = ref(true);
 const dialogFreightVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
-const titleMap= {
-  view: 'View',
-  edit: 'Edit',
-  create: 'Create',
-};
+
 const rules = ref({
   targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
   number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
@@ -566,18 +560,9 @@ fetchList();
   > .el-button
     margin-left: .5rem
 
-.f-row.controls
-  align-items: center
-  margin-left: 1rem
-  .tips
-    margin-left: 1rem
-    width: 20px
-    height: 20px
-    cursor: pointer
-
 .el-row
-  padding-right: 2rem
-  padding-left: 2rem
+  padding-right: 1rem
+  padding-left: 1rem
   .el-form-item
     width: 42%
 :deep(.el-table thead tr > th.el-table__cell .cell)
