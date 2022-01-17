@@ -115,7 +115,7 @@ import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
-import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listTaskShipmentsAPI } from "/@/server/api/logistic";
+import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/server/api/logistic";
 import { orderStatusOptions, whTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
@@ -180,7 +180,7 @@ const handleCloseDrawer = done => {
 };
 
 const listShipments = (orderId, callback) => {
-  listTaskShipmentsAPI(orderId).then(data => {
+  listShipmentsAPI(orderId).then(data => {
     shipmentArr.value = data;
     callback && callback();
   });

@@ -132,10 +132,6 @@ export async function queryTasksAPI (params) {
   });
   return res.data;
 }
-export async function listTaskShipmentsAPI (orderId) {
-  const { items } = await requester.get(`order/${orderId}/shipments`);
-  return items;
-}
 
 export async function findTaskAPI (orderId) {
   const item = handleReqElMsg(
@@ -157,15 +153,25 @@ export async function deleteTaskAPI (taskId) {
 }
 
 /* 物流 Shipment API */
-export async function queryShipmentsAPI (params) {
+export async function listShipmentsAPI (orderId) {
   requester.defaults.baseURL = '/api';
-  jsonToUnderline(params);
-  const res = await requester.get('shipments', {
-    params,
-  });
+  const res = await requester.get(`order/${orderId}/shipments`);
   return res.data;
 }
-
+export async function createShipmentAPI (orderId, data) {
+  jsonToUnderline(data);
+  const item = handleReqElMsg(
+    requester.post(`order/${orderId}/shipments`, data), 'Create', 'Shipment'
+  );
+  return item;
+}
+export async function updateShipmentAPI (shipmentId, updates) {
+  jsonToUnderline(updates);
+  const item = handleReqElMsg(
+    requester.put(`shipment/${shipmentId}`, updates), 'Update', 'Shipment', shipmentId
+  );
+  return item;
+}
 export async function deleteShipmentAPI (shipmentId) {
   handleReqElMsg(
     requester.delete(`shipment/${shipmentId}`), 'Delete', 'Shipment', shipmentId
@@ -177,10 +183,23 @@ export async function queryPackagesAPI (shipmentId) {
   const res = await requester.get(`/packages`);
   return res.data;
 }
-
+export async function createPackageAPI (shipmentId, data) {
+  jsonToUnderline(data);
+  const item = handleReqElMsg(
+    requester.post(`shipment/${shipmentId}/packages`, data), 'Create', 'Package'
+  );
+  return item;
+}
+export async function updatePackageAPI (packageId, updates) {
+  jsonToUnderline(updates);
+  const item = handleReqElMsg(
+    requester.put(`package/${packageId}`, updates), 'Update', 'Package', packageId
+  );
+  return item;
+}
 export async function deletePackageAPI (packageId) {
   handleReqElMsg(
-    requester.delete(`shipment/${packageId}`), 'Delete', 'Shipment', packageId
+    requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
   );
 }
 

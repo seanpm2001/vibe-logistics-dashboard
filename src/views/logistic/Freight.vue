@@ -14,7 +14,7 @@
       <el-button disabled v-wave :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
       </el-button>
-      <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+      <el-checkbox v-model="showMultSelection" class="filter-item" style="margin-left:15px;">
         Multiple Selection
       </el-checkbox>
       <el-button v-if="showMultSelection" class="filter-item" style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
@@ -217,22 +217,23 @@
             <svg-icon icon-name="tips" />
           </el-tooltip>
         </div>
-        <el-divider></el-divider>
 
-        <template v-for="(item, index) in batchArr" :key="index">
-          <Batch
-            :ref="`batch-${index}`"
-            :freightId=freightForm.id
-            :batchIdx=index
-            :batchItem=item
-            :warehouseOptions=warehouseOptions
-            :dialogStatus=dialogStatus
-            @deleteBatch="removeBatch"
-            @createBatch="submitBatch"
-            @editBatch="updateBatch"
-          />
-        </template>
-
+        <el-card v-if="batchArr.length > 0">
+          <template v-for="(item, index) in batchArr" :key="index">
+            <BatchForm
+              :ref="`batch-${index}`"
+              :freightId=freightForm.id
+              :batchIdx=index
+              :batchItem=item
+              :warehouseOptions=warehouseOptions
+              :dialogStatus=dialogStatus
+              @deleteBatch="removeBatch"
+              @createBatch="submitBatch"
+              @editBatch="updateBatch"
+            />
+          </template>
+        </el-card>
+        
         <div class="f-row">
           <el-button class="filter-item" v-if="!isDialogPattern('view')" :disabled="disableNewBatch" style="margin-left: 26px;" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
             Add Sub-Batch
@@ -256,7 +257,7 @@ import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import Batch from './components/Batch.vue';
+import BatchForm from './components/BatchForm.vue';
 import { parseTime } from '/@/assets/utils/format';
 import {
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
@@ -335,7 +336,7 @@ const freightForm = ref({
   oceanForwarder: '',
 });
 
-const emptyForm = Object.assign({}, freightForm.value);
+const emptyForm = JSON.parse(JSON.stringify(freightForm))._value;
 let contrastData = null;
 
 const datePropertyArr = ['ataDp', 'atdOp', 'etaDp', 'etdOp', 'pickup', 'ataWh', 'etaWh'];

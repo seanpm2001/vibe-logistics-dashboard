@@ -1,13 +1,12 @@
 <template>
   <div>
-    <el-divider></el-divider>
-    <span class="f-row header">
+    <el-row justify="space-between" class="header">
       <span>
         Sub-Batch <span v-if="batch?.id">{{batch?.id}} [Database]</span>:
       </span> 
       <svg-icon class="icon close-icon" icon-name="close" @click="handleDeleteBatch"></svg-icon>
-    </span>
-    <el-row justify="space-between" style="margin: 2rem 2rem 0;">
+    </el-row>
+    <el-row justify="space-between">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Source">
         <el-select :disabled="isDialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
@@ -20,7 +19,6 @@
       </el-row>
     </el-row>
     <div class="form-upload-row" style="margin: 0 2rem 1.5rem;">
-      <el-divider />
       <el-row :gutter="40">
         <el-col :span="11">
           <el-upload
@@ -274,11 +272,12 @@ const beforeRemove = (file, fileList) => {
   .submit-btn
     display: none
 
-.f-row.header
-  justify-content: space-between
+.header
   margin: 0 1rem
   font-size: 16px
   font-weight: 500
+  & + .el-row
+    margin: 0 2rem 2rem
 
 .dialog-header
   margin-left: 2rem

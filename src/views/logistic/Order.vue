@@ -103,16 +103,16 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="Actions" align="center" min-width="200px" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="Actions" align="center" min-width="240px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
           <el-button v-if="!isAssigned" type="primary" size="mini" @click="showAssignDialog('assign', row.id)">
             Assign & Add 1st WH Task
           </el-button>
-          <el-button v-if="isAssigned" type="danger" size="mini" @click="unassignOrders(row.id)">
-            unAssign
-          </el-button>
           <el-button v-if="isAssigned" type="success" size="mini" @click="addWarehouseTask(row.id)">
             Add WH Task
+          </el-button>
+          <el-button v-if="isAssigned" type="danger" size="mini" @click="unassignOrders(row.id)">
+            unAssign
           </el-button>
         </template>
       </el-table-column>
@@ -126,7 +126,12 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog width="32%" title="Assign Warehouse" v-model="dialogAssignVisible" :close-on-click-modal="false">
+    <el-dialog
+      width="32%"
+      title="Assign Warehouse"
+      v-model="dialogAssignVisible"
+      :close-on-click-modal="false"
+    >
       <el-row align="middle">
         Target Warehouse: &ensp;
         <el-select v-model="targetId" placeholder="Please select">
@@ -139,7 +144,12 @@
         </el-button>
       </template>
     </el-dialog>
-    <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
+    <el-dialog
+      width="90%"
+      title="Warehouse Task"
+      v-model="dialogTaskVisible"
+      :close-on-click-modal="false"
+    >
       <TaskForm
         :warehouseOptions="warehouseOptions"
         :taskForm="taskForm"
@@ -202,7 +212,7 @@ const isAssigned = ref(null);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const targetId = ref(null);
-const dialogStatus = ref(null);
+const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
 const orderItem = ref(null);
@@ -214,6 +224,7 @@ const taskForm = ref({
   type: null,
   status: null,
 });
+const emptyTaskForm = JSON.parse(JSON.stringify(taskForm))._value;
 const contrastData = ref(null);
 
 // 合并products array为一个{productCode: totalQuantity}的对象
@@ -304,9 +315,8 @@ const assignOrders = () => {
   }
   // 调用assign orders API
   assignOrdersAPI(targetWHId, orderArr).then(data => {
-    console.log('data: ', data);
     dialogAssignVisible.value = false;
-    addWarehouseTask(data.id);
+    addWarehouseTask(data.id, true); // (orderId, isAfterAssign)
   }).finally(() => {
     dialogAssignVisible.value = false;
     fetchList();
@@ -327,9 +337,11 @@ const unassignSelected = () => {
   fetchList();
 };
 
-const addWarehouseTask = orderId => {
+const addWarehouseTask = (orderId, isAfterAssign) => {
+  taskForm.value = Object.assign({}, emptyTaskForm);
   taskForm.value.orderId = orderId;
-  taskForm.value.type = 'FULFILLMENT';
+  isAfterAssign && (taskForm.value.type = 'FULFILLMENT');
+  dialogStatus.value = 'create';
   dialogTaskVisible.value = true;
 };
 
