@@ -173,9 +173,15 @@ export async function deleteShipmentAPI (shipmentId) {
 }
 
 /* 批次 Shipment Package API */
-export async function listShipPackagesAPI (shipmentId) {
-  const res = await requester.get(`shipment/${shipmentId}/packages`);
-  return res.data.items;
+export async function queryPackagesAPI (shipmentId) {
+  const res = await requester.get(`/packages`);
+  return res.data;
+}
+
+export async function deletePackageAPI (packageId) {
+  handleReqElMsg(
+    requester.delete(`shipment/${packageId}`), 'Delete', 'Shipment', packageId
+  );
 }
 
 /* 单个商品 Unit API */
@@ -187,7 +193,6 @@ export async function findUnitAPI (unitId) {
   let item = null;
   await requester.get(`unit/${unitId}`)
     .then(data => {
-      console.log('data: ', data);
       item = data.data.item;
       ElMessage.success(`Find Unit (ID: ${unitId}) successfully.`, 3);
     })

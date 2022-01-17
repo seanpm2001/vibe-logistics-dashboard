@@ -1,7 +1,7 @@
 import Mock from 'mockjs';
 
 const shipmentList = [];
-const shipPackageList = [];
+const packageList = [];
 const orderList = [];
 const taskList = [];
 const count = 20;
@@ -21,8 +21,9 @@ for (let i = 0; i < count; i++) {
   }));
 }
 
-for (let i = 0; i < 3; i++) {
-  shipPackageList.push(Mock.mock({
+for (let i = 0; i < 20; i++) {
+  packageList.push(Mock.mock({
+    id: '@increment',
     'trackingNumber|1': ['52358899', '55658899', '54554465'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     'lastModified': '2020-05-22T00:00:00',
@@ -92,14 +93,15 @@ export default [
     }
   },
   {
-    url: RegExp('/api/shipment/[0-9]+/packages'),
+    url: RegExp('/packages'),
     type: 'get',
     response: config => {
 
       return {
         code: 20000,
         data: {
-          items: shipPackageList
+          items: packageList,
+          total: packageList.length
         }
       };
     }

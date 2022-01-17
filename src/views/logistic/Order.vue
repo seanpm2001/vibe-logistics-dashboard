@@ -53,7 +53,7 @@
           <p>{{row.createdAt}}</p>
         </template>
       </el-table-column>
-      <el-table-column label="Shipment Info" width="300px" align="center">
+      <el-table-column label="Shipment Info" min-width="280px" align="center">
         <template v-slot="{row}">
           <div class="shipment-info" align="left">
             <el-tag size="small" v-if="row.shippingName">
@@ -74,24 +74,26 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="WH Tasks & Units" width="240px" align="center">
+      <el-table-column label="WH Tasks & Units" width="240px" align="center">
         <template v-slot="{row}">
-          <template v-if="isAssigned">
-            <template v-for="(item, key) in row.products" :key="key">
-              <div align="left">
-                <svg-icon :icon-name="productIconMap[key] || 'other'"  />
-                <span class="mgl-5">{{productMap[key] || key}}:<el-tag class="mgl-5" size="small">{{ item }}</el-tag></span>
-              </div>
+          <div class="product-row">
+            <template v-if="isAssigned">
+              <template class="product-row" v-for="(item, key) in row.products" :key="key">
+                <div align="left">
+                  <svg-icon :icon-name="productIconMap[key] || 'other'"  />
+                  <span class="mgl-5">{{productMap[key] || key}}:<el-tag class="mgl-5" size="small">{{ item }}</el-tag></span>
+                </div>
+              </template>
             </template>
-          </template>
-          <template v-else>
-            <template v-for="item in row.items" :key="item.productCode">
-              <div align="left">
-                <svg-icon :icon-name="productIconMap[item.productCode] || 'other'"  />
-                <span class="mgl-5">{{productMap[item.productCode] || item.productCode}}:<el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag></span>
-              </div>
+            <template v-else>
+              <template v-for="item in row.items" :key="item.productCode">
+                <div align="left">
+                  <svg-icon :icon-name="productIconMap[item.productCode] || 'other'"  />
+                  <span class="mgl-5">{{productMap[item.productCode] || item.productCode}}:<el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag></span>
+                </div>
+              </template>
             </template>
-          </template>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="Status" width="120px" align="center">
@@ -372,11 +374,13 @@ fetchList();
     height: 14px
     vertical-align: middle
 
+.product-row
+  max-width: 90%
+  margin: 0 auto
+
 .order-info
   .el-tag
-    margin-right: 50%
     cursor: pointer
-
 .shipment-info
   .el-tag
     margin-right: 50%

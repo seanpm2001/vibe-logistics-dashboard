@@ -20,10 +20,10 @@ export const logisticRouter = [
         meta: { title: 'WH Task', icon: 'task' }
       },
       {
-        path: 'shipment',
-        component: () => import('/@/views/logistic/Shipment.vue'),
-        name: 'Shipment',
-        meta: { title: 'Shipment', icon: 'shipment' }
+        path: 'package',
+        component: () => import('/@/views/logistic/Package.vue'),
+        name: 'ShipmentPackage',
+        meta: { title: 'Package', icon: 'package' }
       },
       {
         path: 'freight',
