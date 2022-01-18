@@ -15,13 +15,13 @@ export const logisticRouter = [
       },
       {
         path: 'task',
-        component: () => import('/@/views/logistic/Task.vue'),
+        component: () => import('/@/views/logistic/WarehouseTask.vue'),
         name: 'task',
         meta: { title: 'WH Task', icon: 'task' }
       },
       {
         path: 'package',
-        component: () => import('/@/views/logistic/Package.vue'),
+        component: () => import('/@/views/logistic/ShipmentPackage.vue'),
         name: 'ShipmentPackage',
         meta: { title: 'Package', icon: 'package' }
       },

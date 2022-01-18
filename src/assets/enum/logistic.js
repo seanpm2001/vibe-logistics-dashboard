@@ -39,14 +39,23 @@ export const destPortOptions = {
   LA_LB: 'LA/LB',
   MELBOURNE: 'Melbourne'
 };
-export const orderStatusOptions = {
+export const packageStatusOptions = {
   DELIVERED: 'Delivered',
   DELIVEREING: 'Delivering',
   PARTIALLY_DELIVERED: 'Partially Delivered',
+  RETURNING: 'Returning',
   RETURNED: 'Returned',
   LOST: 'Lost'
 };
-export const whTypeOptions = {
+export const taskStatusOptions = {
+  UNFULFILLED: 'Unfulfilled',
+  FULFILLED_AND_DELIVERING: 'Fulfilled and delivering',
+  FAILED: 'Failed',
+  COMPLETE: 'Complete',
+  ONHOLD: 'Onhold',
+  CANCELLED: 'Cancelled'
+};
+export const taskTypeOptions = {
   FULFILLMENT: 'Fulfillment',
   REPLACE: 'Replace',
   RETURN: 'Return',

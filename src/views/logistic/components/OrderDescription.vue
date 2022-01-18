@@ -44,7 +44,7 @@
 
 <script setup>
 import { ElMessageBox } from "element-plus";
-import { orderStatusOptions } from '/@/assets/enum/logistic';
+import { packageStatusOptions } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

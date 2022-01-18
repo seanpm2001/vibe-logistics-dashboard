@@ -34,14 +34,14 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>Item Status</template>
-      {{orderStatusOptions[unitItem.status]}}
+      {{packageStatusOptions[unitItem.status]}}
     </el-descriptions-item>
   </el-descriptions>
 </template>
 
 <script setup>
 import { ElMessageBox } from "element-plus";
-import { orderStatusOptions } from '/@/assets/enum/logistic';
+import { packageStatusOptions } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

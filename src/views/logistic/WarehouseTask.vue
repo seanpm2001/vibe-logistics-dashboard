@@ -41,7 +41,7 @@
       <el-table-column label="WT Type" width="110px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ whTypeOptions[row.warehouseTaskType] }}
+            {{ taskTypeOptions[row.warehouseTaskType] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -53,7 +53,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ orderStatusOptions[row.status] }}
+            {{ packageStatusOptions[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -116,7 +116,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
 import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/server/api/logistic";
-import { orderStatusOptions, whTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
 const store = useStore();

@@ -3,7 +3,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Type">
         <el-select v-model="formData.type" :disabled="isDialogPattern('view')" placeholder="Please select">
-          <el-option v-for="(item, key) in whTypeOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in taskTypeOptions" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="Source Warehouse">
@@ -19,10 +19,12 @@
     </el-row>
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Order ID">
-        <el-input v-model="formData.orderId" :disabled="isDialogPattern('view')" placeholder="Order Id" />
+        <el-input disabled v-model="formData.orderId" placeholder="Order Id" />
       </el-form-item>
       <el-form-item label="Task Status">
-        <el-input v-model="formData.status" :disabled="isDialogPattern('view')" placeholder="Task Status"  />
+        <el-select v-model="formData.status" :disabled="isDialogPattern('view')" placeholder="Please select">
+          <el-option v-for="(item, key) in taskStatusOptions" :key="item" :label="item" :value="key" />
+        </el-select>
       </el-form-item>
       <el-form-item label="On hold">
         <el-switch v-model="isOnHold" :disabled="isDialogPattern('view')" @click="onHoldTask">
@@ -74,7 +76,7 @@
 import { ref } from 'vue';
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
-import { whTypeOptions } from '/@/assets/enum/logistic';
+import { taskTypeOptions, taskStatusOptions } from '/@/assets/enum/logistic';
 // eslint-disable-next-line no-undef
 const props = defineProps({
   taskForm: {

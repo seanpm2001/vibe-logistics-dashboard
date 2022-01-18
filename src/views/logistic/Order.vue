@@ -99,7 +99,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ orderStatusOptions[row.status] }}
+            {{ packageStatusOptions[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -144,6 +144,7 @@
         </el-button>
       </template>
     </el-dialog>
+
     <el-dialog
       width="90%"
       title="Warehouse Task"
@@ -187,7 +188,7 @@ import {
   queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
 } from "/@/server/api/logistic";
 import { parseTime } from '/@/assets/utils/format';
-import { orderStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 const store = useStore();
 const warehouseOptions = computed(() => store.getters.warehouseOptions);

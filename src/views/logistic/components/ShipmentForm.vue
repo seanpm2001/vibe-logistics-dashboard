@@ -124,7 +124,10 @@ const emptyPackage = {
   trackingNumber: null,
   status: null,
   newAddress: null,
-  serialArr: [],
+  unitArr: [{
+    serial: null,
+    status: null,
+  }],
 };
 
 const isDialogPattern = type => props.dialogStatus === type;

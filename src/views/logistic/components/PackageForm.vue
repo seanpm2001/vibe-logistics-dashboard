@@ -15,10 +15,25 @@
       </el-form-item>
       <el-form-item :rules="{ required: true, message: 'shipment package status is required', trigger: 'change' }" label="Status">
         <el-select :disabled="isDialogPattern('view')" v-model="shipPackage.status" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in packageStatusOptions" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
     </el-row>
+
+    <template v-for="(item, index) in shipPackage.unitArr" :key="index">
+      <el-row align="middle" class="package-unit">
+        <svg-icon class="icon" icon-name="add" @click="handlePackageUnit(index, 'add')" />
+        <svg-icon class="icon" :style="shipPackage.unitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handlePackageUnit(index, 'minus')" />
+        <el-row >
+          <el-form-item label="Unit Serial">
+            <el-input v-model="item.serial" placeholder="Unit Serial"/>
+          </el-form-item>
+          <el-form-item label="Unit Status">
+            <el-input v-model="item.status" placeholder="Unit Status"/>
+          </el-form-item>
+        </el-row>
+      </el-row>
+    </template>
     
     <div class="f-row controls" v-if="!isDialogPattern('view')">
       <el-button v-if="shipPackage?.id" type="primary" @click="handlePackage('update')">
@@ -30,7 +45,7 @@
       <el-tooltip
         class="tips"
         effect="light"
-        content="You need to have/submit a common part before 'Add new Package'"
+        content="You need to have/submit current package before 'Add new Package'"
         placement="right"
       >
         <svg-icon icon-name="tips" />
@@ -43,6 +58,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/server/api/logistic';
+import { packageStatusOptions } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -55,10 +71,6 @@ const props = defineProps({
     required: true
   },
   packageItem: {
-    type: Object,
-    required: true
-  },
-  warehouseOptions: {
     type: Object,
     required: true
   },
@@ -80,6 +92,11 @@ const isDialogPattern = type => props.dialogStatus === type;
 const dialogExcelVisible = ref(false);
 
 const xmlFileList = ref([]);
+
+const handlePackageUnit = (idx, type) => {
+  const unitArr = shipPackage.value.unitArr;
+  type === "add" ? unitArr.push({serial: null, status: shipPackage.value.status}) : unitArr.splice(idx, 1);
+};
 
 const handleDeletePackage = () => {
   const packageId = shipPackage.value?.id;
@@ -153,7 +170,9 @@ const handlePackage = type => {
     font-size: 16px
     font-weight: 500
 
-.sub-divider
-  width: calc(100% - 32px)
-  margin-left: 16px 
+.package-unit
+  margin-bottom: 1rem
+  .el-form-item
+    margin-right: 1rem
+    margin-bottom: 0
 </style>
