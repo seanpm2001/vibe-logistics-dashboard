@@ -111,37 +111,24 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog width="80%" title="Freight" v-model="dialogFreightVisible" :before-close="beforeCloseDialog" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="rules" :model="freightItem" label-position="left" label-width="180px">
-        <FreightFormItems
-          :warehouseOptions="warehouseOptions"
-          @fetchList="fetchList"
-        />
-      </el-form>
-
-      <template v-slot:footer>
-        <el-button v-if="isDialogPattern('create')"  @click="resetForm">
-          Reset
-        </el-button>
-        <el-button @click="dialogFreightVisible = false">
-          Close
-        </el-button>
-      </template>
-    </el-dialog>
+    <FreightDialogForm
+      ref="freightDialogForm"
+      :warehouseOptions="warehouseOptions"
+      @fetchList="fetchList"
+    />
+    
+      
   </div>
 </template>
 
 <script setup>
 import { computed, getCurrentInstance, onMounted, ref, provide } from "vue";
 import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import FreightFormItems from './components/FreightFormItems.vue';
+import FreightDialogForm from './components/FreightDialogForm.vue';
 import { parseTime } from '/@/assets/utils/format';
-import {
-  queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
-  listWarehousesAPI, listBatchesAPI, deleteBatchAPI
-} from "/@/server/api/logistic";
+import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
 import { freightStatusOptions, forwarderOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* start data */
@@ -154,14 +141,9 @@ const listQuery = ref({
   perPage: 10,
 });
 
-const rules = ref({
-  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
-  number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
-});
-
 const freightItem = ref({
   id: undefined,
-  number: '',
+  number: null,
   etaWh: null,
   ataWh: null,
   ataDp: null,
@@ -169,19 +151,18 @@ const freightItem = ref({
   etdOp: null,
   atdOp: null,
   pickup: null,
-  targetId: '',
-  status: '',
-  mode: '',
-  oriPort: '',
-  destPort: '',
-  container: '',
-  cost: '',
-  oceanForwarder: '',
+  targetId: null,
+  status: null,
+  mode: null,
+  oriPort: null,
+  destPort: null,
+  container: null,
+  cost: null,
+  oceanForwarder: null,
 });
-const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 
 const batchArr = ref([]);
-let contrastData = null;
+const contrastData = ref(null);
 const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 
 const showMultSelection = ref(false);
@@ -198,12 +179,13 @@ const dataList = ref(null);
 const total = ref(0);
 const listLoading = ref(true); // queryList loading
 const dialogFreightVisible = ref(false);
-const dialogStatus = ref('');
+const dialogStatus = ref(null);
 const multipleSelection = ref([]);
 
 const downloadLoading = ref(false);
 
 // provide data for sub-components
+provide('dialogFreightVisible', dialogFreightVisible);
 provide('freightItem', freightItem);
 provide('contrastData', contrastData);
 provide('batchArr', batchArr);
@@ -253,47 +235,11 @@ const sortByID = order => {
   handleFilter();
 };
 
-const beforeCloseDialog = done => {
-  if (dialogStatus.value !== 'edit') {
-    resetForm();
-    done();
-    return;
-  }
-  
-  const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightItem.value);
-  if (!isChanged) {
-    resetForm();
-    done();
-  }
-  isChanged && ElMessageBox.confirm(
-    `Unsaved changes, are you sure to leave?`,
-    'Warning',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-      callback: (action) => {
-        if (action === "confirm") {
-          resetForm();
-          done();
-        }
-      },
-    }
-  );
-};
 
-const resetForm = () => {
-  proxy.$nextTick(() => {
-    batchArr.value = [];
-    freightItem.value = Object.assign({}, emptyFreightForm);
-    proxy.$refs['dataForm'].clearValidate();
-  });
-};
 
 const showCreateDialog = () => {
-  batchArr.value = [];
+  proxy.$refs['freightDialogForm'].resetForm();
   dialogStatus.value = 'create';
-  resetForm();
   dialogFreightVisible.value = true;
 };
 
@@ -326,7 +272,7 @@ const handleDetailRow = (row, type) => {
   }
   findFreightAPI(freightId).then(data => {
     freightItem.value = Object.assign({}, data); // copy obj
-    type === 'edit' && (contrastData = Object.assign({}, data));
+    type === 'edit' && (contrastData.value = Object.assign({}, data));
     listBatches(freightId, () => {
       dialogStatus.value = type;
       dialogFreightVisible.value = true;
