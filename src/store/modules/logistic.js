@@ -2,7 +2,7 @@ import { listWarehousesAPI } from '/@/server/api/logistic';
 import { fixedWarehouseOptions } from '/@/assets/enum/logistic';
 
 const freight = {
-  id: undefined,
+  id: 0,
   number: null,
   etaWh: null,
   ataWh: null,

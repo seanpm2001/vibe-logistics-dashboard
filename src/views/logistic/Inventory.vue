@@ -294,7 +294,7 @@ const rules = ref({
 const downloadLoading = ref(false);
 
 const temp = ref({
-  id: undefined,
+  id: 0,
   content: {},
   remark: '',
   timestamp: new Date(),
@@ -355,7 +355,7 @@ const sortByID = order => {
 
 const resetTemp = () => {
   temp.value = {
-    id: undefined,
+    id: 0,
     content: {},
     remark: '',
     timestamp: new Date(),

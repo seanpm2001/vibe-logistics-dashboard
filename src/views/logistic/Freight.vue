@@ -159,7 +159,7 @@ const listQuery = ref({
 });
 
 const freightItem = ref({
-  id: undefined,
+  id: 0,
   number: null,
   etaWh: null,
   ataWh: null,

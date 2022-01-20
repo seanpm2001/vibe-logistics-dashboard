@@ -77,7 +77,7 @@
       </template>
     </el-card>
     
-    <el-button :disabled="disableNewPackage || !taskId" type="primary" icon="el-icon-circle-plus" @click="addPackage">
+    <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
       Add Package
     </el-button>
   </div>
