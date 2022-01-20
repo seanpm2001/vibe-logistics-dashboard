@@ -231,7 +231,6 @@ const taskItem = ref({
   }],
 });
 const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
-console.log('emptyTaskForm: ', emptyTaskForm);
 const contrastData = ref(null);
 
 provide('taskItem', taskItem);
@@ -366,34 +365,34 @@ const handlePagination = config => {
 
 
 
-const beforeCloseDialog = done => {
-  if (dialogStatus.value !== 'edit') {
-    resetForm();
-    done();
-    return;
-  }
+// const beforeCloseDialog = done => {
+//   if (dialogStatus.value !== 'edit') {
+//     resetForm();
+//     done();
+//     return;
+//   }
   
-  const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightItem.value);
-  if (!isChanged) {
-    resetForm();
-    done();
-  }
-  isChanged && ElMessageBox.confirm(
-    `Unsaved changes, are you sure to leave?`,
-    'Warning',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-      callback: (action) => {
-        if (action === "confirm") {
-          resetForm();
-          done();
-        }
-      },
-    }
-  );
-};
+//   const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightItem.value);
+//   if (!isChanged) {
+//     resetForm();
+//     done();
+//   }
+//   isChanged && ElMessageBox.confirm(
+//     `Unsaved changes, are you sure to leave?`,
+//     'Warning',
+//     {
+//       confirmButtonText: 'OK',
+//       cancelButtonText: 'Cancel',
+//       type: 'warning',
+//       callback: (action) => {
+//         if (action === "confirm") {
+//           resetForm();
+//           done();
+//         }
+//       },
+//     }
+//   );
+// };
 
 fetchList();
 </script>
