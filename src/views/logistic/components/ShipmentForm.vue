@@ -45,10 +45,10 @@
     </el-row>
     
     <div class="f-row controls" v-if="!isDialogPattern('view')">
-      <el-button v-if="shipmentItem?.id" type="primary" @click="handleShipment('update')">
+      <el-button :disabled="!taskId" v-if="shipmentItem?.id" type="primary" @click="handleShipment('update')">
         Update Shipment
       </el-button>
-      <el-button v-else type="primary" @click="handleShipment('create')">
+      <el-button :disabled="!taskId" v-else type="primary" @click="handleShipment('create')">
         Submit Shipment
       </el-button>
       <el-tooltip
@@ -77,7 +77,7 @@
       </template>
     </el-card>
     
-    <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
+    <el-button :disabled="disableNewPackage || !taskId" type="primary" icon="el-icon-circle-plus" @click="addPackage">
       Add Package
     </el-button>
   </div>
@@ -91,6 +91,10 @@ import { createShipmentAPI, deleteShipmentAPI, updateShipmentAPI } from '/@/serv
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
+  taskId: {
+    type: Number,
+    required: true
+  },
   orderId: {
     type: Number,
     required: true

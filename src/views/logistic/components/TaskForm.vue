@@ -89,6 +89,7 @@
       <el-card>
         <ShipmentForm
           :ref="`shipmentForm`"
+          :taskId="taskItem.id"
           :orderId="taskItem.orderId"
           :warehouseOptions="warehouseOptions"
           :dialogStatus="dialogStatus"
