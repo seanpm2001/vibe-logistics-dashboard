@@ -9,7 +9,9 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>Used Age</template>
-      {{(unitItem.usedAge).replaceAll('_', ' ')}}
+      <el-select v-model="unitItem.usedAge" placeholder="Please select">
+        <el-option v-for="(item, key) in usedAgeOptions" :key="item" :label="item" :value="key" />
+      </el-select>
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>SKU</template>
@@ -26,7 +28,9 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>Condition</template>
-      {{unitItem.condition}}
+      <el-select v-model="unitItem.condition" placeholder="Please select">
+        <el-option v-for="(item, key) in conditionOptions" :key="item" :label="item" :value="key" />
+      </el-select>
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>Owner ID</template>
@@ -40,16 +44,11 @@
 </template>
 
 <script setup>
+import { inject } from 'vue';
 import { ElMessageBox } from "element-plus";
-import { packageStatusOptions } from '/@/assets/enum/logistic';
+import { packageStatusOptions, usedAgeOptions, conditionOptions } from '/@/assets/enum/logistic';
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  unitItem: {
-    type: Object,
-    required: true
-  },
-});
+const unitItem = inject('unitItem');
 
 const checkUnit = isChecked => {
   ElMessageBox.confirm(

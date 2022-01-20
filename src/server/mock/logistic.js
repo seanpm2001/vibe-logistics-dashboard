@@ -40,10 +40,10 @@ for (let i = 0; i < 20; i++) {
 
 const unitObj = Mock.mock({
   'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033'],
-  'usedAge|1': ['within_3_months', '3_to_12_months', ''],
+  'usedAge|1': ['WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
   'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR'],
   'producedDate': '2021-07-15',
-  'condition|1': ['Dam P only', 'Dam I only', 'Dam P & I'],
+  'condition|1': ['SCRAP', 'DAM_P_ONLY', 'DAM_U_ONLY'],
   'ownerId': 'COI-4564',
   'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
 });

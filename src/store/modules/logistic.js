@@ -1,28 +1,48 @@
 import { listWarehousesAPI } from '/@/server/api/logistic';
 import { fixedWarehouseOptions } from '/@/assets/enum/logistic';
 
+const freight = {
+  id: undefined,
+  number: null,
+  etaWh: null,
+  ataWh: null,
+  ataDp: null,
+  etaDp: null,
+  etdOp: null,
+  atdOp: null,
+  pickup: null,
+  targetId: '',
+  status: '',
+  mode: '',
+  oriPort: '',
+  destPort: '',
+  container: '',
+  cost: '',
+  oceanForwarder: '',
+};
+const emptyFreight = JSON.parse(JSON.stringify(freight));
+
 export const logistic = {
   namespaced: true,
   state: {
-    freights: [],
-    warehouseOptions: {}
+    warehouseOptions: {},
+    disableNewBatch: false,
+    freightItem: freight,
+    emptyFreightItem: emptyFreight,
   },
 
   getters: {
-    getFreights: state => state.freights,
+    getFreight: state => state.freightItem,
+    getEmptyFreight: state => state.emptyFreightItem
   },
 
   mutations: {
     SET_WAREHOUSE_OPTIONS (state, options) {
       state.warehouseOptions = options;
-    }
-    // UPDATE_FREIGHT (state, freight) {
-    //   const freightObj = state.freights.find(item => item.id === freight.id);
-    //   if (freightObj) {
-    //     Object.assign(freightObj, freight);
-    //   } else {
-    //     state.freights.unshift(freight);
-    //   }
+    },
+
+    // UPDATE_FREIGHT (state, updates) {
+    //   state.freightItem = Object.assign(state.freightItem, updates);
     // },
 
     // DELETE_FREIGHT (state, id) {
@@ -54,20 +74,15 @@ export const logistic = {
     //     resolve();
     //   });
     // },
-    // async findFreight ({ commit }, id) {
-    //   const freight = await findFreightAPI(id);
-    //   freight && commit('UPDATE_FREIGHT', freight);
-    // },
     // async createFreight ({ commit }, freightForm) {
     //   const freight = await createFreightAPI(freightForm);
     //   console.log('freight: ', freight);
     //   freight.code && commit('UPDATE_FREIGHT', { id: freight.id, freight: freight });
     //   return freight.code; // 0：失败 || 1：成功
     // },
-    // async updateFreight ({ commit }, { id, updates }) {
-    //   const freight = await updateFreightAPI(id, updates);
-    //   freight && commit('UPDATE_FREIGHT', { id: freight.id, freight: freight });
-    // },
+    async updateFreight ({ commit }, { id, updates }) {
+      commit('UPDATE_FREIGHT', { freight: updates });
+    },
     // async deleteFreight ({ commit }, id) {
     //   await deleteFreightAPI(id);
     //   commit('DELETE_FREIGHT', id);

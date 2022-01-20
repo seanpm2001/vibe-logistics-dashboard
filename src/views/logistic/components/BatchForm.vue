@@ -111,6 +111,7 @@ const props = defineProps({
 });
 
 const batch = ref(props.batchItem);
+console.log('batch: ', batch);
 const previewExcelArr = [].concat(batch.value?.items);
 
 // eslint-disable-next-line no-undef

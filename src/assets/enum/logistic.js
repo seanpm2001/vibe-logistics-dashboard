@@ -62,6 +62,18 @@ export const taskTypeOptions = {
   RETURN_TO_REPAIR: 'Return to Repair',
   MOVE: 'Move'
 };
+export const usedAgeOptions = {
+  WITHIN_3_MONTHS: 'Within 3 months',
+  BETWEEN_3_TO_12_MONTHS: '3 to 12 months',
+  OVER_12_MONTHS: 'Over 12 months',
+};
+export const conditionOptions = {
+  SCRAP: 'Scrap',
+  DAM_P_ONLY: 'Damage package only',
+  DAM_U_ONLY: 'Damage unit only',
+  DAM_P_AND_U: 'Damage package and unit only',
+  DAM_U_NOT_SHIP: 'Damage unit not shipment'
+};
 export const productMap = {
   '55V1B': '55 V1 Board',
   '55V1WS': '55 V1 White Stand',

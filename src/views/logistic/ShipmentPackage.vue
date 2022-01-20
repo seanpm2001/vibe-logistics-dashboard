@@ -89,15 +89,13 @@
       size="50%"
       direction="ltr"
     >
-      <UnitDescription
-        :unitItem="unitItem"
-      />
+      <UnitDescription/>
     </el-drawer>
   </div>
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref } from "vue";
+import { computed, getCurrentInstance, ref, provide } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -107,7 +105,7 @@ import { parseTime } from '/@/assets/utils/format';
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from "/@/server/api/logistic";
 import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
-
+/* Start data */
 const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -136,6 +134,9 @@ const rules = ref({
 });
 const downloadLoading = ref(false);
 const disableNewBatch = ref(true);
+
+provide('unitItem', unitItem);
+/* End data */
 const isDialogPattern = type => dialogStatus.value === type;
 
 const fetchList = () => {

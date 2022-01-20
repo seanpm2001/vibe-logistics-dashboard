@@ -40,7 +40,7 @@ requester.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = 'Bearer ' + getToken();
     }
-    if (method === 'get' && url.includes('s')) return config; // query API 不触发全屏loading
+    if (method === 'get' && !url.includes('/')) return config; // query API 不触发全屏loading
     showFullScreenLoading();
     return config;
   },

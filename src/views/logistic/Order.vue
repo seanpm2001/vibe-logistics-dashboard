@@ -153,7 +153,6 @@
     >
       <TaskForm
         :warehouseOptions="warehouseOptions"
-        :taskForm="taskForm"
         :dialogStatus="dialogStatus"
       />
       <template v-slot:footer>
@@ -177,7 +176,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, provide, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -190,6 +189,7 @@ import {
 import { parseTime } from '/@/assets/utils/format';
 import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
+/* Start data */
 const store = useStore();
 const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
@@ -217,16 +217,25 @@ const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
 const orderItem = ref(null);
-const taskForm = ref({
+const taskItem = ref({
   id: null,
   orderId: null,
   sourceId: null,
   targetId: null,
   type: null,
   status: null,
+  usedUnitArr: [{
+    usedAge: null,
+    condition: null,
+    serial: null,
+  }],
 });
-const emptyTaskForm = JSON.parse(JSON.stringify(taskForm))._value;
+const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
+
+provide('taskItem', taskItem);
+/* End data */
+
 
 // 合并products array为一个{productCode: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
@@ -273,7 +282,6 @@ const handleFilter = () => {
 };
 
 const showOrderDrawer = orderRaw => {
-  console.log('raw: ', orderRaw);
   orderItem.value = orderRaw;
   drawerOrderVisible.value = true;
 };
@@ -339,9 +347,9 @@ const unassignSelected = () => {
 };
 
 const addWarehouseTask = (orderId, isAfterAssign) => {
-  taskForm.value = Object.assign({}, emptyTaskForm);
-  taskForm.value.orderId = orderId;
-  isAfterAssign && (taskForm.value.type = 'FULFILLMENT');
+  taskItem.value = Object.assign({}, emptyTaskForm);
+  taskItem.value.orderId = orderId;
+  isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
   dialogStatus.value = 'create';
   dialogTaskVisible.value = true;
 };

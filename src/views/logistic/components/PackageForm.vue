@@ -21,17 +21,15 @@
     </el-row>
 
     <template v-for="(item, index) in shipPackage.unitArr" :key="index">
-      <el-row align="middle" class="package-unit">
-        <svg-icon class="icon" icon-name="add" @click="handlePackageUnit(index, 'add')" />
-        <svg-icon class="icon" :style="shipPackage.unitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handlePackageUnit(index, 'minus')" />
-        <el-row >
-          <el-form-item label="Unit Serial">
-            <el-input v-model="item.serial" placeholder="Unit Serial"/>
-          </el-form-item>
-          <el-form-item label="Unit Status">
-            <el-input v-model="item.status" placeholder="Unit Status"/>
-          </el-form-item>
-        </el-row>
+      <el-row align="middle" class="add-minus-row">
+        <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
+        <svg-icon class="icon" :style="shipPackage.unitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
+        <el-form-item label="Unit Serial">
+          <el-input v-model="item.serial" placeholder="Unit Serial"/>
+        </el-form-item>
+        <el-form-item label="Unit Status">
+          <el-input v-model="item.status" placeholder="Unit Status"/>
+        </el-form-item>
       </el-row>
     </template>
     
@@ -81,7 +79,6 @@ const props = defineProps({
 });
 
 const shipPackage = ref(props.packageItem);
-console.log('shipPackage: ', shipPackage);
 const previewExcelArr = [].concat(shipPackage.value?.items);
 
 // eslint-disable-next-line no-undef
@@ -93,7 +90,7 @@ const dialogExcelVisible = ref(false);
 
 const xmlFileList = ref([]);
 
-const handlePackageUnit = (idx, type) => {
+const handleUnitChange = (idx, type) => {
   const unitArr = shipPackage.value.unitArr;
   type === "add" ? unitArr.push({serial: null, status: shipPackage.value.status}) : unitArr.splice(idx, 1);
 };
@@ -153,14 +150,6 @@ const handlePackage = type => {
 .el-checkbox__label .el-form-item
   margin-bottom: 0
 
-.icon
-  margin-right: .25rem
-  cursor: pointer
-  .close-icon
-    float: right
-    width: 24px
-    height: 24px
-
 .el-row
   align-items: center
   padding: 0 2rem
@@ -170,9 +159,4 @@ const handlePackage = type => {
     font-size: 16px
     font-weight: 500
 
-.package-unit
-  margin-bottom: 1rem
-  .el-form-item
-    margin-right: 1rem
-    margin-bottom: 0
 </style>
