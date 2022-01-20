@@ -145,22 +145,12 @@
       </template>
     </el-dialog>
 
-    <el-dialog
-      width="90%"
-      title="Warehouse Task"
-      v-model="dialogTaskVisible"
-      :close-on-click-modal="false"
-    >
-      <TaskForm
-        :warehouseOptions="warehouseOptions"
-        :dialogStatus="dialogStatus"
-      />
-      <template v-slot:footer>
-        <el-button @click="dialogTaskVisible = false">
-          Close
-        </el-button>
-      </template>
-    </el-dialog>
+    <TaskForm
+      ref="taskForm"
+      :warehouseOptions="warehouseOptions"
+      :emptyTaskForm="emptyTaskForm"
+      :dialogStatus="dialogStatus"
+    />
 
     <el-drawer
       v-model="drawerOrderVisible"
@@ -233,6 +223,7 @@ const taskItem = ref({
 const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
+provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 /* End data */
 
@@ -349,6 +340,7 @@ const unassignSelected = () => {
 const addWarehouseTask = (orderId, isAfterAssign) => {
   taskItem.value = Object.assign({}, emptyTaskForm);
   taskItem.value.orderId = orderId;
+  console.log('taskItem.value: ', taskItem.value);
   isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
   dialogStatus.value = 'create';
   dialogTaskVisible.value = true;
@@ -363,7 +355,9 @@ const handlePagination = config => {
   fetchList();
 };
 
+const resetForm = () => {
 
+};
 
 // const beforeCloseDialog = done => {
 //   if (dialogStatus.value !== 'edit') {

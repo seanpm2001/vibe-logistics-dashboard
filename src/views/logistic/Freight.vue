@@ -111,12 +111,29 @@
       @pagination="handlePagination"
     />
 
-    <FreightDialogForm
-      ref="freightDialogForm"
-      :warehouseOptions="warehouseOptions"
-      @fetchList="fetchList"
-    />
-    
+    <el-dialog
+      width="80%"
+      title="Freight"
+      v-model="dialogFreightVisible"
+      :before-close="beforeCloseDialog"
+      :close-on-click-modal="false"
+    >
+      <FreightForm
+        ref="freightForm"
+        :warehouseOptions="warehouseOptions"
+        :emptyFreightForm="emptyFreightForm"
+        @fetchList="fetchList"
+      />
+
+      <template v-slot:footer>
+        <el-button v-if="isDialogPattern('create')"  @click="resetForm">
+          Reset
+        </el-button>
+        <el-button @click="dialogFreightVisible = false">
+          Close
+        </el-button>
+      </template>
+    </el-dialog>
       
   </div>
 </template>
@@ -124,9 +141,9 @@
 <script setup>
 import { computed, getCurrentInstance, onMounted, ref, provide } from "vue";
 import { useStore } from "vuex";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import FreightDialogForm from './components/FreightDialogForm.vue';
+import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/assets/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
 import { freightStatusOptions, forwarderOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
@@ -160,6 +177,7 @@ const freightItem = ref({
   cost: null,
   oceanForwarder: null,
 });
+const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 
 const batchArr = ref([]);
 const contrastData = ref(null);
@@ -185,7 +203,6 @@ const multipleSelection = ref([]);
 const downloadLoading = ref(false);
 
 // provide data for sub-components
-provide('dialogFreightVisible', dialogFreightVisible);
 provide('freightItem', freightItem);
 provide('contrastData', contrastData);
 provide('batchArr', batchArr);
@@ -235,10 +252,12 @@ const sortByID = order => {
   handleFilter();
 };
 
-
+const resetForm = () => {
+  proxy.$refs['freightForm'].resetForm();
+};
 
 const showCreateDialog = () => {
-  proxy.$refs['freightDialogForm'].resetForm();
+  resetForm();
   dialogStatus.value = 'create';
   dialogFreightVisible.value = true;
 };
@@ -310,13 +329,34 @@ const getSortClass = key => {
   return sort === `+${key}` ? 'ascending' : 'descending';
 };
 
-// const handleSizeChange = val => {
-//   listQuery.value.limit = val;
-// };
-
-// const handleCurrentChange = val => {
-//   listQuery.value.page = val;
-// };
+const beforeCloseDialog = done => {
+  if (dialogStatus.value !== 'edit') {
+    resetForm();
+    done();
+    return;
+  }
+  
+  const isChanged = JSON.stringify(contrastData.value) !== JSON.stringify(freightItem.value);
+  if (!isChanged) {
+    resetForm();
+    done();
+  }
+  isChanged && ElMessageBox.confirm(
+    `Unsaved changes, are you sure to leave?`,
+    'Warning',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === "confirm") {
+          resetForm();
+          done();
+        }
+      },
+    }
+  );
+};
 
 
 fetchList();

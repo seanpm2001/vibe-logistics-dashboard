@@ -18,7 +18,7 @@
         <el-input v-else style="width: 80px; margin-left: 1rem;" disabled v-model="totalCostNew" placeholder=""/>
       </el-row>
     </el-row>
-    <div class="form-upload-row" style="margin: 0 2rem 1.5rem;">
+    <div class="form-upload-row">
       <el-row :gutter="40">
         <el-col :span="11">
           <el-upload

@@ -2,7 +2,7 @@
   <div>
     <el-row class="header" justify="space-between" :gutter="3">
       <span>
-        Shipment <span v-if="shipment?.id">{{shipment?.id}} [Database]</span>:
+        Shipment <span v-if="shipmentItem?.id">{{shipmentItem?.id}} [Database]</span>:
       </span> 
       <svg-icon class="icon close-icon" icon-name="close" @click="handleDeleteShipment"></svg-icon>
     </el-row>
@@ -65,11 +65,11 @@
       <template v-for="(item, index) in packageArr" :key="index">
         <PackageForm
           :ref="`package-${index}`"
-          :shipmentId=shipmentItem?.id
-          :packageIdx=index
-          :packageItem=item
-          :warehouseOptions=warehouseOptions
-          :dialogStatus=dialogStatus
+          :shipmentId="shipmentItem?.id"
+          :packageIdx="index"
+          :packageItem="item"
+          :warehouseOptions="warehouseOptions"
+          :dialogStatus="dialogStatus"
           @deletePackage="removePackage"
           @createPackage="submitPackage"
           @editPackage="updatePackage"
@@ -106,7 +106,7 @@ const props = defineProps({
 });
 
 const shipmentItem = ref({
-  id: undefined,
+  id: 0,
   carrier: null,
   deliveryCost: null,
   liftgateCost: null,
@@ -131,10 +131,11 @@ const emptyPackage = {
 
 const isDialogPattern = type => props.dialogStatus === type;
 
-const disableNewPackage = ref(false);
-const dialogExcelVisible = ref(false);
-
-const xmlFileList = ref([]);
+const disableNewPackage = computed(() => {
+  const arr = packageArr.value;
+  if (arr.length === 0) return false;
+  return !arr[arr.length - 1]?.id;
+});
 
 const addPackage = () => {
   // if (!formData.value.id) {
@@ -143,7 +144,6 @@ const addPackage = () => {
   // }
   packageArr.value.push(Object.assign({}, emptyPackage));
   console.log('packageArr.value: ', packageArr.value);
-  disableNewPackage.value = true;
 };
 
 const handleCostChange = (key) => {
@@ -191,10 +191,8 @@ const handleShipment = (type) => {
 
 const removePackage = (idx, shipmentId) => {
   packageArr.value.splice(idx, 1);
-  disableNewPackage.value = false;
 };
 const submitPackage = (shipment, freightId, shipmentIdx) => {
-  disableNewPackage.value = false;
 };
 const updatePackage = (data, shipmentIdx) => {
   console.log('shipmentIdx: ', shipmentIdx);

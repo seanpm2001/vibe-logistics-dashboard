@@ -34,10 +34,10 @@
     </template>
     
     <div class="f-row controls" v-if="!isDialogPattern('view')">
-      <el-button v-if="shipPackage?.id" type="primary" @click="handlePackage('update')">
+      <el-button :disabled="!shipmentId" v-if="shipPackage?.id" type="primary" @click="handlePackage('update')">
         Update Package
       </el-button>
-      <el-button v-else type="primary" @click="handlePackage('create')">
+      <el-button :disabled="!shipmentId" v-else type="primary" @click="handlePackage('create')">
         Submit Package
       </el-button>
       <el-tooltip
@@ -60,7 +60,7 @@ import { packageStatusOptions } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
-  orderId: {
+  shipmentId: {
     type: Number,
     required: true
   },
