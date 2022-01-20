@@ -40,9 +40,6 @@
         <el-row justify="space-between" align="middle" class="add-minus-row">
           <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
           <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
-          <el-form-item label="Unit Serial">
-            <el-input v-model="item.serial" placeholder="Unit Serial"/>
-          </el-form-item>
           <el-form-item label="Used Age">
             <el-select v-model="item.usedAge" placeholder="Please select">
               <el-option v-for="(item, key) in usedAgeOptions" :key="item" :label="item" :value="key" />
@@ -52,6 +49,9 @@
             <el-select v-model="item.condition" placeholder="Please select">
               <el-option v-for="(item, key) in conditionOptions" :key="item" :label="item" :value="key" />
             </el-select>
+          </el-form-item>
+          <el-form-item label="Unit Serial">
+            <el-input v-model="item.serial" placeholder="Unit Serial"/>
           </el-form-item>
         </el-row>
       </template>
@@ -75,25 +75,14 @@
       </el-tooltip>
     </div>
 
-    <el-card v-if="shipmentArr.length > 0">
-      <template v-for="(item, index) in shipmentArr" :key="index">
-        <ShipmentForm
-          :ref="`shipment-${index}`"
-          :orderId="taskItem.orderId"
-          :shipmentIdx="index"
-          :shipmentItem="item"
-          :warehouseOptions="warehouseOptions"
-          :dialogStatus="dialogStatus"
-          @deleteShipment="removeShipment"
-          @createShipment="submitShipment"
-          @editShipment="updateShipment"
-        />
-      </template>
+    <el-card>
+      <ShipmentForm
+        :ref="`shipment-${index}`"
+        :orderId="taskItem.orderId"
+        :warehouseOptions="warehouseOptions"
+        :dialogStatus="dialogStatus"
+      />
     </el-card>
-    
-    <el-button :disabled="disableNewShipment" type="primary" icon="el-icon-circle-plus" @click="addShipment">
-      Add Shipmentment
-    </el-button>
   </el-form>
 </template>
 
@@ -119,7 +108,6 @@ const emit = defineEmits(['fetchList']);
 
 /* Start data */
 const taskItem = inject('taskItem');
-const shipmentArr = ref([]);
 const emptyShipment = {
   carrier: null,
   deliveryCost: null,
@@ -136,27 +124,6 @@ const isDialogPattern = type => props.dialogStatus === type;
 const handleWarehouseTask = type => {
   console.log('type: ', type);
 
-};
-
-let count = 1; // test
-const addShipment = () => {
-  // if (!taskItem.value.id) {
-  //   ElMessage.error('You need to "Submit Common Section" before "Add Shipment"', 3);
-  //   return;
-  // }
-  shipmentArr.value.push(Object.assign({id: count++}, emptyShipment));
-  disableNewShipment.value = true;
-};
-
-const removeShipment = (idx, shipmentId) => {
-  shipmentArr.value.splice(idx, 1);
-  disableNewShipment.value = false;
-};
-const submitShipment = (shipment, freightId, shipmentIdx) => {
-  disableNewShipment.value = false;
-};
-const updateShipment = (data, shipmentIdx) => {
-  console.log('shipmentIdx: ', shipmentIdx);
 };
 
 const handleUnitChange = (idx, type) => {

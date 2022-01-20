@@ -74,7 +74,7 @@
           <span>{{ row.pickup?.split('T')[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Content" width="240px">
+      <el-table-column label="Content" width="240px">
         <template v-slot="{row}">
           <template v-for="(item, key) in row.content" :key="item">
             <div>

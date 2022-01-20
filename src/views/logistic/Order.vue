@@ -6,14 +6,14 @@
         <el-button @click="handleFilter" v-wave type="primary" icon="el-icon-search">
           Search
         </el-button>
-        <el-select :disabled="listLoading" placeholder="Assigned Order" v-model="isAssigned" style="width: 155px" @change="handleFilter">
-          <el-option v-for="(item, key) in {'Assigned': true, 'Unassigned': false}" :key="item" :label="key" :value="item" />
+        <el-select :disabled="listLoading" placeholder="Assigned Order" v-model="showAssignedOrder" style="width: 175px" @change="handleFilter">
+          <el-option v-for="(item, key) in {'Assigned Orders': true, 'Unassigned Orders': false}" :key="item" :label="key" :value="item" />
         </el-select>
         <el-select disabled placeholder="Order From" v-model="listQuery.orderFrom" style="width: 130px" @change="handleFilter">
           <el-option v-for="item in ['AFN', 'Shopify', 'MFN']" :key="item" :label="item" :value="item" />
         </el-select>
       </el-row>
-      <div v-if="!isAssigned">
+      <div v-if="!showAssignedOrder">
         <el-button type="primary" @click="showAssignDialog('assignSelected')">
           Assign Selected
         </el-button>
@@ -77,7 +77,7 @@
       <el-table-column label="WH Tasks & Units" width="240px" align="center">
         <template v-slot="{row}">
           <div class="product-row">
-            <template v-if="isAssigned">
+            <template v-if="showAssignedOrder">
               <template class="product-row" v-for="(item, key) in row.products" :key="key">
                 <div align="left">
                   <svg-icon :icon-name="productIconMap[key] || 'other'"  />
@@ -105,13 +105,13 @@
       </el-table-column>
       <el-table-column fixed="right" label="Actions" align="center" min-width="240px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
-          <el-button v-if="!isAssigned" type="primary" size="mini" @click="showAssignDialog('assign', row.id)">
+          <el-button v-if="!showAssignedOrder" type="primary" size="mini" @click="showAssignDialog('assign', row.id)">
             Assign & Add 1st WH Task
           </el-button>
-          <el-button v-if="isAssigned" type="success" size="mini" @click="addWarehouseTask(row.id)">
+          <el-button v-if="showAssignedOrder" type="success" size="mini" @click="addWarehouseTask(row.id)">
             Add WH Task
           </el-button>
-          <el-button v-if="isAssigned" type="danger" size="mini" @click="unassignOrders(row.id)">
+          <el-button v-if="showAssignedOrder" type="danger" size="mini" @click="unassignOrders(row.id)">
             unAssign
           </el-button>
         </template>
@@ -209,7 +209,7 @@ const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
 const drawerOrderVisible = ref(false);
 
-const isAssigned = ref(null);
+const showAssignedOrder = ref(true);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const targetId = ref(null);
@@ -231,6 +231,7 @@ const taskItem = ref({
   }],
 });
 const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
+console.log('emptyTaskForm: ', emptyTaskForm);
 const contrastData = ref(null);
 
 provide('taskItem', taskItem);
@@ -262,11 +263,11 @@ const formatAssignedOrderItem = orderItem => {
 
 const fetchList = () => {
   listLoading.value = true;
-  (isAssigned.value ?
+  (showAssignedOrder.value ?
     queryAssignedOrdersAPI(listQuery.value) : queryOrdersAPI(listQuery.value)
   ).then(data => {
     dataList.value = data.items;
-    if (isAssigned.value) {
+    if (showAssignedOrder.value) {
       dataList.value.forEach(item => {
         formatAssignedOrderItem(item);
       });
@@ -361,6 +362,37 @@ const handleSelectionChange = selectedArr => {
 const handlePagination = config => {
   listQuery.value = Object.assign(listQuery.value, config);
   fetchList();
+};
+
+
+
+const beforeCloseDialog = done => {
+  if (dialogStatus.value !== 'edit') {
+    resetForm();
+    done();
+    return;
+  }
+  
+  const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightItem.value);
+  if (!isChanged) {
+    resetForm();
+    done();
+  }
+  isChanged && ElMessageBox.confirm(
+    `Unsaved changes, are you sure to leave?`,
+    'Warning',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === "confirm") {
+          resetForm();
+          done();
+        }
+      },
+    }
+  );
 };
 
 fetchList();

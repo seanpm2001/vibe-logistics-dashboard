@@ -25,6 +25,7 @@ for (let i = 0; i < 20; i++) {
   packageList.push(Mock.mock({
     id: '@increment',
     'trackingNumber|1': ['52358899', '55658899', '54554465'],
+    'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     'lastModified': '2020-05-22T00:00:00',
     content: {

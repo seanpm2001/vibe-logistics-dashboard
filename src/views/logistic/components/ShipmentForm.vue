@@ -8,44 +8,44 @@
     </el-row>
     <el-row justify="space-between" :gutter="3">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Carrier">
-        <el-select :disabled="isDialogPattern('view')" v-model="shipment.carrier" placeholder="Please select">
+        <el-select :disabled="isDialogPattern('view')" v-model="shipmentItem.carrier" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
     </el-row>
     <el-row justify="space-between" align="middle" :gutter="3">
       <el-form-item label="Delivery Cost">
-        <el-input v-model="shipment.deliveryCost" placeholder="Delivery Cost"/>
+        <el-input v-model="shipmentItem.deliveryCost" placeholder="Delivery Cost"/>
       </el-form-item>
       <el-form-item label="Liftgate Cost">
         <el-checkbox @change="handleCostChange('liftgateCost')">
-          <el-input v-model="shipment.liftgateCost" placeholder="Liftgate Cost"/>
+          <el-input v-model="shipmentItem.liftgateCost" placeholder="Liftgate Cost"/>
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Limited Cost">
         <el-checkbox @change="handleCostChange('limitedAccessCost')">
-          <el-input v-model="shipment.limitedAccessCost" placeholder="Limited Cost"/>
+          <el-input v-model="shipmentItem.limitedAccessCost" placeholder="Limited Cost"/>
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Residential Cost">
         <el-checkbox @change="handleCostChange('residentialCost')">
-          <el-input v-model="shipment.residentialCost" placeholder="Residential Cost"/>
+          <el-input v-model="shipmentItem.residentialCost" placeholder="Residential Cost"/>
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Inside Cost">
         <el-checkbox @change="handleCostChange('insideCost')">
-          <el-input v-model="shipment.insideCost" placeholder="Inside Cost"/>
+          <el-input v-model="shipmentItem.insideCost" placeholder="Inside Cost"/>
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Insure Cost">
         <el-checkbox @change="handleCostChange('insureCost')">
-          <el-input v-model="shipment.insureCost" placeholder="Insure Cost"/>
+          <el-input v-model="shipmentItem.insureCost" placeholder="Insure Cost"/>
         </el-checkbox>
       </el-form-item>
     </el-row>
     
     <div class="f-row controls" v-if="!isDialogPattern('view')">
-      <el-button v-if="shipment.id" type="primary" @click="handleShipment('update')">
+      <el-button v-if="shipmentItem?.id" type="primary" @click="handleShipment('update')">
         Update Shipment
       </el-button>
       <el-button v-else type="primary" @click="handleShipment('create')">
@@ -65,7 +65,7 @@
       <template v-for="(item, index) in packageArr" :key="index">
         <PackageForm
           :ref="`package-${index}`"
-          :shipmentId=shipment.id
+          :shipmentId=shipmentItem?.id
           :packageIdx=index
           :packageItem=item
           :warehouseOptions=warehouseOptions
@@ -95,14 +95,6 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  shipmentIdx: {
-    type: Number,
-    required: true
-  },
-  shipmentItem: {
-    type: Object,
-    required: true
-  },
   warehouseOptions: {
     type: Object,
     required: true
@@ -113,11 +105,18 @@ const props = defineProps({
   }
 });
 
-const shipment = ref(props.shipmentItem);
-const previewExcelArr = [].concat(shipment.value?.items);
-
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['removeShipment', 'submitShipment', 'editShipment']);
+const shipmentItem = ref({
+  id: undefined,
+  carrier: null,
+  deliveryCost: null,
+  liftgateCost: null,
+  limitedAccessCost: null,
+  residentialCost: null,
+  insideCost: null,
+  insureCostL: null,
+});
+const emptyShipmentItem = JSON.parse(JSON.stringify(shipmentItem))._value;
+const previewExcelArr = [].concat(shipmentItem.value?.items);
 
 const packageArr = ref([]);
 const emptyPackage = {
@@ -148,11 +147,11 @@ const addPackage = () => {
 };
 
 const handleCostChange = (key) => {
-  shipment.value[key] = shipment.value[key] ? null : 50;
+  shipmentItem.value[key] = shipmentItem.value[key] ? null : 50;
 };
 
 const handleDeleteShipment = () => {
-  const shipmentId = shipment.value?.id;
+  const shipmentId = shipmentItem.value?.id;
   if (shipmentId) { // 删除数据库中的shipment
     ElMessageBox.confirm(
       `Remove the shipment (ID:${shipmentId})?`,
@@ -164,7 +163,6 @@ const handleDeleteShipment = () => {
         callback: (action) => {
           if (action === "confirm") {
             deleteShipmentAPI(shipmentId).then(() => {
-              emit('removeShipment', props.shipmentIdx);
             });
           } else if (action === "cancel") {
             ElMessage.info('Delete canceled');
@@ -174,24 +172,20 @@ const handleDeleteShipment = () => {
     );
     return;
   }
-  emit('removeShipment', props.shipmentIdx); // 删除新创建还未提交的shipment
 };
 
 const handleShipment = (type) => {
   // for (const key in products.value) { // 更新costs
-  //   shipment.value.costs[key] = products.value[key].cost || 0;
+  //   shipmentItem.value.costs[key] = products.value[key].cost || 0;
   // }
   if (type === "create") {
-    createShipmentAPI(props.orderId, shipment.value).then(data => {
-      shipment.value = data;
-      emit('submitShipment', data, props.orderId ,props.shipmentIdx);
+    createShipmentAPI(props.orderId, shipmentItem.value).then(data => {
+      shipmentItem.value = data;
     });
   } else {
-    updateShipmentAPI(shipment.value.id, shipment.value).then(data => {
-      shipment.value = data;
-      emit('updateShipment', data, props.shipmentIdx);
+    updateShipmentAPI(shipmentItem.value.id, shipmentItem.value).then(data => {
+      shipmentItem.value = data;
     });
-    emit('editShipment', shipment.value?.id);
   }
 };
 
