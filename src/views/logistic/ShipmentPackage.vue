@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref, provide } from "vue";
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -197,7 +197,17 @@ const viewItemSerial = unitId => {
   });
 };
 
-fetchList();
+onMounted(() => {
+  listQuery.value = store.getters.listQuery['package'];
+  fetchList();
+});
+
+onBeforeUnmount(() => {
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'package'
+  });
+});
 </script>
 
 <style lang="sass" scoped>

@@ -2,9 +2,8 @@ import Mock from 'mockjs';
 
 const shipmentList = [];
 const packageList = [];
-const orderList = [];
 const taskList = [];
-const count = 20;
+const count = 50;
 
 for (let i = 0; i < count; i++) {
   shipmentList.push(Mock.mock({
@@ -21,7 +20,7 @@ for (let i = 0; i < count; i++) {
   }));
 }
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 50; i++) {
   packageList.push(Mock.mock({
     id: '@increment',
     'trackingNumber|1': ['52358899', '55658899', '54554465'],
@@ -50,19 +49,6 @@ const unitObj = Mock.mock({
 });
 
 for (let i = 0; i < count; i++) {
-  orderList.push(Mock.mock({
-    orderId: '@increment',
-    'lastModified|1': ['2020-05-22 by Vibe', '2020-05-22 by Warehouse'],
-    'email|1': ['admin@vibe.us', 'test@vibe.us', 'guest@vibe.us'],
-    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    'serials|2-4': [{
-      id: '@increment',
-      'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033']
-    }]
-  }));
-}
-
-for (let i = 0; i < count; i++) {
   taskList.push(Mock.mock({
     id: '@increment',
     orderId: 1,
@@ -75,6 +61,53 @@ for (let i = 0; i < count; i++) {
       '55V1B': 270,
       '55V1WS': 60
     }
+  }));
+}
+
+const inventoryList = [];
+for (let i = 0; i < count; i++) {
+  inventoryList.push(Mock.mock({
+    warehouse_name: '@title(1, 2)',
+    in_stock: {
+      'board55_v1':'@integer(0, 80)',
+      'stand_red55_v1':'@integer(0, 80)',
+      'stand_white55_v1':'@integer(0, 80)',
+      'stylus55_x2': '@integer(0, 80)',
+      'stylus55_active': '@integer(0, 80)',
+      'board75_pro':'@integer(0, 80)',
+      'stand75_pro':'@integer(0, 80)', 
+      'ops75_pro':'@integer(0, 80)',
+    },
+    available: {
+      'board55_v1':'@integer(0, 80)',
+      'stand_red55_v1':'@integer(0, 80)',
+      'stand_white55_v1':'@integer(0, 80)',
+      'stylus55_x2': '@integer(0, 80)',
+      'stylus55_active': '@integer(0, 80)',
+      'board75_pro':'@integer(0, 80)',
+      'stand75_pro':'@integer(0, 80)', 
+      'ops75_pro':'@integer(0, 80)',
+    },
+    pending_in: {
+      'board55_v1':'@integer(0, 80)',
+      'stand_red55_v1':'@integer(0, 80)',
+      'stand_white55_v1':'@integer(0, 80)',
+      'stylus55_x2': '@integer(0, 80)',
+      'stylus55_active': '@integer(0, 80)',
+      'board75_pro':'@integer(0, 80)',
+      'stand75_pro':'@integer(0, 80)', 
+      'ops75_pro':'@integer(0, 80)',
+    },
+    pending_out: {
+      'board55_v1':'@integer(0, 80)',
+      'stand_red55_v1':'@integer(0, 80)',
+      'stand_white55_v1':'@integer(0, 80)',
+      'stylus55_x2': '@integer(0, 80)',
+      'stylus55_active': '@integer(0, 80)',
+      'board75_pro':'@integer(0, 80)',
+      'stand75_pro':'@integer(0, 80)', 
+      'ops75_pro':'@integer(0, 80)',
+    },
   }));
 }
 
@@ -120,34 +153,6 @@ export default [
       };
     }
   },
-  // {
-  //   url: '/api/orders',
-  //   type: 'get',
-  //   response: config => {
-
-  //     return {
-  //       code: 20000,
-  //       data: {
-  //         items: orderList,
-  //         total: orderList.length
-  //       }
-  //     };
-  //   }
-  // },
-  // {
-  //   url: '/api/orders/assign',
-  //   type: 'post',
-  //   response: config => {
-
-  //     return {
-  //       code: 20000,
-  //       data: {
-  //         items: [],
-  //         msg: 'success'
-  //       }
-  //     };
-  //   }
-  // },
   {
     url: '/api/tasks',
     type: 'get',
@@ -161,4 +166,30 @@ export default [
       };
     }
   },
+  {
+    url: '/api/inventories',
+    type: 'get',
+    response: config => {
+      const { type, warehouse_name, page = 1, limit = 20, sort } = config.query;
+
+      let mockList = inventoryList.filter(item => {
+        if (warehouse_name && item?.warehouse_name.indexOf(warehouse_name) < 0) return false;
+        return true;
+      });
+
+      if (sort === '-id') {
+        mockList = mockList.reverse();
+      }
+
+      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1));
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          items: pageList
+        }
+      };
+    }
+  }
 ];

@@ -166,8 +166,9 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, provide, ref } from "vue";
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, provide, ref } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
@@ -181,6 +182,7 @@ import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum
 
 /* Start data */
 const store = useStore();
+const router = useRouter();
 const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
@@ -208,7 +210,7 @@ const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 const multipleSelection = ref([]);
 const orderItem = ref(null);
 const taskItem = ref({
-  id: null,
+  id: 0,
   orderId: null,
   sourceId: null,
   targetId: null,
@@ -388,7 +390,19 @@ const resetForm = () => {
 //   );
 // };
 
-fetchList();
+
+onMounted(() => {
+  listQuery.value = store.getters.listQuery['order'];
+  fetchList();
+});
+
+onBeforeUnmount(() => {
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'order'
+  });
+});
+
 </script>
 
 <style lang="sass" scoped>

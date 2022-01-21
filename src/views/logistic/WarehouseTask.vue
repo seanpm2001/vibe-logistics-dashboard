@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
@@ -142,7 +142,7 @@ const dialogTaskVisible = ref(false);
 const multipleSelection = ref([]);
 const shipmentArr = ref([]);
 const taskForm = ref({
-  id: null,
+  id: 0,
   orderId: null,
   sourceId: null,
   targetId: null,
@@ -213,9 +213,16 @@ const init = () => {
 };
 
 onMounted(() => {
-  init();
+  listQuery.value = store.getters.listQuery['task'];
+  fetchList();
 });
 
+onBeforeUnmount(() => {
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'task'
+  });
+});
 </script>
 
 <style lang="sass" scoped>

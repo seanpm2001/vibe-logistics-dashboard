@@ -18,11 +18,11 @@
     <el-table
       :key="tableKey"
       v-loading="listLoading"
-      :data="list"
+      :data="dataList"
+      height="68vh"
       border
       fit
       highlight-current-row
-      style="width: 100%;"
       @sort-change="sortChange"
     >
       <el-table-column label="Warehouse" width="150px" align="center">
@@ -245,7 +245,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/assets/utils/format';
@@ -275,7 +275,7 @@ const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Des
 const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
 
 const tableKey = ref(0);
-const list = ref(null);
+const dataList = ref(null);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogFormVisible = ref(false);
@@ -309,10 +309,10 @@ const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
   return acc;
 }, {});
 
-const getList = () => {
+const fetchList = () => {
   listLoading.value = true;
   listInventoriesAPI(listQuery.value).then(data => {
-    list.value = data.items;
+    dataList.value = data.items;
     total.value = data.total;
 
     // Just to simulate the time of the request
@@ -324,12 +324,12 @@ const getList = () => {
 
 const handlePagination = config => {
   listQuery.value = Object.assign(listQuery.value, config);
-  getList();
+  fetchList();
 };
 
 const handleFilter = () => {
   listQuery.value.page = 1;
-  getList();
+  fetchList();
 };
 
 const handleModifyStatus = (row, status) => {
@@ -380,7 +380,7 @@ const createData = () => {
       temp.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
       temp.value.author = 'vibe';
       // createArticle(temp.value).then(() => {
-      //   list.value.unshift(temp.value)
+      //   dataList.value.unshift(temp.value)
       //   dialogFormVisible.value = false
       // })
     }
@@ -403,8 +403,8 @@ const updateData = () => {
       const tempData = Object.assign({}, temp.value);
       tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       // updateArticle(tempData).then(() => {
-      //   const index = list.value.findIndex(v => v.id === temp.value.id)
-      //   list.value.splice(index, 1, temp.value)
+      //   const index = dataList.value.findIndex(v => v.id === temp.value.id)
+      //   dataList.value.splice(index, 1, temp.value)
       //   dialogFormVisible.value = false
       //   ElMessage.success('Update Successfully', 3)
       // })
@@ -413,7 +413,7 @@ const updateData = () => {
 };
 
 const handleDelete = (row, index) => {
-  list.value.splice(index, 1);
+  dataList.value.splice(index, 1);
 };
 
 const handleFetchPv = pv => {
@@ -440,7 +440,7 @@ const handleDownload = () => {
 };
 
 const formatJson = filterVal => {
-  return list.value.map(v => filterVal.map(j => {
+  return dataList.value.map(v => filterVal.map(j => {
     if (j === 'timestamp') {
       return parseTime(v[j]);
     } else {
@@ -454,15 +454,17 @@ const getSortClass = key => {
   return sort === `+${key}` ? 'ascending' : 'descending';
 };
 
-// const handleSizeChange = val => {
-//   listQuery.value.limit = val;
-// };
+onMounted(() => {
+  listQuery.value = store.getters.listQuery['inventory'];
+  fetchList();
+});
 
-// const handleCurrentChange = val => {
-//   listQuery.value.page = val;
-// };
-
-getList();
+onBeforeUnmount(() => {
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'inventory'
+  });
+});
 </script>
 
 <style lang="sass" scoped>
@@ -475,6 +477,5 @@ getList();
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem
-
 
 </style>

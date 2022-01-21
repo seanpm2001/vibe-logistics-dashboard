@@ -12,6 +12,7 @@ const getters = {
   permissionRroutes: state => state.permission.routes,
 
   warehouseOptions: state => state.logistic.warehouseOptions,
+  listQuery: (state, pageName) => state.logistic.listQuery,
 };
 
 export default getters;

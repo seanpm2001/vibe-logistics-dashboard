@@ -139,7 +139,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref, provide } from "vue";
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
@@ -358,8 +358,17 @@ const beforeCloseDialog = done => {
   );
 };
 
+onMounted(() => {
+  listQuery.value = store.getters.listQuery['freight'];
+  fetchList();
+});
 
-fetchList();
+onBeforeUnmount(() => {
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'freight'
+  });
+});
 </script>
 
 <style lang="sass" scoped>
