@@ -167,7 +167,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, provide, ref } from "vue";
-import { useLogisticStore } from "/@/stores/modules/logistic";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -181,9 +181,9 @@ import { parseTime } from '/@/utils/format';
 import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
-const store = useLogisticStore();
+const store = useStore();
 const router = useRouter();
-const warehouseOptions = store.warehouseOptions;
+const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -392,12 +392,15 @@ const resetForm = () => {
 
 
 onMounted(() => {
-  listQuery.value = store.listQuery['order'];
+  listQuery.value = store.getters.listQuery['order'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.setListQuery('order', listQuery.value);
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'order'
+  });
 });
 
 </script>

@@ -140,17 +140,17 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
+import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
-import { useLogisticStore } from "/@/stores/modules/logistic";
 import { parseTime } from '/@/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
 import { freightStatusOptions, forwarderOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* start data */
-const store = useLogisticStore();
-const warehouseOptions = store.warehouseOptions;
+const store = useStore();
+const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -359,12 +359,15 @@ const beforeCloseDialog = done => {
 };
 
 onMounted(() => {
-  listQuery.value = store.listQuery['freight'];
+  listQuery.value = store.getters.listQuery['freight'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.setListQuery('freight', listQuery.value);
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'freight'
+  });
 });
 </script>
 

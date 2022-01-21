@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-import { listWarehousesAPI } from "/@/server/api/logistic";
-import { useStore } from 'vuex';
+// import { listWarehousesAPI } from "/@/server/api/logistic";
+// import { useStore } from 'vuex';
 
-const store = useStore();
+// const store = useStore();
 
 // 初始化2个以上物流页面都需要的enum/固定的数据
 // const init = () => {

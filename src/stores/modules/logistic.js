@@ -9,32 +9,39 @@ export const useLogisticStore = defineStore({
   state: () => ({
     warehouseOptions: {},
     listQuery: {
-      order: {},
-      task: {},
-      package: {},
-      freight: {},
-      inventory: {},
+      order: { page: 1, perPage: 10 },
+      task: { page: 1, perPage: 10 },
+      package: { page: 1, perPage: 10 },
+      freight: { page: 1, perPage: 10 },
+      inventory: { page: 1, perPage: 10 },
     }
   }),
 
   getters: {
+    getWarehouseOptions: state => state.warehouseOptions,
   },
 
   actions: {
     async setWarehouseOptions () {
-      await listWarehousesAPI()
-        .then(data => {
-          const options = {};
-          data.forEach(item => {
-            options[item.id] = item.name;
-          });
-          this.warehouseOptions = options;
-        })
-        .catch(() => (this.warehouseOptions = fixedWarehouseOptions));
+      const state = this;
+      return new Promise((resolve, reject) => {
+        listWarehousesAPI()
+          .then(data => {
+            const options = {};
+            data.forEach(item => {
+              options[item.id] = item.name;
+            });
+            state.warehouseOptions = options;
+            console.log('state: ', state);
+          })
+          .catch(() => (state.warehouseOptions = fixedWarehouseOptions))
+          .finally(() => resolve());
+      });
     },
    
     setListQuery(pageName, query) {
       this.listQuery[pageName] = query;
+      console.log('this.listQuery: ', this.listQuery);
     }
   }
 });

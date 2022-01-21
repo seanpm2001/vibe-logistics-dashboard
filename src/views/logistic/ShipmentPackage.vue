@@ -96,17 +96,17 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
+import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
 import UnitDescription from './components/UnitDescription.vue';
 import { parseTime } from '/@/utils/format';
-import { useLogisticStore } from "/@/stores/modules/logistic";
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from "/@/server/api/logistic";
 import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
-const store = useLogisticStore();
+const store = useStore();
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
@@ -198,12 +198,15 @@ const viewItemSerial = unitId => {
 };
 
 onMounted(() => {
-  listQuery.value = store.listQuery['package'];
+  listQuery.value = store.getters.listQuery['package'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.setListQuery('package', listQuery.value);
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'package'
+  });
 });
 </script>
 

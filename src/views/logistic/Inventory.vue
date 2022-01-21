@@ -246,13 +246,13 @@
 
 <script setup>
 import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
+import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/utils/format';
 import Pagination from '/@/components/Pagination.vue';
-import { useLogisticStore } from "/@/stores/modules/logistic";
 import { listInventoriesAPI } from "/@/server/api/logistic";
 
-const store = useLogisticStore();
+const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const listQuery = ref({
@@ -455,12 +455,15 @@ const getSortClass = key => {
 };
 
 onMounted(() => {
-  listQuery.value = store.listQuery['inventory'];
+  listQuery.value = store.getters.listQuery['inventory'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.setListQuery('inventory', listQuery.value);
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'inventory'
+  });
 });
 </script>
 

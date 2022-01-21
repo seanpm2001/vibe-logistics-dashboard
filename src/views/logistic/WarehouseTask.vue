@@ -111,16 +111,16 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
+import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
-import { useLogisticStore } from "/@/stores/modules/logistic";
 import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/server/api/logistic";
 import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
-const store = useLogisticStore();
-const warehouseOptions = store.warehouseOptions;
+const store = useStore();
+const warehouseOptions = computed(() => store.getters.warehouseOptions);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -213,12 +213,15 @@ const init = () => {
 };
 
 onMounted(() => {
-  listQuery.value = store.listQuery['task'];
+  listQuery.value = store.getters.listQuery['task'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.setListQuery('task', listQuery.value);
+  store.commit('logistic/SET_LIST_QUERY', {
+    query: listQuery.value,
+    pageName: 'task'
+  });
 });
 </script>
 

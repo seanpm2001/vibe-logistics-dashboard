@@ -1,28 +1,26 @@
+import { store } from '/@/stores';
+import { defineStore } from 'pinia';
 import defaultSettings from '/@/settings';
 
 const { showSettings, tagsView, theme, fixedHeader, sidebarLogo } = defaultSettings;
 
-export const setting = {
+export const useSettingStore = defineStore({
   id: 'setting',
-  namespaced: true,
-  state: {
+  state: () => ({
     theme: theme,
     showSettings: showSettings,
     tagsView: tagsView,
     fixedHeader: fixedHeader,
     sidebarLogo: sidebarLogo
-  },
-  mutations: {
-    CHANGE_SETTING: (state, { key, value }) => {
-      // eslint-disable-next-line no-prototype-builtins
-      if (state.hasOwnProperty(key)) {
-        state[key] = value;
+  }),
+
+  actions: {
+    changeSetting(payload) {
+      const { key, value } = payload;
+      const state = this.$state;
+      if (Object.prototype.hasOwnProperty.call(state, key)) {
+        this[key] = value;
       }
     }
-  },
-  actions: {
-    changeSetting({ commit }, data) {
-      commit('CHANGE_SETTING', data);
-    }
   }
-};
+});
