@@ -1,6 +1,8 @@
+import { store } from '/@/stores';
 import { getCookie, setCookie } from '/@/utils/auth';
 
 export const app = {
+  id: 'app',
   namespaced: true,
   state: {
     sidebar: {

@@ -61,8 +61,8 @@
 
 <script setup>
 import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
-import { resolve } from '/@/assets/utils/path';
-import { deepClone } from '/@/assets/utils/index';
+import { resolve } from '/@/utils/path';
+import { deepClone } from '/@/utils/index';
 import { getRoutesAPI, getRolesAPI, addRoleAPI, deleteRoleAPI, updateRoleAPI } from '/@/server/api/role';
 
 const { proxy } = getCurrentInstance();

@@ -140,17 +140,17 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
-import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
-import { parseTime } from '/@/assets/utils/format';
+import { useLogisticStore } from "/@/stores/modules/logistic";
+import { parseTime } from '/@/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
 import { freightStatusOptions, forwarderOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* start data */
-const store = useStore();
-const warehouseOptions = computed(() => store.getters.warehouseOptions);
+const store = useLogisticStore();
+const warehouseOptions = store.warehouseOptions;
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -301,7 +301,7 @@ const handleDetailRow = (row, type) => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import('/@/assets/utils/excel').then(excel => {
+  import('/@/utils/excel').then(excel => {
     const tHeader = [ 'title', 'type', 'status'];
     const filterVal = [ 'title', 'type', 'status'];
     const data = formatJson(filterVal);
@@ -359,15 +359,12 @@ const beforeCloseDialog = done => {
 };
 
 onMounted(() => {
-  listQuery.value = store.getters.listQuery['freight'];
+  listQuery.value = store.listQuery['freight'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
-    query: listQuery.value,
-    pageName: 'freight'
-  });
+  store.setListQuery('freight', listQuery.value);
 });
 </script>
 

@@ -1,13 +1,15 @@
 import router from './router/index';
 import store from './store/index';
+import { useLogisticStoreWithOut } from "/@/stores/modules/logistic";
 import { ElMessage } from 'element-plus';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
-import { getToken } from '/@/assets/utils/auth'; // get token from cookie
-import getPageTitle from '/@/assets/utils/get-page-title';
+import { getToken } from '/@/utils/auth'; // get token from cookie
+import getPageTitle from '/@/utils/get-page-title';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
+const logisticStore = useLogisticStoreWithOut();
 const whiteList = ['/login', '/auth-redirect']; // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
@@ -40,9 +42,10 @@ router.beforeEach(async(to, from, next) => {
           // generate accessible routes map based on roles
 
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
-          if (JSON.stringify(store.getters.warehouseOptions) === '{}')
-            store.dispatch('logistic/setWarehouseOptions'); // init warehouseOptions
-
+          
+          if (JSON.stringify(logisticStore.getWarehouseOptions) === '{}')
+            logisticStore.setWarehouseOptions();
+            // store.dispatch('logistic/setWarehouseOptions'); // init warehouseOptions
           // dynamically add accessible routes
           accessRoutes.forEach(item => {
             router.addRoute(item);

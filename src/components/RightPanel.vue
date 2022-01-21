@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { addClass, removeClass } from '/@/assets/utils/index.js';
+import { addClass, removeClass } from '/@/utils/index.js';
 
 export default {
   name: 'RightPanel',

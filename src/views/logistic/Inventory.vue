@@ -246,13 +246,13 @@
 
 <script setup>
 import { getCurrentInstance, onBeforeUnmount, onMounted, ref } from "vue";
-import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-import { parseTime } from '/@/assets/utils/format';
+import { parseTime } from '/@/utils/format';
 import Pagination from '/@/components/Pagination.vue';
+import { useLogisticStore } from "/@/stores/modules/logistic";
 import { listInventoriesAPI } from "/@/server/api/logistic";
 
-const store = useStore();
+const store = useLogisticStore();
 const { proxy } = getCurrentInstance();
 
 const listQuery = ref({
@@ -426,7 +426,7 @@ const handleFetchPv = pv => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import('/@/assets/utils/excel').then(excel => {
+  import('/@/utils/excel').then(excel => {
     const tHeader = ['timestamp', 'title', 'type', 'content', 'status'];
     const filterVal = ['timestamp', 'title', 'type', 'content', 'status'];
     const data = formatJson(filterVal);
@@ -455,15 +455,12 @@ const getSortClass = key => {
 };
 
 onMounted(() => {
-  listQuery.value = store.getters.listQuery['inventory'];
+  listQuery.value = store.listQuery['inventory'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
-    query: listQuery.value,
-    pageName: 'inventory'
-  });
+  store.setListQuery('inventory', listQuery.value);
 });
 </script>
 

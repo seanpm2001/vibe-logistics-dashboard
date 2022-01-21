@@ -24,7 +24,6 @@ import { useStore } from 'vuex';
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
 import { useRoute } from 'vue-router';
-import { useGetters } from '/@/assets/utils/vuex-helper';
 const route = useRoute();
 const store = useStore();
 const permissionRroutes = computed(() => store.getters['permissionRroutes']);

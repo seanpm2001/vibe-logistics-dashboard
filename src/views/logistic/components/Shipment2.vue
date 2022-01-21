@@ -102,7 +102,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
-import { parseTime } from '/@/assets/utils/format';
+import { parseTime } from '/@/utils/format';
 import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/server/api/logistic";
 import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 

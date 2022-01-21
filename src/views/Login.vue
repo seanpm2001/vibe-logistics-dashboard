@@ -73,7 +73,7 @@ import Captcha from "/@/components/Captcha/Index.vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { validUsername } from '/@/assets/utils/validate';
+import { validUsername } from '/@/utils/validate';
 
 /* Begin Data */
 const store = useStore();

@@ -46,7 +46,7 @@ _____
   * vue-cli3 (easier)
 * MVVM framework:
   * vue3 (virtual dom)
-  * vuex (state management)
+  * pinia (state management) (vuex5 for vue3 & vite)
 * Router:
   * vue-router (history pattern)
 * UI framework:

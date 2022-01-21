@@ -167,7 +167,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, provide, ref } from "vue";
-import { useStore } from "vuex";
+import { useLogisticStore } from "/@/stores/modules/logistic";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
@@ -177,13 +177,13 @@ import OrderDescription from './components/OrderDescription.vue';
 import {
   queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
 } from "/@/server/api/logistic";
-import { parseTime } from '/@/assets/utils/format';
+import { parseTime } from '/@/utils/format';
 import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
-const store = useStore();
+const store = useLogisticStore();
 const router = useRouter();
-const warehouseOptions = computed(() => store.getters.warehouseOptions);
+const warehouseOptions = store.warehouseOptions;
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -392,15 +392,12 @@ const resetForm = () => {
 
 
 onMounted(() => {
-  listQuery.value = store.getters.listQuery['order'];
+  listQuery.value = store.listQuery['order'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
-    query: listQuery.value,
-    pageName: 'order'
-  });
+  store.setListQuery('order', listQuery.value);
 });
 
 </script>

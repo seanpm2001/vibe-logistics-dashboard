@@ -28,7 +28,7 @@
 import { computed, getCurrentInstance, onMounted, onUpdated, ref, watch, watchEffect } from 'vue';
 import ScrollPane from './ScrollPane.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { resolve } from '/@/assets/utils/path';
+import { resolve } from '/@/utils/path';
 import { useStore } from 'vuex'; 
 
 const { proxy } = getCurrentInstance();

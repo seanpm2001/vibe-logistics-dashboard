@@ -28,7 +28,6 @@
 <script setup>
 import { defineComponent, ref, toRefs } from 'vue';
 import { useStore } from 'vuex';
-import { useGetters } from '/@/assets/utils/vuex-helper';
 import Timeline from './components/Timeline.vue';
 
 const store = useStore();

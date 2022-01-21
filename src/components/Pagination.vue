@@ -16,7 +16,7 @@
 
 <script setup>
 import { computed, getCurrentInstance } from "vue";
-import { scrollTo } from '/@/assets/utils/scroll-to';
+import { scrollTo } from '/@/utils/scroll-to';
 
 const { proxy } = getCurrentInstance();
 

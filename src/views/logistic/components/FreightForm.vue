@@ -142,7 +142,7 @@ import {
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
 } from "/@/server/api/logistic";
 import { freightStatusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions} from '/@/assets/enum/logistic';
-import { parseTime } from '/@/assets/utils/format';
+import { parseTime } from '/@/utils/format';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

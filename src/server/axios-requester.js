@@ -2,8 +2,8 @@ import axios from 'axios';
 import { ElMessage, ElLoading } from 'element-plus';
 import 'element-plus/theme-chalk/src/loading.scss';
 import store from '/@/store';
-import { getToken } from '/@/assets/utils/auth';
-import { jsonToHump } from '/@/assets/utils/format';
+import { getToken } from '/@/utils/auth';
+import { jsonToHump } from '/@/utils/format';
 // import { useStore } from 'vuex'
 
 /* start 将同一时刻的请求合并。*/

@@ -3,6 +3,7 @@ import { getToken, setToken, removeToken } from '/@/utils/auth';
 import router, { resetRouter } from '/@/router';
 
 export const user = {
+  id: 'user',
   namespaced: true,
   state: {
     isLogined: false,
