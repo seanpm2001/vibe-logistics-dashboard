@@ -67,6 +67,7 @@
 </template>
 
 <script setup>
+import { computed, getCurrentInstance, onMounted, reactive, ref, watchEffect } from "vue";
 // 局部组件（导入）
 import Captcha from "/@/components/Captcha/Index.vue";
 import { useStore } from "vuex";
