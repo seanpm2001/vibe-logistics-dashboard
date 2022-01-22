@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" @keyup.enter="handleFilter" />
       <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+        <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
       <el-button disabled v-wave type="primary" icon="el-icon-search" @click="handleFilter">
         Search
@@ -44,13 +44,13 @@
       </el-table-column>
       <el-table-column label="Target" width="110px" align="center">
         <template v-slot="{row}">
-          <el-tag>{{ warehouseOptions[row.targetId] }}</el-tag>
+          <el-tag>{{ warehouseEnum[row.targetId] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Status" width="100" align="center">
         <template v-slot="{row}">
           <el-tag :type="statusTypeDict[row.status]">
-            {{ freightStatusOptions[row.status] }}
+            {{ freightStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -120,7 +120,7 @@
     >
       <FreightForm
         ref="freightForm"
-        :warehouseOptions="warehouseOptions"
+        :warehouseEnum="warehouseEnum"
         :emptyFreightForm="emptyFreightForm"
         @fetchList="fetchList"
       />
@@ -146,11 +146,11 @@ import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
-import { freightStatusOptions, forwarderOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* start data */
 const store = useStore();
-const warehouseOptions = computed(() => store.getters.warehouseOptions);
+const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -181,7 +181,7 @@ const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 
 const batchArr = ref([]);
 const contrastData = ref(null);
-const sortOptions = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
+const sortEnum = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 
 const showMultSelection = ref(false);
 
@@ -210,8 +210,8 @@ provide('dialogStatus', dialogStatus);
 /* end data */
 
 // arr to obj, such as { CN : "China", US : "USA" }
-// const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
-//   acc[cur.key] = cur.display_name;
+// const calendarTypeKeyValue = calendarTypeEnum.value.reduce((acc, cur) => {
+//   acc[cur.key] = cur.displayName;
 //   return acc;
 // }, {});
 

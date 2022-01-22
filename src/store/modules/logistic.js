@@ -1,10 +1,10 @@
 import { listWarehousesAPI } from '/@/server/api/logistic';
-import { fixedWarehouseOptions } from '/@/assets/enum/logistic';
+import { fixedWarehouseEnum } from '/@/assets/enum/logistic';
 
 export const logistic = {
   namespaced: true,
   state: {
-    warehouseOptions: {},
+    warehouseEnum: {},
     listQuery: {
       order: {},
       task: {},
@@ -19,7 +19,7 @@ export const logistic = {
 
   mutations: {
     SET_WAREHOUSE_OPTIONS (state, options) {
-      state.warehouseOptions = options;
+      state.warehouseEnum = options;
     },
 
     SET_LIST_QUERY (state, payload) {
@@ -32,7 +32,7 @@ export const logistic = {
     // },
   },
   actions: {
-    async setWarehouseOptions ({ commit }) {
+    async setWarehouseEnum ({ commit }) {
       return new Promise(resolve => {
         listWarehousesAPI()
           .then(data => {
@@ -42,7 +42,7 @@ export const logistic = {
             });
             commit('SET_WAREHOUSE_OPTIONS', options);
           })
-          .catch(() => commit('SET_WAREHOUSE_OPTIONS', fixedWarehouseOptions))
+          .catch(() => commit('SET_WAREHOUSE_OPTIONS', fixedWarehouseEnum))
           .finally(() => resolve());
       });
     },

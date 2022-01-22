@@ -2,7 +2,7 @@
   <div class="page">
     <div class="filter-container">
       <el-select placeholder="Task type" v-model="showTaskPattern" style="width: 155px" @change="handleFilter">
-        <el-option v-for="(item, key) in taskPatternOptions" :key="item" :label="item" :value="key" />
+        <el-option v-for="(item, key) in taskPatternEnum" :key="item" :label="item" :value="key" />
       </el-select>
     </div>
     <el-table
@@ -30,18 +30,18 @@
       </el-table-column>
       <el-table-column label="Source" width="110px" align="center">
         <template v-slot="{row}">
-          {{ warehouseOptions[row.sourceId] }}
+          {{ warehouseEnum[row.sourceId] }}
         </template>
       </el-table-column>
       <el-table-column label="Target" width="110px" align="center">
         <template v-slot="{row}">
-          {{ warehouseOptions[row.targetId] }}
+          {{ warehouseEnum[row.targetId] }}
         </template>
       </el-table-column>
       <el-table-column label="WT Type" width="110px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ taskTypeOptions[row.warehouseTaskType] }}
+            {{ taskTypeEnum[row.warehouseTaskType] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -53,7 +53,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ packageStatusOptions[row.status] }}
+            {{ packageStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -96,7 +96,7 @@
 
     <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
       <TaskForm
-        :warehouseOptions="warehouseOptions"
+        :warehouseEnum="warehouseEnum"
         :taskForm="taskForm"
         :dialogStatus="dialogStatus"
       />
@@ -116,11 +116,11 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
 import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/server/api/logistic";
-import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
 const store = useStore();
-const warehouseOptions = computed(() => store.getters.warehouseOptions);
+const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -151,7 +151,7 @@ const taskForm = ref({
 });
 // let contrastData = null;
 const showTaskPattern = ref(null);
-const taskPatternOptions = {
+const taskPatternEnum = {
   'MY-ONLY': 'My task only',
   'ALL': 'All tasks'
 };
@@ -207,7 +207,7 @@ const init = () => {
   listWarehousesAPI().then(data => {
     fetchList(); // fetch list
     data.forEach(item => {
-      warehouseOptions.value[item.id] = item.name;
+      warehouseEnum.value[item.id] = item.name;
     });
   });
 };

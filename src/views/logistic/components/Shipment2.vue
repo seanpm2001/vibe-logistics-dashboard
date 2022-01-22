@@ -32,7 +32,7 @@
       <el-table-column label="WT Type" width="110px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ taskTypeOptions[row.warehouseTaskType] }}
+            {{ taskTypeEnum[row.warehouseTaskType] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -44,7 +44,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ packageStatusOptions[row.status] }}
+            {{ packageStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -104,7 +104,7 @@ import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/utils/format';
 import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/server/api/logistic";
-import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 
 const store = useStore();

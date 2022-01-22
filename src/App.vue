@@ -17,8 +17,8 @@
 
 // 初始化2个以上物流页面都需要的enum/固定的数据
 // const init = () => {
-//   if (store.getters.token && JSON.stringify(store.getters.warehouseOptions) === '{}')
-//     store.dispatch('logistic/setWarehouseOptions');
+//   if (store.getters.token && JSON.stringify(store.getters.warehouseEnum) === '{}')
+//     store.dispatch('logistic/setWarehouseEnum');
 // };
 // init();
 </script>

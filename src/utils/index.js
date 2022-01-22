@@ -3,7 +3,7 @@
  * @returns {Object}
  */
 export function getQueryObject(url) {
-  url = url == null ? window.location.href : url;
+  url = url === null ? window.location.href : url;
   const search = url.substring(url.lastIndexOf('?') + 1);
   const obj = {};
   const reg = /([^?&=]+)=([^?&=]*)/g;

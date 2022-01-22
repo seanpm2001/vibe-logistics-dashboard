@@ -1,13 +1,13 @@
 import { store } from '/@/stores';
 import { defineStore } from 'pinia';
 import { listWarehousesAPI } from '/@/server/api/logistic';
-import { fixedWarehouseOptions } from '/@/assets/enum/logistic';
+import { fixedWarehouseEnum } from '/@/assets/enum/logistic';
 
 export const useLogisticStore = defineStore({
   id: 'logistic',
   namespaced: true,
   state: () => ({
-    warehouseOptions: {},
+    warehouseEnum: {},
     listQuery: {
       order: { page: 1, perPage: 10 },
       task: { page: 1, perPage: 10 },
@@ -18,11 +18,11 @@ export const useLogisticStore = defineStore({
   }),
 
   getters: {
-    getWarehouseOptions: state => state.warehouseOptions,
+    getWarehouseEnum: state => state.warehouseEnum,
   },
 
   actions: {
-    async setWarehouseOptions () {
+    async setWarehouseEnum () {
       const state = this;
       return new Promise((resolve, reject) => {
         listWarehousesAPI()
@@ -31,10 +31,10 @@ export const useLogisticStore = defineStore({
             data.forEach(item => {
               options[item.id] = item.name;
             });
-            state.warehouseOptions = options;
+            state.warehouseEnum = options;
             console.log('state: ', state);
           })
-          .catch(() => (state.warehouseOptions = fixedWarehouseOptions))
+          .catch(() => (state.warehouseEnum = fixedWarehouseEnum))
           .finally(() => resolve());
       });
     },

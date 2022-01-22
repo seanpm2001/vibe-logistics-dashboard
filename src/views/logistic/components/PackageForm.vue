@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item :rules="{ required: true, message: 'shipment package status is required', trigger: 'change' }" label="Status">
         <el-select :disabled="isDialogPattern('view')" v-model="shipPackage.status" placeholder="Please select">
-          <el-option v-for="(item, key) in packageStatusOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
     </el-row>
@@ -56,7 +56,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/server/api/logistic';
-import { packageStatusOptions } from '/@/assets/enum/logistic';
+import { packageStatusEnum } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

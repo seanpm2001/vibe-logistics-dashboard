@@ -10,7 +10,7 @@
     <el-descriptions-item>
       <template #label>Used Age</template>
       <el-select v-model="unitItem.usedAge" placeholder="Please select">
-        <el-option v-for="(item, key) in usedAgeOptions" :key="item" :label="item" :value="key" />
+        <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
       </el-select>
     </el-descriptions-item>
     <el-descriptions-item>
@@ -29,7 +29,7 @@
     <el-descriptions-item>
       <template #label>Condition</template>
       <el-select v-model="unitItem.condition" placeholder="Please select">
-        <el-option v-for="(item, key) in conditionOptions" :key="item" :label="item" :value="key" />
+        <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
       </el-select>
     </el-descriptions-item>
     <el-descriptions-item>
@@ -38,7 +38,7 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>Item Status</template>
-      {{packageStatusOptions[unitItem.status]}}
+      {{packageStatusEnum[unitItem.status]}}
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -46,7 +46,7 @@
 <script setup>
 import { inject } from 'vue';
 import { ElMessageBox } from "element-plus";
-import { packageStatusOptions, usedAgeOptions, conditionOptions } from '/@/assets/enum/logistic';
+import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
 
 const unitItem = inject('unitItem');
 

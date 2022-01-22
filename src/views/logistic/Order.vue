@@ -99,7 +99,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ packageStatusOptions[row.status] }}
+            {{ packageStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -135,7 +135,7 @@
       <el-row align="middle">
         Target Warehouse: &ensp;
         <el-select v-model="targetId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-row>
       <template v-slot:footer>
@@ -147,7 +147,7 @@
 
     <TaskForm
       ref="taskForm"
-      :warehouseOptions="warehouseOptions"
+      :warehouseEnum="warehouseEnum"
       :emptyTaskForm="emptyTaskForm"
       :dialogStatus="dialogStatus"
     />
@@ -178,12 +178,12 @@ import {
   queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
 } from "/@/server/api/logistic";
 import { parseTime } from '/@/utils/format';
-import { packageStatusOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
 const store = useStore();
 const router = useRouter();
-const warehouseOptions = computed(() => store.getters.warehouseOptions);
+const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({

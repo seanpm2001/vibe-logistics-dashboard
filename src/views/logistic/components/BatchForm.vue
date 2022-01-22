@@ -9,7 +9,7 @@
     <el-row justify="space-between">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Source">
         <el-select :disabled="isDialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
       <el-row>
@@ -100,7 +100,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  warehouseOptions: {
+  warehouseEnum: {
     type: Object,
     required: true
   },

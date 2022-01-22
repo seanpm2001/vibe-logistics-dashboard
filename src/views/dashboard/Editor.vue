@@ -7,7 +7,7 @@
       </pan-thumb>
       <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
       <div class="info-container">
-        <span class="display_name">{{ name }}</span>
+        <span class="display-name">{{ name }}</span>
         <span style="font-size:20px;padding-top:20px;display:inline-block;">Editor's Dashboard</span>
       </div>
     </div>
@@ -56,7 +56,7 @@ const roles = computed(() => store.getters['roles']);
       height: 150px
       line-height: 200px
       user-select: none
-      .display_name
+      .displayName
         font-size: 48px
         line-height: 48px
         color: #212121

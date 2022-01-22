@@ -41,7 +41,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{row}">
           <el-tag>
-            {{ packageStatusOptions[row.status] }}
+            {{ packageStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -103,7 +103,7 @@ import Pagination from '/@/components/Pagination.vue';
 import UnitDescription from './components/UnitDescription.vue';
 import { parseTime } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from "/@/server/api/logistic";
-import { packageStatusOptions, taskTypeOptions, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
 const store = useStore();

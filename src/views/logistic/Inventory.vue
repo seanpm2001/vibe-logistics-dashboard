@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" @keyup.enter="handleFilter" />
       <el-select v-model="listQuery.sort" style="width: 140px" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+        <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
       <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
         Search
@@ -198,7 +198,7 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="Type" prop="type">
           <el-select v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+            <el-option v-for="item in calendarTypeEnum" :key="item.key" :label="item.displayName" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="Date" prop="timestamp">
@@ -209,7 +209,7 @@
         </el-form-item>
         <el-form-item label="Status">
           <el-select v-model="temp.status" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
+            <el-option v-for="item in statusEnum" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-form-item label="Content">
@@ -264,15 +264,15 @@ const listQuery = ref({
   sort: '+id'
 });
 
-const contentOptions = ref([1, 2, 3]);
-const calendarTypeOptions = ref([
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
+const contentEnum = ref([1, 2, 3]);
+const calendarTypeEnum = ref([
+  { key: 'CN', displayName: 'China' },
+  { key: 'US', displayName: 'USA' },
+  { key: 'JP', displayName: 'Japan' },
+  { key: 'EU', displayName: 'Eurozone' }
 ]);
-const sortOptions = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
-const statusOptions = ref(['In Transit', 'Delivered', 'Deleted']);
+const sortEnum = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
+const statusEnum = ref(['In Transit', 'Delivered', 'Deleted']);
 
 const tableKey = ref(0);
 const dataList = ref(null);
@@ -304,8 +304,8 @@ const temp = ref({
 });
 
 // arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.value.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name;
+const calendarTypeKeyValue = calendarTypeEnum.value.reduce((acc, cur) => {
+  acc[cur.key] = cur.displayName;
   return acc;
 }, {});
 

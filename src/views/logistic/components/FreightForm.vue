@@ -9,7 +9,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Destination Warehouse" prop="targetId">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.targetId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="key" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in warehouseEnum" :key="key" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
       <el-form-item label="Batch number" prop="number">
@@ -19,7 +19,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Status" prop="status">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.status" placeholder="Please select">
-          <el-option v-for="(item, key) in freightStatusOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in freightStatusEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="Ocean Freight Cost" prop="cost">
@@ -29,31 +29,31 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Mode" prop="mode">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.mode" placeholder="Please select">
-          <el-option v-for="(item, key) in modeOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in modeEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="Ocean Forwarder" prop="oceanForwarder">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.oceanForwarder" placeholder="Please select">
-          <el-option v-for="(item, key) in forwarderOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in forwarderEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
     </el-row>
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Origin Port" prop="oriPort">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.oriPort" placeholder="Please select">
-          <el-option v-for="(item, key) in oriPortOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in oriPortEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="Destination Port" prop="destPort">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.destPort" placeholder="Please select">
-          <el-option v-for="(item, key) in destPortOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in destPortEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
     </el-row>
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="Container Type" prop="container">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.container" placeholder="Please select">
-          <el-option v-for="(item, key) in containerOptions" :key="item" :label="item" :value="key" />
+          <el-option v-for="(item, key) in containerEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="Pick Up" prop="pickup">
@@ -88,9 +88,9 @@
       <el-form-item label="Transit Time">
         <el-input disabled v-model="transitTime" placeholder=""/>
       </el-form-item>
-      <el-form-item label="Transit Options">
+      <el-form-item label="Transit Enum">
         <el-select :default="1" :disabled="isDialogPattern('view')" v-model="transitTimeBase" placeholder="Please select">
-          <el-option v-for="item in transitTimeOptions" :key="item" :label="item.key" :value="item.value" />
+          <el-option v-for="item in transitTimeEnum" :key="item" :label="item.key" :value="item.value" />
         </el-select>
       </el-form-item>
     </el-row>
@@ -118,7 +118,7 @@
           :freightId="freightItem.id"
           :batchIdx="index"
           :batchItem="item"
-          :warehouseOptions="warehouseOptions"
+          :warehouseEnum="warehouseEnum"
           :dialogStatus="dialogStatus"
           @deleteBatch="removeBatch"
           @createBatch="submitBatch"
@@ -141,7 +141,7 @@ import {
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
 } from "/@/server/api/logistic";
-import { freightStatusOptions, forwarderOptions, modeOptions, containerOptions, oriPortOptions, destPortOptions} from '/@/assets/enum/logistic';
+import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/assets/enum/logistic';
 import { parseTime } from '/@/utils/format';
 
 // eslint-disable-next-line no-undef
@@ -150,7 +150,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  warehouseOptions: {
+  warehouseEnum: {
     type: Object,
     required: true
   },
@@ -177,7 +177,7 @@ const disableNewBatch = computed(() => {
   return !arr[arr.length - 1]?.id;
 });
 
-const transitTimeOptions = [{key: 'day', value: 1}, {key: 'week', value: 7}];
+const transitTimeEnum = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const transitTimeBase = ref(1);
 const transitTime = computed(() => {
   const data = freightItem.value;

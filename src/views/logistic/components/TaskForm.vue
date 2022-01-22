@@ -14,17 +14,17 @@
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Type">
           <el-select v-model="taskItem.type" :disabled="isDialogPattern('view')" placeholder="Please select">
-            <el-option v-for="(item, key) in taskTypeOptions" :key="item" :label="item" :value="key" />
+            <el-option v-for="(item, key) in taskTypeEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
         <el-form-item label="Source Warehouse">
           <el-select v-model="taskItem.sourceId" :disabled="isDialogPattern('view')" placeholder="Please select">
-            <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+            <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
           </el-select>
         </el-form-item>
         <el-form-item label="Target Warehouse">
           <el-select v-model="taskItem.targetId" :disabled="isDialogPattern('view')" placeholder="Please select">
-            <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+            <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
           </el-select>
         </el-form-item>
       </el-row>
@@ -34,7 +34,7 @@
         </el-form-item>
         <el-form-item label="Task Status">
           <el-select v-model="taskItem.status" :disabled="isDialogPattern('view')" placeholder="Please select">
-            <el-option v-for="(item, key) in taskStatusOptions" :key="item" :label="item" :value="key" />
+            <el-option v-for="(item, key) in taskStatusEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
         <el-form-item label="On hold">
@@ -53,12 +53,12 @@
             <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
             <el-form-item label="Used Age">
               <el-select v-model="item.usedAge" placeholder="Please select">
-                <el-option v-for="(item, key) in usedAgeOptions" :key="item" :label="item" :value="key" />
+                <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
               </el-select>
             </el-form-item>
             <el-form-item label="Condition">
               <el-select v-model="item.condition" placeholder="Please select">
-                <el-option v-for="(item, key) in conditionOptions" :key="item" :label="item" :value="key" />
+                <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
               </el-select>
             </el-form-item>
             <el-form-item label="Unit Serial">
@@ -91,7 +91,7 @@
           :ref="`shipmentForm`"
           :taskId="taskItem.id"
           :orderId="taskItem.orderId"
-          :warehouseOptions="warehouseOptions"
+          :warehouseEnum="warehouseEnum"
           :dialogStatus="dialogStatus"
         />
       </el-card>
@@ -109,14 +109,14 @@
 import { getCurrentInstance, ref, inject } from 'vue';
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
-import { taskTypeOptions, taskStatusOptions, usedAgeOptions, conditionOptions } from '/@/assets/enum/logistic';
+import { taskTypeEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
 // eslint-disable-next-line no-undef
 const props = defineProps({
   emptyTaskForm: {
     type: Object,
     required: true
   },
-  warehouseOptions: {
+  warehouseEnum: {
     type: Object,
     required: true
   },

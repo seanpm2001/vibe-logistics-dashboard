@@ -40,8 +40,8 @@ router.beforeEach(async(to, from, next) => {
           // generate accessible routes map based on roles
 
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles);
-          if (JSON.stringify(store.getters.warehouseOptions) === '{}')
-            store.dispatch('logistic/setWarehouseOptions'); // init warehouseOptions
+          if (JSON.stringify(store.getters.warehouseEnum) === '{}')
+            store.dispatch('logistic/setWarehouseEnum'); // init warehouseEnum
 
           // dynamically add accessible routes
           accessRoutes.forEach(item => {

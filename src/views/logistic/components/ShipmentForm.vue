@@ -9,7 +9,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Carrier">
         <el-select :disabled="isDialogPattern('view')" v-model="shipmentItem.carrier" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseOptions" :key="item" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
     </el-row>
@@ -68,7 +68,7 @@
           :shipmentId="shipmentItem?.id"
           :packageIdx="index"
           :packageItem="item"
-          :warehouseOptions="warehouseOptions"
+          :warehouseEnum="warehouseEnum"
           :dialogStatus="dialogStatus"
           @deletePackage="removePackage"
           @createPackage="submitPackage"
@@ -99,7 +99,7 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  warehouseOptions: {
+  warehouseEnum: {
     type: Object,
     required: true
   },

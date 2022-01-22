@@ -1,29 +1,29 @@
-export const freightStatusOptions = {
+export const freightStatusEnum = {
   IN_TRANSIT: 'In Transit',
   DELIVERED: 'Delivered',
   CANCELLED: 'Canceled',
   PICKED_UP: 'Picked Up'
 };
-export const forwarderOptions = {
+export const forwarderEnum = {
   FPL: 'Full Power Logistics',
   FLEXPORT: 'FLEXPORT',
   LIGHTNING: 'LIGHTNING',
   AGL: 'AGL',
   SF: 'SF'
 };
-export const modeOptions = {
+export const modeEnum = {
   OCEAN: 'Ocean',
   AIR: 'Air',
   TRUCK: 'Truck'
 };
-export const containerOptions = {
+export const containerEnum = {
   GP20: '20GP',
   GP40: '40GP',
   HQ40: '40HQ',
   HQ45: '45HQ',
   LCL: 'LCL'
 };
-export const oriPortOptions = {
+export const oriPortEnum = {
   CALGARY: 'Calgary',
   CALIFORNIA: 'California',
   FUZHOU: 'Fuzhou',
@@ -31,7 +31,7 @@ export const oriPortOptions = {
   XIAMEN: 'Xiamen',
   YANTIAN: 'Yantian'
 };
-export const destPortOptions = {
+export const destPortEnum = {
   CALGARY: 'Calgary',
   FELIXTOWE: 'Felixtowe',
   FUZHOU: 'Fuzhou',
@@ -39,7 +39,7 @@ export const destPortOptions = {
   LA_LB: 'LA/LB',
   MELBOURNE: 'Melbourne'
 };
-export const packageStatusOptions = {
+export const packageStatusEnum = {
   DELIVERED: 'Delivered',
   DELIVEREING: 'Delivering',
   PARTIALLY_DELIVERED: 'Partially Delivered',
@@ -47,7 +47,7 @@ export const packageStatusOptions = {
   RETURNED: 'Returned',
   LOST: 'Lost'
 };
-export const taskStatusOptions = {
+export const taskStatusEnum = {
   UNFULFILLED: 'Unfulfilled',
   FULFILLED_AND_DELIVERING: 'Fulfilled and delivering',
   FAILED: 'Failed',
@@ -55,19 +55,19 @@ export const taskStatusOptions = {
   ONHOLD: 'Onhold',
   CANCELLED: 'Cancelled'
 };
-export const taskTypeOptions = {
+export const taskTypeEnum = {
   FULFILLMENT: 'Fulfillment',
   REPLACE: 'Replace',
   RETURN: 'Return',
   RETURN_TO_REPAIR: 'Return to Repair',
   MOVE: 'Move'
 };
-export const usedAgeOptions = {
+export const usedAgeEnum = {
   WITHIN_3_MONTHS: 'Within 3 months',
   BETWEEN_3_TO_12_MONTHS: '3 to 12 months',
   OVER_12_MONTHS: 'Over 12 months',
 };
-export const conditionOptions = {
+export const conditionEnum = {
   SCRAP: 'Scrap',
   DAM_P_ONLY: 'Damage package only',
   DAM_U_ONLY: 'Damage unit only',
@@ -125,8 +125,8 @@ export const productIconMap = {
   '55P1B': 'board',
 };
 
-// API 获取失败的情况下，调用默认写死的warehouseOptions
-export const fixedWarehouseOptions = {
+// API 获取失败的情况下，调用默认写死的warehouseEnum
+export const fixedWarehouseEnum = {
   1: 'FBA-US',
   2: 'FBA-CA',
   3: 'FBA-DE',

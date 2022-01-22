@@ -162,7 +162,7 @@ onMounted(() => {
   };
 
   const updateStarDust = (s,g) => {
-    if (g == currentGalaxy && drawingMode) return;
+    if (g === currentGalaxy && drawingMode) return;
     s.angle += (0.5+(s.speed*0.5))/s.distance;
     s.x = g.x + (Math.cos(s.angle+g.realAngleOffsetX)*s.distance);
     s.y = g.y + (Math.sin(s.angle+g.realAngleOffsetY)*s.distance);
@@ -170,7 +170,7 @@ onMounted(() => {
 
   const update = () => {
     galaxies.forEach(g => {
-      if (g != currentGalaxy) {
+      if (g !== currentGalaxy) {
         g.realAngleOffsetX +=
         g.realAngleOffsetX < g.angleOffsetX
           ? (g.angleOffsetX-g.realAngleOffsetX)*0.05 : 0;

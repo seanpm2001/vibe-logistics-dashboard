@@ -39,6 +39,7 @@
     "eslint-plugin-vue": "^7.0.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "unplugin-auto-import": "^0.5.11",
     "unplugin-vue-components": "^0.17.2",
     "vite": "^2.5.10",
     "vite-plugin-mock": "^2.9.6"
@@ -74,7 +75,9 @@
         2
       ],
       "space-before-function-paren": 0,
-      "eol-last": 0,
+      "eol-last": 1,
+      "eqeqeq": 2,
+      "no-undef": 0,
       "no-unused-vars": "off",
       "no-useless-escape": "off",
       "max-len": [
