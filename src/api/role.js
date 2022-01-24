@@ -1,4 +1,4 @@
-import requester from '../axios-requester';
+import requester from '/@/utils/http';
 
 export async function getRoutesAPI() {
   const res = await requester.get('/routes');

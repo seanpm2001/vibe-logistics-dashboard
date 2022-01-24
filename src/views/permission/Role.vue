@@ -63,7 +63,7 @@
 import { computed, defineComponent, getCurrentInstance, ref } from 'vue';
 import { resolve } from '/@/utils/path';
 import { deepClone } from '/@/utils/index';
-import { getRoutesAPI, getRolesAPI, addRoleAPI, deleteRoleAPI, updateRoleAPI } from '/@/server/api/role';
+import { getRoutesAPI, getRolesAPI, addRoleAPI, deleteRoleAPI, updateRoleAPI } from '/@/api/role';
 
 const { proxy } = getCurrentInstance();
 const refs = proxy.$refs;
