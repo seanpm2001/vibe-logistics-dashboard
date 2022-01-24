@@ -149,6 +149,7 @@
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
+import { findAssignedOrderAPI } from '/@/api/logistic';
 import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef
@@ -204,7 +205,10 @@ const handleWarehouseTask = type => {
 };
 
 const showOrderDrawerByID = orderId => {
-  console.log('orderId: ', orderId);
+  // findAssignedOrderAPI(orderId).then(data => {
+  //   console.log('data: ', data);
+
+  // });
   drawerOrderVisible.value = true;
 };
 

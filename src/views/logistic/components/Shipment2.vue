@@ -99,7 +99,6 @@
 
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
-import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/utils/format';

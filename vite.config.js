@@ -4,13 +4,13 @@ import { VITE_DROP_CONSOLE, VITE_PORT } from './config/constant';
 import { createVitePlugins } from './config/vite/plugin';
 import proxy from './config/vite/proxy';
 import { resolve } from "path";
-import vue from '@vitejs/plugin-vue';
 
 function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
 }
-
 export default (({command}) => {
+  console.log('123', pathResolve("src"));
+  console.log('123', pathResolve("node_modules"));
   const isBuild = command === 'build';
   // 加载不同生产环境下的配置
   const NODE_ENV =  process.env.NODE_ENV || 'development'; // 无local API，默认采用beta API的配置
@@ -25,9 +25,10 @@ export default (({command}) => {
   return defineConfig({
     plugins: createVitePlugins(isBuild),
     resolve: {
-      alias: {
-        '/@': pathResolve("src"),
-      }
+      alias: [
+        { find: '/~', replacement: pathResolve("node_modules") },
+        { find: '/@', replacement: pathResolve("src"), }
+      ]
     },
     // 强制预构建插件包
     optimizeDeps: {

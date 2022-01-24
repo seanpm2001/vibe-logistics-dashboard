@@ -82,7 +82,6 @@
 <script setup>
 
 import { ElMessage, ElMessageBox } from "element-plus";
-import "element-plus/theme-chalk/src/message-box.scss";
 import { file2Xcel } from '/@/utils/excel';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/api/logistic';
 

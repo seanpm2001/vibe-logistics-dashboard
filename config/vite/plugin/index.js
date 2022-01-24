@@ -4,6 +4,7 @@ import Components from 'unplugin-vue-components/vite';
 import { svgBuilder } from './svgBuilder'; 
 import { AutoImportDeps } from './autoImport';
 import { configVisualizerConfig } from './visualizer';
+import { configStyleImportPlugin } from './styleImport';
 
 export function createVitePlugins(isBuild) {
   const vitePlugins = [
@@ -18,6 +19,9 @@ export function createVitePlugins(isBuild) {
 
   // rollup-plugin-visualizer
   vitePlugins.push(configVisualizerConfig());
+
+  // vite-plugin-style-import
+  vitePlugins.push(configStyleImportPlugin(isBuild));
 
   return vitePlugins;
 }

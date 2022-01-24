@@ -3,7 +3,6 @@
  */
 
 import { ElMessage } from 'element-plus';
-import "element-plus/theme-chalk/src/message.scss";
 import requester from '/@/utils/http';
 import { jsonToUnderline } from '/@/utils/format';
 
@@ -95,6 +94,13 @@ export async function queryAssignedOrdersAPI (params) {
     params,
   });
   return res;
+}
+export async function findAssignedOrderAPI (orderId) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  const item = handleReqElMsg(
+    requester.get(`orders/assigned/${orderId}`), 'Find', 'Warehouse Task', orderId
+  );
+  return item;
 }
 export async function assignOrdersAPI (targetId, orderArr) {
   requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
