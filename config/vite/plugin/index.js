@@ -3,6 +3,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
 import { svgBuilder } from './svgBuilder'; 
 import { AutoImportDeps } from './autoImport';
+import { configVisualizerConfig } from './visualizer';
 
 export function createVitePlugins(isBuild) {
   const vitePlugins = [
@@ -14,6 +15,9 @@ export function createVitePlugins(isBuild) {
       resolvers: [ElementPlusResolver({importStyle: "sass"})]
     }),
   ];
+
+  // rollup-plugin-visualizer
+  vitePlugins.push(configVisualizerConfig());
 
   return vitePlugins;
 }
