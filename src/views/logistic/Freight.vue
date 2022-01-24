@@ -147,10 +147,10 @@ import { parseTime } from '/@/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from '/@/api/logistic';
 import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
-onRenderTriggered(e => {
-  console.log('e: ', e);
+// onRenderTriggered(e => {
+//   console.log('e: ', e);
 
-});
+// });
 
 /* start data */
 const store = useStore();
@@ -257,7 +257,9 @@ const sortByID = order => {
 };
 
 const resetForm = () => {
-  proxy.$refs['freightForm'].resetForm();
+  proxy.$nextTick(() => {
+    proxy.$refs['freightForm'].resetForm();
+  });
 };
 
 const showCreateDialog = () => {

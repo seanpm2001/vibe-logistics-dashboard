@@ -115,7 +115,7 @@ const listQuery = ref({
 });
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const total = ref(0);
 const unitItem = ref({});
 

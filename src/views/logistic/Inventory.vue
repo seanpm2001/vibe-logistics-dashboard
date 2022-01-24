@@ -275,7 +275,7 @@ const sortEnum = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descen
 const statusEnum = ref(['In Transit', 'Delivered', 'Deleted']);
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogFormVisible = ref(false);

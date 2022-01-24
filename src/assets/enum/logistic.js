@@ -60,12 +60,21 @@ export const taskTypeEnum = {
   REPLACE: 'Replace',
   RETURN: 'Return',
   RETURN_TO_REPAIR: 'Return to Repair',
+};
+export const inventoryTaskTypeEnum = {
   MOVE: 'Move'
+};
+export const taskReasonEnum = {
+  ITEM_UPGRADE: 'Item Upgrade',
+  ITEM_DEGRADE: 'Item Degrade',
+  ITEM_DEMAGED: 'Item Damaged',
+  HARDWARE_DEFECT: 'Hardware Defect',
+  PACKAGE_LOST: 'Package Lost'
 };
 export const usedAgeEnum = {
   WITHIN_3_MONTHS: 'Within 3 months',
   BETWEEN_3_TO_12_MONTHS: '3 to 12 months',
-  OVER_12_MONTHS: 'Over 12 months',
+  OVER_12_MONTHS: 'Over 12 months'
 };
 export const conditionEnum = {
   SCRAP: 'Scrap',

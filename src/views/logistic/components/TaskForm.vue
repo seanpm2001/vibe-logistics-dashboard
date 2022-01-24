@@ -9,12 +9,17 @@
       ref="dataForm"
       :model="taskItem"
       label-position="left"
-      label-width="140px"
+      label-width="170px"
     >
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Type">
           <el-select v-model="taskItem.type" :disabled="isDialogPattern('view')" placeholder="Please select">
             <el-option v-for="(item, key) in taskTypeEnum" :key="item" :label="item" :value="key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="isReturnOrRepalce" label="Return/Replace reason">
+          <el-select v-model="taskItem.reason" :disabled="isDialogPattern('view')" placeholder="Please select">
+            <el-option v-for="(item, key) in taskReasonEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
         <el-form-item label="Source Warehouse">
@@ -29,8 +34,8 @@
         </el-form-item>
       </el-row>
       <el-row justify="space-between" :gutter="3">
-        <el-form-item label="Order ID">
-          <el-input disabled v-model="taskItem.orderId" placeholder="Order Id" />
+        <el-form-item :label="'Order ID: ' + taskItem.orderId"  @click="showOrderDrawerByID(taskItem.orderId)">
+          <el-button type="success">Open drawer</el-button>
         </el-form-item>
         <el-form-item label="Task Status">
           <el-select v-model="taskItem.status" :disabled="isDialogPattern('view')" placeholder="Please select">
@@ -42,6 +47,31 @@
             On hold:
           </el-switch>
         </el-form-item>
+      </el-row>
+
+      <template v-if="isMoveOrReturn">
+        <el-row>
+          <el-form-item label="Specfy Serial">
+            <el-checkbox-group  v-model="checkedSpecifySerial" :max="1">
+              <el-checkbox :key="true" :label="true">true</el-checkbox>
+              <el-checkbox :key="false" :label="false">false</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-row>
+        <template v-if="checkedSpecifySerial[0]">
+          <template v-for="(item, index) in taskItem.specifySerailArr" :key="index">
+            <el-row align="middle" class="add-minus-row">
+              <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
+              <svg-icon class="icon" :style="taskItem.specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
+              <el-form-item label="Unit Serial">
+                <el-input v-model="item.serial" placeholder="Unit Serial"/>
+              </el-form-item>
+            </el-row>
+          </template>
+        </template>
+      </template>
+
+      <el-row>
         <el-checkbox v-model="showUsedUnits">
           Show Used Units
         </el-checkbox>
@@ -67,7 +97,6 @@
           </el-row>
         </template>
       </template>
-      
 
       <div class="f-row controls" v-if="!isDialogPattern('view')">
         <el-button v-if="taskItem.id" type="primary" @click="handleWarehouseTask('update')">
@@ -103,13 +132,25 @@
       </el-button>
     </template>
   </el-dialog>
+
+  <el-drawer
+    v-model="drawerOrderVisible"
+    title="Order Info"
+    size="60%"
+    direction="ltr"
+  >
+    <OrderDescription
+      :orderItem="orderItem"
+    />
+  </el-drawer>
 </template>
 
 <script setup>
-
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
-import { taskTypeEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
+import OrderDescription from './OrderDescription.vue';
+import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
+
 // eslint-disable-next-line no-undef
 const props = defineProps({
   emptyTaskForm: {
@@ -135,16 +176,36 @@ const taskItem = inject('taskItem');
 
 const { proxy } = getCurrentInstance();
 
+const orderItem = shallowRef(null);
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
+const checkedSpecifySerial = ref([]);
+const showSpecifySerails = ref(false);
 const disableNewShipment = ref(false);
+const drawerOrderVisible = ref(false);
+
+const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
+const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
+const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.type));
+const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type));
 /* End data */
+
+// watchEffect(() => {
+//   if (isReturnOrRepalce.value) {
+//     console.log('isReturnOrRepalce: ', isReturnOrRepalce);
+//   }
+// });
 
 const isDialogPattern = type => props.dialogStatus === type;
 
 const handleWarehouseTask = type => {
   console.log('type: ', type);
 
+};
+
+const showOrderDrawerByID = orderId => {
+  console.log('orderId: ', orderId);
+  drawerOrderVisible.value = true;
 };
 
 const handleUnitChange = (idx, type) => {

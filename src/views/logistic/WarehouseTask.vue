@@ -129,7 +129,7 @@ const listQuery = ref({
 });
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const packageList = ref([]);
 
 const total = ref(0);

@@ -122,7 +122,7 @@ const statusTypeDict = {
 };
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const packageList = ref([]);
 const total = ref(0);
 const listLoading = ref(true);

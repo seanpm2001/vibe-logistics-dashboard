@@ -208,7 +208,7 @@ const targetId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
-const orderItem = ref(null);
+const orderItem = shallowRef(null);
 const taskItem = ref({
   id: 0,
   orderId: null,
@@ -221,6 +221,9 @@ const taskItem = ref({
     condition: null,
     serial: null,
   }],
+  specifySerailArr: [{
+    serial: null,
+  }]
 });
 const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
@@ -228,7 +231,6 @@ const contrastData = ref(null);
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 /* End data */
-
 
 // 合并products array为一个{productCode: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
