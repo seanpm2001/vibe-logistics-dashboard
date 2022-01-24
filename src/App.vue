@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-// import { listWarehousesAPI } from "/@/server/api/logistic";
+// import { listWarehousesAPI } from "/@/api/logistic";
 // import { useStore } from 'vuex';
 
 // const store = useStore();

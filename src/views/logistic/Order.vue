@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, provide, ref } from "vue";
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, shallowRef, provide, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -176,7 +176,7 @@ import TaskForm from './components/TaskForm.vue';
 import OrderDescription from './components/OrderDescription.vue';
 import {
   queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
-} from "/@/server/api/logistic";
+} from "/@/api/logistic";
 import { parseTime } from '/@/utils/format';
 import { packageStatusEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
@@ -194,7 +194,7 @@ const listQuery = ref({
 });
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const total = ref(0);
 const listLoading = ref(true);
 const dialogAssignVisible = ref(false);

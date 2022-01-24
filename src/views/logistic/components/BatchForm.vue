@@ -84,7 +84,7 @@ import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import "element-plus/theme-chalk/src/message-box.scss";
 import { file2Xcel } from '/@/utils/excel';
-import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/server/api/logistic';
+import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/api/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

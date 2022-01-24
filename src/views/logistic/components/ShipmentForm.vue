@@ -87,7 +87,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
 import PackageForm from './PackageForm.vue';
-import { createShipmentAPI, deleteShipmentAPI, updateShipmentAPI } from '/@/server/api/logistic';
+import { createShipmentAPI, deleteShipmentAPI, updateShipmentAPI } from '/@/api/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

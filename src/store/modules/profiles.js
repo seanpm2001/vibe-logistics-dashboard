@@ -1,4 +1,4 @@
-import { loginAPI, logoutAPI } from '../../server/api/logistic';
+import { loginAPI, logoutAPI } from '/@/api/logistic';
 import router from '/@/router';
 
 export const profile = {

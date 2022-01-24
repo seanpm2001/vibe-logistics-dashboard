@@ -115,7 +115,7 @@ import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskForm from './components/TaskForm.vue';
-import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/server/api/logistic";
+import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/api/logistic";
 import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 

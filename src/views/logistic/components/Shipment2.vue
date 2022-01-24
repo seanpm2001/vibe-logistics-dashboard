@@ -103,7 +103,7 @@ import "element-plus/theme-chalk/src/message-box.scss";
 import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/utils/format';
-import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/server/api/logistic";
+import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/api/logistic";
 import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 

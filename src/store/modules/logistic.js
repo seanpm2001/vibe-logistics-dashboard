@@ -1,4 +1,4 @@
-import { listWarehousesAPI } from '/@/server/api/logistic';
+import { listWarehousesAPI } from '/@/api/logistic';
 import { fixedWarehouseEnum } from '/@/assets/enum/logistic';
 
 export const logistic = {

@@ -250,7 +250,7 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/utils/format';
 import Pagination from '/@/components/Pagination.vue';
-import { listInventoriesAPI } from "/@/server/api/logistic";
+import { listInventoriesAPI } from "/@/api/logistic";
 
 const store = useStore();
 const { proxy } = getCurrentInstance();

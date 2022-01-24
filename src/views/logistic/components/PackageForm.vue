@@ -55,7 +55,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from "element-plus";
-import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/server/api/logistic';
+import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/assets/enum/logistic';
 
 // eslint-disable-next-line no-undef

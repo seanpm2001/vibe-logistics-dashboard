@@ -6,7 +6,7 @@ import store from './store';
 import vPermission from '/@/directive/permission';
 import vWave from '/@/directive/wave';
 
-import { setupProdMockServer } from './server/mock-prod-server';
+import { setupProdMockServer } from '../mock/mock-prod-server';
 
 import SvgIcon from '/@/components/SvgIcon.vue'; // svg component
 import './permission'; // permission control

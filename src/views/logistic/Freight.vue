@@ -139,14 +139,19 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, provide } from "vue";
+import { onRenderTriggered, computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, shallowRef, provide } from "vue";
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/utils/format';
-import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/server/api/logistic";
+import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/api/logistic";
 import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+
+onRenderTriggered(e => {
+  console.log('e: ', e);
+
+});
 
 /* start data */
 const store = useStore();
@@ -193,7 +198,7 @@ const statusTypeDict = {
 };
 
 const tableKey = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const total = ref(0);
 const listLoading = ref(true); // queryList loading
 const dialogFreightVisible = ref(false);

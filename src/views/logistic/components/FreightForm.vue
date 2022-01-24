@@ -140,7 +140,7 @@ import BatchForm from './BatchForm.vue';
 import {
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
-} from "/@/server/api/logistic";
+} from "/@/api/logistic";
 import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/assets/enum/logistic';
 import { parseTime } from '/@/utils/format';
 
