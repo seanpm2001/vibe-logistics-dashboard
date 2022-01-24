@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+
 import { useStore } from 'vuex';
 import { AppMain, Navbar, SidebarComponent, TagsView } from './components/index';
 // import ResizeMixin from './mixin/ResizeHandler';

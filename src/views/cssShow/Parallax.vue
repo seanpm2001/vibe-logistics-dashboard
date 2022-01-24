@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { onMounted }  from "vue";
+
 import "/@/assets/js/parallax.min";
 onMounted(() => {
   // eslint-disable-next-line no-undef

@@ -9,8 +9,8 @@
 </template>
 
 <script setup>
-import { computed, defineComponent, ref } from 'vue';
-import { useRoute } from "vue-router";
+
+
 import { useStore } from "vuex";
 
 // eslint-disable-next-line no-undef

@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+
 import { ElMessageBox } from "element-plus";
 import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
 

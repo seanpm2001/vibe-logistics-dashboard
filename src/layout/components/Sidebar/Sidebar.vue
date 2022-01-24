@@ -19,11 +19,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+
 import { useStore } from 'vuex';
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
-import { useRoute } from 'vue-router';
+
 const route = useRoute();
 const store = useStore();
 const permissionRroutes = computed(() => store.getters['permissionRroutes']);

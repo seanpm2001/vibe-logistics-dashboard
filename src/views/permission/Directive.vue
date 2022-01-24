@@ -58,8 +58,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+
+
 import { checkPermission } from '/@/utils/permission'; // 权限判断函数
 import SwitchRoles from './components/SwitchRoles.vue';
 const router = useRouter();

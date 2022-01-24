@@ -139,13 +139,12 @@
 </template>
 
 <script setup>
-import { onRenderTriggered, computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, shallowRef, provide } from "vue";
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/utils/format';
-import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from "/@/api/logistic";
+import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from '/@/api/logistic';
 import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 onRenderTriggered(e => {

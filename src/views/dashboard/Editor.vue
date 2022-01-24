@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+
 import { useStore }  from 'vuex';
 import PanThumb from '/@/components/PanThumb.vue';
 import GithubCorner from '/@/components/GithubCorner.vue';

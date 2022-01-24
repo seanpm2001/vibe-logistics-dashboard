@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, inject } from 'vue';
+
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
 import { taskTypeEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';

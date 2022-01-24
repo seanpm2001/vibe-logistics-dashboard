@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from 'vue';
+
 import { resolve } from '/@/utils/path';
 import { isExternal } from '/@/utils/validate';
 import Item from './Item.vue';

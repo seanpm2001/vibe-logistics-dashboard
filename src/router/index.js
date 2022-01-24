@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+
 import { cssShowRouter } from './modules/css-show';
 import { logisticRouter } from './modules/logistic';
 // import store from '../store';

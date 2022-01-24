@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+
 import { ElMessage, ElMessageBox } from "element-plus";
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/assets/enum/logistic';

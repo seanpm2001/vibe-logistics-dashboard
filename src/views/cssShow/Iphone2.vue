@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+
 onMounted(() => {
   window.addEventListener('scroll', (e) => {
     const scrolled = document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight);

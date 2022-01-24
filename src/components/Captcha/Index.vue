@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
+
 import "./captcha.js";
 export default {
   name: "Captcha",

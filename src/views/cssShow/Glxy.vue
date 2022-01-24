@@ -13,7 +13,7 @@
 
 <script setup>
 import throttle from "lodash/throttle";
-import { getCurrentInstance, onMounted, onUnmounted } from "vue";
+
 const { proxy } = getCurrentInstance();
 
 function setBgPosition() {

@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+
 onMounted(() => {
   const rows = document.querySelectorAll('#ui ul li');
   const html = document.documentElement;

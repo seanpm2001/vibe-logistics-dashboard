@@ -35,7 +35,7 @@
 
 <script setup>
 import { useStore } from 'vuex';
-import { useRoute, useRouter } from 'vue-router';
+
 import Breadcrumb from '/@/components/Breadcrumb.vue';
 
 const store = useStore();

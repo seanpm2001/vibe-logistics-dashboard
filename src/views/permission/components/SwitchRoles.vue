@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance } from "vue";
+
 import { useStore } from "vuex";
 
 const store = useStore();

@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, toRefs } from 'vue';
+
 import { useStore } from 'vuex';
 import Timeline from './components/Timeline.vue';
 

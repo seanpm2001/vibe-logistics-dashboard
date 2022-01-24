@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, getCurrentInstance } from "vue";
+
 import throttle from "lodash/throttle";
 const { proxy } = getCurrentInstance();
 const refs = computed(() => proxy.$refs);

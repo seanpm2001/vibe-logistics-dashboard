@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, getCurrentInstance } from 'vue';
+
 const tagAndTagSpacing = 4; // tagAndTagSpacing
 
 const left = ref(0);

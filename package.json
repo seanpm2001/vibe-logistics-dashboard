@@ -57,10 +57,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "jsx-quotes": [
-        "warn",
-        "prefer-single"
-      ],
+      "jsx-quotes": 2,
       "arrow-parens": 0,
       "generator-star-spacing": 0,
       "semi": [

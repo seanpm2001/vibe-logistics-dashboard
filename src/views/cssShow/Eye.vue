@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, computed } from 'vue';
+
 const { proxy } = getCurrentInstance();
 const refs = computed(() => proxy.$refs);
 
