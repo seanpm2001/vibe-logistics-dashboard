@@ -11,7 +11,7 @@
         </el-button>
       </el-row>
 
-      <el-button type="primary" icon="el-icon-edit" @click="addWarehouseMoveTask">
+      <el-button type="primary" @click="addWarehouseMoveTask">
         Add a warehouse move task
       </el-button>
     </el-row>

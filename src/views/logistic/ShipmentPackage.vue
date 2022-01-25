@@ -33,9 +33,10 @@
         </template>
       </el-table-column>
       <el-table-column label="Tracking Num" prop="trackingNumber" align="center" width="120px" />
+      <el-table-column label="Carrier" prop="shippingCarrier" align="center" width="100" />
       <el-table-column label="Last Modified" width="130px" align="center">
         <template v-slot="{row}">
-          {{ row.lastModified?.split('T')[0] }}
+          {{ row.lastModified }}
         </template>
       </el-table-column>
       <el-table-column label="Status" width="120px" align="center">
@@ -62,8 +63,11 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="Actions" align="center" min-width="100px" class-name="small-padding fixed-width">
+      <el-table-column fixed="right" label="Actions" align="center" min-width="240px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
+          <el-button size="mini" type="primary">
+            Pendenging Warehousing Task
+          </el-button>
           <el-popconfirm @confirm="deleteShipment(row,$index)" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
               <el-button size="mini" type="danger">

@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column label="Last Modified" width="130px" align="center">
         <template v-slot="{row}">
-          {{ row.lastModified?.split('T')[0] }}
+          {{ row.lastModified }}
         </template>
       </el-table-column>
       <el-table-column label="Status" width="120px" align="center">

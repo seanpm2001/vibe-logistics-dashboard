@@ -11,7 +11,7 @@ for (let i = 0; i < count; i++) {
     orderId: 1,
     'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
     'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
-    'lastModified': '2020-05-22T00:00:00',
+    'lastModified': '2020-05-22 by vibe',
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     content: {
       '55V1B': 270,
@@ -26,7 +26,7 @@ for (let i = 0; i < 50; i++) {
     'trackingNumber|1': ['52358899', '55658899', '54554465'],
     'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    'lastModified': '2020-05-22T00:00:00',
+    'lastModified': '2020-05-22 by vibe',
     content: {
       '55V1B': 90,
       '55V1WS': 20
@@ -55,7 +55,7 @@ for (let i = 0; i < count; i++) {
     'sourceId': '@integer(1, 18)',
     'targetId': '@integer(1, 18)',
     'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
-    'lastModified': '2020-05-22T00:00:00',
+    'lastModified': '2020-05-22 by vibe',
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
     content: {
       '55V1B': 270,
