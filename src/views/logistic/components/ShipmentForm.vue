@@ -44,22 +44,14 @@
       </el-form-item>
     </el-row>
     
-    <div class="f-row controls" v-if="!isDialogPattern('view')">
+    <template v-if="!isDialogPattern('view')">
       <el-button :disabled="!taskId" v-if="shipmentItem?.id" type="primary" @click="handleShipment('update')">
         Update Shipment
       </el-button>
       <el-button :disabled="!taskId" v-else type="primary" @click="handleShipment('create')">
         Submit Shipment
       </el-button>
-      <el-tooltip
-        class="tips"
-        effect="light"
-        content="You need to have/submit a common part before 'Add new Package'"
-        placement="right"
-      >
-        <svg-icon icon-name="tips" />
-      </el-tooltip>
-    </div>
+    </template>
 
     <el-card v-if="packageArr.length > 0">
       <template v-for="(item, index) in packageArr" :key="index">
@@ -77,9 +69,19 @@
       </template>
     </el-card>
     
-    <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
-      Add Package
-    </el-button>
+    <div class="f-row controls">
+      <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
+        Add Package
+      </el-button>
+      <el-tooltip
+        class="tips"
+        effect="light"
+        content="You need to have/submit a 'Shipment part' before 'Add new Package'"
+        placement="right"
+      >
+        <svg-icon icon-name="tips" />
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -139,7 +141,7 @@ const disableNewPackage = computed(() => {
 
 const addPackage = () => {
   // if (!formData.value.id) {
-  //   ElMessage.error('You need to "Submit Common Section" before "Add Shipment"', 3);
+  //   ElMessage.error('You need to "Submit Shipment Section" before "Add Shipment"', 3);
   //   return;
   // }
   packageArr.value.push(Object.assign({}, emptyPackage));

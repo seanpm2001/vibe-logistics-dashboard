@@ -105,22 +105,14 @@
           </template>
         </template>
 
-        <div class="f-row controls" v-if="!isDialogPattern('view')">
+        <template v-if="!isDialogPattern('view')">
           <el-button v-if="taskItem.id" type="primary" @click="handleWarehouseTask('update')">
-            Update Common Section
+            Update Warehouse Task
           </el-button>
           <el-button v-else type="primary" @click="handleWarehouseTask('create')">
-            Submit Common Section
+            Submit Warehouse Task
           </el-button>
-          <el-tooltip
-            class="tips"
-            effect="light"
-            content="You need to have/submit a common part before 'Add new Sub-Batch'"
-            placement="right"
-          >
-            <svg-icon icon-name="tips" />
-          </el-tooltip>
-        </div>
+        </template>
 
         <el-card>
           <ShipmentForm

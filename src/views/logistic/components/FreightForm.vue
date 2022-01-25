@@ -94,22 +94,14 @@
         </el-select>
       </el-form-item>
     </el-row>
-    <div class="f-row controls" v-if="!isDialogPattern('view')">
+    <template v-if="!isDialogPattern('view')">
       <el-button v-if="isDialogPattern('create')" type="primary" @click="createFreight">
-        Submit Common Section
+        Submit Freight
       </el-button>
       <el-button v-if="isDialogPattern('edit')" type="primary" @click="updateFreight">
-        Update Common Section
+        Update Freight
       </el-button>
-      <el-tooltip
-        class="tips"
-        effect="light"
-        content="You need to have/submit a common part before 'Add new Sub-Batch'"
-        placement="right"
-      >
-        <svg-icon icon-name="tips" />
-      </el-tooltip>
-    </div>
+    </template>
 
     <el-card v-if="batchArr.length > 0">
       <template v-for="(item, index) in batchArr" :key="index">
@@ -127,9 +119,19 @@
       </template>
     </el-card>
     
-    <el-button v-if="!isDialogPattern('view')" :disabled="disableNewBatch" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
-      Add Sub-Batch
-    </el-button>
+    <div class="f-row controls">
+      <el-button v-if="!isDialogPattern('view')" :disabled="disableNewBatch" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
+        Add Sub-Batch
+      </el-button>
+      <el-tooltip
+        class="tips"
+        effect="light"
+        content="You need to have/submit a freight part before 'Add new Sub-Batch'"
+        placement="right"
+      >
+        <svg-icon icon-name="tips" />
+      </el-tooltip>
+    </div>
   </el-form>
 </template>
 
@@ -227,7 +229,7 @@ const removeBatch = (idx, batchId) => {
 
 const handleAddBatch = () => {
   if (!freightItem.value.id) {
-    ElMessage.error('You need to "Submit Common Section" before "Add Sub-Batch"', 3);
+    ElMessage.error('You need to "Submit Freight Section" before "Add Sub-Batch"', 3);
     return;
   }
   batchArr.value.push({costs: {}, sourceId: '', items: []});

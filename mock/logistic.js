@@ -2,6 +2,7 @@ import Mock from 'mockjs';
 
 const shipmentList = [];
 const packageList = [];
+const unitList = [];
 const taskList = [];
 const count = 50;
 
@@ -48,6 +49,17 @@ const unitObj = Mock.mock({
   'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
 });
 
+for (let i = 0; i < count; i++) {
+  unitList.push(Mock.mock({
+    'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033'],
+    'usedAge|1': ['WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
+    'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR'],
+    'producedDate': '2021-07-15',
+    'condition|1': ['SCRAP', 'DAM_P_ONLY', 'DAM_U_ONLY'],
+    'ownerId': 'COI-4564',
+    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
+  }));
+}
 for (let i = 0; i < count; i++) {
   taskList.push(Mock.mock({
     id: '@integer(1, 23)',
@@ -136,6 +148,20 @@ export default [
         data: {
           items: packageList,
           total: packageList.length
+        }
+      };
+    }
+  },
+  {
+    url: RegExp('/units'),
+    type: 'get',
+    response: config => {
+
+      return {
+        code: 20000,
+        data: {
+          items: unitList,
+          total: unitList.length
         }
       };
     }
