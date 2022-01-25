@@ -95,10 +95,6 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  orderId: {
-    type: Number,
-    required: true
-  },
   warehouseEnum: {
     type: Object,
     required: true
@@ -183,7 +179,7 @@ const handleShipment = (type) => {
   //   shipmentItem.value.costs[key] = products.value[key].cost || 0;
   // }
   if (type === "create") {
-    createShipmentAPI(props.orderId, shipmentItem.value).then(data => {
+    createShipmentAPI(props.taskId, shipmentItem.value).then(data => {
       shipmentItem.value = data;
     });
   } else {

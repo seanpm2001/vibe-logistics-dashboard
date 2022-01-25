@@ -53,7 +53,7 @@ const roles = computed(() => store.getters['roles']);
     height: 150px
     line-height: 200px
     user-select: none
-    .displayName
+    .display-name
       font-size: 48px
       line-height: 48px
       color: #212121

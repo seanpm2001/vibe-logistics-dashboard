@@ -1,20 +1,23 @@
 <template>
   <div class="page">
-    <div class="filter-container">
-      <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" @keyup.enter="handleFilter" />
-      <el-select v-model="listQuery.sort" style="width: 140px" @change="handleFilter">
-        <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
-        Search
+    <el-row justify="space-between" class="filter-container">
+      <el-row>
+        <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" @keyup.enter="handleFilter" />
+        <el-select v-model="listQuery.sort" style="width: 140px" @change="handleFilter">
+          <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
+        </el-select>
+        <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
+          Search
+        </el-button>
+        <el-button v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
+          Export
+        </el-button>
+      </el-row>
+
+      <el-button type="primary" icon="el-icon-edit" @click="addWarehouseMoveTask">
+        Add a warehouse move task
       </el-button>
-      <el-button type="primary" icon="el-icon-edit" @click="handleCreate">
-        Add
-      </el-button>
-      <el-button v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
-        Export
-      </el-button>
-    </div>
+    </el-row>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -194,66 +197,27 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in calendarTypeEnum" :key="item.key" :label="item.displayName" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="BN" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" placeholder="Please select">
-            <el-option v-for="item in statusEnum" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Content">
-          <el-rate v-model="temp.content" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
-      </el-form>
-      <template v-slot:footer>
-        <el-button @click="dialogFormVisible = false">
-          Cancel
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          Confirm
-        </el-button>
-      </template>
-    </el-dialog>
-
-    <el-dialog v-model="dialogPvVisible" title="Reading statistics">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <template v-slot:footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-        </span>
-      </template>
-
-    </el-dialog>
+    <TaskDialog
+      :emptyTaskItem="emptyTaskItem"
+      :warehouseEnum="warehouseEnum"
+      :dialogStatus="dialogStatus"
+    />
   </div>
 </template>
 
 <script setup>
-
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { parseTime } from '/@/utils/format';
 import Pagination from '/@/components/Pagination.vue';
+import TaskDialog from './components/TaskDialog.vue';
 import { listInventoriesAPI } from "/@/api/logistic";
 
+/* Start Data */
 const store = useStore();
 const { proxy } = getCurrentInstance();
+
+const warehouseEnum = shallowRef(store.getters.warehouseEnum);
 
 const listQuery = ref({
   page: 1,
@@ -264,34 +228,40 @@ const listQuery = ref({
   sort: '+id'
 });
 
-const contentEnum = ref([1, 2, 3]);
-const calendarTypeEnum = ref([
-  { key: 'CN', displayName: 'China' },
-  { key: 'US', displayName: 'USA' },
-  { key: 'JP', displayName: 'Japan' },
-  { key: 'EU', displayName: 'Eurozone' }
-]);
+
 const sortEnum = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
-const statusEnum = ref(['In Transit', 'Delivered', 'Deleted']);
 
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
 const listLoading = ref(true);
-const dialogFormVisible = ref(false);
+const dialogTaskVisible = ref(false);
 const dialogStatus = ref('');
-const textMap= ref({
-  update: 'Edit',
-  create: 'Create'
-});
-const dialogPvVisible = ref(false);
-const pvData = ref([]);
-const rules = ref({
-  type: [{ required: true, message: 'type is required', trigger: 'change' }],
-  timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-  title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-});
 const downloadLoading = ref(false);
+
+const taskItem = ref({
+  id: 0,
+  orderId: null,
+  sourceId: null,
+  targetId: null,
+  type: null,
+  status: null,
+  usedUnitArr: [{
+    usedAge: null,
+    condition: null,
+    serial: null,
+  }],
+  specifySerailArr: [{
+    serial: null,
+  }]
+});
+const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
+const taskOrderItem = null;
+
+provide('dialogTaskVisible', dialogTaskVisible);
+provide('taskItem', taskItem);
+provide('taskOrderItem', taskOrderItem);
+/* End Data */
 
 const temp = ref({
   id: 0,
@@ -303,11 +273,12 @@ const temp = ref({
   status: 'In Transit'
 });
 
-// arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeEnum.value.reduce((acc, cur) => {
-  acc[cur.key] = cur.displayName;
-  return acc;
-}, {});
+const addWarehouseMoveTask = () => {
+  taskItem.value = Object.assign({}, emptyTaskItem);
+  taskItem.value.type = 'MOVE';
+  dialogStatus.value = 'create';
+  dialogTaskVisible.value = true;
+};
 
 const fetchList = () => {
   listLoading.value = true;
@@ -353,40 +324,6 @@ const sortByID = order => {
   handleFilter();
 };
 
-const resetTemp = () => {
-  temp.value = {
-    id: 0,
-    content: {},
-    remark: '',
-    timestamp: new Date(),
-    title: '',
-    status: 'In Transit',
-    type: ''
-  };
-};
-
-const handleCreate = () => {
-  resetTemp();
-  dialogStatus.value = 'create';
-  dialogFormVisible.value = true;
-  proxy.$nextTick(() => {
-    proxy.$refs['dataForm'].clearValidate();
-  });
-};
-
-const createData = () => {
-  proxy.$refs['dataForm'].validate((valid) => {
-    if (valid) {
-      temp.value.id = parseInt(Math.random() * 100) + 1024; // mock a id
-      temp.value.author = 'vibe';
-      // createArticle(temp.value).then(() => {
-      //   dataList.value.unshift(temp.value)
-      //   dialogFormVisible.value = false
-      // })
-    }
-  });
-};
-
 const handleUpdate = row => {
   temp.value = Object.assign({}, row); // copy obj
   temp.value.timestamp = new Date(temp.value.timestamp);
@@ -416,13 +353,6 @@ const handleDelete = (row, index) => {
   dataList.value.splice(index, 1);
 };
 
-const handleFetchPv = pv => {
-  console.log('pv: ', pv);
-  // fetchPv(pv).then(response => {
-  //   pvData.value = response.data.pvData
-  //   dialogPvVisible.value = true
-  // })
-};
 
 const handleDownload = () => {
   downloadLoading.value = true;
@@ -455,6 +385,9 @@ const getSortClass = key => {
 };
 
 onMounted(() => {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
+    store.dispatch('logistic/setWarehouseEnum');
+
   listQuery.value = store.getters.listQuery['inventory'];
   fetchList();
 });
@@ -472,10 +405,5 @@ onBeforeUnmount(() => {
   padding: 16px
   background-color: #e3e3e3
   min-height: calc(100vh - 91px - 32px)
-
-.filter-container
-  margin-bottom: .5rem
-  > .el-button
-    margin-left: .5rem
 
 </style>

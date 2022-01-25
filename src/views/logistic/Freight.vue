@@ -1,26 +1,25 @@
 <template>
   <div class="page">
-    <div class="filter-container">
-      <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" @keyup.enter="handleFilter" />
-      <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" @change="handleFilter">
-        <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <el-button disabled v-wave type="primary" icon="el-icon-search" @click="handleFilter">
-        Search
-      </el-button>
-      <el-button  type="primary" icon="el-icon-edit" @click="showCreateDialog">
-        Add
-      </el-button>
-      <el-button disabled v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
-        Export
-      </el-button>
-      <el-checkbox v-model="showMultSelection" style="margin-left:15px;">
-        Multiple Selection
-      </el-checkbox>
-      <el-button v-if="showMultSelection" style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
+    <el-row justify="space-between" class="filter-container">
+      <el-row>
+        <el-input :disabled="isDialogPattern('view')" v-model="listQuery.title" placeholder="Batch Num" style="width: 120px;" @keyup.enter="handleFilter" />
+        <el-select :disabled="isDialogPattern('view') || true" v-model="listQuery.sort" style="width: 150px" @change="handleFilter">
+          <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
+        </el-select>
+        <el-button disabled v-wave type="primary" icon="el-icon-search" @click="handleFilter">
+          Search
+        </el-button>
+        <el-button  type="primary" icon="el-icon-edit" @click="showCreateDialog">
+          Add
+        </el-button>
+        <el-button disabled v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
+          Export
+        </el-button>
+      </el-row>
+      <el-button style="float: right;" v-wave  type="danger" icon="el-icon-delete" @click="handleDelSelected">
         Delete Selected Item
       </el-button>
-    </div>
+    </el-row>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -33,7 +32,7 @@
       @sort-change="sortChange"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column v-if="showMultSelection" type="selection" width="50" height="40" align="center" />
+      <el-table-column type="selection" width="50" height="40" align="center" />
       <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')" />
       <el-table-column label="Batch Number" width="120px" align="center">
         <template v-slot="{row}">
@@ -186,8 +185,6 @@ const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 const batchArr = ref([]);
 const contrastData = ref(null);
 const sortEnum = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
-
-const showMultSelection = ref(false);
 
 const statusTypeDict = {
   'Picked Up': 'success',
@@ -383,16 +380,12 @@ onBeforeUnmount(() => {
   background-color: #e3e3e3
   min-height: calc(100vh - 91px - 32px)
 
-.filter-container
-  margin-bottom: .5rem
-  > .el-button
-    margin-left: .5rem
-
-.el-row
-  padding-right: 1rem
-  padding-left: 1rem
-  .el-form-item
+:deep(.el-dialog__body)
+  padding-left: 32px
+  padding-right: 32px
+  .el-form .el-form-item
     width: 42%
+
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px
   .el-checkbox

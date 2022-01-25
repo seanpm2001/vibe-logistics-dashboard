@@ -5,9 +5,11 @@
     v-model="dialogTaskVisible"
     :close-on-click-modal="false"
   >
-    <OrderDescription
-      :orderItem="taskOrderItem"
-    />
+    <template v-if="taskOrderItem">
+      <OrderDescription
+        :orderItem="taskOrderItem"
+      />
+    </template>
 
     <el-card>
       <el-form

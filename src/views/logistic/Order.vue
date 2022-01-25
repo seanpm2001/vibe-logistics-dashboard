@@ -1,7 +1,7 @@
 <template>
   <div class="page">
-    <div class="filter-container">
-      <el-row class="left" align="middle" :gutter="3">
+    <el-row justify="space-between" class="filter-container">
+      <el-row>
         <el-input v-model="listQuery.search" placeholder="Order Info" style="width: 120px;" />
         <el-button @click="handleFilter" v-wave type="primary" icon="el-icon-search">
           Search
@@ -26,7 +26,7 @@
           Unassign Selected
         </el-button>
       </div>
-    </div>
+    </el-row>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -394,14 +394,6 @@ onBeforeUnmount(() => {
   padding: 16px
   background-color: #e3e3e3
   min-height: calc(100vh - 91px - 32px)
-
-
-.filter-container
-  display: flex
-  justify-content: space-between
-  margin-bottom: .5rem
-  .left > :not(:first-child)
-    margin-left: .5rem
 
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px
