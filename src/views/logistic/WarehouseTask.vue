@@ -220,6 +220,9 @@ const init = () => {
 };
 
 onMounted(() => {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
+    store.dispatch('logistic/setWarehouseEnum');
+
   listQuery.value = store.getters.listQuery['task'];
   fetchList();
 });

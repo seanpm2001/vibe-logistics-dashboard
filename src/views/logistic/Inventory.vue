@@ -2,10 +2,7 @@
   <div class="page">
     <el-row justify="space-between" class="filter-container">
       <el-row>
-        <el-input v-model="listQuery.warehouse_name" placeholder="Warehouse" style="width: 200px;" @keyup.enter="handleFilter" />
-        <el-select v-model="listQuery.sort" style="width: 140px" @change="handleFilter">
-          <el-option v-for="item in sortEnum" :key="item.key" :label="item.label" :value="item.key" />
-        </el-select>
+        <el-input v-model="listQuery.search" placeholder="Search" style="width: 200px;" @keyup.enter="handleFilter" />
         <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
           Search
         </el-button>
@@ -30,7 +27,7 @@
     >
       <el-table-column label="Warehouse" width="150px" align="center">
         <template v-slot="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.warehouse_name }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.search }}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="product-column" label="In Stock" width="200px">
@@ -217,14 +214,12 @@ import { listInventoriesAPI } from "/@/api/logistic";
 const store = useStore();
 const { proxy } = getCurrentInstance();
 
-const warehouseEnum = shallowRef(store.getters.warehouseEnum);
+const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const listQuery = ref({
   page: 1,
   limit: 10,
-  content: undefined,
-  title: undefined,
-  type: undefined,
+  search: undefined,
   sort: '+id'
 });
 

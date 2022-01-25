@@ -154,6 +154,7 @@ import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@
 /* start data */
 const store = useStore();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
+console.log('warehouseEnum: ', warehouseEnum);
 
 const { proxy } = getCurrentInstance();
 const listQuery = ref({
@@ -362,6 +363,9 @@ const beforeCloseDialog = done => {
 };
 
 onMounted(() => {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
+    store.dispatch('logistic/setWarehouseEnum');
+
   listQuery.value = store.getters.listQuery['freight'];
   fetchList();
 });
