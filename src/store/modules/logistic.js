@@ -1,9 +1,10 @@
-import { listWarehousesAPI } from '/@/api/logistic';
+import { listUnitsAPI, listWarehousesAPI } from '/@/api/logistic';
 import { fixedWarehouseEnum } from '/@/enums/logistic';
 
 export const logistic = {
   namespaced: true,
   state: {
+    unitList: [],
     warehouseEnum: {},
     listQuery: {
       order: {},
@@ -18,6 +19,10 @@ export const logistic = {
   },
 
   mutations: {
+    SET_UNIT_LIST (state, data) {
+      state.unitList = data;
+    },
+
     SET_WAREHOUSE_OPTIONS (state, options) {
       state.warehouseEnum = options;
     },
@@ -32,6 +37,17 @@ export const logistic = {
     // },
   },
   actions: {
+    async setUnitList ({ commit }) {
+      return new Promise(resolve => {
+        listUnitsAPI()
+          .then(data => {
+            console.log('data: ', data);
+            commit('SET_UNIT_LIST', data);
+          })
+          .finally(() => resolve());
+      });
+    },
+
     async setWarehouseEnum ({ commit }) {
       return new Promise(resolve => {
         listWarehousesAPI()

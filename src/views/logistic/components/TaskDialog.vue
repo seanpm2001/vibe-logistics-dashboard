@@ -136,6 +136,7 @@
 </template>
 
 <script setup>
+import { useStore } from 'vuex';
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
@@ -165,7 +166,10 @@ const dialogTaskVisible = inject('dialogTaskVisible');
 const taskItem = inject('taskItem');
 const taskOrderItem = inject('taskOrderItem');
 
+const store = useStore();
 const { proxy } = getCurrentInstance();
+
+const unitList = computed(() => store.getters.unitList);
 
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
@@ -212,6 +216,15 @@ const resetForm = () => {
     proxy.$refs['dataForm'].clearValidate();
   });
 };
+
+function initGlobalData() {
+  if (unitList.value.length === 0) // init unitList:[]
+    store.dispatch('logistic/setUnitList');
+}
+
+onMounted(() => {
+  initGlobalData();
+});
 </script>
 
 <style lang="sass" scoped>

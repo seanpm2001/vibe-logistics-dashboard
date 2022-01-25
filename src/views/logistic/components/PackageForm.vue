@@ -24,11 +24,11 @@
       <el-row align="middle" class="add-minus-row">
         <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
         <svg-icon class="icon" :style="shipPackage.unitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
-        <el-form-item label="Unit Serial">
-          <el-input v-model="item.serial" placeholder="Unit Serial"/>
-        </el-form-item>
         <el-form-item label="Unit Status">
           <el-input v-model="item.status" placeholder="Unit Status"/>
+        </el-form-item>
+        <el-form-item label="Unit Serial">
+          <el-input v-model="item.serial" placeholder="Unit Serial"/>
         </el-form-item>
       </el-row>
     </template>
@@ -45,8 +45,8 @@
 </template>
 
 <script setup>
-
-import { ElMessage, ElMessageBox } from "element-plus";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/enums/logistic';
 
@@ -70,11 +70,14 @@ const props = defineProps({
   }
 });
 
+const store = useStore();
+
+const unitList = computed(() => store.getters['unitList']);
 const shipPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(shipPackage.value?.items);
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['removePackage', 'submitPackage', 'editPackage']);
+const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
 
 const isDialogPattern = type => props.dialogStatus === type;
 
@@ -101,7 +104,7 @@ const handleDeletePackage = () => {
         callback: (action) => {
           if (action === "confirm") {
             deletePackageAPI(packageId).then(() => {
-              emit('removePackage', props.packageIdx);
+              emit('deletePackage', props.packageIdx);
             });
           } else if (action === "cancel") {
             ElMessage.info('Delete canceled');
@@ -111,7 +114,7 @@ const handleDeletePackage = () => {
     );
     return;
   }
-  emit('removePackage', props.packageIdx); // 删除新创建还未提交的package
+  emit('deletePackage', props.packageIdx); // 删除新创建还未提交的package
 };
 
 const handlePackage = type => {
@@ -125,7 +128,7 @@ const handlePackage = type => {
 //   if (type === "create") {
 //     createPackageAPI(props.orderId, shipPackage.value).then(data => {
 //       shipPackage.value = data;
-//       emit('submitPackage', data, props.orderId ,props.packageIdx);
+//       emit('createPackage', data, props.orderId ,props.packageIdx);
 //     });
 //   } else {
 //     updatePackageAPI(shipPackage.value.id, shipPackage.value).then(data => {
@@ -135,7 +138,14 @@ const handlePackage = type => {
 //     emit('editPackage', shipPackage.value?.id);
 //   }
 // };
+function initGlobalData() {
+  if (unitList.value.length === 0) // init unitList:[]
+    store.dispatch('logistic/setUnitList');
+}
 
+onMounted(() => {
+  initGlobalData();
+});
 </script>
 
 <style lang="sass" scoped>

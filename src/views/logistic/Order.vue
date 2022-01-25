@@ -234,7 +234,7 @@ provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 /* End data */
 
-const fetchList = () => {
+function fetchList() {
   listLoading.value = true;
   (showAssignedOrder.value ?
     queryAssignedOrdersAPI(listQuery.value) : queryOrdersAPI(listQuery.value)
@@ -248,7 +248,7 @@ const fetchList = () => {
     total.value = data.total;
     listLoading.value = false;
   });
-};
+}
 
 const handleFilter = () => {
   listQuery.value.page = 1;
@@ -374,10 +374,13 @@ const resetForm = () => {
 //   );
 // };
 
+function initGlobalData() {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
+    store.dispatch('logistic/setWarehouseEnum');
+}
 
 onMounted(() => {
-  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
-    store.dispatch('logistic/setWarehouseEnum');
+  initGlobalData();
 
   listQuery.value = store.getters.listQuery['order'];
   fetchList();

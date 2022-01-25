@@ -362,9 +362,13 @@ const beforeCloseDialog = done => {
   );
 };
 
-onMounted(() => {
-  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
+function initGlobalData() {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
     store.dispatch('logistic/setWarehouseEnum');
+}
+
+onMounted(() => {
+  initGlobalData();
 
   listQuery.value = store.getters.listQuery['freight'];
   fetchList();
@@ -387,7 +391,7 @@ onBeforeUnmount(() => {
 :deep(.el-dialog__body)
   padding-left: 32px
   padding-right: 32px
-  .el-form .el-form-item
+  .el-form .el-row > .el-form-item
     width: 42%
 
 :deep(.el-table thead tr > th.el-table__cell .cell)

@@ -11,6 +11,7 @@ const getters = {
   roles: state => state.user.roles,
   permissionRroutes: state => state.permission.routes,
 
+  unitList: state => state.logistic.unitList,
   warehouseEnum: state => state.logistic.warehouseEnum,
   listQuery: (state, pageName) => state.logistic.listQuery,
 };

@@ -379,9 +379,13 @@ const getSortClass = key => {
   return sort === `+${key}` ? 'ascending' : 'descending';
 };
 
-onMounted(() => {
-  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum
+function initGlobalData() {
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
     store.dispatch('logistic/setWarehouseEnum');
+}
+
+onMounted(() => {
+  initGlobalData();
 
   listQuery.value = store.getters.listQuery['inventory'];
   fetchList();
