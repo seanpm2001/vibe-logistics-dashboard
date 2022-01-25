@@ -68,8 +68,8 @@
           <template v-if="checkedSpecifySerial[0]">
             <template v-for="(item, index) in taskItem.specifySerailArr" :key="index">
               <el-row align="middle" class="add-minus-row">
-                <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
-                <svg-icon class="icon" :style="taskItem.specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
+                <svg-icon class="icon" icon-name="add" @click="onSpecifySerialChange(index, 'add')" />
+                <svg-icon class="icon" :style="taskItem.specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onSpecifySerialChange(index, 'minus')" />
                 <el-form-item label="Unit Serial">
                   <el-input v-model="item.serial" placeholder="Unit Serial"/>
                 </el-form-item>
@@ -86,8 +86,8 @@
         <template v-if="showUsedUnits">
           <template v-for="(item, index) in taskItem.usedUnitArr" :key="index">
             <el-row justify="space-between" align="middle" class="add-minus-row">
-              <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
-              <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
+              <svg-icon class="icon" icon-name="add" @click="onUsedUnitChange(index, 'add')" />
+              <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
               <el-form-item label="Used Age">
                 <el-select v-model="item.usedAge" placeholder="Please select">
                   <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
@@ -200,9 +200,14 @@ const handleWarehouseTask = type => {
 
 };
 
-const handleUnitChange = (idx, type) => {
+const onUsedUnitChange = (idx, type) => {
   const unitArr = taskItem.value.usedUnitArr;
   type === "add" ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(idx, 1);
+};
+
+const onSpecifySerialChange = (idx, type) => {
+  const serialArr = taskItem.value.specifySerailArr;
+  type === "add" ? serialArr.push({serial: null}) : serialArr.splice(idx, 1);
 };
 
 const onHoldTask = () => {
