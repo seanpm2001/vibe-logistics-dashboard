@@ -1,7 +1,7 @@
 import { store } from '/@/stores';
 import { defineStore } from 'pinia';
 import { listWarehousesAPI } from '/@/api/logistic';
-import { fixedWarehouseEnum } from '/@/assets/enum/logistic';
+import { fixedWarehouseEnum } from '/@/enums/logistic';
 
 export const useLogisticStore = defineStore({
   id: 'logistic',

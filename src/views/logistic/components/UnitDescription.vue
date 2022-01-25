@@ -46,7 +46,7 @@
 <script setup>
 
 import { ElMessageBox } from "element-plus";
-import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
+import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
 
 const unitItem = inject('unitItem');
 

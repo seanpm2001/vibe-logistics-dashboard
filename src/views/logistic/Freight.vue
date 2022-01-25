@@ -144,7 +144,7 @@ import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/utils/format';
 import { queryFreightsAPI, findFreightAPI, deleteFreightAPI, listBatchesAPI } from '/@/api/logistic';
-import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 // onRenderTriggered(e => {
 //   console.log('e: ', e);

@@ -56,7 +56,7 @@
 
 import { ElMessage, ElMessageBox } from "element-plus";
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
-import { packageStatusEnum } from '/@/assets/enum/logistic';
+import { packageStatusEnum } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

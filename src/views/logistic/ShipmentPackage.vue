@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column label="Tracking Num" prop="trackingNumber" align="center" width="120px" />
       <el-table-column label="Carrier" prop="shippingCarrier" align="center" width="100" />
-      <el-table-column label="Last Modified" width="130px" align="center">
+      <el-table-column label="Last Modified" width="160px" align="center">
         <template v-slot="{row}">
           {{ row.lastModified }}
         </template>
@@ -106,7 +106,7 @@ import Pagination from '/@/components/Pagination.vue';
 import UnitDescription from './components/UnitDescription.vue';
 import { parseTime } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from "/@/api/logistic";
-import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 /* Start data */
 const store = useStore();

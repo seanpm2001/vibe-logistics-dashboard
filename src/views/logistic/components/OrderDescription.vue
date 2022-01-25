@@ -47,8 +47,8 @@
 
 <script setup>
 import { ElMessageBox } from "element-plus";
-import { packageStatusEnum } from '/@/assets/enum/logistic';
-import { productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum } from '/@/enums/logistic';
+import { productMap, productIconMap } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

@@ -1,5 +1,5 @@
 import { listWarehousesAPI } from '/@/api/logistic';
-import { fixedWarehouseEnum } from '/@/assets/enum/logistic';
+import { fixedWarehouseEnum } from '/@/enums/logistic';
 
 export const logistic = {
   namespaced: true,

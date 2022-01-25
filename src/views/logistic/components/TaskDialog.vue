@@ -147,7 +147,7 @@
 import { ElMessage } from "element-plus";
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
-import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/assets/enum/logistic';
+import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

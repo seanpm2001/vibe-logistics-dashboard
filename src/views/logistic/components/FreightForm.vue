@@ -141,7 +141,7 @@ import {
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
 } from "/@/api/logistic";
-import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/assets/enum/logistic';
+import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/enums/logistic';
 import { parseTime } from '/@/utils/format';
 
 // eslint-disable-next-line no-undef

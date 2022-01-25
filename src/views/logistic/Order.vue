@@ -178,7 +178,7 @@ import {
 } from "/@/api/logistic";
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
-import { packageStatusEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 /* Start data */
 const store = useStore();

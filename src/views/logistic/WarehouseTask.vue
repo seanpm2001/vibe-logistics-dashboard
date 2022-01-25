@@ -45,7 +45,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Last Modified" width="130px" align="center">
+      <el-table-column label="Last Modified" width="160px" align="center">
         <template v-slot="{row}">
           {{ row.lastModified }}
         </template>
@@ -109,7 +109,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
 import TaskDialog from './components/TaskDialog.vue';
 import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI, findAssignedOrderAPI } from "/@/api/logistic";
-import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
 
 /* Start Data */

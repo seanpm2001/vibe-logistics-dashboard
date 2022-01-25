@@ -36,7 +36,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Last Modified" width="130px" align="center">
+      <el-table-column label="Last Modified" width="160px" align="center">
         <template v-slot="{row}">
           {{ row.lastModified }}
         </template>
@@ -103,7 +103,7 @@ import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/utils/format';
 import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/api/logistic";
-import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 
 const store = useStore();
