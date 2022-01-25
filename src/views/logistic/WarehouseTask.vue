@@ -94,18 +94,11 @@
       @pagination="handlePagination"
     />
 
-    <el-dialog width="90%" title="Common" v-model="dialogTaskVisible" :close-on-click-modal="false">
-      <TaskForm
-        :warehouseEnum="warehouseEnum"
-        :taskForm="taskForm"
-        :dialogStatus="dialogStatus"
-      />
-      <template v-slot:footer>
-        <el-button @click="dialogTaskVisible = false">
-          Close
-        </el-button>
-      </template>
-    </el-dialog>
+    <TaskDialog
+      :emptyTaskItem="emptyTaskItem"
+      :warehouseEnum="warehouseEnum"
+      :dialogStatus="dialogStatus"
+    />
   </div>
 </template>
 
@@ -114,11 +107,12 @@
 import { useStore } from "vuex";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import TaskForm from './components/TaskForm.vue';
-import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI } from "/@/api/logistic";
+import TaskDialog from './components/TaskDialog.vue';
+import { listWarehousesAPI, queryTasksAPI, findTaskAPI, deleteTaskAPI, listShipmentsAPI, findAssignedOrderAPI } from "/@/api/logistic";
 import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
+import { formatAssignedOrderItem } from '/@/utils/logistic';
 
-
+/* Start Data */
 const store = useStore();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
@@ -130,6 +124,7 @@ const listQuery = ref({
 
 const tableKey = ref(0);
 const dataList = shallowRef(null);
+const taskOrderItem = shallowRef(null);
 const packageList = ref([]);
 
 const total = ref(0);
@@ -141,20 +136,34 @@ const dialogTaskVisible = ref(false);
 
 const multipleSelection = ref([]);
 const shipmentArr = ref([]);
-const taskForm = ref({
+const taskItem = ref({
   id: 0,
   orderId: null,
   sourceId: null,
   targetId: null,
   type: null,
   status: null,
+  usedUnitArr: [{
+    usedAge: null,
+    condition: null,
+    serial: null,
+  }],
+  specifySerailArr: [{
+    serial: null,
+  }]
 });
+const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 // let contrastData = null;
 const showTaskPattern = ref(null);
 const taskPatternEnum = {
   'MY-ONLY': 'My task only',
   'ALL': 'All tasks'
 };
+
+provide('dialogTaskVisible', dialogTaskVisible);
+provide('taskItem', taskItem);
+provide('taskOrderItem', taskOrderItem);
+/* End Data */
 
 const fetchList = () => {
   listLoading.value = true;
@@ -192,15 +201,13 @@ const handleDetailRow = (row, type) => {
     deleteTaskAPI(orderId).then(() => fetchList());
     return;
   }
-  dialogTaskVisible.value = true;
-  // findTaskAPI(orderId).then(data => {
-  //   taskForm.value = Object.assign({}, data); // copy obj
-  //   type === 'edit' && (contrastData = Object.assign({}, data));
-  //   // listShipments(orderId, () => disableNewShipment.value = false);
-  //   dialogStatus.value = type;
-  //   disableNewShipment.value = true;
-  //   dialogTaskVisible.value = true;
-  // });
+  findAssignedOrderAPI(orderId).then(data => {
+    taskItem.value = Object.assign({}, emptyTaskItem);
+    taskItem.value.orderId = orderId;
+    taskOrderItem.value = formatAssignedOrderItem(data);
+    dialogStatus.value = 'create';
+    dialogTaskVisible.value = true;
+  });
 };
 
 const init = () => {

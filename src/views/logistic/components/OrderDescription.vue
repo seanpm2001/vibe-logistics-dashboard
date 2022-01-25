@@ -39,6 +39,9 @@
         <a :href="'mailto:' + orderItem?.email" class="link" target="_blank">{{ orderItem?.email }}</a>
       </div>
     </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>History Task</template>
+    </el-descriptions-item>
   </el-descriptions>
 </template>
 

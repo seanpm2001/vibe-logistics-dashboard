@@ -50,7 +50,7 @@ const unitObj = Mock.mock({
 
 for (let i = 0; i < count; i++) {
   taskList.push(Mock.mock({
-    id: '@increment',
+    id: '@integer(1, 23)',
     orderId: 1,
     'sourceId': '@integer(1, 18)',
     'targetId': '@integer(1, 18)',

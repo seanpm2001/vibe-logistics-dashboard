@@ -145,10 +145,10 @@
       </template>
     </el-dialog>
 
-    <TaskForm
+    <TaskDialog
       ref="taskForm"
       :warehouseEnum="warehouseEnum"
-      :emptyTaskForm="emptyTaskForm"
+      :emptyTaskItem="emptyTaskItem"
       :dialogStatus="dialogStatus"
     />
 
@@ -168,15 +168,16 @@
 <script setup>
 
 import { useStore } from "vuex";
-
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from '/@/components/Pagination.vue';
-import TaskForm from './components/TaskForm.vue';
+import TaskDialog from './components/TaskDialog.vue';
 import OrderDescription from './components/OrderDescription.vue';
 import {
-  queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI, findUnitAPI
+  queryOrdersAPI, queryAssignedOrdersAPI, assignOrdersAPI, unassignOrdersAPI,
+  findUnitAPI, findAssignedOrderAPI
 } from "/@/api/logistic";
 import { parseTime } from '/@/utils/format';
+import { formatAssignedOrderItem } from '/@/utils/logistic';
 import { packageStatusEnum, productMap, productIconMap } from '/@/assets/enum/logistic';
 
 /* Start data */
@@ -208,6 +209,7 @@ const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
 const orderItem = shallowRef(null);
+const taskOrderItem = shallowRef(null);
 const taskItem = ref({
   id: 0,
   orderId: null,
@@ -224,35 +226,13 @@ const taskItem = ref({
     serial: null,
   }]
 });
-const emptyTaskForm = JSON.parse(JSON.stringify(taskItem))._value;
+const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
+provide('taskOrderItem', taskOrderItem);
 /* End data */
-
-// 合并products array为一个{productCode: totalQuantity}的对象
-const combineSameProductQuantity = (arr => {
-  const result = {};
-  const productArr = [];
-  arr.forEach(item => {
-    const code = item.productCode;
-    result[code] = (result[code] + item.quantity) || item.quantity;
-  });
-  return result;
-});
-
-const formatAssignedOrderItem = orderItem => {
-  const raws = orderItem.rawOrders;
-  const originId = orderItem.id;
-  let productsArr = [];
-  raws.forEach(item => {
-    productsArr = productsArr.concat(item.items); // products array [{product_code: 'ABC', quantity: 1}]
-  });
-  orderItem = Object.assign(orderItem, raws[0]);
-  orderItem.id = originId;
-  orderItem.products = combineSameProductQuantity(productsArr); // {productCode: totalQuantity}
-};
 
 const fetchList = () => {
   listLoading.value = true;
@@ -341,12 +321,15 @@ const unassignSelected = () => {
 };
 
 const addWarehouseTask = (orderId, isAfterAssign) => {
-  taskItem.value = Object.assign({}, emptyTaskForm);
-  taskItem.value.orderId = orderId;
-  console.log('taskItem.value: ', taskItem.value);
-  isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
-  dialogStatus.value = 'create';
-  dialogTaskVisible.value = true;
+  findAssignedOrderAPI(orderId).then(data => {
+    taskItem.value = Object.assign({}, emptyTaskItem);
+    taskItem.value.orderId = orderId;
+    taskOrderItem.value = formatAssignedOrderItem(data);
+    console.log('taskOrderItem.value: ', taskOrderItem.value);
+    isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
+    dialogStatus.value = 'create';
+    dialogTaskVisible.value = true;
+  });
 };
 
 const handleSelectionChange = selectedArr => {
