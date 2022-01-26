@@ -28,4 +28,4 @@ export const ANALYSIS = false;
 export const COMPRESSION = true;
 
 // 删除 console
-export const VITE_DROP_CONSOLE = true;
+export const VITE_DROP_CONSOLE = false;

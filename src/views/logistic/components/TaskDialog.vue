@@ -114,9 +114,9 @@
               <el-form-item label="Unit Serial">
                 <el-select
                   v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-                  filterable allow-create default-first-option
+                  @click="filterUnitArr(item)" filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, index) in filteredUnitArr(item)" :key="index" :label="item.serial" :value="item.serial" />
+                  <el-option v-for="(item, index) in filteredUnitArr" :key="index" :label="item.serial" :value="item.serial" />
                 </el-select>
               </el-form-item>
             </el-row>
@@ -192,24 +192,33 @@ const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
-let isDelayed = false;
-let copyFilteredUnitArr = [];
-const filteredUnitArr = computed(() => {
-  return filterObj => {
-    if (isDelayed) return copyFilteredUnitArr;
-    isDelayed = true;
-    setTimeout(() => isDelayed = false, 1000);
-    copyFilteredUnitArr = unitList.value.filter(unit => {
-      if (!filterObj.usedAge && !filterObj.condition) return true;
-      if (!filterObj.usedAge && filterObj.conditon === unit.conditon) return true;
-      if (!filterObj.conditon && filterObj.usedAge === unit.usedAge) return true;
-      if (filterObj.conditon === unit.conditon && filterObj.usedAge === unit.usedAge) return true;
-      return false;
-    });
-    return copyFilteredUnitArr;
-  };
-});
-
+// let isDelayed = false;
+// let copyFilteredUnitArr = [];
+const filteredUnitArr = shallowRef(null);
+const filterUnitArr = filterObj => {
+  console.log('filterObj: ', filterObj);
+  filteredUnitArr.value = unitList.value.filter(unit => {
+    if (!filterObj.usedAge && !filterObj.condition) return true;
+    if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
+    if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
+    if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
+    return false;
+  });
+};
+// const filteredUnitArr = computed(() => {
+//   return filterObj => {
+//     // if (isDelayed) return [].concat(copyFilteredUnitArr);
+//     // isDelayed = true;
+//     // setTimeout(() => isDelayed = false, 1000);
+//     return unitList.value.filter(unit => {
+//       if (!filterObj.usedAge && !filterObj.condition) return true;
+//       if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
+//       if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
+//       if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
+//       return false;
+//     });
+//   };
+// });
 
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
