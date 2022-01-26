@@ -114,7 +114,7 @@
               <el-form-item label="Unit Serial">
                 <el-select
                   v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-                  @click="filterUnitArr(item)" filterable allow-create default-first-option
+                  @focus="filterUnitArr(item)" filterable allow-create default-first-option
                 >
                   <el-option v-for="(item, index) in filteredUnitArr" :key="index" :label="item.serial" :value="item.serial" />
                 </el-select>
@@ -192,12 +192,14 @@ const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
+console.log('unitList: ', unitList);
 // let isDelayed = false;
 // let copyFilteredUnitArr = [];
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
   filteredUnitArr.value = unitList.value.filter(unit => {
+    console.log('unit: ', unit);
     if (!filterObj.usedAge && !filterObj.condition) return true;
     if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
     if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
