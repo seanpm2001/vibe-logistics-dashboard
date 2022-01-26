@@ -58,7 +58,7 @@
 
         <template v-if="isMoveOrReturn">
           <el-row>
-            <el-form-item label="Specfy Serial">
+            <el-form-item label="Specify Serial">
               <el-checkbox-group  v-model="checkedSpecifySerial" :max="1">
                 <el-checkbox :key="true" :label="true">true</el-checkbox>
                 <el-checkbox :key="false" :label="false">false</el-checkbox>
@@ -71,7 +71,12 @@
                 <svg-icon class="icon" icon-name="add" @click="onSpecifySerialChange(index, 'add')" />
                 <svg-icon class="icon" :style="taskItem.specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onSpecifySerialChange(index, 'minus')" />
                 <el-form-item label="Unit Serial">
-                  <el-input v-model="item.serial" placeholder="Unit Serial"/>
+                  <el-select
+                    v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
+                    filterable allow-create default-first-option
+                  >
+                    <el-option v-for="(item, index) in unitList" :key="index" :label="item.serial" :value="item.serial" />
+                  </el-select>
                 </el-form-item>
               </el-row>
             </template>
@@ -99,7 +104,12 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="Unit Serial">
-                <el-input v-model="item.serial" placeholder="Unit Serial"/>
+                <el-select
+                  v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
+                  filterable allow-create default-first-option
+                >
+                  <el-option v-for="(item, index) in filteredUnitArr(item)" :key="index" :label="item.serial" :value="item.serial" />
+                </el-select>
               </el-form-item>
             </el-row>
           </template>
@@ -138,6 +148,7 @@
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage } from "element-plus";
+import { throttle } from "/@/utils";
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
 import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
@@ -170,6 +181,24 @@ const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
+let isDelayed = false;
+let copyFilteredUnitArr = null;
+const filteredUnitArr = computed(() => {
+  return targetObj => {
+    if (isDelayed) return copyFilteredUnitArr;
+    isDelayed = true;
+    setTimeout(() => isDelayed = false, 1500);
+    copyFilteredUnitArr = unitList.value.filter(item => {
+      if (targetObj.usedAge === null && targetObj.condition === null) return true;
+      if (targetObj.usedAge === null && targetObj.conditon === item.conditon) return true;
+      if (targetObj.conditon === null && targetObj.usedAge === item.usedAge) return true;
+      if (targetObj.conditon === item.conditon && targetObj.usedAge === item.usedAge) return true;
+      return false;
+    });
+    return copyFilteredUnitArr;
+  };
+});
+
 
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
