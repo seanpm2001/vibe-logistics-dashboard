@@ -201,8 +201,8 @@ const filteredUnitArr = computed(() => {
     setTimeout(() => isDelayed = false, 1000);
     copyFilteredUnitArr = unitList.value.filter(unit => {
       if (!filterObj.usedAge && !filterObj.condition) return true;
-      if (!filterObj.usedAge&& filterObj.conditon === unit.conditon) return true;
-      if (!filterObj.conditon&& filterObj.usedAge === unit.usedAge) return true;
+      if (!filterObj.usedAge && filterObj.conditon === unit.conditon) return true;
+      if (!filterObj.conditon && filterObj.usedAge === unit.usedAge) return true;
       if (filterObj.conditon === unit.conditon && filterObj.usedAge === unit.usedAge) return true;
       return false;
     });
