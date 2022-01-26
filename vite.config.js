@@ -9,8 +9,6 @@ function pathResolve(dir) {
   return resolve(__dirname, ".", dir);
 }
 export default (({command}) => {
-  console.log('123', pathResolve("src"));
-  console.log('123', pathResolve("node_modules"));
   const isBuild = command === 'build';
   // 加载不同生产环境下的配置
   const NODE_ENV =  process.env.NODE_ENV || 'development'; // 无local API，默认采用beta API的配置

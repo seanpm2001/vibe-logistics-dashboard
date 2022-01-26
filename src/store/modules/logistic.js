@@ -41,7 +41,6 @@ export const logistic = {
       return new Promise(resolve => {
         listUnitsAPI()
           .then(data => {
-            console.log('data: ', data);
             commit('SET_UNIT_LIST', data);
           })
           .finally(() => resolve());

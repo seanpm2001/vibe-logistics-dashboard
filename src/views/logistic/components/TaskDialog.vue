@@ -83,10 +83,18 @@
           </template>
         </template>
 
-        <el-row>
+        <el-row align="middle">
           <el-checkbox v-model="showUsedUnits">
             Show Used Units
           </el-checkbox>
+          <el-tooltip
+            class="tips"
+            effect="light"
+            content="For performance reasons, there is a 1-second delay in updating the unit selection list. If you operate both units within 1 second, the data will be empty. Click refresh list again."
+            placement="right"
+          >
+            <svg-icon class="mgl-5" icon-name="tips" />
+          </el-tooltip>
         </el-row>
         <template v-if="showUsedUnits">
           <template v-for="(item, index) in taskItem.usedUnitArr" :key="index">
@@ -94,12 +102,12 @@
               <svg-icon class="icon" icon-name="add" @click="onUsedUnitChange(index, 'add')" />
               <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
               <el-form-item label="Used Age">
-                <el-select v-model="item.usedAge" placeholder="Please select">
+                <el-select v-model="item.usedAge" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Condition">
-                <el-select v-model="item.condition" placeholder="Please select">
+                <el-select v-model="item.condition" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
@@ -151,7 +159,10 @@ import { ElMessage } from "element-plus";
 import { throttle } from "/@/utils";
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
-import { taskTypeEnum, taskReasonEnum, taskStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
+import {
+  taskTypeEnum, taskReasonEnum, taskStatusEnum,
+  usedAgeEnum, reversedUsedAgeEnum, conditionEnum, reversedConditionEnum
+} from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -182,17 +193,17 @@ const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
 let isDelayed = false;
-let copyFilteredUnitArr = null;
+let copyFilteredUnitArr = [];
 const filteredUnitArr = computed(() => {
-  return targetObj => {
+  return filterObj => {
     if (isDelayed) return copyFilteredUnitArr;
     isDelayed = true;
-    setTimeout(() => isDelayed = false, 1500);
-    copyFilteredUnitArr = unitList.value.filter(item => {
-      if (targetObj.usedAge === null && targetObj.condition === null) return true;
-      if (targetObj.usedAge === null && targetObj.conditon === item.conditon) return true;
-      if (targetObj.conditon === null && targetObj.usedAge === item.usedAge) return true;
-      if (targetObj.conditon === item.conditon && targetObj.usedAge === item.usedAge) return true;
+    setTimeout(() => isDelayed = false, 1000);
+    copyFilteredUnitArr = unitList.value.filter(unit => {
+      if (!filterObj.usedAge && !filterObj.condition) return true;
+      if (!filterObj.usedAge&& filterObj.conditon === unit.conditon) return true;
+      if (!filterObj.conditon&& filterObj.usedAge === unit.usedAge) return true;
+      if (filterObj.conditon === unit.conditon && filterObj.usedAge === unit.usedAge) return true;
       return false;
     });
     return copyFilteredUnitArr;

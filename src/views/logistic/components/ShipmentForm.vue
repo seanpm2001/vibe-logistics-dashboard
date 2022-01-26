@@ -69,19 +69,10 @@
       </template>
     </el-card>
     
-    <div class="f-row controls">
-      <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
-        Add Package
-      </el-button>
-      <el-tooltip
-        class="tips"
-        effect="light"
-        content="You need to have/submit a 'Shipment part' before 'Add new Package'"
-        placement="right"
-      >
-        <svg-icon icon-name="tips" />
-      </el-tooltip>
-    </div>
+
+    <el-button :disabled="disableNewPackage" type="primary" icon="el-icon-circle-plus" @click="addPackage">
+      Add Package
+    </el-button>
   </div>
 </template>
 
@@ -173,6 +164,8 @@ const handleDeleteShipment = () => {
       }
     );
     return;
+  } else {
+    ElMessage.error('This Shipment hasn\'t been created and can\'t be deleted', 3);
   }
 };
 

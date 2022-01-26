@@ -40,6 +40,14 @@
       <el-button :disabled="!shipmentId" v-else type="primary" @click="handlePackage('create')">
         Submit Package
       </el-button>
+      <el-tooltip
+        class="tips"
+        effect="light"
+        content="You need to have/submit a 'Shipment' part before 'Submit Package'"
+        placement="right"
+      >
+        <svg-icon icon-name="tips" />
+      </el-tooltip>
     </div>
   </div>
 </template>
