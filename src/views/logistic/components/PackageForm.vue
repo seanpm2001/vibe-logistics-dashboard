@@ -134,14 +134,14 @@ const handlePackage = type => {
 //   //   shipPackage.value.costs[key] = products.value[key].cost || 0;
 //   // }
 //   if (type === "create") {
-//     createPackageAPI(props.orderId, shipPackage.value).then(data => {
-//       shipPackage.value = data;
-//       emit('createPackage', data, props.orderId ,props.packageIdx);
+//     createPackageAPI(props.orderId, shipPackage.value).then(_data => {
+//       shipPackage.value = _data;
+//       emit('createPackage', _data, props.orderId ,props.packageIdx);
 //     });
 //   } else {
-//     updatePackageAPI(shipPackage.value.id, shipPackage.value).then(data => {
-//       shipPackage.value = data;
-//       emit('updatePackage', data, props.packageIdx);
+//     updatePackageAPI(shipPackage.value.id, shipPackage.value).then(_data => {
+//       shipPackage.value = _data;
+//       emit('updatePackage', _data, props.packageIdx);
 //     });
 //     emit('editPackage', shipPackage.value?.id);
 //   }

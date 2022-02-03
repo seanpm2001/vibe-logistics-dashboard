@@ -277,9 +277,9 @@ const addWarehouseMoveTask = () => {
 
 const fetchList = () => {
   listLoading.value = true;
-  listInventoriesAPI(listQuery.value).then(data => {
-    dataList.value = data.items;
-    total.value = data.total;
+  listInventoriesAPI(listQuery.value).then(_data => {
+    dataList.value = _data.items;
+    total.value = _data.total;
 
     // Just to simulate the time of the request
     setTimeout(() => {

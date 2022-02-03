@@ -214,14 +214,14 @@ const handleBatch = (type) => {
     batch.value.costs[key] = products.value[key].cost || 0;
   }
   if (type === "create") {
-    createBatchAPI(props.freightId, batch.value).then(data => {
-      batch.value = data;
-      emit('submitBatch', data, props.freightId ,props.batchIdx);
+    createBatchAPI(props.freightId, batch.value).then(_data => {
+      batch.value = _data;
+      emit('submitBatch', _data, props.freightId ,props.batchIdx);
     });
   } else {
-    updateBatchAPI(batch.value.id, batch.value).then(data => {
-      batch.value = data;
-      emit('updateBatch', data, props.batchIdx);
+    updateBatchAPI(batch.value.id, batch.value).then(_data => {
+      batch.value = _data;
+      emit('updateBatch', _data, props.batchIdx);
     });
     emit('editBatch', batch.value?.id);
   }
@@ -230,7 +230,7 @@ const handleBatch = (type) => {
 const handleUpdate = (file, fileList) => {
   updateBatchProducts("add", file);
 };
-const handlePreview = (file) => {
+const handlePreview = file => {
   dialogExcelVisible.value = true;
 };
 const handleExceed = (files, fileList) => {

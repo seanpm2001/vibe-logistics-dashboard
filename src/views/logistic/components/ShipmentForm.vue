@@ -174,12 +174,12 @@ const handleShipment = (type) => {
   //   shipmentItem.value.costs[key] = products.value[key].cost || 0;
   // }
   if (type === "create") {
-    createShipmentAPI(props.taskId, shipmentItem.value).then(data => {
-      shipmentItem.value = data;
+    createShipmentAPI(props.taskId, shipmentItem.value).then(_data => {
+      shipmentItem.value = _data;
     });
   } else {
-    updateShipmentAPI(shipmentItem.value.id, shipmentItem.value).then(data => {
-      shipmentItem.value = data;
+    updateShipmentAPI(shipmentItem.value.id, shipmentItem.value).then(_data => {
+      shipmentItem._data = data;
     });
   }
 };

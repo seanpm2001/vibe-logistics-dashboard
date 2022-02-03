@@ -186,17 +186,7 @@ const router = useRouter();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const { proxy } = getCurrentInstance();
-const listQuery = ref({
-  page: 1,
-  perPage: 10,
-  search: null,
-  orderFrom: null
-});
 
-const tableKey = ref(0);
-const dataList = shallowRef(null);
-const total = ref(0);
-const listLoading = ref(true);
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
 const drawerOrderVisible = ref(false);
@@ -204,7 +194,6 @@ const drawerOrderVisible = ref(false);
 const showAssignedOrder = ref(true);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
-const targetId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
@@ -234,18 +223,29 @@ provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 /* End data */
 
+const tableKey = ref(0);
+const dataList = shallowRef(null);
+const total = ref(0);
+const listLoading = ref(true);
+const listQuery = ref({
+  page: 1,
+  perPage: 10,
+  search: null,
+  orderFrom: null
+});
+
 function fetchList() {
   listLoading.value = true;
   (showAssignedOrder.value ?
     queryAssignedOrdersAPI(listQuery.value) : queryOrdersAPI(listQuery.value)
-  ).then(data => {
-    dataList.value = data.items;
+  ).then(_data => {
+    dataList.value = _data.items;
     if (showAssignedOrder.value) {
       dataList.value.forEach(item => {
         formatAssignedOrderItem(item);
       });
     }
-    total.value = data.total;
+    total.value = _data.total;
     listLoading.value = false;
   });
 }
@@ -255,27 +255,28 @@ const handleFilter = () => {
   fetchList();
 };
 
-const showOrderDrawer = orderRaw => {
-  orderItem.value = orderRaw;
+const showOrderDrawer = _raw => {
+  orderItem.value = _raw;
   drawerOrderVisible.value = true;
 };
 
-const showAssignDialog = (type, orderId) => {
-  assignPattern.value = type;
-  assignOrderId.value = orderId || null;
+const showAssignDialog = (_type, _orderId) => {
+  assignPattern.value = _type;
+  assignOrderId.value = _orderId || null;
   dialogAssignVisible.value = true;
 };
 
-function assignSelectedOrders(targetWHId, selectedArr) {
-  if (!selectedArr.length) {
+function assignSelectedOrders(_targetWHId, _selectedArr) {
+  if (!_selectedArr.length) {
     ElMessage.error('Please at least select an order!', 3);
     return;
   }
   multipleSelection.value.forEach(item => {
-    assignOrdersAPI(targetWHId, [item.id]);
+    assignOrdersAPI(_targetWHId, [item.id]);
   });
 }
 
+const targetId = ref(null);
 const assignOrders = () => {
   const targetWHId = targetId.value;
   const selectedArr = multipleSelection.value;
@@ -297,18 +298,18 @@ const assignOrders = () => {
     orderArr.push(assignOrderId.value);
   }
   // 调用assign orders API
-  assignOrdersAPI(targetWHId, orderArr).then(data => {
+  assignOrdersAPI(targetWHId, orderArr).then(_data => {
     dialogAssignVisible.value = false;
-    addWarehouseTask(data.id, true); // (orderId, isAfterAssign)
+    addWarehouseTask(_data.id, true); // (orderId, isAfterAssign)
   }).finally(() => {
     dialogAssignVisible.value = false;
     fetchList();
   });
 };
 
-const unassignOrders = orderId => {
-  unassignOrdersAPI(orderId).then(data => {
-    console.log('data: ', data);
+const unassignOrders = _orderId => {
+  unassignOrdersAPI(_orderId).then(_data => {
+    console.log('data: ', _data);
   });
 };
 
@@ -320,25 +321,25 @@ const unassignSelected = () => {
   fetchList();
 };
 
-const addWarehouseTask = (orderId, isAfterAssign) => {
-  findAssignedOrderAPI(orderId).then(data => {
+const addWarehouseTask = (_orderId, _isAfterAssign) => {
+  findAssignedOrderAPI(_orderId).then(_data => {
     taskItem.value = Object.assign({}, emptyTaskItem);
-    taskItem.value.orderId = orderId;
-    taskOrderItem.value = formatAssignedOrderItem(data);
+    taskItem.value.orderId = _orderId;
+    taskOrderItem.value = formatAssignedOrderItem(_data);
     console.log('taskOrderItem.value: ', taskOrderItem.value);
-    isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
+    _isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
 };
 
-const handleSelectionChange = selectedArr => {
-  multipleSelection.value = selectedArr.sort((pre, next) => next.orderId > pre.orderId);
+const handleSelectionChange = _selectedArr => {
+  multipleSelection.value = _selectedArr.sort((pre, next) => next.orderId > pre.orderId);
 };
 
-const handlePagination = config => {
-  listQuery.value = Object.assign(listQuery.value, config);
-  fetchList();
+const handlePagination = _config => {
+  listQuery.value = Object.assign(listQuery.value, _config);
+  
 };
 
 const resetForm = () => {

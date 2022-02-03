@@ -167,9 +167,9 @@ provide('taskOrderItem', taskOrderItem);
 
 const fetchList = () => {
   listLoading.value = true;
-  queryTasksAPI(listQuery.value).then(data => {
-    dataList.value = data.items;
-    total.value = data.total;
+  queryTasksAPI(listQuery.value).then(_data => {
+    dataList.value = _data.items;
+    total.value = _data.total;
     listLoading.value = false;
   });
 };
@@ -189,8 +189,8 @@ const handleCloseDrawer = done => {
 };
 
 const listShipments = (orderId, callback) => {
-  listShipmentsAPI(orderId).then(data => {
-    shipmentArr.value = data;
+  listShipmentsAPI(orderId).then(_data => {
+    shipmentArr.value = _data;
     callback && callback();
   });
 };
@@ -201,19 +201,19 @@ const handleDetailRow = (row, type) => {
     deleteTaskAPI(orderId).then(() => fetchList());
     return;
   }
-  findAssignedOrderAPI(orderId).then(data => {
+  findAssignedOrderAPI(orderId).then(_data => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = orderId;
-    taskOrderItem.value = formatAssignedOrderItem(data);
+    taskOrderItem.value = formatAssignedOrderItem(_data);
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
 };
 
 const init = () => {
-  listWarehousesAPI().then(data => {
+  listWarehousesAPI().then(_data => {
     fetchList(); // fetch list
-    data.forEach(item => {
+    _data.forEach(item => {
       warehouseEnum.value[item.id] = item.name;
     });
   });

@@ -40,8 +40,8 @@ export const logistic = {
     async setUnitList ({ commit }) {
       return new Promise(resolve => {
         listUnitsAPI()
-          .then(data => {
-            commit('SET_UNIT_LIST', data);
+          .then(_data => {
+            commit('SET_UNIT_LIST', _data);
           })
           .finally(() => resolve());
       });
@@ -50,9 +50,9 @@ export const logistic = {
     async setWarehouseEnum ({ commit }) {
       return new Promise(resolve => {
         listWarehousesAPI()
-          .then(data => {
+          .then(_data => {
             const options = {};
-            data.forEach(item => {
+            _data.forEach(item => {
               options[item.id] = item.name;
             });
             commit('SET_WAREHOUSE_OPTIONS', options);

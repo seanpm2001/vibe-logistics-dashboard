@@ -192,9 +192,6 @@ const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
-console.log('unitList: ', unitList);
-// let isDelayed = false;
-// let copyFilteredUnitArr = [];
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
@@ -207,20 +204,6 @@ const filterUnitArr = filterObj => {
     return false;
   });
 };
-// const filteredUnitArr = computed(() => {
-//   return filterObj => {
-//     // if (isDelayed) return [].concat(copyFilteredUnitArr);
-//     // isDelayed = true;
-//     // setTimeout(() => isDelayed = false, 1000);
-//     return unitList.value.filter(unit => {
-//       if (!filterObj.usedAge && !filterObj.condition) return true;
-//       if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
-//       if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
-//       if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
-//       return false;
-//     });
-//   };
-// });
 
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);

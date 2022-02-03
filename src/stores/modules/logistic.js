@@ -26,9 +26,9 @@ export const useLogisticStore = defineStore({
       const state = this;
       return new Promise((resolve, reject) => {
         listWarehousesAPI()
-          .then(data => {
+          .then(_data => {
             const options = {};
-            data.forEach(item => {
+            _data.forEach(item => {
               options[item.id] = item.name;
             });
             state.warehouseEnum = options;

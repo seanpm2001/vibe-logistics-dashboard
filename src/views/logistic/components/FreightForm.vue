@@ -201,8 +201,8 @@ const createFreight = () => {
   proxy.$parent.validate((valid) => {
     if (valid) {
       const data = formatDate(freightItem.value);
-      createFreightAPI(data).then(data => {
-        freightItem.value = data;
+      createFreightAPI(data).then(_data => {
+        freightItem.value = _data;
         dialogStatus.value = 'edit';
         emit('fetchList');
       });
@@ -214,8 +214,8 @@ const updateFreight = () => {
   proxy.$parent.validate((valid) => {
     if (valid) {
       const updates = freightItem.value;
-      updateFreightAPI(updates.id, updates).then(data => {
-        freightItem.value = data;
+      updateFreightAPI(updates.id, updates).then(_data => {
+        freightItem.value = _data;
         contrastData.value = null;
       });
     }

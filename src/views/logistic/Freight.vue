@@ -133,7 +133,6 @@
         </el-button>
       </template>
     </el-dialog>
-      
   </div>
 </template>
 
@@ -152,15 +151,9 @@ import { freightStatusEnum, forwarderEnum, productMap, productIconMap } from '/@
 // });
 
 /* start data */
+const { proxy } = getCurrentInstance();
 const store = useStore();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
-console.log('warehouseEnum: ', warehouseEnum);
-
-const { proxy } = getCurrentInstance();
-const listQuery = ref({
-  page: 1,
-  perPage: 10,
-});
 
 const freightItem = ref({
   id: 0,
@@ -187,17 +180,6 @@ const batchArr = ref([]);
 const contrastData = ref(null);
 const sortEnum = [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }];
 
-const statusTypeDict = {
-  'Picked Up': 'success',
-  'In Transit': 'info',
-  'Delivered': 'info',
-  'Cancelled': 'danger',
-};
-
-const tableKey = ref(0);
-const dataList = shallowRef(null);
-const total = ref(0);
-const listLoading = ref(true); // queryList loading
 const dialogFreightVisible = ref(false);
 const dialogStatus = ref(null);
 const multipleSelection = ref([]);
@@ -211,25 +193,34 @@ provide('batchArr', batchArr);
 provide('dialogStatus', dialogStatus);
 /* end data */
 
-// arr to obj, such as { CN : "China", US : "USA" }
-// const calendarTypeKeyValue = calendarTypeEnum.value.reduce((acc, cur) => {
-//   acc[cur.key] = cur.displayName;
-//   return acc;
-// }, {});
-
 const isDialogPattern = type => dialogStatus.value === type;
 
+const statusTypeDict = {
+  'Picked Up': 'success',
+  'In Transit': 'info',
+  'Delivered': 'info',
+  'Cancelled': 'danger',
+};
+
+const tableKey = ref(0);
+const dataList = shallowRef(null);
+const total = ref(0);
+const listLoading = ref(true); // queryList loading
+const listQuery = ref({
+  page: 1,
+  perPage: 10,
+});
 const fetchList = () => {
   listLoading.value = true;
-  queryFreightsAPI(listQuery.value).then(data => {
-    dataList.value = data.items;
-    total.value = data.total;
+  queryFreightsAPI(listQuery.value).then(_data => {
+    dataList.value = _data.items;
+    total.value = _data.total;
     listLoading.value = false;
   });
 };
 
-const handlePagination = config => {
-  listQuery.value = Object.assign(listQuery.value, config);
+const handlePagination = _config => {
+  listQuery.value = Object.assign(listQuery.value, _config);
   fetchList();
 };
 
@@ -238,15 +229,15 @@ const handleFilter = () => {
   fetchList();
 };
 
-const sortChange = data => {
-  const { prop, order } = data;
+const sortChange = _data => {
+  const { prop, order } = _data;
   if (prop === 'id') {
     sortByID(order);
   }
 };
 
-const sortByID = order => {
-  if (order === 'ascending') {
+const sortByID = _order => {
+  if (_order === 'ascending') {
     listQuery.value.sort = '+id';
   } else {
     listQuery.value.sort = '-id';
@@ -267,8 +258,8 @@ const showCreateDialog = () => {
 };
 
 
-const handleSelectionChange = selectedArr => {
-  multipleSelection.value = selectedArr.sort((pre, next) => next.id - pre.id);
+const handleSelectionChange = _selectedArr => {
+  multipleSelection.value = _selectedArr.sort((pre, next) => next.id - pre.id);
 };
 
 const handleDelSelected = () => {
@@ -280,24 +271,24 @@ const handleDelSelected = () => {
   fetchList();
 };
 
-const listBatches = (freightId, callback) => {
-  listBatchesAPI(freightId).then(data => {
-    batchArr.value = data;
+const listBatches = (_freightId, callback) => {
+  listBatchesAPI(_freightId).then(_data => {
+    batchArr.value = _data;
     callback && callback();
   });
 };
 
-const handleDetailRow = (row, type) => {
-  const freightId = row.id;
-  if (type === 'remove') {
+const handleDetailRow = (_row, _type) => {
+  const freightId = _row.id;
+  if (_type === 'remove') {
     deleteFreightAPI(freightId).then(() => fetchList());
     return;
   }
-  findFreightAPI(freightId).then(data => {
-    freightItem.value = Object.assign({}, data); // copy obj
-    type === 'edit' && (contrastData.value = Object.assign({}, data));
+  findFreightAPI(freightId).then(_data => {
+    freightItem.value = Object.assign({}, _data); // copy obj
+    _type === 'edit' && (contrastData.value = Object.assign({}, _data));
     listBatches(freightId, () => {
-      dialogStatus.value = type;
+      dialogStatus.value = _type;
       dialogFreightVisible.value = true;
     });
   });
@@ -318,8 +309,8 @@ const handleDownload = () => {
   });
 };
 
-const formatJson = filterVal => {
-  return dataList.value.map(v => filterVal.map(j => {
+const formatJson = _filterVal => {
+  return dataList.value.map(v => _filterVal.map(j => {
     if (j === 'timestamp') {
       return parseTime(v[j]);
     } else {
@@ -328,9 +319,9 @@ const formatJson = filterVal => {
   }));
 };
 
-const getSortClass = key => {
+const getSortClass = _key => {
   const sort = listQuery.value.sort;
-  return sort === `+${key}` ? 'ascending' : 'descending';
+  return sort === `+${_key}` ? 'ascending' : 'descending';
 };
 
 const beforeCloseDialog = done => {

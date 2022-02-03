@@ -144,9 +144,9 @@ const isDialogPattern = type => dialogStatus.value === type;
 
 const fetchList = () => {
   listLoading.value = true;
-  queryPackagesAPI(listQuery.value).then(data => {
-    dataList.value = data.items;
-    total.value = data.total;
+  queryPackagesAPI(listQuery.value).then(_data => {
+    dataList.value = _data.items;
+    total.value = _data.total;
     listLoading.value = false;
   });
 };
@@ -169,8 +169,8 @@ const handleDetailRow = (row, type) => {
     return;
   }
   
-  // queryPackagesAPI(row.id).then(data => {
-  //   packageList.value = data;
+  // queryPackagesAPI(row.id).then(_data => {
+  //   packageList.value = _data;
   //   dialogTableVisible.value = true;
   // });
 };
@@ -194,8 +194,8 @@ const handleDelSelected = () => {
 };
 
 const viewItemSerial = unitId => {
-  findUnitAPI(unitId).then(data => {
-    unitItem.value = data;
+  findUnitAPI(unitId).then(_data => {
+    unitItem.value = _data;
     drawerUnitVisible.value = true;
   });
 };

@@ -38,9 +38,9 @@ export const user = {
     login({ commit }, userInfo) {
       const { email, password } = userInfo;
       return new Promise((resolve, reject) => {
-        loginAPI({ email, password }).then(data => {
-          commit('SET_TOKEN', data.access_token);
-          setToken(data.access_token);
+        loginAPI({ email, password }).then(_data => {
+          commit('SET_TOKEN', _data.access_token);
+          setToken(_data.access_token);
           commit('SET_LOGINED', true);
           resolve();
         }).catch(error => {
