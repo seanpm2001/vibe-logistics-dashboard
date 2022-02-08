@@ -15,8 +15,8 @@ export const API_BASE_URL = '/api';
 export const API_TARGET_URL = 'https://logistics.vibe.dev/api/';
 
 // mock
-export const MOCK_API_BASE_URL = '/mock/api';
-export const MOCK_API_TARGET_URL = 'http://localhost:3000';
+export const MOCK_API_BASE_URL = '/api/mock';
+export const MOCK_API_TARGET_URL = '/api/mock';
 
 // iconfontUrl
 // export const ICONFONTURL = '//at.alicdn.com/t/font_3004192_9jmc1z9neiw.js'; // 去色版

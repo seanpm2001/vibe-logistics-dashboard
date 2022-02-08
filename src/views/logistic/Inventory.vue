@@ -176,10 +176,10 @@
       </el-table-column>
       <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
         <template v-slot="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="small" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="row.status!='deleted'" size="small" type="danger" @click="handleDelete(row,$index)">
             Delete
           </el-button>
         </template>

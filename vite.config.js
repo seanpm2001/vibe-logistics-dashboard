@@ -3,6 +3,7 @@ import { commonEnv, developmentEnv, productionEnv } from "./env";
 import { VITE_DROP_CONSOLE, VITE_PORT } from './config/constant';
 import { createVitePlugins } from './config/vite/plugin';
 import proxy from './config/vite/proxy';
+console.log('proxy: ', proxy);
 import { resolve } from "path";
 
 function pathResolve(dir) {

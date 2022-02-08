@@ -1,30 +1,33 @@
 <template>
-  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.prevent="handleScroll">
+  <el-scrollbar
+    ref="scrollContainer"
+    :vertical="false"
+    class="scroll-container"
+    @wheel.prevent="handleScroll"
+  >
     <slot />
   </el-scrollbar>
 </template>
 
 <script setup>
-
 const tagAndTagSpacing = 4; // tagAndTagSpacing
 
 const left = ref(0);
 const { proxy } = getCurrentInstance();
-const refs = computed(() => proxy.$refs);
-const scrollWrapper = computed(() => refs.value.scrollContainer.$refs.wrap);
+const scrollWrapper = computed(() => proxy.$refs.scrollContainer.$refs.wrap$);
 
-const handleScroll = e => {
+const handleScroll = (e) => {
   const eventDelta = e.wheelDelta || -e.deltaY * 40;
   const $scrollWrapper = scrollWrapper.value;
   $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4;
 };
 
 const emitScroll = () => {
-  proxy.$emit('scroll');
+  proxy.$emit("scroll");
 };
 
 const moveToTarget = (currentTag, tagList) => {
-  const $container = refs.value.scrollContainer.$el;
+  const $container = proxy.$refs.scrollContainer.$el;
   const $containerWidth = $container.offsetWidth;
   const $scrollWrapper = scrollWrapper.value;
 
@@ -43,12 +46,13 @@ const moveToTarget = (currentTag, tagList) => {
     $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth;
   } else {
     // find preTag and nextTag
-    const currentIndex = tagList.findIndex(item => item === currentTag);
+    const currentIndex = tagList.findIndex((item) => item === currentTag);
     const prevTag = tagList[currentIndex - 1];
     const nextTag = tagList[currentIndex + 1];
 
     // the tag's offsetLeft after of nextTag
-    const afterNextTagOffsetLeft = nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing;
+    const afterNextTagOffsetLeft =
+      nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing;
 
     // the tag's offsetLeft before of prevTag
     const beforePrevTagOffsetLeft = prevTag.$el.offsetLeft - tagAndTagSpacing;
@@ -63,11 +67,11 @@ const moveToTarget = (currentTag, tagList) => {
 
 // eslint-disable-next-line no-undef
 defineExpose({
-  moveToTarget
+  moveToTarget,
 });
 
 onMounted(() => {
-  scrollWrapper.value.addEventListener('scroll', emitScroll, true);
+  scrollWrapper.value.addEventListener("scroll", emitScroll, true);
 });
 </script>
 

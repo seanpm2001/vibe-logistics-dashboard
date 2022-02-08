@@ -38,7 +38,7 @@ const users = {
 export default [
   // user login
   // {
-  //   url: '/api/user/login',
+  //   url: '/api/mock/user/login',
   //   method: 'post',
   //   response: config => {
   //     // const { username } = config.body;
@@ -63,7 +63,7 @@ export default [
 
   // get user info
   {
-    url: RegExp('/api/user/info\.*'),
+    url: RegExp('/api/mock/user/info\.*'),
     method: 'get',
     response: config => {
       // const token = "admin-token"; // test
@@ -86,7 +86,7 @@ export default [
 
   // user logout
   {
-    url: '/api/user/logout',
+    url: '/api/mock/user/logout',
     method: 'post',
     response: () => {
       return {

@@ -59,7 +59,7 @@ const roles = [
 export default [
   // mock get all routes form server
   {
-    url: '/api/routes',
+    url: '/api/mock/routes',
     method: 'get',
     response: () => {
       return {
@@ -71,7 +71,7 @@ export default [
 
   // mock get all roles form server
   {
-    url: '/api/roles',
+    url: '/api/mock/roles',
     method: 'get',
     response: () => {
       return {
@@ -83,7 +83,7 @@ export default [
 
   // add role
   {
-    url: '/api/role',
+    url: '/api/mock/role',
     method: 'post',
     response: {
       code: 20000,
@@ -95,7 +95,7 @@ export default [
 
   // update role
   {
-    url: RegExp('/api/role/[A-Za-z0-9]'),
+    url: RegExp('/api/mock/role/[A-Za-z0-9]'),
     method: 'put',
     response: {
       code: 20000,
@@ -107,7 +107,7 @@ export default [
 
   // delete role
   {
-    url: RegExp('/api/role/[A-Za-z0-9]'),
+    url: RegExp('/api/mock/role/[A-Za-z0-9]'),
     method: 'delete',
     response: {
       code: 20000,

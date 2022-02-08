@@ -60,12 +60,12 @@
       </el-table-column>
       <el-table-column fixed="right" label="Actions" align="center" min-width="200px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
-          <el-button type="success" size="mini" @click="handleDetailRow(row, 'view')">
+          <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
             View detail
           </el-button>
           <el-popconfirm @confirm="handleDetailRow(row, 'remove')" confirm-button-text="OK" cancel-button-text="No, Thanks" icon-color="red" title="Are you sure to delete this?">
             <template #reference>
-              <el-button v-if="row.status!='deleted'" size="mini" type="danger">
+              <el-button v-if="row.status!='deleted'" size="small" type="danger">
                 Delete
               </el-button>
             </template>
