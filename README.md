@@ -4,6 +4,7 @@ This website generates front page of new logistics system.
 Please don't delete or modify `./index.html` if you don't know what to do.
 ## Version for
 **npm > ^7.0.0 | ^8.0.0**
+**yarn**
 
 NVM is recommended, install nvm by yourself.
 
@@ -16,27 +17,27 @@ nvm use v16.11.0
 
 ## Project setup
 ```
-npm install
+yarn
 ```
 
 ### Compiles and hot-reloads for development
 ```
-// 没对接API的情况下请使用 npm run dev:mock
-npm run dev 
-npm run dev:mock // API use mockjs
-npm run serve // preview prod env
+// 没对接API的情况下请使用 yarn dev:mock
+yarn dev 
+yarn dev:mock // API use mockjs
+yarn serve // preview prod env
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build:beta
-npm run build:prod
-npm run build:mock // API use mockjs
+yarn build:beta
+yarn build:prod
+yarn build:mock // API use mockjs
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn lint
 ```
 
 _____
@@ -46,7 +47,7 @@ _____
   * vue-cli3 (easier)
 * MVVM framework:
   * vue3 (virtual dom)
-  * pinia (state management) (vuex5 for vue3 & vite)
+  * vuex(state management), maybe pinia later (vuex5 for vue3 & vite)
 * Router:
   * vue-router (history pattern)
 * UI framework:
