@@ -23,7 +23,7 @@ const handleScroll = (e) => {
 };
 
 const emitScroll = () => {
-  proxy.$emit("scroll");
+  proxy.$emit('scroll');
 };
 
 const moveToTarget = (currentTag, tagList) => {
@@ -71,7 +71,7 @@ defineExpose({
 });
 
 onMounted(() => {
-  scrollWrapper.value.addEventListener("scroll", emitScroll, true);
+  scrollWrapper.value.addEventListener('scroll', emitScroll, true);
 });
 </script>
 

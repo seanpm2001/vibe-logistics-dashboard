@@ -186,7 +186,7 @@ export async function deleteShipmentAPI (shipmentId) {
 
 /* 批次 Shipment Package API */
 export async function queryPackagesAPI (shipmentId) {
-  const res = await requester.get(`/packages`);
+  const res = await requester.get('/packages');
   return res.data;
 }
 export async function createPackageAPI (shipmentId, data) {
@@ -211,7 +211,7 @@ export async function deletePackageAPI (packageId) {
 
 /* 单个商品 Unit API */
 export async function listUnitsAPI () {
-  const res = await requester.get(`/units`);
+  const res = await requester.get('/units');
   return res.data.items;
 }
 export async function findUnitAPI (unitId) {
@@ -253,9 +253,9 @@ export async function loginAPI(formInfo) {
   await requester.post('/login', formInfo)
     .then(_data => {
       res = _data;
-      ElMessage.success(`Welcome to Vibe Logisitc System.`, 3);
+      ElMessage.success('Welcome to Vibe Logisitc System.', 3);
     })
-    .catch(() => ElMessage.error(`Wrong username or password.`, 3));
+    .catch(() => ElMessage.error('Wrong username or password.', 3));
   return res;
 }
 
@@ -268,6 +268,6 @@ export async function getInfoAPI(token) {
 export async function logoutAPI() {
   requester.defaults.baseURL = '/api';
   await requester.post('/mock/user/logout')
-    .then(() => ElMessage.success(`Log out successfully.`, 3))
-    .catch(() => ElMessage.error(`Log out failed, please contact developer.`, 3));
+    .then(() => ElMessage.success('Log out successfully.', 3))
+    .catch(() => ElMessage.error('Log out failed, please contact developer.', 3));
 }

@@ -1,13 +1,13 @@
-import { defineConfig } from "vite";
-import { commonEnv, developmentEnv, productionEnv } from "./env";
+import { defineConfig } from 'vite';
+import { commonEnv, developmentEnv, productionEnv } from './env';
 import { VITE_DROP_CONSOLE, VITE_PORT } from './config/constant';
 import { createVitePlugins } from './config/vite/plugin';
 import proxy from './config/vite/proxy';
 console.log('proxy: ', proxy);
-import { resolve } from "path";
+import { resolve } from 'path';
 
 function pathResolve(dir) {
-  return resolve(__dirname, ".", dir);
+  return resolve(__dirname, '.', dir);
 }
 export default (({command}) => {
   const isBuild = command === 'build';
@@ -25,8 +25,8 @@ export default (({command}) => {
     plugins: createVitePlugins(isBuild),
     resolve: {
       alias: [
-        { find: '/~', replacement: pathResolve("node_modules") },
-        { find: '/@', replacement: pathResolve("src"), }
+        { find: '/~', replacement: pathResolve('node_modules') },
+        { find: '/@', replacement: pathResolve('src'), }
       ]
     },
     // 强制预构建插件包

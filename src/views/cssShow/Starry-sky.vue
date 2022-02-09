@@ -18,7 +18,7 @@ onMounted(() => {
   const dustCtx = dustCanvas.getContext('2d');
   const starCanvas = document.getElementsByClassName('star-canvas')[0];
   const starCtx = starCanvas.getContext('2d');
-  starCanvas.className = "canvas star-canvas";
+  starCanvas.className = 'canvas star-canvas';
 
 
   const container = document.getElementById('sky');

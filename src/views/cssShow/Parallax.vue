@@ -38,7 +38,7 @@
 
 <script setup>
 
-import "/@/assets/js/parallax.min";
+import '/@/assets/js/parallax.min';
 onMounted(() => {
   // eslint-disable-next-line no-undef
   const parallaxInstance = new Parallax(document.getElementById('scene'));

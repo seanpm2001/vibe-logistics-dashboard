@@ -95,7 +95,7 @@ const xmlFileList = ref([]);
 
 const handleUnitChange = (idx, type) => {
   const unitArr = shipPackage.value.unitArr;
-  type === "add" ? unitArr.push({serial: null, status: shipPackage.value.status}) : unitArr.splice(idx, 1);
+  type === 'add' ? unitArr.push({serial: null, status: shipPackage.value.status}) : unitArr.splice(idx, 1);
 };
 
 const handleDeletePackage = () => {
@@ -110,11 +110,11 @@ const handleDeletePackage = () => {
         cancelButtonText: 'Cancel',
         type: 'warning',
         callback: (action) => {
-          if (action === "confirm") {
+          if (action === 'confirm') {
             deletePackageAPI(packageId).then(() => {
               emit('deletePackage', props.packageIdx);
             });
-          } else if (action === "cancel") {
+          } else if (action === 'cancel') {
             ElMessage.info('Delete canceled');
           }
         },

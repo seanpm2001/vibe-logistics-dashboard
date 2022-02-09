@@ -133,10 +133,10 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
-import Pagination from "/@/components/Pagination.vue";
-import TaskDialog from "./components/TaskDialog.vue";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import Pagination from '/@/components/Pagination.vue';
+import TaskDialog from './components/TaskDialog.vue';
 import {
   listWarehousesAPI,
   queryTasksAPI,
@@ -144,14 +144,14 @@ import {
   deleteTaskAPI,
   listShipmentsAPI,
   findAssignedOrderAPI,
-} from "/@/api/logistic";
+} from '/@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
   productMap,
   productIconMap,
-} from "/@/enums/logistic";
-import { formatAssignedOrderItem } from "/@/utils/logistic";
+} from '/@/enums/logistic';
+import { formatAssignedOrderItem } from '/@/utils/logistic';
 
 /* Start Data */
 const store = useStore();
@@ -170,7 +170,7 @@ const packageList = ref([]);
 
 const total = ref(0);
 const listLoading = ref(true);
-const dialogStatus = ref("");
+const dialogStatus = ref('');
 const downloadLoading = ref(false);
 const disableNewShipment = ref(true);
 const dialogTaskVisible = ref(false);
@@ -201,13 +201,13 @@ const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 // let contrastData = null;
 const showTaskPattern = ref(null);
 const taskPatternEnum = {
-  "MY-ONLY": "My task only",
-  ALL: "All tasks",
+  'MY-ONLY': 'My task only',
+  ALL: 'All tasks',
 };
 
-provide("dialogTaskVisible", dialogTaskVisible);
-provide("taskItem", taskItem);
-provide("taskOrderItem", taskOrderItem);
+provide('dialogTaskVisible', dialogTaskVisible);
+provide('taskItem', taskItem);
+provide('taskOrderItem', taskOrderItem);
 /* End Data */
 
 const fetchList = () => {
@@ -242,7 +242,7 @@ const listShipments = (_orderId, _callback) => {
 
 const handleDetailRow = (_row, _type) => {
   const orderId = _row.id;
-  if (_type === "remove") {
+  if (_type === 'remove') {
     deleteTaskAPI(orderId).then(() => fetchList());
     return;
   }
@@ -250,7 +250,7 @@ const handleDetailRow = (_row, _type) => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    dialogStatus.value = "create";
+    dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
 };
@@ -265,22 +265,22 @@ const init = () => {
 };
 
 function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === "{}")
+  if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch("logistic/setWarehouseEnum");
+    store.dispatch('logistic/setWarehouseEnum');
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery["task"];
+  listQuery.value = store.getters.listQuery['task'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit("logistic/SET_LIST_QUERY", {
+  store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
-    pageName: "task",
+    pageName: 'task',
   });
 });
 </script>

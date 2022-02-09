@@ -236,11 +236,11 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
-import Pagination from "/@/components/Pagination.vue";
-import TaskDialog from "./components/TaskDialog.vue";
-import OrderDescription from "./components/OrderDescription.vue";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import Pagination from '/@/components/Pagination.vue';
+import TaskDialog from './components/TaskDialog.vue';
+import OrderDescription from './components/OrderDescription.vue';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
@@ -248,10 +248,10 @@ import {
   unassignOrdersAPI,
   findUnitAPI,
   findAssignedOrderAPI,
-} from "/@/api/logistic";
-import { parseTime } from "/@/utils/format";
-import { formatAssignedOrderItem } from "/@/utils/logistic";
-import { packageStatusEnum, productMap, productIconMap } from "/@/enums/logistic";
+} from '/@/api/logistic';
+import { parseTime } from '/@/utils/format';
+import { formatAssignedOrderItem } from '/@/utils/logistic';
+import { packageStatusEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 /* Start data */
 const store = useStore();
@@ -265,9 +265,9 @@ const dialogTaskVisible = ref(false);
 const drawerOrderVisible = ref(false);
 
 const showAssignedOrder = ref(true);
-const assignPattern = ref("");
+const assignPattern = ref('');
 const assignOrderId = ref(null);
-const dialogStatus = ref("view"); // 点开Warehouse Task默认为view pattern
+const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
 const orderItem = shallowRef(null);
@@ -295,9 +295,9 @@ const taskItem = ref({
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
-provide("dialogTaskVisible", dialogTaskVisible);
-provide("taskItem", taskItem);
-provide("taskOrderItem", taskOrderItem);
+provide('dialogTaskVisible', dialogTaskVisible);
+provide('taskItem', taskItem);
+provide('taskOrderItem', taskOrderItem);
 /* End data */
 
 const tableKey = ref(0);
@@ -346,7 +346,7 @@ const showAssignDialog = (_type, _orderId) => {
 
 function assignSelectedOrders(_targetWHId, _selectedArr) {
   if (!_selectedArr.length) {
-    ElMessage.error("Please at least select an order!", 3);
+    ElMessage.error('Please at least select an order!', 3);
     return;
   }
   multipleSelection.value.forEach((item) => {
@@ -359,17 +359,17 @@ const assignOrders = () => {
   const targetWHId = targetId.value;
   const selectedArr = multipleSelection.value;
   if (!targetWHId) {
-    ElMessage.error("Please select a target warehouse!", 3);
+    ElMessage.error('Please select a target warehouse!', 3);
     return;
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
   const orderArr = [];
-  if (pattern === "assignSelected") {
+  if (pattern === 'assignSelected') {
     // 单独处理assign多个，不展示warehouse task dialog
     assignSelectedOrders(targetWHId, selectedArr);
     dialogAssignVisible.value = false;
     return;
-  } else if (pattern === "combineAndAssign") {
+  } else if (pattern === 'combineAndAssign') {
     // 批量assign
     multipleSelection.value.forEach((item) => {
       orderArr.push(item.id);
@@ -392,7 +392,7 @@ const assignOrders = () => {
 
 const unassignOrders = (_orderId) => {
   unassignOrdersAPI(_orderId).then((_data) => {
-    console.log("data: ", _data);
+    console.log('data: ', _data);
   });
 };
 
@@ -409,9 +409,9 @@ const addWarehouseTask = (_orderId, _isAfterAssign) => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = _orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    console.log("taskOrderItem.value: ", taskOrderItem.value);
-    _isAfterAssign && (taskItem.value.type = "FULFILLMENT");
-    dialogStatus.value = "create";
+    console.log('taskOrderItem.value: ', taskOrderItem.value);
+    _isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
+    dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
 };
@@ -456,22 +456,22 @@ const resetForm = () => {};
 // };
 
 function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === "{}")
+  if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch("logistic/setWarehouseEnum");
+    store.dispatch('logistic/setWarehouseEnum');
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery["order"];
+  listQuery.value = store.getters.listQuery['order'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit("logistic/SET_LIST_QUERY", {
+  store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
-    pageName: "order",
+    pageName: 'order',
   });
 });
 </script>

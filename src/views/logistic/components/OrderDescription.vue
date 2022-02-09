@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox } from 'element-plus';
 import { packageStatusEnum } from '/@/enums/logistic';
 import { productMap, productIconMap } from '/@/enums/logistic';
 

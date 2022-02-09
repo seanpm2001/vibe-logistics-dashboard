@@ -11,7 +11,7 @@
 <script setup>
 
 
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

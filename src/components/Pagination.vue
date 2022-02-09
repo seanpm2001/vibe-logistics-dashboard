@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden':hidden}" class="pagination-container">
+  <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
       :background="background"
       v-model:current-page="currentPage"
@@ -15,62 +15,60 @@
 </template>
 
 <script setup>
-
 import { scrollTo } from '/@/utils/scroll-to';
 
 const { proxy } = getCurrentInstance();
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   total: {
     required: true,
-    type: Number
+    type: Number,
   },
   page: {
     type: Number,
-    default: 1
+    default: 1,
   },
   perPage: {
     type: Number,
-    default: 10
+    default: 10,
   },
   pageSizes: {
     type: Array,
     default() {
       return [10, 20, 30, 50];
-    }
+    },
   },
   layout: {
     type: String,
-    default: 'total, sizes, prev, pager, next, jumper'
+    default: 'total, sizes, prev, pager, next, jumper',
   },
   background: {
     type: Boolean,
-    default: true
+    default: true,
   },
   autoScroll: {
     type: Boolean,
-    default: true
+    default: true,
   },
   hidden: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['pagination']);
 
-const currentPage = computed(val => props.page);
-const pageSize = computed(val => props.perPage);
+const currentPage = computed((val) => props.page);
+const pageSize = computed((val) => props.perPage);
 
-const handleSizeChange = val => {
+const handleSizeChange = (val) => {
   emit('pagination', { page: props.page, perPage: val });
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
 };
-const handleCurrentChange = val => {
+const handleCurrentChange = (val) => {
   emit('pagination', { page: val, perPage: props.pageSize });
   if (props.autoScroll) {
     scrollTo(0, 800);

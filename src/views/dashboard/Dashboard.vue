@@ -6,7 +6,7 @@
 
 <script setup>
 
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 import AdminDashboard from './admin/Admin.vue';
 import EditorDashboard from './Editor.vue';
 

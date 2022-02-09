@@ -193,23 +193,23 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
-import Pagination from "/@/components/Pagination.vue";
-import FreightForm from "./components/FreightForm.vue";
-import { parseTime } from "/@/utils/format";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import Pagination from '/@/components/Pagination.vue';
+import FreightForm from './components/FreightForm.vue';
+import { parseTime } from '/@/utils/format';
 import {
   queryFreightsAPI,
   findFreightAPI,
   deleteFreightAPI,
   listBatchesAPI,
-} from "/@/api/logistic";
+} from '/@/api/logistic';
 import {
   freightStatusEnum,
   forwarderEnum,
   productMap,
   productIconMap,
-} from "/@/enums/logistic";
+} from '/@/enums/logistic';
 
 // onRenderTriggered(e => {
 //   console.log('e: ', e);
@@ -245,8 +245,8 @@ const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 const batchArr = ref([]);
 const contrastData = ref(null);
 const sortEnum = [
-  { label: "ID Ascending", key: "+id" },
-  { label: "ID Descending", key: "-id" },
+  { label: 'ID Ascending', key: '+id' },
+  { label: 'ID Descending', key: '-id' },
 ];
 
 const dialogFreightVisible = ref(false);
@@ -256,19 +256,19 @@ const multipleSelection = ref([]);
 const downloadLoading = ref(false);
 
 // provide data for sub-components
-provide("freightItem", freightItem);
-provide("contrastData", contrastData);
-provide("batchArr", batchArr);
-provide("dialogStatus", dialogStatus);
+provide('freightItem', freightItem);
+provide('contrastData', contrastData);
+provide('batchArr', batchArr);
+provide('dialogStatus', dialogStatus);
 /* end data */
 
 const isDialogPattern = (type) => dialogStatus.value === type;
 
 const statusTypeDict = {
-  "Picked Up": "success",
-  "In Transit": "info",
-  Delivered: "info",
-  Cancelled: "danger",
+  'Picked Up': 'success',
+  'In Transit': 'info',
+  Delivered: 'info',
+  Cancelled: 'danger',
 };
 
 const tableKey = ref(0);
@@ -300,29 +300,29 @@ const handleFilter = () => {
 
 const sortChange = (_data) => {
   const { prop, order } = _data;
-  if (prop === "id") {
+  if (prop === 'id') {
     sortByID(order);
   }
 };
 
 const sortByID = (_order) => {
-  if (_order === "ascending") {
-    listQuery.value.sort = "+id";
+  if (_order === 'ascending') {
+    listQuery.value.sort = '+id';
   } else {
-    listQuery.value.sort = "-id";
+    listQuery.value.sort = '-id';
   }
   handleFilter();
 };
 
 const resetForm = () => {
   proxy.$nextTick(() => {
-    proxy.$refs["freightForm"]?.resetForm();
+    proxy.$refs['freightForm']?.resetForm();
   });
 };
 
 const showCreateDialog = () => {
   resetForm();
-  dialogStatus.value = "create";
+  dialogStatus.value = 'create';
   dialogFreightVisible.value = true;
 };
 
@@ -348,13 +348,13 @@ const listBatches = (_freightId, callback) => {
 
 const handleDetailRow = (_row, _type) => {
   const freightId = _row.id;
-  if (_type === "remove") {
+  if (_type === 'remove') {
     deleteFreightAPI(freightId).then(() => fetchList());
     return;
   }
   findFreightAPI(freightId).then((_data) => {
     freightItem.value = Object.assign({}, _data); // copy obj
-    _type === "edit" && (contrastData.value = Object.assign({}, _data));
+    _type === 'edit' && (contrastData.value = Object.assign({}, _data));
     listBatches(freightId, () => {
       dialogStatus.value = _type;
       dialogFreightVisible.value = true;
@@ -364,14 +364,14 @@ const handleDetailRow = (_row, _type) => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import("/@/utils/excel").then((excel) => {
-    const tHeader = ["title", "type", "status"];
-    const filterVal = ["title", "type", "status"];
+  import('/@/utils/excel').then((excel) => {
+    const tHeader = ['title', 'type', 'status'];
+    const filterVal = ['title', 'type', 'status'];
     const data = formatJson(filterVal);
     excel.export_json_to_excel({
       header: tHeader,
       data,
-      filename: "table-list",
+      filename: 'table-list',
     });
     downloadLoading.value = false;
   });
@@ -380,7 +380,7 @@ const handleDownload = () => {
 const formatJson = (_filterVal) => {
   return dataList.value.map((v) =>
     _filterVal.map((j) => {
-      if (j === "timestamp") {
+      if (j === 'timestamp') {
         return parseTime(v[j]);
       } else {
         return v[j];
@@ -391,11 +391,11 @@ const formatJson = (_filterVal) => {
 
 const getSortClass = (_key) => {
   const sort = listQuery.value.sort;
-  return sort === `+${_key}` ? "ascending" : "descending";
+  return sort === `+${_key}` ? 'ascending' : 'descending';
 };
 
 const beforeCloseDialog = (done) => {
-  if (dialogStatus.value !== "edit") {
+  if (dialogStatus.value !== 'edit') {
     resetForm();
     done();
     return;
@@ -408,12 +408,12 @@ const beforeCloseDialog = (done) => {
     done();
   }
   isChanged &&
-    ElMessageBox.confirm(`Unsaved changes, are you sure to leave?`, "Warning", {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
-      type: "warning",
+    ElMessageBox.confirm('Unsaved changes, are you sure to leave?', 'Warning', {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
       callback: (action) => {
-        if (action === "confirm") {
+        if (action === 'confirm') {
           resetForm();
           done();
         }
@@ -422,22 +422,22 @@ const beforeCloseDialog = (done) => {
 };
 
 function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === "{}")
+  if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch("logistic/setWarehouseEnum");
+    store.dispatch('logistic/setWarehouseEnum');
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery["freight"];
+  listQuery.value = store.getters.listQuery['freight'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit("logistic/SET_LIST_QUERY", {
+  store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
-    pageName: "freight",
+    pageName: 'freight',
   });
 });
 </script>

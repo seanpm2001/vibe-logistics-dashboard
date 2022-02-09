@@ -45,7 +45,7 @@
 
 <script setup>
 
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox } from 'element-plus';
 import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
 
 const unitItem = inject('unitItem');
@@ -59,7 +59,7 @@ const checkUnit = isChecked => {
       cancelButtonText: 'Cancel',
       type: 'warning',
       callback: (action) => {
-        if (action === "confirm") {
+        if (action === 'confirm') {
           console.log('Checked: '+isChecked);
         }
       },

@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import throttle from "lodash/throttle";
+import throttle from 'lodash/throttle';
 
 const { proxy } = getCurrentInstance();
 

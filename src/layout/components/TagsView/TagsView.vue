@@ -33,10 +33,10 @@
 </template>
 
 <script setup>
-import ScrollPane from "./ScrollPane.vue";
+import ScrollPane from './ScrollPane.vue';
 
-import { resolve } from "/@/utils/path";
-import { useStore } from "vuex";
+import { resolve } from '/@/utils/path';
+import { useStore } from 'vuex';
 
 const { proxy } = getCurrentInstance();
 
@@ -68,7 +68,7 @@ const isAffix = (tag) => {
   return tag.meta && tag.meta.affix;
 };
 
-const filterAffixTags = (routes, basePath = "/") => {
+const filterAffixTags = (routes, basePath = '/') => {
   const tags = [];
   routes.forEach((route) => {
     if (route.meta && route.meta.affix) {
@@ -89,7 +89,7 @@ const initTags = () => {
   for (const tag of affixTagsArr) {
     // Must have tag name
     if (tag.name) {
-      store.dispatch("tagsView/addVisitedView", tag);
+      store.dispatch('tagsView/addVisitedView', tag);
     }
   }
 };
@@ -103,7 +103,7 @@ const addTags = () => {
   const { path } = route;
 
   if (isNewTag()) {
-    store.dispatch("tagsView/addView", route);
+    store.dispatch('tagsView/addView', route);
   }
   return false;
 };
@@ -116,7 +116,7 @@ const moveToCurrentTag = () => {
         refs.value.scrollPane.moveToTarget(tag, tags);
         // when query is different then update
         if (tag.fullPath !== route.fullPath) {
-          store.dispatch("tagsView/updateVisitedView", route);
+          store.dispatch('tagsView/updateVisitedView', route);
         }
         break;
       }
@@ -127,19 +127,19 @@ const moveToCurrentTag = () => {
 const refreshSelectedTag = (view) => {
   // if (view.path === route.path) router.go(0);
   // router.push(view.path);
-  store.dispatch("tagsView/delCachedView", view).then(() => {
+  store.dispatch('tagsView/delCachedView', view).then(() => {
     const { fullPath } = view;
 
     proxy.$nextTick(() => {
       router.replace({
-        path: "/redirect" + fullPath,
+        path: '/redirect' + fullPath,
       });
     });
   });
 };
 
 const closeSelectedTag = (view) => {
-  store.dispatch("tagsView/delView", view).then(({ visitedViews }) => {
+  store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
     if (isActive(view)) {
       toLastView(visitedViews, view);
     }
@@ -149,13 +149,13 @@ const closeSelectedTag = (view) => {
 
 const closeOthersTags = () => {
   router.push(selectedTag.value);
-  store.dispatch("tagsView/delOthersViews", selectedTag.value).then(() => {
+  store.dispatch('tagsView/delOthersViews', selectedTag.value).then(() => {
     moveToCurrentTag();
   });
 };
 
 const closeAllTags = (view) => {
-  store.dispatch("tagsView/delAllViews").then(({ visitedViews }) => {
+  store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
     if (affixTags.value.some((tag) => tag.path === view.path)) {
       return;
     }
@@ -170,11 +170,11 @@ const toLastView = (visitedViews, view) => {
   } else {
     // now the default is to redirect to the home page if there is no tags-view,
     // you can adjust it according to your needs.
-    if (view.name === "Dashboard") {
+    if (view.name === 'Dashboard') {
       // to reload home page
-      router.replace({ path: "/redirect" + view.fullPath });
+      router.replace({ path: '/redirect' + view.fullPath });
     } else {
-      router.push("/");
+      router.push('/');
     }
   }
 };
@@ -208,16 +208,16 @@ const closeMenu = () => {
 /* watch */
 watchEffect(() => {
   if (visible.value) {
-    document.body.addEventListener("click", closeMenu);
+    document.body.addEventListener('click', closeMenu);
   } else {
-    document.body.removeEventListener("click", closeMenu);
+    document.body.removeEventListener('click', closeMenu);
   }
 });
 
 watch(
   () => route.path,
   () => {
-    if (route.path.indexOf("redirect") > -1) return;
+    if (route.path.indexOf('redirect') > -1) return;
     addTags();
     // moveToCurrentTag();
   }

@@ -78,7 +78,7 @@
 
 <script setup>
 
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { createShipmentAPI, deleteShipmentAPI, updateShipmentAPI } from '/@/api/logistic';
 
@@ -154,10 +154,10 @@ const handleDeleteShipment = () => {
         cancelButtonText: 'Cancel',
         type: 'warning',
         callback: (action) => {
-          if (action === "confirm") {
+          if (action === 'confirm') {
             deleteShipmentAPI(shipmentId).then(() => {
             });
-          } else if (action === "cancel") {
+          } else if (action === 'cancel') {
             ElMessage.info('Delete canceled');
           }
         },
@@ -173,7 +173,7 @@ const handleShipment = (type) => {
   // for (const key in products.value) { // 更新costs
   //   shipmentItem.value.costs[key] = products.value[key].cost || 0;
   // }
-  if (type === "create") {
+  if (type === 'create') {
     createShipmentAPI(props.taskId, shipmentItem.value).then(_data => {
       shipmentItem.value = _data;
     });

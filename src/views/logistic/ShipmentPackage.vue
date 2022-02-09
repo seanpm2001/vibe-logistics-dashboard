@@ -126,18 +126,18 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
-import Pagination from "/@/components/Pagination.vue";
-import UnitDescription from "./components/UnitDescription.vue";
-import { parseTime } from "/@/utils/format";
-import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from "/@/api/logistic";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import Pagination from '/@/components/Pagination.vue';
+import UnitDescription from './components/UnitDescription.vue';
+import { parseTime } from '/@/utils/format';
+import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from '/@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
   productMap,
   productIconMap,
-} from "/@/enums/logistic";
+} from '/@/enums/logistic';
 
 /* Start data */
 const store = useStore();
@@ -145,7 +145,7 @@ const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
   perPage: 10,
-  search: "",
+  search: '',
 });
 
 const tableKey = ref(0);
@@ -155,21 +155,21 @@ const unitItem = ref({});
 
 const listLoading = ref(true);
 const drawerUnitVisible = ref(false);
-const dialogStatus = ref("");
+const dialogStatus = ref('');
 const multipleSelection = ref([]);
 const titleMap = ref({
-  view: "View",
-  update: "Edit",
-  create: "Create",
+  view: 'View',
+  update: 'Edit',
+  create: 'Create',
 });
 const rules = ref({
-  targetId: [{ required: true, message: "destination is required", trigger: "change" }],
-  number: [{ required: true, message: "batch number is required", trigger: "change" }],
+  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
+  number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
 });
 const downloadLoading = ref(false);
 const disableNewBatch = ref(true);
 
-provide("unitItem", unitItem);
+provide('unitItem', unitItem);
 /* End data */
 const isDialogPattern = (type) => dialogStatus.value === type;
 
@@ -193,7 +193,7 @@ const handleCloseDrawer = (done) => {
 
 const handleDetailRow = (_row, _type) => {
   const shipmentId = _row.id;
-  if (_type === "remove") {
+  if (_type === 'remove') {
     deletePackageAPI(shipmentId).then(() => {
       fetchList();
     });
@@ -232,14 +232,14 @@ const viewItemSerial = (_unitId) => {
 };
 
 onMounted(() => {
-  listQuery.value = store.getters.listQuery["package"];
+  listQuery.value = store.getters.listQuery['package'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit("logistic/SET_LIST_QUERY", {
+  store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
-    pageName: "package",
+    pageName: 'package',
   });
 });
 </script>

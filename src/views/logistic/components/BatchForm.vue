@@ -81,7 +81,7 @@
 
 <script setup>
 
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '/@/utils/excel';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/api/logistic';
 
@@ -169,11 +169,11 @@ const handleDeleteBatch = () => {
         cancelButtonText: 'Cancel',
         type: 'warning',
         callback: (action) => {
-          if (action === "confirm") {
+          if (action === 'confirm') {
             deleteBatchAPI(batchId).then(() => {
               emit('removeBatch', props.batchIdx);
             });
-          } else if (action === "cancel") {
+          } else if (action === 'cancel') {
             ElMessage.info('Delete canceled');
           }
         },
@@ -192,7 +192,7 @@ const updateBatchProducts = (type, file) => {
       dataArr.forEach(item => {
         const sku = item.sheetName;
         // 文件max limit暂时为1
-        if (type === "add") {
+        if (type === 'add') {
           tempArr = tempArr.concat(item.sheet);
           item.sheet.length && (products.value[sku] ? 
             products.value[sku].quantityCount += item.sheet.length :
@@ -203,7 +203,7 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
-        batch.value.items.push({serial: item["Serial Number"], sku: item["SKU"]});
+        batch.value.items.push({serial: item['Serial Number'], sku: item['SKU']});
       });
     }
   });
@@ -213,7 +213,7 @@ const handleBatch = (type) => {
   for (const key in products.value) { // 更新costs
     batch.value.costs[key] = products.value[key].cost || 0;
   }
-  if (type === "create") {
+  if (type === 'create') {
     createBatchAPI(props.freightId, batch.value).then(_data => {
       batch.value = _data;
       emit('submitBatch', _data, props.freightId ,props.batchIdx);
@@ -228,7 +228,7 @@ const handleBatch = (type) => {
 };
 
 const handleUpdate = (file, fileList) => {
-  updateBatchProducts("add", file);
+  updateBatchProducts('add', file);
 };
 const handlePreview = file => {
   dialogExcelVisible.value = true;
@@ -248,11 +248,11 @@ const beforeRemove = (file, fileList) => {
         cancelButtonText: 'Cancel',
         type: 'warning',
         callback: (action) => {
-          if (action === "confirm") {
+          if (action === 'confirm') {
             // 移除文件时重置sub batch products
             updateBatchProducts('remove', file);
             resolve(action);
-          } else if (action === "cancel") {
+          } else if (action === 'cancel') {
             reject();
             ElMessage.info('Delete canceled');
           }

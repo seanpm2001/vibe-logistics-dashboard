@@ -97,12 +97,12 @@
 
 <script setup>
 
-import { useStore } from "vuex";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { useStore } from 'vuex';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import Pagination from '/@/components/Pagination.vue';
 import ShipPackage from './components/ShipPackage.vue';
 import { parseTime } from '/@/utils/format';
-import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from "/@/api/logistic";
+import { queryShipmentsAPI, deleteShipmentAPI, listShipPackagesAPI } from '/@/api/logistic';
 import { packageStatusEnum, taskTypeEnum, productMap, productIconMap } from '/@/enums/logistic';
 
 

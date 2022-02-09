@@ -89,7 +89,7 @@ const iframeUrlData = {
 const openDialog = (idx, name) => {
   const iframeUrlArr = iframeUrlData[name][idx];
   if (iframeUrlArr.target) {
-    window.open(iframeUrlArr.url, "_blank");
+    window.open(iframeUrlArr.url, '_blank');
     return;
   }
   iframeUrl.value = iframeUrlArr.url;

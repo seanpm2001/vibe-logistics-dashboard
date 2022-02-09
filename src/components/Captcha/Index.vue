@@ -12,27 +12,27 @@
 
 <script>
 
-import "./captcha.js";
+import './captcha.js';
 export default {
-  name: "Captcha",
-  emits: ["sliderValidation"],
+  name: 'Captcha',
+  emits: ['sliderValidation'],
   setup(props, context) {
     onMounted(() => {
       const nc_token = [
-        "FFFF0N00000000009931",
+        'FFFF0N00000000009931',
         new Date().getTime(),
         Math.random(),
-      ].join(":"); // 没有做任何的响应
+      ].join(':'); // 没有做任何的响应
       const NC_Opt = {
-        renderTo: "#captcha-dom",
-        appkey: "FFFF0N00000000009931",
-        scene: "nc_login",
+        renderTo: '#captcha-dom',
+        appkey: 'FFFF0N00000000009931',
+        scene: 'nc_login',
         token: nc_token,
         customWidth: 300,
-        trans: { key1: "code0" },
-        elementID: ["usernameID"],
+        trans: { key1: 'code0' },
+        elementID: ['usernameID'],
         is_Opt: 0,
-        language: "cn",
+        language: 'cn',
         isEnabled: true,
         timeout: 3000,
         times: 5,
@@ -50,14 +50,14 @@ export default {
           window.console && console.log(nc_token);
           window.console && console.log(data.csessionid);
           window.console && console.log(data.sig);
-          data.csessionid && context.emit("sliderValidation");
+          data.csessionid && context.emit('sliderValidation');
         },
       };
       // eslint-disable-next-line new-cap,no-undef
       const nc = new noCaptcha(NC_Opt);
-      nc.upLang("cn", {
-        _startTEXT: "请按住滑块，拖动到最右边",
-        _yesTEXT: "验证通过",
+      nc.upLang('cn', {
+        _startTEXT: '请按住滑块，拖动到最右边',
+        _yesTEXT: '验证通过',
         _error300:
           '哎呀，出错了，点击<a href="javascript:__nc.reset()">刷新</a>再来一次',
         _errorNetwork:

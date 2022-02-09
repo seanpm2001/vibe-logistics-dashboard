@@ -155,8 +155,8 @@
 
 <script setup>
 import { useStore } from 'vuex';
-import { ElMessage } from "element-plus";
-import { throttle } from "/@/utils";
+import { ElMessage } from 'element-plus';
+import { throttle } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
 import {
@@ -232,16 +232,16 @@ const handleWarehouseTask = type => {
 
 const onUsedUnitChange = (idx, type) => {
   const unitArr = taskItem.value.usedUnitArr;
-  type === "add" ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(idx, 1);
+  type === 'add' ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(idx, 1);
 };
 
 const onSpecifySerialChange = (idx, type) => {
   const serialArr = taskItem.value.specifySerailArr;
-  type === "add" ? serialArr.push({serial: null}) : serialArr.splice(idx, 1);
+  type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx, 1);
 };
 
 const onHoldTask = () => {
-  console.log("onHoldTask");
+  console.log('onHoldTask');
 };
 
 const resetForm = () => {

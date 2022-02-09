@@ -69,8 +69,8 @@
 <script setup>
 
 // 局部组件（导入）
-import Captcha from "/@/components/Captcha/Index.vue";
-import { useStore } from "vuex";
+import Captcha from '/@/components/Captcha/Index.vue';
+import { useStore } from 'vuex';
 
 import { ElMessage } from 'element-plus';
 import { validUsername } from '/@/utils/validate';
@@ -89,13 +89,13 @@ const redirect = ref('/');
 const otherQuery = ref('');
 
 const signInForm = reactive({
-  email: "admin@vibe.us",
-  password: "",
+  email: 'admin@vibe.us',
+  password: '',
 });
 
 const signUpForm = reactive({
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 });
 
 const validateUsername = (rule, value, callback) => {
