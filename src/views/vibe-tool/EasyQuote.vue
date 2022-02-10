@@ -47,42 +47,47 @@ const calculatePrice = arr => {
   }
   const [country, area, product, transport, unit] = arr;
   // West US
-  if (isWestUs(area)) {
-    if (transport === 'GLS') {
-      if (1 < num <= 10) {
-        price.value = '$' + (num * 100 + 70);
-      } else if (10 < num <= 40) {
-        price.value = '$' + (num * 60 + 1070);
-      } else {
-        price.value = 'TBA';
+  if(product === '55') {
+    if (isWestUs(area)) {
+      if (transport === 'GLS') {
+        if (1 < num <= 10) {
+          price.value = '$' + (num * 100 + 70);
+        } else if (10 < num <= 40) {
+          price.value = '$' + (num * 60 + 1070);
+        } else {
+          price.value = 'TBA';
+        }
+      } else if (transport === 'TRUCK') {
+        if (1 < num <= 10) {
+          price.value = '$' + (num * 90 + 260);
+        } else if (10 < num <= 40) {
+          price.value = '$' + (num * 60 + 1160);
+        } else {
+          price.value = 'TBA';
+        }
       }
-    } else if (transport === 'TRUCK') {
+    // Middle US
+    } else if (isMiddleUs(area)) {
       if (1 < num <= 10) {
-        price.value = '$' + (num * 90 + 260);
+        price.value = '$' + (num * 100 + 300);
       } else if (10 < num <= 40) {
-        price.value = '$' + (num * 60 + 1160);
-      } else {
-        price.value = 'TBA';
+        price.value = '$' + (num * 70 + 1300);
       }
+    // East US
+    } else if (isEastUs(area)) {
+      if (1 < num <= 10) {
+        price.value = '$' + (num * 110 + 340);
+      } else if (10 < num <= 40) {
+        price.value = '$' + (num * 80 + 1440);
+      }
+    // Other
+    } else {
+      price.value = 'TBA';
     }
-  // Middle US
-  } else if (isMiddleUs(area)) {
-    if (1 < num <= 10) {
-      price.value = '$' + (num * 100 + 300);
-    } else if (10 < num <= 40) {
-      price.value = '$' + (num * 70 + 1300);
-    }
-  // East US
-  } else if (isEastUs(area)) {
-    if (1 < num <= 10) {
-      price.value = '$' + (num * 110 + 340);
-    } else if (10 < num <= 40) {
-      price.value = '$' + (num * 80 + 1440);
-    }
-  // Other
-  } else {
+  } else if (product === '75') {
     price.value = 'TBA';
   }
+  
 };
 
 const unitOpiton = { value: 'UNIT', label: 'Unit(s)' };
@@ -94,7 +99,7 @@ const  USGlsChildren = [
     { value: 'GLS', label: 'GLS', children: [unitOpiton]},
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]},
-  {value: '75', label: '75', children: [
+  {value: '75', label: '75(TBA)', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]}
 ];
@@ -102,7 +107,7 @@ const USTruckChildren = [
   { value: '55', label: '55', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]},
-  {value: '75', label: '75', children: [
+  {value: '75', label: '75(TBA)', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]}
 ];
@@ -118,7 +123,7 @@ const CAChildren = [
 const options = [
   { // country
     value: 'CANADA',
-    label: 'Canada',
+    label: 'Canada(TBA)',
     children: [ // province
       // nationwide
       { value: 'AB', label: 'AB', children: CAChildren },
@@ -138,7 +143,7 @@ const options = [
   },
   { // country
     value: 'US',
-    label: 'US(TBA)',
+    label: 'US',
     children: [ // state
       // West coast by GLS
       { value: 'AZ', label: 'AZ', children:  USGlsChildren },
