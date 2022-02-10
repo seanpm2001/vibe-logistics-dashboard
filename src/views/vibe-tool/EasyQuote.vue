@@ -41,7 +41,7 @@ const onCascaderArrChange = arr => {
 
 const calculatePrice = arr => { 
   const num = number.value || 1;
-  if (arr.length === 0 || num > 40) {
+  if (arr.length === 0 || num > 40 || num < 0) {
     price.value = 'TBA';
     return;
   }
@@ -50,35 +50,35 @@ const calculatePrice = arr => {
   if(product === '55') {
     if (isWestUs(area)) {
       if (transport === 'GLS') {
-        if (1 < num <= 10) {
+        if (num <= 10) {
           price.value = '$' + (num * 100 + 70);
-        } else if (10 < num <= 40) {
-          price.value = '$' + ((num-10) * 60 + 1070);
+        } else if (num <= 40) {
+          price.value = '$' + (60 * (num-10) + 1070);
         } else {
           price.value = 'TBA';
         }
       } else if (transport === 'TRUCK') {
-        if (1 < num <= 10) {
+        if (num <= 10) {
           price.value = '$' + (num * 90 + 260);
-        } else if (10 < num <= 40) {
-          price.value = '$' + ((num-10) * 60 + 1160);
+        } else if (num <= 40) {
+          price.value = '$' + (60 * (num-10) + 1160);
         } else {
           price.value = 'TBA';
         }
       }
     // Middle US
     } else if (isMiddleUs(area)) {
-      if (1 < num <= 10) {
+      if (num <= 10) {
         price.value = '$' + (num * 100 + 300);
-      } else if (10 < num <= 40) {
-        price.value = '$' + ((num-10) * 70 + 1300);
+      } else if (10 < num) {
+        price.value = '$' + (70 * (num-10) + 1300);
       }
     // East US
     } else if (isEastUs(area)) {
-      if (1 < num <= 10) {
+      if (num <= 10) {
         price.value = '$' + (num * 110 + 340);
-      } else if (10 < num <= 40) {
-        price.value = '$' + ((num-10) * 80 + 1440);
+      } else if (10 < num) {
+        price.value = '$' + (80 * (num-10) + 1440);
       }
     // Other
     } else {
@@ -218,5 +218,5 @@ const options = [
   padding: 32px
 
 :deep(.el-cascader)
-  width: 500px
+  width: 300px
 </style>
