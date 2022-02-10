@@ -55,11 +55,6 @@ requester.interceptors.request.use(
 // response interceptor
 requester.interceptors.response.use(
   /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
    * Determine the request status by custom code
    */
   response => {
@@ -74,11 +69,69 @@ requester.interceptors.response.use(
       return Promise.reject(new Error(response.msg || 'Error'));
     }
 
-    if (!res.code) {
-      res.items && jsonToHump(res.items);
-      res.item && jsonToHump(res.item);
-      return res;
+    res.items && jsonToHump(res.items);
+    res.item && jsonToHump(res.item);
+    return res;
+
+  },
+  error => {
+    // eslint-disable-next-line no-undef
+    tryHideFullScreenLoading();
+    console.log('err' + error); // for debug
+    ElMessage({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    });
+    return Promise.reject(error);
+  }
+);
+
+export default requester;
+
+export const mockRequester = axios.create({
+  // baseURL: 'https://logistics.vibe.dev/api'
+  baseURL: '/mock/api',
+  timeout: 6000, // 设置超时时间
+  withCredentials: true, // 允许携带cookie
+  headers: { // 解决ie浏览器会自动缓存
+    'cache-control': 'no-cache',
+  }
+});
+
+mockRequester.interceptors.request.use(
+  config => {
+    const { method, url } = config;
+    // do something before request is sent
+    if (store.getters.token) {
+      config.headers['Authorization'] = 'Bearer ' + getToken();
     }
+    if (method === 'get' && !url.includes('/')) return config; // query API 不触发全屏loading
+    showFullScreenLoading();
+    return config;
+  },
+  error => {
+    // do something with request error
+    tryHideFullScreenLoading();
+    console.log(error); // for debug
+    return Promise.reject(error);
+  }
+);
+
+mockRequester.interceptors.response.use(
+  /**
+   * If you want to get http information such as headers or status
+   * Please return  response => response
+  */
+
+  /**
+   * Determine the request status by custom code
+   */
+  response => {
+    // eslint-disable-next-line no-undef
+    tryHideFullScreenLoading();
+    const res = response.data;
+
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
@@ -118,6 +171,3 @@ requester.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default requester;
-

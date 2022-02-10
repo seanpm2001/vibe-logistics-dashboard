@@ -60,7 +60,7 @@ freightObj = Mock.mock({
 export default [
   // mock get all routes form server
   {
-    url: RegExp('/api/mock/freights/[0-9]+'),
+    url: RegExp('/mock/api/freights/[0-9]+'),
     method: 'get',
     response: config => {
       return {
@@ -70,7 +70,7 @@ export default [
     }
   },
   {
-    url: RegExp('/api/mock/freights/[0-9]+'),
+    url: RegExp('/mock/api/freights/[0-9]+'),
     method: 'put',
     response: config => {
       freightObj = config.body;
@@ -81,7 +81,7 @@ export default [
     }
   },
   {
-    url: RegExp('/api/mock/freights/[0-9]+'),
+    url: RegExp('/mock/api/freights/[0-9]+'),
     method: 'delete',
     response: config => {
       return {
@@ -91,7 +91,7 @@ export default [
     }
   },
   {
-    url: '/api/mock/freights/',
+    url: '/mock/api/freights/',
     method: 'post',
     response: config => {
       console.log('post config: ', config);
@@ -103,7 +103,7 @@ export default [
     }
   },
   {
-    url: '/api/mock/freights',
+    url: '/mock/api/freights',
     method: 'get',
     response: config => {
       const { content, type, title, page = 1, limit = 20, sort } = config.query;

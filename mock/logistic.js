@@ -126,7 +126,7 @@ for (let i = 0; i < count; i++) {
 export default [
   // mock get all routes form server
   {
-    url: '/api/mock/shipments',
+    url: '/mock/api/shipments',
     type: 'get',
     response: config => {
       return {
@@ -167,7 +167,7 @@ export default [
     }
   },
   {
-    url: RegExp('/api/mock/unit/[0-9]+'),
+    url: RegExp('/mock/api/unit/[0-9]+'),
     type: 'get',
     response: config => {
 
@@ -180,7 +180,7 @@ export default [
     }
   },
   {
-    url: '/api/mock/tasks',
+    url: '/mock/api/tasks',
     type: 'get',
     response: config => {
       return {
@@ -193,7 +193,7 @@ export default [
     }
   },
   {
-    url: '/api/mock/inventories',
+    url: '/mock/api/inventories',
     type: 'get',
     response: config => {
       const { type, warehouse_name, page = 1, limit = 20, sort } = config.query;
