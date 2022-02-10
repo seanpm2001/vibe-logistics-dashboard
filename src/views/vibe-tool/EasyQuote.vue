@@ -53,7 +53,7 @@ const calculatePrice = arr => {
         if (1 < num <= 10) {
           price.value = '$' + (num * 100 + 70);
         } else if (10 < num <= 40) {
-          price.value = '$' + (num * 60 + 1070);
+          price.value = '$' + ((num-10) * 60 + 1070);
         } else {
           price.value = 'TBA';
         }
@@ -61,7 +61,7 @@ const calculatePrice = arr => {
         if (1 < num <= 10) {
           price.value = '$' + (num * 90 + 260);
         } else if (10 < num <= 40) {
-          price.value = '$' + (num * 60 + 1160);
+          price.value = '$' + ((num-10) * 60 + 1160);
         } else {
           price.value = 'TBA';
         }
@@ -71,14 +71,14 @@ const calculatePrice = arr => {
       if (1 < num <= 10) {
         price.value = '$' + (num * 100 + 300);
       } else if (10 < num <= 40) {
-        price.value = '$' + (num * 70 + 1300);
+        price.value = '$' + ((num-10) * 70 + 1300);
       }
     // East US
     } else if (isEastUs(area)) {
       if (1 < num <= 10) {
         price.value = '$' + (num * 110 + 340);
       } else if (10 < num <= 40) {
-        price.value = '$' + (num * 80 + 1440);
+        price.value = '$' + ((num-10) * 80 + 1440);
       }
     // Other
     } else {
