@@ -46,24 +46,36 @@ const calculatePrice = arr => {
     return;
   }
   const [country, area, product, transport, unit] = arr;
-  // West US
   if(product === '55') {
+    if(area === 'AK') {
+      if (num <= 10) {
+        price.value = '$' + (num * 150 + 450);
+      } else {
+        price.value = 'TBA';
+      }
+      return;
+    }
+    if(area === 'HI') {
+      if (num <= 10) {
+        price.value = '$' + (num * 200 + 600);
+      } else {
+        price.value = 'TBA';
+      }
+      return;
+    }
+    // West US
     if (isWestUs(area)) {
       if (transport === 'GLS') {
         if (num <= 10) {
           price.value = '$' + (num * 100 + 70);
         } else if (num <= 40) {
           price.value = '$' + (60 * (num-10) + 1070);
-        } else {
-          price.value = 'TBA';
         }
       } else if (transport === 'TRUCK') {
         if (num <= 10) {
           price.value = '$' + (num * 90 + 260);
         } else if (num <= 40) {
           price.value = '$' + (60 * (num-10) + 1160);
-        } else {
-          price.value = 'TBA';
         }
       }
     // Middle US
