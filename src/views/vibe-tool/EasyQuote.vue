@@ -118,7 +118,7 @@ const CAChildren = [
 const options = [
   { // country
     value: 'CANADA',
-    label: 'CANADA',
+    label: 'Canada',
     children: [ // province
       // nationwide
       { value: 'AB', label: 'AB', children: CAChildren },
@@ -138,7 +138,7 @@ const options = [
   },
   { // country
     value: 'US',
-    label: 'US',
+    label: 'US(TBA)',
     children: [ // state
       // West coast by GLS
       { value: 'AZ', label: 'AZ', children:  USGlsChildren },
