@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { cssShowRouter } from './modules/css-show';
 import { logisticRouter } from './modules/logistic';
+import { vibeToolRouter } from './modules/vibe-tool';
 // import store from '../store';
 /* Layout */
 import Layout from '/@/layout/Layout.vue';
@@ -35,6 +36,7 @@ import Layout from '/@/layout/Layout.vue';
 export const constantRoutes = [
   ...cssShowRouter,
   ...logisticRouter,
+  ...vibeToolRouter,
   {
     path: '/',
     component: Layout,

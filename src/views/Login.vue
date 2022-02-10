@@ -17,17 +17,25 @@
             :key="passwordType"
             ref="inPassword"
             v-model="signInForm.password"
-            :type="passwordType" 
-            placeholder="密码" 
+            :type="passwordType"
+            placeholder="密码"
             @keyup="checkCapslock"
             @blur="capsTooltip = false"
           />
-          <span @click="showPwd(signInPattern = true)">
-            <svg-icon :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'" icon-class="eye" />
+          <span @click="showPwd((signInPattern = true))">
+            <svg-icon
+              :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'"
+              icon-class="eye"
+            />
           </span>
         </div>
         <Captcha @sliderValidation="moveSlider" />
-        <el-button :loading="btnLoading" class="submit-btn" @click="submitLogin(signInPattern=true)">立即登录</el-button>
+        <el-button
+          :loading="btnLoading"
+          class="submit-btn"
+          @click="submitLogin((signInPattern = true))"
+          >立即登录</el-button
+        >
       </el-form>
       <el-form ref="upForm" :rules="formRules" :model="signUpForm" class="sign-up-form">
         <h2 class="form-title">注册</h2>
@@ -41,12 +49,25 @@
           <span class="svg-container">
             <svg-icon icon-name="password" />
           </span>
-          <el-input ref="upPassword" v-model="signUpForm.password" :type="passwordType" placeholder="密码" />
-          <span @click="showPwd(signInPattern = false)">
-            <svg-icon :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'" icon-class="eye" />
+          <el-input
+            ref="upPassword"
+            v-model="signUpForm.password"
+            :type="passwordType"
+            placeholder="密码"
+          />
+          <span @click="showPwd((signInPattern = false))">
+            <svg-icon
+              :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'"
+              icon-class="eye"
+            />
           </span>
         </div>
-        <el-button :loading="btnLoading" class="submit-btn" @click="submitLogin(signInPattern=false)">立即注册</el-button>
+        <el-button
+          :loading="btnLoading"
+          class="submit-btn"
+          @click="submitLogin((signInPattern = false))"
+          >立即注册</el-button
+        >
       </el-form>
     </div>
     <div class="desc-warp">
@@ -54,20 +75,19 @@
         <div class="content">
           <button @click="toggleSignUp(true)">注册</button>
         </div>
-        <img src="/@/assets/img/profile/sign-in.svg" alt="sign-in.svg">
+        <img src="/@/assets/img/profile/sign-in.svg" alt="sign-in.svg" />
       </div>
       <div class="desc-warp-item sign-in-desc">
         <div class="content">
           <button @click="toggleSignUp(false)">登录</button>
         </div>
-        <img src="/@/assets/img/profile/sign-up.svg" alt="sign-up.svg">
+        <img src="/@/assets/img/profile/sign-up.svg" alt="sign-up.svg" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
 // 局部组件（导入）
 import Captcha from '/@/components/Captcha/Index.vue';
 import { useStore } from 'vuex';
@@ -116,11 +136,10 @@ const validatePassword = (rule, value, callback) => {
 
 const formRules = {
   email: [{ required: true, trigger: 'blur', validator: validateUsername }],
-  password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+  password: [{ required: true, trigger: 'blur', validator: validatePassword }],
 };
 
 /* End Data */
-
 
 /* Method */
 onMounted(() => {
@@ -142,15 +161,17 @@ const moveSlider = () => {
   validated.value = true;
 };
 
-const toggleSignUp = signUpPattern => {
+const toggleSignUp = (signUpPattern) => {
   const containerDom = document.getElementsByClassName('container')[0];
-  signUpPattern ? containerDom.classList.add('sign-up-mode') : containerDom.classList.remove('sign-up-mode');
+  signUpPattern
+    ? containerDom.classList.add('sign-up-mode')
+    : containerDom.classList.remove('sign-up-mode');
   focusForm(!signUpPattern, proxy.$refs);
 };
 
-const checkCapslock = e => {
+const checkCapslock = (e) => {
   const { key } = e;
-  capsTooltip.value = key && key.length === 1 && (key >= 'A' && key <= 'Z');
+  capsTooltip.value = key && key.length === 1 && key >= 'A' && key <= 'Z';
 };
 
 const showPwd = (signInPattern) => {
@@ -180,7 +201,7 @@ const showPwd = (signInPattern) => {
 //   });
 // };
 
-const getOtherQuery = query => {
+const getOtherQuery = (query) => {
   return Object.keys(query).reduce((acc, cur) => {
     if (cur !== 'redirect') {
       acc[cur] = query[cur];
@@ -189,18 +210,19 @@ const getOtherQuery = query => {
   }, {});
 };
 
-const submitLogin = async signInPattern => {
+const submitLogin = async (signInPattern) => {
   // ToDo 逻辑尚未完善
   if (validated.value) {
-    proxy.$refs.inForm.validate(valid => {
+    proxy.$refs.inForm.validate((valid) => {
       if (valid) {
         btnLoading.value = true;
-        store.dispatch('user/login', signInForm)
+        store
+          .dispatch('user/login', signInForm)
           .then(() => {
             router.push({ path: redirect.value || '/', query: otherQuery.value });
             btnLoading.value = false;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log('err: ', err);
             btnLoading.value = false;
           });
@@ -221,8 +243,6 @@ watchEffect(() => {
     otherQuery.value = getOtherQuery(query);
   }
 });
-      
-
 </script>
 
 <style lang="sass">
@@ -271,7 +291,7 @@ watchEffect(() => {
   right: 48%
   transform: translateY(-50%)
 
-.container.sign-up-mode::before 
+.container.sign-up-mode::before
   transform: translate(100%, -50%)
 
 .svg-container
@@ -285,7 +305,7 @@ watchEffect(() => {
   margin-left: -26px
   line-height: 32px
   cursor: pointer
-.form-warp 
+.form-warp
   position: absolute
   z-index: 5
   left: 75%
@@ -296,7 +316,7 @@ watchEffect(() => {
   grid-template-columns: 1fr
   transition: 1s 0.7s ease-in-out
   transform: translate(-50%, -50%)
-  form 
+  form
     display: flex
     align-items: center
     justify-content: center
@@ -308,28 +328,28 @@ watchEffect(() => {
     transition: all 0.2s 0.7s
     opacity: 1
     z-index: 4
-  .form-title 
+  .form-title
     font-size: 1.5em
     font-weight: 700
     color: #6266f5
-  .sign-up-form 
+  .sign-up-form
     opacity: 0
     z-index: 3
   .el-input
     width: 300px
 
 .container.sign-up-mode
-  .form-warp 
+  .form-warp
     left: 25%
-  .sign-in-form 
+  .sign-in-form
     opacity: 0
     z-index: 3
-  .sign-up-form 
+  .sign-up-form
     opacity: 1
     z-index: 4
 
 input,
-.submit-btn 
+.submit-btn
   min-width: 300px
   outline: none
   padding: 12px 30px
@@ -340,10 +360,10 @@ input,
   background-color: #6267f513
   border: none
 
-input::placeholder 
+input::placeholder
   color: #cccc
 
-.submit-btn 
+.submit-btn
   background-color: #6266f5
   color: #FFF
   text-align: center
@@ -354,7 +374,7 @@ input::placeholder
   cursor: pointer
 
 
-.desc-warp 
+.desc-warp
   width: 100%
   height: 100%
   position: absolute
@@ -363,7 +383,7 @@ input::placeholder
   display: grid
   grid-template-columns: repeat(2, 1fr)
 
-.desc-warp-item 
+.desc-warp-item
   display: flex
   flex-direction: column
   align-items: flex-end
@@ -378,36 +398,36 @@ input::placeholder
   margin-right: -3rem
 
 /* 事件穿透 BEGIN */
-.sign-in-desc 
+.sign-in-desc
   pointer-events: none
 
-.sign-up-mode .sign-in-desc 
+.sign-up-mode .sign-in-desc
   pointer-events: all
 
-.sign-up-mode .sign-up-desc 
+.sign-up-mode .sign-up-desc
   pointer-events: none
 
 /* 事件穿透 END */
-.content 
+.content
   width: 100%
   transition: transform 0.9s ease-in-out
   transition-delay: .6s
 
 .sign-in-desc img,
-.sign-in-desc .content 
+.sign-in-desc .content
   transform: translateX(800px)
 
 .sign-up-mode .sign-in-desc img,
-.sign-up-mode .sign-in-desc .content 
+.sign-up-mode .sign-in-desc .content
   transform: translateX(0)
 
 
 .sign-up-mode .sign-up-desc img,
-.sign-up-mode .sign-up-desc .content 
+.sign-up-mode .sign-up-desc .content
   transform: translateX(-800px)
 
 
-button 
+button
   outline: none
   padding: 6px 8px
   min-width: 100px
@@ -419,10 +439,10 @@ button
   cursor: pointer
   transition: all .3s ease
 
-button:active 
+button:active
   background: rgba(255, 255, 255, .1)
 
-img 
+img
   width: 100%
   display: block
   transition: transform 0.9s ease-in-out
@@ -430,8 +450,8 @@ img
 
 
 /* 响应式 */
-@media screen and (max-width: 870px) 
-  .container::before 
+@media screen and (max-width: 870px)
+  .container::before
     width: 1500px
     height: 1500px
     transform: translateX(-50%)
@@ -440,59 +460,59 @@ img
     right: initial
     top: initial
     transition: 2s ease-in-out
-  
-  .container.sign-up-mode::before 
+
+  .container.sign-up-mode::before
     transform: translate(-50%, 100%)
     bottom: 32%
     right: initial
-  
-  .form-warp 
+
+  .form-warp
     width: 100%
     top: 75%
     left: 50%
     transform: translate(-50%, -100%)
     transition: 1s 0.8s ease-in-out
-  
-  .container.sign-up-mode .form-warp 
+
+  .container.sign-up-mode .form-warp
     top: 25%
     left: 50%
     transform: translate(-50%, 0)
-  
-  img 
+
+  img
     width: 200px
     transition: transform 0.9s ease-in-out
     transition-delay: 0.7s
-  
-  .desc-warp 
+
+  .desc-warp
     grid-template-columns: 1fr
     grid-template-rows: 1fr 2fr 1fr
-  
-  .desc-warp-item 
+
+  .desc-warp-item
     flex-direction: row
     justify-content: space-around
     align-items: center
     padding: 2.5rem 8%
     grid-column: 1 / 2
-  
-  .sign-in-desc 
+
+  .sign-in-desc
     grid-row: 3 / 4
 
   .sign-in-desc img,
-  .sign-in-desc .content 
+  .sign-in-desc .content
     transform: translateY(800px)
-  
+
   .sign-up-mode .sign-in-desc img,
-  .sign-up-mode .sign-in-desc .content 
+  .sign-up-mode .sign-in-desc .content
     transform: translateY(0)
 
   .sign-up-mode .sign-up-desc img,
-  .sign-up-mode .sign-up-desc .content 
+  .sign-up-mode .sign-up-desc .content
     transform: translateY(-800px)
 
-@media screen and (max-width: 570px) 
-  .container::before 
+@media screen and (max-width: 570px)
+  .container::before
     bottom: 72%
     left: 50%
-  img 
+  img
     display: none
 </style>
