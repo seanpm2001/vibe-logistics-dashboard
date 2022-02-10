@@ -30,8 +30,8 @@ const westAreaArr = ['WA', 'OR', 'CA', 'NV', 'ID', 'UT', 'AZ', 'NM', 'CO', 'MT',
 const middleAreaArr = ['AL', 'AR', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'MI', 'MN', 'MS', 'MO', 'NE', 'ND', 'OH', 'OK', 'SD', 'TN', 'TX', 'WI'];
 const eastAreaArr = ['CT', 'DE', 'FL', 'GA', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY', 'NC', 'PA', 'RI', 'SC', 'VT', 'VA', 'WV'];
 const isWestUs = area => westAreaArr.includes(area);
-const isMiddleUs = area => westAreaArr.includes(area);
-const isEastUs = area => westAreaArr.includes(area);
+const isMiddleUs = area => middleAreaArr.includes(area);
+const isEastUs = area => eastAreaArr.includes(area);
 
 const cascaderArr = ref([]);
 const onCascaderArrChange = arr => {
