@@ -4,7 +4,7 @@
      label-position="left"
     >
       <el-row>
-        <el-form-item style="margin-right: 32px" label="Number:">
+        <el-form-item style="margin-right: 32px" label="Number(1-40)">
           <el-input @input="calculatePrice(cascaderArr)" v-model="number" style="width: 100px" placeholder="1"></el-input>
         </el-form-item>
         <el-form-item label="Country/Area/Product/Transport/Unit:">
