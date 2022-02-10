@@ -95,28 +95,28 @@ const boardOption = { value: 'BOARD', label: 'Board(s)' };
 const setOption = { value: 'SET', label: 'Set(s)' };
 
 const  USGlsChildren = [
-  { value: '55', label: '55', children: [
+  { value: '55', label: '55″', children: [
     { value: 'GLS', label: 'GLS', children: [unitOpiton]},
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]},
-  {value: '75', label: '75(TBA)', children: [
+  {value: '75', label: '75″(TBA)', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]}
 ];
 const USTruckChildren = [
-  { value: '55', label: '55', children: [
+  { value: '55', label: '55″', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]},
-  {value: '75', label: '75(TBA)', children: [
+  {value: '75', label: '75″(TBA)', children: [
     { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
   ]}
 ];
 const CAChildren = [
-  { value: '55', label: '55', children: [
+  { value: '55', label: '55″', children: [
     { value: 'TRUCK', label: 'Truck', children: [boardOption, setOption]},
     { value: 'FEDEX', label: 'FedEx-Amazon', children: [boardOption, setOption]}
   ]},
-  {value: '75', label: '75', children: [
+  {value: '75', label: '75″', children: [
     { value: 'TRUCK', label: 'Truck', children: [boardOption, setOption]},
   ]}
 ];
