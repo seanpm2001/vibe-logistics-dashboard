@@ -50,17 +50,15 @@ const calculatePrice = arr => {
     if(area === 'AK') {
       if (num <= 10) {
         price.value = '$' + (num * 150 + 450);
-      } else {
-        price.value = 'TBA';
       }
+      price.value = 'TBA';
       return;
     }
     if(area === 'HI') {
       if (num <= 10) {
         price.value = '$' + (num * 200 + 600);
-      } else {
-        price.value = 'TBA';
       }
+      price.value = 'TBA';
       return;
     }
     // West US
