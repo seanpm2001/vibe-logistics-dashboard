@@ -123,7 +123,7 @@
             <template v-if="showAssignedOrder">
               <template v-for="(item, key) in row.products" :key="key">
                 <div align="left">
-                  <svg-icon :icon-name="productIconMap[key] || 'other'" />
+                  <svg-icon :icon-name="productIconMap[key] || 'product-other'" />
                   <span class="mgl-5"
                     >{{ productMap[key] || key }}:<el-tag class="mgl-5" size="small">{{
                       item
@@ -135,7 +135,7 @@
             <template v-else>
               <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="productIconMap[item.productCode] || 'other'" />
+                  <svg-icon :icon-name="productIconMap[item.productCode] || 'product-other'" />
                   <span class="mgl-5"
                     >{{ productMap[item.productCode] || item.productCode }}:<el-tag
                       class="mgl-5"

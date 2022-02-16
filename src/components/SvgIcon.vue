@@ -1,45 +1,39 @@
 <template>
-  <div v-if="ifExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon"/>
-  <svg v-else :class="svgClass" aria-hidden="true">
-    <use width=100% height=100% :href="iconName" />
+  <svg :class="svgClass" aria-hidden="true">
+    <use width=100% height=100% :href="symbolId" :fill="color" />
   </svg>
 </template>
 
 <script setup>
 
-// doc: https://panjiachen.github.io/vue-element-admin-site/feature/component/svg-icon.html#usage
-import { isExternal } from '/@/utils/validate';
-
-// eslint-disable-next-line no-undef
 const props = defineProps({
+  prefix: {
+    type: String,
+    default: 'icon',
+  },
   iconName: {
     type: String,
-    required: true
+    required: true,
   },
   iconClass: {
     type: String,
-    default: ''
-  }
-});
+  },
+  alt: {
+    type: String,
+  },
+  color: {
+    type: String,
+    default: '#333',
+  },
+}); 
 
-
-const ifExternal = computed(() => {
-  return isExternal(props.iconName);
-});
-const iconName = computed(() => `#icon-${props.iconName}`);
-
+const symbolId = computed(() => `#${props.prefix}-${props.iconName}`);
 const svgClass = computed(() => {
   if (props.iconClass) {
     return 'svg-icon ' + props.iconClass;
   } else {
     return 'svg-icon';
   }
-});
-const styleExternalIcon = computed(() => {
-  return {
-    mask: `url(${props.iconName}) no-repeat 50% 50%`,
-    '-webkit-mask': `url(${props.iconName}) no-repeat 50% 50%`
-  };
 });
 </script>
 
@@ -59,9 +53,4 @@ svg
     fill: #ff6666
   &.is-grey
     fill: #000
-
-.svg-external-icon
-  background-color: currentColor
-  mask-size: cover !important
-  display: inline-block
 </style>

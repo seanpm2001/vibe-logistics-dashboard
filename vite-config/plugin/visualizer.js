@@ -2,7 +2,7 @@
  * Package file volume analysis
  */
 import visualizer from 'rollup-plugin-visualizer';
-import { ANALYSIS } from '../../constant';
+import { ANALYSIS } from '../constant';
 
 export function configVisualizerConfig() {
   if (ANALYSIS) {

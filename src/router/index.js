@@ -20,7 +20,7 @@ import Layout from '/@/layout/Layout.vue';
  * meta : {
     roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
+    icon: 'sidebar-svg-name'/'el-icon-x' the icon show in the sidebar
     noCache: true                if set true, the page will no be cached(default is false)
     affix: true                  if set true, the tag will affix in the tags-view
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
@@ -47,7 +47,7 @@ export const constantRoutes = [
         path: 'dashboard/index',
         component: () => import('/@/views/dashboard/Dashboard.vue'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: 'Dashboard', icon: 'sidebar-dashboard', affix: true }
       }
     ]
   },
@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: 'refactor',
         component: () => import('/@/views/dashboard/UiRefactor.vue'),
         name: 'UiRefactor',
-        meta: { title: 'Ui Refactor', icon: 'dashboard', affix: true }
+        meta: { title: 'Ui Refactor', icon: 'sidebar-dashboard', affix: true }
       }
     ]
   },
@@ -96,7 +96,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('/@/views/profile/Profile.vue'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: { title: 'Profile', icon: 'sidebar-user', noCache: true }
       }
     ]
   }
@@ -115,7 +115,7 @@ export const asyncRoutes = [
     name: 'Permission',
     meta: {
       title: 'Permission',
-      icon: 'permission',
+      icon: 'sidebar-permission',
     },
     children: [
       {
@@ -124,7 +124,7 @@ export const asyncRoutes = [
         name: 'DirectivePermission',
         meta: {
           title: 'Change Role',
-          icon: 'role-change',
+          icon: 'sidebar-role-change',
           roles: ['admin', 'manager', 'editor', 'visitor']
           // if do not set roles, means: this page does not require permission
         }
@@ -135,7 +135,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: 'Manage Role',
-          icon: 'role',
+          icon: 'sidebar-role',
           roles: ['admin','manager']
         }
       }

@@ -44,7 +44,8 @@
     "unplugin-vue-components": "^0.17.17",
     "vite": "^2.7.13",
     "vite-plugin-mock": "^2.9.6",
-    "vite-plugin-style-import": "^1.4.1"
+    "vite-plugin-style-import": "^1.4.1",
+    "vite-plugin-svg-icons": "^2.0.1"
   },
   "eslintConfig": {
     "root": true,
@@ -63,7 +64,10 @@
       "vue/no-deprecated-router-link-tag-prop": 0,
       "arrow-parens": 0,
       "generator-star-spacing": 0,
-      "quotes": [2, "single"],
+      "quotes": [
+        2,
+        "single"
+      ],
       "semi": [
         "error",
         "always",

@@ -33,35 +33,35 @@
       <el-table-column class-name="product-column" label="In Stock" width="200px">
         <template v-slot="{row}">
           <div v-if="row.in_stock.board55_v1">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>55″ Board: <span class="count">{{ row.in_stock.board55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stand_white55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-current" />
+            <svg-icon icon-name="product-stand" class="product-icon is-current" />
             <span>55″ White Stand: <span class="count">{{ row.in_stock.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stand_red55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-red" />
+            <svg-icon icon-name="product-stand" class="product-icon is-red" />
             <span>55″ Red Stand: <span class="count">{{ row.in_stock.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stylus55_x2">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Stylus ×2: <span class="count">{{ row.in_stock.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.in_stock.stylus55_active">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Active Stylus: <span class="count">{{ row.in_stock.stylus55_active }}</span></span>
           </div>
           <div v-if="row.in_stock.board75_pro">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>75″ Board: <span class="count">{{ row.in_stock.board75_pro }}</span></span>
           </div>
           <div v-if="row.in_stock.stand75_pro">
-            <svg-icon icon-name="stand" class="product-icon is-grey" />
+            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
             <span>75″ Grey Stand: <span class="count">{{ row.in_stock.stand75_pro }}</span></span>
           </div>
           <div v-if="row.in_stock.ops75_pro">
-            <svg-icon icon-name="ops-75" class="product-icon" />
+            <svg-icon icon-name="product-ops-75" class="product-icon" />
             <span>75″ OPS: <span class="count">{{ row.in_stock.ops75_pro }}</span></span>
           </div>
         </template>
@@ -69,35 +69,35 @@
       <el-table-column class-name="product-column" label="Avaliable" width="200px">
         <template v-slot="{row}">
           <div v-if="row.available.board55_v1">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>55″ Board: <span class="count">{{ row.available.board55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stand_white55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-current" />
+            <svg-icon icon-name="product-stand" class="product-icon is-current" />
             <span>55″ White Stand: <span class="count">{{ row.available.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stand_red55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-red" />
+            <svg-icon icon-name="product-stand" class="product-icon is-red" />
             <span>55″ Red Stand: <span class="count">{{ row.available.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stylus55_x2">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Stylus ×2: <span class="count">{{ row.available.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.available.stylus55_active">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Active Stylus: <span class="count">{{ row.available.stylus55_active }}</span></span>
           </div>
           <div v-if="row.available.board75_pro">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>75″ Board: <span class="count">{{ row.available.board75_pro }}</span></span>
           </div>
           <div v-if="row.available.stand75_pro">
-            <svg-icon icon-name="stand" class="product-icon is-grey" />
+            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
             <span>75″ Grey Stand: <span class="count">{{ row.available.stand75_pro }}</span></span>
           </div>
           <div v-if="row.available.ops75_pro">
-            <svg-icon icon-name="ops-75" class="product-icon" />
+            <svg-icon icon-name="product-ops-75" class="product-icon" />
             <span>75″ OPS: <span class="count">{{ row.available.ops75_pro }}</span></span>
           </div>
         </template>
@@ -105,35 +105,35 @@
       <el-table-column class-name="product-column" label="Pending In" width="200px">
         <template v-slot="{row}">
           <div v-if="row.pending_in.board55_v1">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>55″ Board: <span class="count">{{ row.pending_in.board55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stand_white55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-current" />
+            <svg-icon icon-name="product-stand" class="product-icon is-current" />
             <span>55″ White Stand: <span class="count">{{ row.pending_in.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stand_red55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-red" />
+            <svg-icon icon-name="product-stand" class="product-icon is-red" />
             <span>55″ Red Stand: <span class="count">{{ row.pending_in.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stylus55_x2">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Stylus ×2: <span class="count">{{ row.pending_in.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.pending_in.stylus55_active">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Active Stylus: <span class="count">{{ row.pending_in.stylus55_active }}</span></span>
           </div>
           <div v-if="row.pending_in.board75_pro">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>75″ Board: <span class="count">{{ row.pending_in.board75_pro }}</span></span>
           </div>
           <div v-if="row.pending_in.stand75_pro">
-            <svg-icon icon-name="stand" class="product-icon is-grey" />
+            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
             <span>75″ Grey Stand: <span class="count">{{ row.pending_in.stand75_pro }}</span></span>
           </div>
           <div v-if="row.pending_in.ops75_pro">
-            <svg-icon icon-name="ops-75" class="product-icon" />
+            <svg-icon icon-name="product-ops-75" class="product-icon" />
             <span>75″ OPS: <span class="count">{{ row.pending_in.ops75_pro }}</span></span>
           </div>
         </template>
@@ -141,35 +141,35 @@
       <el-table-column class-name="product-column" label="Pending Out" width="200px">
         <template v-slot="{row}">
           <div v-if="row.pending_out.board55_v1">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>55″ Board: <span class="count">{{ row.pending_out.board55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stand_white55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-current" />
+            <svg-icon icon-name="product-stand" class="product-icon is-current" />
             <span>55″ White Stand: <span class="count">{{ row.pending_out.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stand_red55_v1">
-            <svg-icon icon-name="stand" class="product-icon is-red" />
+            <svg-icon icon-name="product-stand" class="product-icon is-red" />
             <span>55″ Red Stand: <span class="count">{{ row.pending_out.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stylus55_x2">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Stylus ×2: <span class="count">{{ row.pending_out.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.pending_out.stylus55_active">
-            <svg-icon icon-name="stylus" class="product-icon" />
+            <svg-icon icon-name="product-stylus" class="product-icon" />
             <span>55″ Active Stylus: <span class="count">{{ row.pending_out.stylus55_active }}</span></span>
           </div>
           <div v-if="row.pending_out.board75_pro">
-            <svg-icon icon-name="board" class="product-icon" />
+            <svg-icon icon-name="product-board" class="product-icon" />
             <span>75″ Board: <span class="count">{{ row.pending_out.board75_pro }}</span></span>
           </div>
           <div v-if="row.pending_out.stand75_pro">
-            <svg-icon icon-name="stand" class="product-icon is-grey" />
+            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
             <span>75″ Grey Stand: <span class="count">{{ row.pending_out.stand75_pro }}</span></span>
           </div>
           <div v-if="row.pending_out.ops75_pro">
-            <svg-icon icon-name="ops-75" class="product-icon" />
+            <svg-icon icon-name="product-ops-75" class="product-icon" />
             <span>75″ OPS: <span class="count">{{ row.pending_out.ops75_pro }}</span></span>
           </div>
         </template>

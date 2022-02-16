@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import { commonEnv, developmentEnv, productionEnv } from './env';
-import { VITE_DROP_CONSOLE, VITE_PORT } from './config/constant';
-import { createVitePlugins } from './config/vite/plugin';
-import proxy from './config/vite/proxy';
+import { VITE_DROP_CONSOLE, VITE_PORT } from './vite-config/constant';
+import { createVitePlugins } from './vite-config/plugin';
+import proxy from './vite-config/proxy';
 console.log('proxy: ', proxy);
 import { resolve } from 'path';
 
