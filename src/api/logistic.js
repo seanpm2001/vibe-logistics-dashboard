@@ -21,7 +21,7 @@ const handleReqElMsg = async (fn, action, name, id) => {
 
 /* 海运 Freight API */
 export async function queryFreightsAPI (params) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   jsonToUnderline(params);
   const res = await requester.get('freights', {
     params,
@@ -50,7 +50,7 @@ export async function updateFreightAPI (freightId, updates) {
 }
 export async function deleteFreightAPI (freightId) {
   handleReqElMsg(
-    // requester.delete(`freight/${freightId}`), 'Delete', 'Freight', freightId
+    requester.delete(`freight/${freightId}`), 'Delete', 'Freight', freightId
   );
 }
 
@@ -81,7 +81,7 @@ export async function deleteBatchAPI (batchId) {
 
 /* 订单 Order API */
 export async function queryOrdersAPI (params) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   jsonToUnderline(params);
 
   const res = await requester.get('orders/raw', {
@@ -90,7 +90,7 @@ export async function queryOrdersAPI (params) {
   return res;
 }
 export async function queryAssignedOrdersAPI (params) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   jsonToUnderline(params);
   const res = await requester.get('orders/assigned', {
     params,
@@ -98,14 +98,14 @@ export async function queryAssignedOrdersAPI (params) {
   return res;
 }
 export async function findAssignedOrderAPI (orderId) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const item = handleReqElMsg(
     requester.get(`orders/assigned/${orderId}`), 'Find', 'Assigned Order', orderId
   );
   return item;
 }
 export async function assignOrdersAPI (targetId, orderArr) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const item = handleReqElMsg(
     requester.post('orders/assign', {
       assigned_to: targetId,
@@ -115,16 +115,16 @@ export async function assignOrdersAPI (targetId, orderArr) {
   return item;
 }
 export async function unassignOrdersAPI (orderId) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   handleReqElMsg(
-    // requester.delete(`orders/assign/${orderId}`), 'Unassign', 'Order', orderId
+    requester.delete(`orders/assign/${orderId}`), 'Unassign', 'Order', orderId
   );
 }
 
 
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   const { items } = await requester.get('warehouses', {
     params,
   });
@@ -133,7 +133,7 @@ export async function listWarehousesAPI (params) {
 
 /* 仓库 Warehouse Tasks API */
 export async function queryTasksAPI (params) {
-  // requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/api';
   jsonToUnderline(params);
   const res = await mockRequester.get('/tasks', {
     params,
@@ -156,13 +156,13 @@ export async function updateTaskAPI (taskId, updates) {
 }
 export async function deleteTaskAPI (taskId) {
   handleReqElMsg(
-    // requester.delete(`tasks/${taskId}`), 'Delete', 'Warehouse Task', taskId
+    requester.delete(`tasks/${taskId}`), 'Delete', 'Warehouse Task', taskId
   );
 }
 
 /* 物流 Shipment API */
 export async function listShipmentsAPI (orderId) {
-  // requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/api';
   const res = await mockRequester.get(`/order/${orderId}/shipments`);
   return res.data;
 }
@@ -207,7 +207,7 @@ export async function updatePackageAPI (packageId, updates) {
 }
 export async function deletePackageAPI (packageId) {
   handleReqElMsg(
-    // requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
+    requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
   );
 }
 
@@ -220,7 +220,7 @@ export async function findUnitAPI (unitId) {
   // const item = handleReqElMsg(
   //   requester.get(`unit/${unitId}`), 'Find', 'Unit', unitId
   // );
-  // requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/api';
   let item = null;
   await mockRequester.get(`/unit/${unitId}`)
     .then(_data => {
@@ -240,7 +240,7 @@ export async function updateUnitAPI (unitId, updates) {
 
 
 /* 库存 Inventory API */
-// requester.defaults.baseURL = '/api';
+requester.defaults.baseURL = '/api';
 export async function listInventoriesAPI (params) {
   const { data } = await mockRequester.get('/inventories', {
     params,
@@ -250,7 +250,7 @@ export async function listInventoriesAPI (params) {
 
 /* 用户配置 profile API 登录注册登出 */
 export async function loginAPI(formInfo) {
-  // requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   let res = null;
   await requester.post('/login', formInfo)
     .then(_data => {
@@ -262,13 +262,13 @@ export async function loginAPI(formInfo) {
 }
 
 export async function getInfoAPI(token) {
-  // requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/api';
   const res = await mockRequester.get('/user/info', token);
   return res;
 }
 
 export async function logoutAPI() {
-  // requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/api';
   await mockRequester.post('/user/logout')
     .then(() => ElMessage.success('Log out successfully.', 3))
     .catch(() => ElMessage.error('Log out failed, please contact developer.', 3));
