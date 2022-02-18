@@ -37,7 +37,6 @@ jobs:
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
       run: |
-        yarn clean
         yarn set version berry
         yarn set version latest
         yarn
