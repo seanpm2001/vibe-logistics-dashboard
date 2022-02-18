@@ -37,9 +37,7 @@ jobs:
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
       run: |
-        npm i yarn -g
-        yarn set version berry
-        yarn set version latest
+        yarn
         yarn build:mock
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \
