@@ -37,8 +37,8 @@ jobs:
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
       run: |
-        yarn set version berry
-        yarn set version latest
+        yarn set version berry -g
+        yarn set version latest -g
         yarn clean
         yarn build:mock
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
