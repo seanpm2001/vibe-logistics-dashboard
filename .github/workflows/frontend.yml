@@ -37,9 +37,10 @@ jobs:
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
       run: |
-        npm install -g @vue/cli@4.5.13
-        npm install
-        npm run build:mock
+        npm i yarn -g
+        yarn set version berry
+        yarn set version latest
+        yarn build:mock
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \
             --distribution-id E1QRAWF4RAJF91 \
@@ -47,9 +48,9 @@ jobs:
     - name: Install dependencies and deploy production
       if: github.event_name == 'deployment' && github.event.deployment.environment == 'production' && github.ref == 'refs/heads/master'
       run: |
-        npm install -g @vue/cli@4.5.13
-        npm install
-        npm run build:prod
+        yarn -g @vue/cli@4.5.13
+        yarn
+        yarn build:prod
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \
             --distribution-id E1QRAWF4RAJF91 \
