@@ -3,7 +3,6 @@ import { commonEnv, developmentEnv, productionEnv } from './env';
 import { VITE_DROP_CONSOLE, VITE_PORT } from './vite-config/constant';
 import { createVitePlugins } from './vite-config/plugin';
 import proxy from './vite-config/proxy';
-console.log('proxy: ', proxy);
 import { resolve } from 'path';
 
 function pathResolve(dir) {
@@ -28,6 +27,9 @@ export default (({command}) => {
         { find: '/~', replacement: pathResolve('node_modules') },
         { find: '/@', replacement: pathResolve('src'), }
       ]
+    },
+    css: {
+      preprocessorOptions: { scss: { charset: false } }
     },
     // 强制预构建插件包
     optimizeDeps: {
