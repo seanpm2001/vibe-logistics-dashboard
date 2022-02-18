@@ -207,7 +207,7 @@ export async function updatePackageAPI (packageId, updates) {
 }
 export async function deletePackageAPI (packageId) {
   handleReqElMsg(
-    // requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
+    requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
   );
 }
 
