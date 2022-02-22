@@ -3,28 +3,39 @@
     <el-form
      label-position="left"
     >
-      <el-row>
-        <el-form-item style="margin-right: 32px" label="Number(1-40)">
-          <el-input @input="calculatePrice(cascaderArr)" v-model="number" style="width: 100px" placeholder="1"></el-input>
-        </el-form-item>
-        <el-form-item label="Country/Area/Product/Transport/Unit:">
-          <el-cascader
-            placeholder="Country/Area/Product/Transport/Unit"
-            :options="options"
-            :props="{ expandTrigger: 'hover' }"
-            clearable
-            filterable
-            @change="onCascaderArrChange"
-          />
-        </el-form-item>
-      </el-row>
+      <el-form-item style="margin-right: 32px" label="55 Board Number(1-40)">
+        <el-input @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-right: 32px" label="55 Stand Number(1-40)">
+        <el-input @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-right: 32px" label="75 Board Number(1-40)">
+        <el-input @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input>
+      </el-form-item>
+      <el-form-item style="margin-right: 32px" label="75 Board Number(1-40)">
+        <el-input @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input>
+      </el-form-item>
+      <el-form-item label="Country/Area/Transport:">
+        <el-cascader
+          :disabled="!hasProduct()"
+          placeholder="Country/Area/Transport"
+          :options="options"
+          :props="{ expandTrigger: 'hover' }"
+          clearable
+          filterable
+          @change="onCascaderArrChange"
+        />
+      </el-form-item>
     </el-form>
     <div>Price: {{price || 'TBA'}}</div>
   </div>
 </template>
 
 <script setup>
-const number = ref(null);
+const board55Num = ref(null);
+const stand55Num = ref(null);
+const board75Num = ref(null);
+const stand75Num = ref(null);
 const price = ref(null);
 const westAreaArr = ['WA', 'OR', 'CA', 'NV', 'ID', 'UT', 'AZ', 'NM', 'CO', 'MT', 'WY'];
 const middleAreaArr = ['AL', 'AR', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'MI', 'MN', 'MS', 'MO', 'NE', 'ND', 'OH', 'OK', 'SD', 'TN', 'TX', 'WI'];
@@ -32,6 +43,9 @@ const eastAreaArr = ['CT', 'DE', 'FL', 'GA', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY',
 const isWestUs = area => westAreaArr.includes(area);
 const isMiddleUs = area => middleAreaArr.includes(area);
 const isEastUs = area => eastAreaArr.includes(area);
+const hasProduct55 = () => board55Num.value > 0 || stand55Num.value > 0;
+const hasProduct75 = () => board75Num.value > 0 || stand75Num.value > 0;
+const hasProduct = () => hasProduct55() || hasProduct75();
 
 const cascaderArr = ref([]);
 const onCascaderArrChange = arr => {
@@ -40,13 +54,14 @@ const onCascaderArrChange = arr => {
 };
 
 const calculatePrice = arr => { 
-  const num = number.value || 1;
-  if (arr.length === 0 || num > 40 || num < 0) {
+  if (!arr || arr.length === 0) {
     price.value = 'TBA';
     return;
   }
-  const [country, area, product, transport, unit] = arr;
-  if(product === '55') {
+  const [country, area, transport] = arr;
+
+  if(board55Num.value > 0) {
+    const num = board55Num.value || 0;
     if(area === 'AK') {
       if (num <= 10) {
         price.value = '$' + (num * 150 + 450);
@@ -94,43 +109,37 @@ const calculatePrice = arr => {
     } else {
       price.value = 'TBA';
     }
-  } else if (product === '75') {
+  }
+  if (board75Num.value > 0) {
     price.value = 'TBA';
   }
   
 };
 
-const unitOpiton = { value: 'UNIT', label: 'Unit(s)' };
-const boardOption = { value: 'BOARD', label: 'Board(s)' };
-const setOption = { value: 'SET', label: 'Set(s)' };
+// const unitOpiton = { value: 'UNIT', label: 'Unit(s)' };
+// const boardOption = { value: 'BOARD', label: 'Board(s)' };
+// const setOption = { value: 'SET', label: 'Set(s)' };
 
-const  USGlsChildren = [
-  { value: '55', label: '55″', children: [
-    { value: 'GLS', label: 'GLS', children: [unitOpiton]},
-    { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
-  ]},
-  {value: '75', label: '75″(TBA)', children: [
-    { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
-  ]}
-];
+const  USGlsChildren = computed(() => {
+  if (hasProduct75())
+    return [{ value: 'TRUCK', label: 'Truck' }];
+  return [
+    { value: 'GLS', label: 'GLS' },
+    { value: 'TRUCK', label: 'Truck' },
+  ];
+});
 const USTruckChildren = [
-  { value: '55', label: '55″', children: [
-    { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
-  ]},
-  {value: '75', label: '75″(TBA)', children: [
-    { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
-  ]}
+  { value: 'TRUCK', label: 'Truck' },
 ];
-const CAChildren = [
-  { value: '55', label: '55″', children: [
-    { value: 'TRUCK', label: 'Truck', children: [boardOption, setOption]},
-    { value: 'FEDEX', label: 'FedEx-Amazon', children: [boardOption, setOption]}
-  ]},
-  {value: '75', label: '75″', children: [
-    { value: 'TRUCK', label: 'Truck', children: [boardOption, setOption]},
-  ]}
-];
-const options = [
+const CAChildren = computed(() => {
+  if (hasProduct75())
+    return [{ value: 'TRUCK', label: 'Truck' }];
+  return [
+    { value: 'TRUCK', label: 'Truck' },
+    { value: 'FEDEX', label: 'FedEx-Amazon'},
+  ];
+});
+const options = ref([
   { // country
     value: 'CANADA',
     label: 'Canada(TBA)',
@@ -211,16 +220,12 @@ const options = [
       { value: 'AK', label: 'AK', children: USTruckChildren },
       { value: 'HI', label: 'HI', children: USTruckChildren },
       { value: 'PR', label: 'PR', children: [
-        { value: '55', label: '55', children: [
-          { value: 'PARCEL', label: 'Parcel', children: [unitOpiton]},
-        ]},
-        {value: '75', label: '75', children: [
-          { value: 'TRUCK', label: 'Truck', children: [unitOpiton]},
-        ]}
-      ] },
+        { value: 'PARCEL', label: 'Parcel' },
+        { value: 'TRUCK', label: 'Truck' },
+      ]},
     ]
   }
-];
+]);
 </script>
 
 <style lang="sass" scoped>
