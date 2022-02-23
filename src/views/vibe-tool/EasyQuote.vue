@@ -4,16 +4,16 @@
      label-position="left"
     >
       <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
-        <el-input @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input>
+        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
-        <el-input @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input>
+        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-        <el-input @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input>
+        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-        <el-input @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input>
+        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item label="Country/Area/Transport:">
         <el-cascader
@@ -34,10 +34,10 @@
 <script setup>
 import { CACostEnum, USCostEnum } from '/@/enums/easy-quote';
 
-const board55Num = ref(null);
-const stand55Num = ref(null);
-const board75Num = ref(null);
-const stand75Num = ref(null);
+const board55Num = ref(0);
+const stand55Num = ref(0);
+const board75Num = ref(0);
+const stand75Num = ref(0);
 const price = ref(null);
 // US area
 const westAreaArr = ['WA', 'OR', 'CA', 'NV', 'ID', 'UT', 'AZ', 'NM', 'CO', 'MT', 'WY'];
@@ -69,15 +69,15 @@ const calculatePrice = arr => {
   const [country, area, transport] = arr;
   const b55num = board55Num.value || 0;
   const s55num = stand55Num.value || 0;
-  const b75num = board55Num.value || 0;
-  const s75num = stand55Num.value || 0;
+  const b75num = board75Num.value || 0;
+  const s75num = stand75Num.value || 0;
 
   // product 55 price
-  if (b55num > 0 && s55num === 0) { // only 55 board
+  if (b55num > 0 && (s55num === 0)) { // only 55 board
     total += calPrice(country, b55num, area, '55', 'BOARD', transport);
-  } else if (b55num === 0 && s55num > 0) { // only 55 stand
+  } else if (b55num === 0 && (s55num > 0)) { // only 55 stand
     total += calPrice(country, s55num, area, '55', 'STAND', transport);
-  } else if (b55num !==0 && s55num !==0) { // 55 board + stand
+  } else if (b55num !==0 && (s55num !==0)) { // 55 board + stand
     const setNum = Math.min(b55num, s55num);
     if (b55num > s55num) { // 55 after 1 board
       total += calPrice(country, 1, area, '55', 'BOARD', transport);
@@ -87,11 +87,11 @@ const calculatePrice = arr => {
     total += calPrice(country, setNum, area, '55', 'SET', transport);
   }
   
-  if (b75num > 0 && s75num === 0) { // only 75 board
+  if (b75num > 0 && (s75num === 0)) { // only 75 board
     total += calPrice(country, b75num, area, '75', 'BOARD', transport);
-  } else if (b75num === 0 && s75num > 0) { // only 75 stand
-    total += calPrice(country, s75num, area, '75', 'BOARD', transport);
-  } else if (b75num !==0 && s75num !==0) { // 75 board + stand
+  } else if (b75num === 0 && (s75num > 0)) { // only 75 stand
+    total += calPrice(country, s75num, area, '75', 'STAND', transport);
+  } else if (b75num !==0 && (s75num !==0)) { // 75 board + stand
     const setNum = Math.min(b75num, s75num);
     if (b75num > s75num) { // 75 after 1 board
       total += calPrice(country, 1, area, '75', 'BOARD', transport);
@@ -111,6 +111,7 @@ const formatUSArea = area => {
 };
 
 const calPrice = (country, num, area, product, unit, transport) => {
+  if (+num === 0) return 0;
   let costEnum = null;
   if (isCA(country))
     costEnum = CACostEnum;
@@ -144,7 +145,7 @@ const options = ref([
   { // country
     value: 'CANADA',
     label: 'Canada(TBA)',
-children: [ // province
+    children: [ // province
       // nationwide
       { value: 'AB', label: 'AB-Alberta', children: CAChildren },
       { value: 'BC', label: 'BC-British Columbia', children: CAChildren },
