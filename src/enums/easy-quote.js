@@ -404,14 +404,110 @@ export const CostEnum={
   },
   CA:{
     BC:{
-
+      B55:{
+        TRUCK:{
+          nitialPrice:100,
+          unitPrice=200,
+          tenUnitPrice=200
+        },
+        Amazon:{
+          nitialPrice:0,
+          unitPrice=360,
+          tenUnitPrice=360
+        }
+      },
+      S55:{
+        TRUCK:{
+          nitialPrice:40,
+          unitPrice=110,
+          tenUnitPrice=110
+        },
+        Amazon:{
+          nitialPrice:40,
+          unitPrice=110,
+          tenUnitPrice=110
+        }
+      },
+      BS55:{
+        TRUCK:{
+          nitialPrice:130,
+          unitPrice=220,
+          tenUnitPrice=220
+        },
+        Amazon:{
+          nitialPrice:0,
+          unitPrice=410,
+          tenUnitPrice=410
+        }
+      },
+      B75:{
+        TRUCK:{
+          nitialPrice:170,
+          unitPrice=280,
+          tenUnitPrice=280
+        }
+      },
+      BS75:{
+        TRUCK:{
+          nitialPrice:220,
+          unitPrice=330,
+          tenUnitPrice=330
+        }
+      },
     },
     AB:{
-
+      B55:{
+        TRUCK:{
+          nitialPrice:50,
+          unitPrice=100,
+          tenUnitPrice=100
+        },
+        Amazon:{
+          nitialPrice:0,
+          unitPrice=180,
+          tenUnitPrice=180
+        }
+      },
+      S55:{
+        TRUCK:{
+          nitialPrice:20,
+          unitPrice=60,
+          tenUnitPrice=60
+        },
+        Amazon:{
+          nitialPrice:20,
+          unitPrice=60,
+          tenUnitPrice=60
+        }
+      },
+      BS55:{
+        TRUCK:{
+          nitialPrice:50,
+          unitPrice=150,
+          tenUnitPrice=150
+        },
+        Amazon:{
+          nitialPrice:0,
+          unitPrice=230,
+          tenUnitPrice=230
+        }
+      },
+      B75:{
+        TRUCK:{
+          nitialPrice:70,
+          unitPrice=180,
+          tenUnitPrice=180
+        }
+      },
+      BS75:{
+        TRUCK:{
+          nitialPrice:100,
+          unitPrice=200,
+          tenUnitPrice=200
+        }
+      },
     },
-    SK:{
-
-    },
+    SK:{'B55': {'TRUCK': {'nitialPrice': 70, 'unitPrice': '180', 'tenUnitPrice': '180'}, 'Amazon': {'nitialPrice': 0, 'unitPrice': '300', 'tenUnitPrice': '300'}}, 'S55': {'TRUCK': {'nitialPrice': 30, 'unitPrice': '90', 'tenUnitPrice': '90'}, 'Amazon': {'nitialPrice': 30, 'unitPrice': '90', 'tenUnitPrice': '90'}}, 'BS55': {'TRUCK': {'nitialPrice': 100, 'unitPrice': '200', 'tenUnitPrice': '200'}, 'Amazon': {'nitialPrice': 0, 'unitPrice': '350', 'tenUnitPrice': '350'}}, 'B75': {'TRUCK': {'nitialPrice': 150, 'unitPrice': '250', 'tenUnitPrice': '250'}}, 'BS75': {'TRUCK': {'nitialPrice': 170, 'unitPrice': '280', 'tenUnitPrice': '280'}}},
     BC:{
 
     },
