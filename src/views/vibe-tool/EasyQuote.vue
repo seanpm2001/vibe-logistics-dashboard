@@ -143,8 +143,8 @@ const CAChildren = computed(() => {
 const options = ref([
   { // country
     value: 'CANADA',
-    label: 'Canada(TBA)',
-children: [ // province
+    label: 'Canada',
+    children: [ // province
       // nationwide
       { value: 'AB', label: 'AB-Alberta', children: CAChildren },
       { value: 'BC', label: 'BC-British Columbia', children: CAChildren },
