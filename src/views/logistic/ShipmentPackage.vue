@@ -128,7 +128,6 @@
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import Pagination from '/@/components/Pagination.vue';
 import UnitDescription from './components/UnitDescription.vue';
 import { parseTime } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from '/@/api/logistic';

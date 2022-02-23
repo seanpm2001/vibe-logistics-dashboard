@@ -206,7 +206,6 @@
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import { parseTime } from '/@/utils/format';
-import Pagination from '/@/components/Pagination.vue';
 import TaskDialog from './components/TaskDialog.vue';
 import { listInventoriesAPI } from '/@/api/logistic';
 

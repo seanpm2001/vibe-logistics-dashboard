@@ -155,7 +155,7 @@
 
 <script setup>
 import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElTooltip } from 'element-plus';
 import { throttle } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';

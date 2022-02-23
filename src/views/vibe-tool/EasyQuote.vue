@@ -32,6 +32,8 @@
 </template>
 
 <script setup>
+import { CATruckAreaCostEnum, CAFedexAreaCostEnum } from '/@/enums/easy-quote';
+
 const board55Num = ref(null);
 const stand55Num = ref(null);
 const board75Num = ref(null);
@@ -58,62 +60,99 @@ const calculatePrice = arr => {
     price.value = 'TBA';
     return;
   }
+  let total = 0;
   const [country, area, transport] = arr;
+  const b55num = board55Num.value || 0;
+  const s55num = stand55Num.value || 0;
+  const b75num = board55Num.value || 0;
+  const s75num = stand55Num.value || 0;
 
-  if(board55Num.value > 0) {
-    const num = board55Num.value || 0;
+  // product 55 price
+  if (b55num > 0 && s55num === 0) { // only 55 stand
     if(area === 'AK') {
       if (num <= 10) {
-        price.value = '$' + (num * 150 + 450);
+        total = (num * 150 + 450);
       }
-      price.value = 'TBA';
-      return;
+      total = 0;
     }
     if(area === 'HI') {
       if (num <= 10) {
-        price.value = '$' + (num * 200 + 600);
+        total = num * 200 + 600;
       }
-      price.value = 'TBA';
-      return;
+      total = 0;
     }
     // West US
     if (isWestUs(area)) {
       if (transport === 'GLS') {
         if (num <= 10) {
-          price.value = '$' + (num * 100 + 70);
+          total = (num * 100 + 70);
         } else if (num <= 40) {
-          price.value = '$' + (60 * (num-10) + 1070);
+          total = (60 * (num-10) + 1070);
         }
       } else if (transport === 'TRUCK') {
         if (num <= 10) {
-          price.value = '$' + (num * 90 + 260);
+          total = (num * 90 + 260);
         } else if (num <= 40) {
-          price.value = '$' + (60 * (num-10) + 1160);
+          total = (60 * (num-10) + 1160);
         }
       }
     // Middle US
     } else if (isMiddleUs(area)) {
       if (num <= 10) {
-        price.value = '$' + (num * 100 + 300);
+        total = (num * 100 + 300);
       } else if (10 < num) {
-        price.value = '$' + (70 * (num-10) + 1300);
+        total = (70 * (num-10) + 1300);
       }
     // East US
     } else if (isEastUs(area)) {
       if (num <= 10) {
-        price.value = '$' + (num * 110 + 340);
+        total = (num * 110 + 340);
       } else if (10 < num) {
-        price.value = '$' + (80 * (num-10) + 1440);
+        total = (80 * (num-10) + 1440);
       }
     // Other
     } else {
-      price.value = 'TBA';
+      total = 0;
     }
-  }
-  if (board75Num.value > 0) {
-    price.value = 'TBA';
+  } else if (b55num === 0 && s55num > 0) { // only 55 stand
+    // TODO: 
+  } else if (b55num !==0 && s55num !==0) { // 55 board + stand
+    const setNum = Math.min(b55num, s55num);
+    if (country === 'CANADA') {
+      if (transport==='TRUCK') {
+        if (b55num > s55num) { // 55 after 1 board
+
+        } else if (b55num < s55num) { // 55 after 1 stand
+
+        }
+        count += setNum * CATruckAreaCostEnum[area];
+      } else if (transport==='FEDEX') {
+        if (b55num > s55num) { // 55 after 1 board
+
+        } else if (b55num < s55num) { // 55 after 1 stand
+
+        }
+        count += setNum * CAFedexAreaCostEnum[area];
+      }
+    } else if (area === 'US') {
+      console.log();
+    }
+    price.value = total === 0 ? 'TBA' : '$' + total;
   }
   
+
+  if (b75num > 0 && s75num === 0) { // only 75 stand
+
+  } else if (b75num === 0 && s75num > 0) { // only 75 stand
+
+  } else if (b75num === s75num) { // 75 set(s)
+
+  } else if (b75num > s75num) { // 75 after 1 board
+
+  } else if (b75num < s75num) { // 75 after 1 stand
+
+  }
+
 };
 
 // const unitOpiton = { value: 'UNIT', label: 'Unit(s)' };

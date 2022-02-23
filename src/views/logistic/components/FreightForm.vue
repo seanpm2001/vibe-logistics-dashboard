@@ -129,7 +129,7 @@
         content="You need to have/submit a freight part before 'Add new Sub-Batch'"
         placement="right"
       >
-        <svg-icon icon-name="tips" />
+        <svg-icon class="mgl-5" icon-name="tips" />
       </el-tooltip>
     </div>
   </el-form>
@@ -137,7 +137,7 @@
 
 <script setup>
 
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElTooltip } from 'element-plus';
 import BatchForm from './BatchForm.vue';
 import {
   queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,

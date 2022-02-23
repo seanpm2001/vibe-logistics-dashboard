@@ -46,7 +46,6 @@ jobs:
     - name: Install dependencies and deploy production
       if: github.event_name == 'deployment' && github.event.deployment.environment == 'production' && github.ref == 'refs/heads/master'
       run: |
-        yarn -g @vue/cli@4.5.13
         yarn
         yarn build:prod
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/

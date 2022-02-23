@@ -40,21 +40,23 @@
       <el-button :disabled="!shipmentId" v-else type="primary" @click="handlePackage('create')">
         Submit Package
       </el-button>
-      <el-tooltip
+      <el-popover
         class="tips"
-        effect="light"
+        trigger="hover"
         content="You need to have/submit a 'Shipment' part before 'Submit Package'"
         placement="right"
       >
-        <svg-icon icon-name="tips" />
-      </el-tooltip>
+        <template #reference>
+          <svg-icon class="mgl-5" icon-name="tips" />123
+        </template>
+      </el-popover>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useStore } from 'vuex';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from 'element-plus';
 import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/enums/logistic';
 

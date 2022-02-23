@@ -2365,11 +2365,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:^7.5.5":
-  version: 7.5.5
-  resolution: "@vueuse/core@npm:7.5.5"
+"@vueuse/core@npm:^7.6.0":
+  version: 7.6.2
+  resolution: "@vueuse/core@npm:7.6.2"
   dependencies:
-    "@vueuse/shared": 7.5.5
+    "@vueuse/shared": 7.6.2
     vue-demi: "*"
   peerDependencies:
     "@vue/composition-api": ^1.1.0
@@ -2379,13 +2379,13 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 20d21fcb145155c686963acc1ac11c7925eb9700e82fd05650c942f6be81ab1e6c05087a6ac57966d2367d11e9bd5a0813f144e27ce46da5321c32c59ad70e60
+  checksum: 60ed01a9bcfdd949149fe0048cab9a00df445712334e9f7923094f9569b59b5ff97f15f827e32cf2143a85d930369067970a8993e7043787151e0e4a767fbf80
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:7.5.5":
-  version: 7.5.5
-  resolution: "@vueuse/shared@npm:7.5.5"
+"@vueuse/shared@npm:7.6.2":
+  version: 7.6.2
+  resolution: "@vueuse/shared@npm:7.6.2"
   dependencies:
     vue-demi: "*"
   peerDependencies:
@@ -2396,7 +2396,7 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 1a2f0b29d2bba23c631cdf9a8b7b7065131a1701accb25f4a17973c6bd8da5905fb55e144b5e95ef7877de5c910c10af403122f2e0dfb0155a7f81d6ed4b2844
+  checksum: 824043ef06f71090220f2a053430c124e283a0cfa381e2f780b4b27390353d503d6f9d8bc68323136922b9585eabd1c9b9588c3c921b64e5042a0ba4b0587cd1
   languageName: node
   linkType: hard
 
@@ -5256,22 +5256,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"element-plus@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "element-plus@npm:2.0.1"
+"element-plus@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "element-plus@npm:2.0.2"
   dependencies:
     "@ctrl/tinycolor": ^3.4.0
     "@element-plus/icons-vue": ^0.2.6
     "@popperjs/core": ^2.11.2
-    "@vueuse/core": ^7.5.5
+    "@vueuse/core": ^7.6.0
     async-validator: ^4.0.7
     dayjs: ^1.10.7
     lodash: ^4.17.21
+    lodash-es: ^4.17.21
+    lodash-unified: ^1.0.1
     memoize-one: ^6.0.0
     normalize-wheel-es: ^1.1.1
   peerDependencies:
     vue: ^3.2.0
-  checksum: 6f8a6c0587a71433be080c263f990b08b653e154a282b25f9d989efff239c058601b3b975deda6ac39213dc8b07e2b702dc57223d693d98c7f71152f7c52b40e
+  checksum: 1bf94ab1f96af41edd60a3b70233950d2316b15d01b5ce600e7c927ffdc949c2b17dadff4686c507526dc807f39a662f149063b20cc30512294b1d3711994135
   languageName: node
   linkType: hard
 
@@ -8347,6 +8349,24 @@ __metadata:
   dependencies:
     p-locate: ^4.1.0
   checksum: 83e51725e67517287d73e1ded92b28602e3ae5580b301fe54bfb76c0c723e3f285b19252e375712316774cf52006cb236aed5704692c32db0d5d089b69696e30
+  languageName: node
+  linkType: hard
+
+"lodash-es@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
+  languageName: node
+  linkType: hard
+
+"lodash-unified@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "lodash-unified@npm:1.0.1"
+  peerDependencies:
+    "@types/lodash-es": "*"
+    lodash: "*"
+    lodash-es: "*"
+  checksum: 5356366c53cabecb0b3ca5851135ad4fd4059984908c5669577463a758014a39ab3f218f3feefa2f732f32279f3cb23d967e2c11f988b93d21333e645e4dc6af
   languageName: node
   linkType: hard
 
@@ -13041,7 +13061,7 @@ __metadata:
     babel-eslint: ^10.1.0
     core-js: ^3.21.0
     cross-env: ^7.0.3
-    element-plus: ^2.0.1
+    element-plus: ^2.0.2
     eslint: ^7.x
     eslint-plugin-vue: ^8.4.1
     fast-glob: ^3.2.11

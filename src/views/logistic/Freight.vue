@@ -195,7 +195,6 @@
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import Pagination from '/@/components/Pagination.vue';
 import FreightForm from './components/FreightForm.vue';
 import { parseTime } from '/@/utils/format';
 import {
@@ -331,8 +330,8 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 const handleDelSelected = () => {
-  multipleSelection.value.forEach((item) => {
-    const freightId = item.id;
+  multipleSelection.value.forEach((_item) => {
+    const freightId = _item.id;
     deleteFreightAPI(freightId);
   });
   multipleSelection.value = [];
