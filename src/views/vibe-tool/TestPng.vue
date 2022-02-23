@@ -1,24 +1,17 @@
 <template>
   <div class="page">
-    <img :src="src">
+    <img v-if="week===1" src="/@/assets/img/parallax/background.png">
+    <img v-if="week===2" src="/@/assets/img/parallax/rock.png">
+    <img v-if="week===3" src="/@/assets/img/parallax/earth.png">
+    <img v-if="week===4" src="/@/assets/img/parallax/earth.png">
+    <img v-if="week===5" src="/@/assets/img/parallax/rock.png">
+    <img v-if="week===6" src="/@/assets/img/parallax/earth.png">
+    <img v-if="week===7" src="/@/assets/img/parallax/rock.png">
   </div>
 </template>
 
 <script setup>
 const week = new Date().getDay();
-console.log('week: ', week);
-
-const src = computed(() => {
-  switch(week) {
-  case 1: return '/@/assets/img/parallax/background.png';
-  case 2: return '/@/assets/img/parallax/facebook.png';
-  case 3: return '/@/assets/img/parallax/earth.png';
-  case 4: return '/@/assets/img/parallax/rock.png';
-  case 5: return '/@/assets/img/parallax/mid.png';
-  case 6: return '/@/assets/img/parallax/earth.png';
-  case 7: return '/@/assets/img/parallax/rock.png';
-  }
-});
 </script>
 
 <style lang="sass" scoped>
