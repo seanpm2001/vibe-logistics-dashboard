@@ -522,7 +522,19 @@ export const CAfreightEnum={
 }
 
 
-export const USCostFuc=(nation,position,way,number)=>{
-  
+export const USCostFuc=(nation,position,production,way,number)=>{
+  if (nation == "US"){
+    const nitialPrice=USfreightEunm[position][production][way]["nitialPrice"]
+    const unitPrice=USfreightEunm[position][production][way]["unitPrice"]
+    const tenUnitPrice=USfreightEunm[position][production][way]["tenUnitPrice"]
+    return number<10?nitialPrice+unitPrice*number:nitialPrice+unitPrice*10+tenUnitPrice*(10-number)
+  }else if (nation=="CA"){
+    const nitialPrice=CAfreightEnum[position][production][way]["nitialPrice"]
+    const unitPrice=CAfreightEnum[position][production][way]["unitPrice"]
+    const tenUnitPrice=CAfreightEnum[position][production][way]["tenUnitPrice"]
+    return number<10?nitialPrice+unitPrice*number:nitialPrice+unitPrice*10+tenUnitPrice*(10-number)
+  }else{
+    return 0
+  }
 
 }
