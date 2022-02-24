@@ -404,7 +404,6 @@ export const USfreightEunm={
 }
 
 export const CAfreightEnum={
-  CA:{
     BC:{
       B55:{
         TRUCK:{
@@ -520,51 +519,10 @@ export const CAfreightEnum={
     NT:{'B55': {'TRUCK': {'nitialPrice': 200, 'unitPrice': 300, 'tenUnitPrice': 300}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 600, 'tenUnitPrice': 600}}, 'S55': {'TRUCK': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}, 'Amazon': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}}, 'BS55': {'TRUCK': {'nitialPrice': 250, 'unitPrice': 350, 'tenUnitPrice': 350}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 700, 'tenUnitPrice': 700}}, 'B75': {'TRUCK': {'nitialPrice': 320, 'unitPrice': 430, 'tenUnitPrice': 430}}, 'BS75': {'TRUCK': {'nitialPrice': 300, 'unitPrice': 600, 'tenUnitPrice': 600}}},
     YT:{'B55': {'TRUCK': {'nitialPrice': 200, 'unitPrice': 300, 'tenUnitPrice': 300}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 600, 'tenUnitPrice': 600}}, 'S55': {'TRUCK': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}, 'Amazon': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}}, 'BS55': {'TRUCK': {'nitialPrice': 250, 'unitPrice': 350, 'tenUnitPrice': 350}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 700, 'tenUnitPrice': 700}}, 'B75': {'TRUCK': {'nitialPrice': 320, 'unitPrice': 430, 'tenUnitPrice': 430}}, 'BS75': {'TRUCK': {'nitialPrice': 300, 'unitPrice': 600, 'tenUnitPrice': 600}}},
     NU:{'B55': {'TRUCK': {'nitialPrice': 200, 'unitPrice': 300, 'tenUnitPrice': 300}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 600, 'tenUnitPrice': 600}}, 'S55': {'TRUCK': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}, 'Amazon': {'nitialPrice': 185, 'unitPrice': 150, 'tenUnitPrice': 150}}, 'BS55': {'TRUCK': {'nitialPrice': 250, 'unitPrice': 350, 'tenUnitPrice': 350}, 'Amazon': {'nitialPrice': 0, 'unitPrice': 700, 'tenUnitPrice': 700}}, 'B75': {'TRUCK': {'nitialPrice': 320, 'unitPrice': 430, 'tenUnitPrice': 430}}, 'BS75': {'TRUCK': {'nitialPrice': 300, 'unitPrice': 600, 'tenUnitPrice': 600}}},
-  }
 }
 
 
-export const USCostFuc=(position,way,number)=>{
-  /** 初始价格 */
-  let nitialPrice=0
-  /** 单价 */
-  let unitPrice=0
-  switch(position){
-    case "WEST":
-      if (way=="GLS"){
-        if (number<=10){
-          nitialPrice=70
-          unitPrice=100
-        } else {
-          nitialPrice=1070
-          unitPrice=60
-          number-=10
-        }
-      } else {
-        // way == Truck
-        if (number<=10){
-          nitialPrice=260
-          unitPrice=90
-        } else {
-          nitialPrice=1070
-          unitPrice=60
-          number-=10
-        }
-      }
-      
-      
-      break
-    case "MIDDLE":
-      break
-    case "EAST":
-      break
-    case "AK":
-      break
-    case "HI":
-      break
-    case "PR":
-      break
-    
-  }
+export const USCostFuc=(nation,position,way,number)=>{
+  
 
 }
