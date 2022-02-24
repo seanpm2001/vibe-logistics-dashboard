@@ -10,10 +10,10 @@
         <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
+        <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
+        <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item label="Country/Area/Transport:">
         <el-cascader
@@ -27,7 +27,7 @@
         />
       </el-form-item>
     </el-form>
-    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr.join(' / ')}}</span></div>
+    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
     <br>
     <div>Price: {{price || 'TBA'}}</div>
   </div>
@@ -35,7 +35,6 @@
 
 <script setup>
 import { calCostFn } from '/@/enums/easy-quote';
-import { debounce } from 'lodash';
 
 const board55Num = ref(0);
 const stand55Num = ref(0);
@@ -43,17 +42,7 @@ const board75Num = ref(0);
 const stand75Num = ref(0);
 const price = ref(null);
 let total = 0;
-// US area
-const westAreaArr = ['WA', 'OR', 'CA', 'NV', 'ID', 'UT', 'AZ', 'NM', 'CO', 'MT', 'WY'];
-const middleAreaArr = ['AL', 'AR', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'MI', 'MN', 'MS', 'MO', 'NE', 'ND', 'OH', 'OK', 'SD', 'TN', 'TX', 'WI'];
-const eastAreaArr = ['CT', 'DE', 'FL', 'GA', 'ME', 'MD', 'MA', 'NH', 'NJ', 'NY', 'NC', 'PA', 'RI', 'SC', 'VT', 'VA', 'WV'];
-// const caAreaArr = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'NT', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
 
-const isWestUs = area => westAreaArr.includes(area);
-const isMiddleUs = area => middleAreaArr.includes(area);
-const isEastUs = area => eastAreaArr.includes(area);
-const isUS = country => country === 'US';
-const isCA = country => country === 'CANADA';
 const hasProduct55 = () => board55Num.value > 0 || stand55Num.value > 0;
 const hasProduct75 = () => board75Num.value > 0 || stand75Num.value > 0;
 const hasProduct = () => hasProduct55() || hasProduct75();
@@ -61,8 +50,14 @@ const hasProduct = () => hasProduct55() || hasProduct75();
 const cascaderArr = ref([]);
 const onCascaderArrChange = arr => {
   cascaderArr.value = arr;
-  debounce(() => calculatePrice(arr), 500);
+  calculatePrice(arr);
 };
+
+const disable75Input = computed(() => {
+  const disabledArr = ['FEDEX', 'GLS'];
+  if (disabledArr.includes(cascaderArr.value[2])) // transport
+    return true;
+});
 
 const calculatePrice = arr => { 
   if (!arr || arr.length === 0) {
@@ -82,14 +77,14 @@ const calculatePrice = arr => {
     total += calCostFn(country, s55num, area, 'S55', transport);
   } else if (b55num !==0 && (s55num !==0)) { // 55 board + stand
     const setNum = Math.min(b55num, s55num);
+    const unitNum = Math.abs(b55num - s55num);
     if (b55num > s55num) { // 55 after 1 board
-      total += calCostFn(country, 1, area, 'B55', transport);
+      total += calCostFn(country, unitNum, area, 'B55', transport);
     } else if (b55num < s55num) { // 55 after 1 stand
-      total += calCostFn(country, 1, area, 'S55', transport);
+      total += calCostFn(country, unitNum, area, 'S55', transport);
     }
     total += calCostFn(country, setNum, area, 'BS55', transport);
   }
-  console.log(total);
   
   if (b75num > 0 && (s75num === 0)) { // only 75 board
     total += calCostFn(country, b75num, area, 'B75', transport);
@@ -97,14 +92,14 @@ const calculatePrice = arr => {
     total += calCostFn(country, s75num, area, 'S75', transport);
   } else if (b75num !==0 && (s75num !==0)) { // 75 board + stand
     const setNum = Math.min(b75num, s75num);
+    const unitNum = Math.abs(b75num - s75num);
     if (b75num > s75num) { // 75 after 1 board
-      total += calCostFn(country, 1, area, 'B75', transport);
+      total += calCostFn(country, unitNum, area, 'B75', transport);
     } else if (b75num < s75num) { // 75 after 1 stand
-      total += calCostFn(country, 1, area, 'S75', transport);
+      total += calCostFn(country, unitNum, area, 'S75', transport);
     }
     total += calCostFn(country, setNum, area, 'BS75', transport);
   }
-  console.log(total);
   price.value = total === 0 ? 'TBA' : '$' + total;
   total = 0;
 };
