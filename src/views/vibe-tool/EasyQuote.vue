@@ -27,18 +27,22 @@
         />
       </el-form-item>
     </el-form>
+    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr.join(' / ')}}</span></div>
+    <br>
     <div>Price: {{price || 'TBA'}}</div>
   </div>
 </template>
 
 <script setup>
-import { CACostEnum, USCostEnum } from '/@/enums/easy-quote';
+import { calCostFn } from '/@/enums/easy-quote';
+import { debounce } from 'lodash';
 
 const board55Num = ref(0);
 const stand55Num = ref(0);
 const board75Num = ref(0);
 const stand75Num = ref(0);
 const price = ref(null);
+let total = 0;
 // US area
 const westAreaArr = ['WA', 'OR', 'CA', 'NV', 'ID', 'UT', 'AZ', 'NM', 'CO', 'MT', 'WY'];
 const middleAreaArr = ['AL', 'AR', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'MI', 'MN', 'MS', 'MO', 'NE', 'ND', 'OH', 'OK', 'SD', 'TN', 'TX', 'WI'];
@@ -57,7 +61,7 @@ const hasProduct = () => hasProduct55() || hasProduct75();
 const cascaderArr = ref([]);
 const onCascaderArrChange = arr => {
   cascaderArr.value = arr;
-  calculatePrice(arr);
+  debounce(() => calculatePrice(arr), 500);
 };
 
 const calculatePrice = arr => { 
@@ -65,7 +69,6 @@ const calculatePrice = arr => {
     price.value = 'TBA';
     return;
   }
-  let total = 0;
   const [country, area, transport] = arr;
   const b55num = board55Num.value || 0;
   const s55num = stand55Num.value || 0;
@@ -74,52 +77,36 @@ const calculatePrice = arr => {
 
   // product 55 price
   if (b55num > 0 && (s55num === 0)) { // only 55 board
-    total += calPrice(country, b55num, area, '55', 'BOARD', transport);
+    total += calCostFn(country, b55num, area, 'B55', transport);
   } else if (b55num === 0 && (s55num > 0)) { // only 55 stand
-    total += calPrice(country, s55num, area, '55', 'STAND', transport);
+    total += calCostFn(country, s55num, area, 'S55', transport);
   } else if (b55num !==0 && (s55num !==0)) { // 55 board + stand
     const setNum = Math.min(b55num, s55num);
     if (b55num > s55num) { // 55 after 1 board
-      total += calPrice(country, 1, area, '55', 'BOARD', transport);
+      total += calCostFn(country, 1, area, 'B55', transport);
     } else if (b55num < s55num) { // 55 after 1 stand
-      total += calPrice(country, 1, area, '55', 'STAND', transport);
+      total += calCostFn(country, 1, area, 'S55', transport);
     }
-    total += calPrice(country, setNum, area, '55', 'SET', transport);
+    total += calCostFn(country, setNum, area, 'BS55', transport);
   }
+  console.log(total);
   
   if (b75num > 0 && (s75num === 0)) { // only 75 board
-    total += calPrice(country, b75num, area, '75', 'BOARD', transport);
+    total += calCostFn(country, b75num, area, 'B75', transport);
   } else if (b75num === 0 && (s75num > 0)) { // only 75 stand
-    total += calPrice(country, s75num, area, '75', 'STAND', transport);
+    total += calCostFn(country, s75num, area, 'S75', transport);
   } else if (b75num !==0 && (s75num !==0)) { // 75 board + stand
     const setNum = Math.min(b75num, s75num);
     if (b75num > s75num) { // 75 after 1 board
-      total += calPrice(country, 1, area, '75', 'BOARD', transport);
+      total += calCostFn(country, 1, area, 'B75', transport);
     } else if (b75num < s75num) { // 75 after 1 stand
-      total += calPrice(country, 1, area, '75', 'STAND', transport);
+      total += calCostFn(country, 1, area, 'S75', transport);
     }
-    total += calPrice(country, setNum, area, '75', 'SET', transport);
+    total += calCostFn(country, setNum, area, 'BS75', transport);
   }
+  console.log(total);
   price.value = total === 0 ? 'TBA' : '$' + total;
-};
-
-const formatUSArea = area => {
-  if (isWestUs(area)) return 'West';
-  if (isMiddleUs(area)) return 'Middle';
-  if (isEastUs(area)) return 'East';
-  return area;
-};
-
-const calPrice = (country, num, area, product, unit, transport) => {
-  if (+num === 0) return 0;
-  let costEnum = null;
-  if (isCA(country))
-    costEnum = CACostEnum;
-  if (isUS(country)) {
-    area = formatUSArea(area);
-    costEnum = USCostEnum;
-  }
-  return costEnum[area][product][unit][transport](num);
+  total = 0;
 };
 
 const USGlsChildren = computed(() => {
@@ -144,7 +131,7 @@ const CAChildren = computed(() => {
 const options = ref([
   { // country
     value: 'CANADA',
-    label: 'Canada(TBA)',
+    label: 'Canada',
     children: [ // province
       // nationwide
       { value: 'AB', label: 'AB-Alberta', children: CAChildren },
@@ -236,4 +223,8 @@ const options = ref([
 
 :deep(.el-cascader)
   width: 300px
+
+.cascader-font
+  font-size: 14px
+  color: rgb(96, 98, 102)
 </style>
