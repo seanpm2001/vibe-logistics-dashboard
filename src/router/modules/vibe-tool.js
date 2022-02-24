@@ -4,4 +4,9 @@ export const vibeToolRouter = [
     component: () => import('/@/views/vibe-tool/EasyQuote.vue'),
     hidden: true
   },
+  {
+    path: '/test-png',
+    component: () => import('/@/views/vibe-tool/TestPng.vue'),
+    hidden: true
+  },
 ];
