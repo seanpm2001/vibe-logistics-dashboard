@@ -41,10 +41,10 @@ for (let i = 0; i < 50; i++) {
 
 const unitObj = Mock.mock({
   'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033', 'QTXM8AB001011', 'QTXM8AB001022', 'QTXM8AB001045'],
-  'usedAge|1': ['WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
+  'usedAge|1': ['BRAND_NEW', 'WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
   'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR'],
   'producedDate': '2021-07-15',
-  'condition|1': ['SCRAP', 'DAM_P_ONLY', 'DAM_U_ONLY', 'DAM_P_AND_U', 'DAM_U_NOT_SHIP'],
+  'condition|1': ['SCRAP', 'GOOD', 'DAMAGED'],
   'ownerId': 'COI-4564',
   'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
 });
@@ -52,10 +52,10 @@ const unitObj = Mock.mock({
 for (let i = 0; i < 20; i++) {
   unitList.push(Mock.mock({
     'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033', 'QTXM8AB001011', 'QTXM8AB001022', 'QTXM8AB001045'],
-    'usedAge|1': ['WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
+    'usedAge|1': ['BRAND_NEW', 'WITHIN_3_MONTHS', 'BETWEEN_3_TO_12_MONTHS', 'OVER_12_MONTHS'],
     'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR'],
     'producedDate': '2021-07-15',
-    'condition|1': ['SCRAP', 'DAM_P_ONLY', 'DAM_U_ONLY', 'DAM_P_AND_U', 'DAM_U_NOT_SHIP'],
+    'condition|1': ['SCRAP', 'GOOD', 'DAMAGED'],
     'ownerId': 'COI-4564',
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
   }));

@@ -54,7 +54,45 @@
               On hold:
             </el-switch>
           </el-form-item>
+          <el-form-item label="New Address">
+            <el-input v-model="taskItem.newAddress" placeholder="New Address"/>
+          </el-form-item>
+          <el-form-item label="Note">
+            <el-input v-model="taskItem.note" placeholder="Note"/>
+          </el-form-item>
         </el-row>
+
+        <template v-for="(item, index) in taskItem.units" :key="item.productCode">
+          <el-row align="middle" class="add-minus-row">
+            <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
+            <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
+            <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
+              <el-select
+                v-model="item.productCode" :disabled="isDialogPattern('view')" placeholder="Please select"
+                filterable allow-create default-first-option
+              >
+                <el-option v-for="(item, index) in skuList" :key="index" :label="item.productCode" :value="item.productCode" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
+              <el-input v-model="item.quantity" placeholder="Quantity" />
+            </el-form-item>
+            <div class="divider" style="margin-right: 100%; margin-bottom: 16px;" />
+            <el-form-item label="Condition">
+              <el-select v-model="item.condition" placeholder="Please select" clearable>
+                <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Used Age">
+              <el-select v-model="item.usedAge" placeholder="Please select" clearable>
+                <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Available">
+              <el-input disabled>999</el-input>
+            </el-form-item>
+          </el-row>
+        </template>
 
         <template v-if="isMoveOrReturn">
           <el-row>
@@ -159,6 +197,7 @@ import { ElMessage, ElTooltip } from 'element-plus';
 import { throttle } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
+import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum,
   usedAgeEnum, reversedUsedAgeEnum, conditionEnum, reversedConditionEnum
@@ -186,12 +225,14 @@ const emit = defineEmits(['fetchList']);
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
 const taskItem = inject('taskItem');
+console.log('taskItem: ', taskItem.value);
 const taskOrderItem = inject('taskOrderItem');
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
+const skuList = computed(() => []);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
@@ -203,7 +244,7 @@ const filterUnitArr = filterObj => {
     if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
     return false;
   });
-};
+}; 
 
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
@@ -225,19 +266,33 @@ const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type
 
 const isDialogPattern = type => props.dialogStatus === type;
 
-const handleWarehouseTask = type => {
-  console.log('type: ', type);
-
+const handleWarehouseTask = _type => {
+  if (_type === 'create') {
+    createTaskAPI(taskItem.value).then(_data => {
+      taskItem.value = _data;
+    });
+  } else {
+    updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
+      taskItem.value = _data;
+    });
+  }
 };
 
-const onUsedUnitChange = (idx, type) => {
+const onUsedUnitChange = (_idx, _type) => {
   const unitArr = taskItem.value.usedUnitArr;
-  type === 'add' ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(idx, 1);
+  _type === 'add' ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(_idx, 1);
 };
 
-const onSpecifySerialChange = (idx, type) => {
+const onSpecifySerialChange = (_idx, _type) => {
   const serialArr = taskItem.value.specifySerailArr;
-  type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx, 1);
+  _type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(_idx--, 1);
+};
+
+const onProductChange = (_idx, _type) => {
+  const units = taskItem.value.units;
+  _type === 'add'
+    ? units.push({productCode: null, condition: null, usedAge: null, quantity: null})
+    : units.splice(_idx--, 1);
 };
 
 const onHoldTask = () => {

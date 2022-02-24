@@ -72,28 +72,26 @@ export const taskReasonEnum = {
   PACKAGE_LOST: 'Package Lost'
 };
 export const usedAgeEnum = {
-  WITHIN_3_MONTHS: 'Within 3 months',
-  BETWEEN_3_TO_12_MONTHS: '3 to 12 months',
-  OVER_12_MONTHS: 'Over 12 months'
+  BRAND_NEW: 'Brand New',
+  WITHIN_3_MONTHS: 'Used < 3 months',
+  BETWEEN_3_TO_12_MONTHS: 'Used 3-12 months',
+  OVER_12_MONTHS: 'Used > 12 months'
 };
 export const reversedUsedAgeEnum = {
-  'Within 3 months': 'WITHIN_3_MONTHS',
-  '3 to 12 months': 'BETWEEN_3_TO_12_MONTHS',
-  'Over 12 months': 'OVER_12_MONTHS'
+  'Brand New': 'BRAND_NEW',
+  'Used < 3 months': 'WITHIN_3_MONTHS',
+  'Used 3-12 months': 'BETWEEN_3_TO_12_MONTHS',
+  'Used > 12 months': 'OVER_12_MONTHS'
 };
 export const conditionEnum = {
+  GOOD: 'Good',
   SCRAP: 'Scrap',
-  DAM_P_ONLY: 'Damage package only',
-  DAM_U_ONLY: 'Damage unit only',
-  DAM_P_AND_U: 'Damage package and unit only',
-  DAM_U_NOT_SHIP: 'Damage unit not shipment'
+  DAMAGED: 'Damaged',
 };
 export const reversedConditionEnum = {
+  'Good': 'GOOD',
   'Scrap': 'SCRAP',
-  'Damage package only': 'DAM_P_ONLY',
-  'Damage unit only': 'DAM_U_ONLY',
-  'Damage package and unit only': 'DAM_P_AND_U',
-  'Damage unit not shipment': 'DAM_U_NOT_SHIP'
+  'Damaged': 'DAMAGED',
 };
 export const productMap = {
   '55V1B': '55 V1 Board',

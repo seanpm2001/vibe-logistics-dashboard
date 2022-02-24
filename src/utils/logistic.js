@@ -1,7 +1,7 @@
 // 合并products array为一个{productCode: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
   const result = {};
-  const productArr = [];
+  const units = [];
   arr.forEach(item => {
     const code = item.productCode;
     result[code] = (result[code] + item.quantity) || item.quantity;

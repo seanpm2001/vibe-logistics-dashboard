@@ -10,9 +10,6 @@
       <el-form-item label="Tracking Number">
         <el-input v-model="shipPackage.trackingNumber" placeholder="Tracking Number"/>
       </el-form-item>
-      <el-form-item label="New Address">
-        <el-input v-model="shipPackage.newAddress" placeholder="New Address"/>
-      </el-form-item>
       <el-form-item :rules="{ required: true, message: 'shipment package status is required', trigger: 'change' }" label="Status">
         <el-select :disabled="isDialogPattern('view')" v-model="shipPackage.status" placeholder="Please select">
           <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />

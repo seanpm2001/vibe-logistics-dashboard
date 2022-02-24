@@ -278,6 +278,14 @@ const taskItem = ref({
   targetId: null,
   type: null,
   status: null,
+  newAddress: null,
+  note: null,
+  units: [{
+    productCode: null,
+    condition: null,
+    usedAge: null,
+    quantity: null,
+  }],
   usedUnitArr: [
     {
       usedAge: null,

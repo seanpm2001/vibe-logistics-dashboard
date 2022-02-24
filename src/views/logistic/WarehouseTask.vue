@@ -156,7 +156,6 @@ import { formatAssignedOrderItem } from '/@/utils/logistic';
 const store = useStore();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
-const { proxy } = getCurrentInstance();
 const listQuery = ref({
   page: 1,
   perPage: 10,
@@ -183,19 +182,24 @@ const taskItem = ref({
   targetId: null,
   type: null,
   status: null,
-  usedUnitArr: [
-    {
-      usedAge: null,
-      condition: null,
-      serial: null,
-    },
-  ],
-  specifySerailArr: [
-    {
-      serial: null,
-    },
-  ],
+  newAddress: null,
+  note: null,
+  units: [{
+    sku: null,
+    condition: null,
+    usedAge: null,
+    quantity: null,
+  }],
+  usedUnitArr: [{
+    usedAge: null,
+    condition: null,
+    serial: null,
+  }],
+  specifySerailArr: [{
+    serial: null,
+  }],
 });
+
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 // let contrastData = null;
 const showTaskPattern = ref(null);

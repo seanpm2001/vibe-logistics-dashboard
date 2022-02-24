@@ -115,7 +115,6 @@ const packageArr = ref([]);
 const emptyPackage = {
   trackingNumber: null,
   status: null,
-  newAddress: null,
   unitArr: [{
     serial: null,
     status: null,

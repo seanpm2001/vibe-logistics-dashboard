@@ -20,7 +20,6 @@ export function createVitePlugins(isBuild) {
     Components({
       resolvers: [ElementPlusResolver({importStyle: 'sass'})],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-      dts: 'src/components.d.ts',
     }),
   ];
 
