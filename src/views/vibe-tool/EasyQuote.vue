@@ -27,8 +27,6 @@
         />
       </el-form-item>
     </el-form>
-    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
-    <br>
     <div>Price: {{price || 'TBA'}}</div>
   </div>
 </template>
@@ -54,8 +52,11 @@ const onCascaderArrChange = arr => {
 };
 
 const disable75Input = computed(() => {
+  const arr = cascaderArr.value;
+  if (!arr || arr.length === 0) return false;
+  const transport = cascaderArr.value[2];
   const disabledArr = ['FEDEX', 'GLS'];
-  if (disabledArr.includes(cascaderArr.value[2])) // transport
+  if (disabledArr.includes(transport))
     return true;
 });
 
