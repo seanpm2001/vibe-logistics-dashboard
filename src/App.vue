@@ -24,5 +24,4 @@
 </script>
 
 <style lang="sass">
-@import "./assets/css/main.sass"
 </style>

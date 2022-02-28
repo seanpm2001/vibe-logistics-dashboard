@@ -137,7 +137,7 @@ export async function listWarehousesAPI (params) {
 
 /* 仓库 Warehouse Tasks API */
 export async function queryTasksAPI (params) {
-  requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
   jsonToUnderline(params);
   const res = await requester.get('/warehouse/tasks', {
     params,
@@ -153,20 +153,20 @@ export async function createTaskAPI (data) {
 }
 export async function findTaskAPI (taskId) {
   const item = handleReqElMsg(
-    requester.get(`/warehouse/tasks/${taskId}`), 'Find', 'Warehouse Task', taskId
+    requester.get(`/warehouse/task/${taskId}`), 'Find', 'Warehouse Task', taskId
   );
   return item;
 }
 export async function updateTaskAPI (taskId, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`tasks/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
+    requester.put(`task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
   );
   return item;
 }
 export async function deleteTaskAPI (taskId) {
   handleReqElMsg(
-    requester.delete(`tasks/${taskId}`), 'Delete', 'Warehouse Task', taskId
+    requester.delete(`task/${taskId}`), 'Delete', 'Warehouse Task', taskId
   );
 }
 
