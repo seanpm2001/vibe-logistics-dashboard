@@ -240,9 +240,7 @@ const unitList = computed(() => store.getters.unitList);
 const skuList = computed(() => skuProdcutEnum);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
-  console.log('filterObj: ', filterObj);
   filteredUnitArr.value = unitList.value.filter(unit => {
-    console.log('unit: ', unit);
     if (!filterObj.usedAge && !filterObj.condition) return true;
     if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
     if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;

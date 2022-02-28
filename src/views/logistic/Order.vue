@@ -117,7 +117,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="WH Tasks & Units" width="240px" align="center">
+      <el-table-column label="Units" width="255px" align="center">
         <template v-slot="{ row }">
           <div class="product-row">
             <template v-if="showAssignedOrder">
@@ -145,6 +145,13 @@
               </template>
             </template>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Warehouse Task" width="240px" align="center">
+        <template v-slot="{ row }">
+          <template v-for="(item, index) in row.tasks" :key="item.id">
+            <el-tag class="cursor-pointer" @click="editWarehouseTask(item)">Task {{index+1}}</el-tag>
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="Status" width="120px" align="center">
@@ -413,11 +420,16 @@ const addWarehouseTask = (_orderId, _isAfterAssign) => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = _orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    console.log('taskOrderItem.value: ', taskOrderItem.value);
     _isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
+};
+
+const editWarehouseTask = (_taskItem) => {
+  taskItem.value = Object.assign({}, _taskItem);
+  dialogStatus.value = 'update';
+  dialogTaskVisible.value = true;
 };
 
 const handleSelectionChange = (_selectedArr) => {
