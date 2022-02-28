@@ -62,37 +62,41 @@
           </el-form-item>
         </el-row>
 
-        <template v-for="(item, index) in taskItem.units" :key="item.sku">
-          <el-row align="middle" class="add-minus-row">
-            <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
-            <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
-            <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
-              <el-select
-                v-model="item.sku" :disabled="isDialogPattern('view')" placeholder="Please select"
-                filterable allow-create default-first-option
-              >
-                <el-option v-for="(item, key) in skuList" :key="key" :label="key" :value="key" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
-              <el-input v-model="item.quantity" placeholder="Quantity" />
-            </el-form-item>
-            <div class="divider" style="margin-right: 100%; margin-bottom: 16px;" />
-            <el-form-item label="Condition">
-              <el-select v-model="item.condition" placeholder="Please select" clearable>
-                <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Used Age">
-              <el-select v-model="item.usedAge" placeholder="Please select" clearable>
-                <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Available">
-              <el-input disabled>999</el-input>
-            </el-form-item>
-          </el-row>
-        </template>
+        <el-card>
+          Product: 
+          <template v-for="(item, index) in taskItem.units" :key="item.sku">
+            <el-row align="middle" class="add-minus-row">
+              <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
+              <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
+              <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
+                <el-select
+                  v-model="item.sku" :disabled="isDialogPattern('view')" placeholder="Please select"
+                  filterable allow-create default-first-option
+                >
+                  <el-option v-for="(item, key) in skuList" :key="key" :label="key" :value="key" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
+                <el-input v-model="item.quantity" placeholder="Quantity" />
+              </el-form-item>
+              <div class="divider" style="margin-right: 100%; margin-bottom: 16px;" />
+              <el-form-item label="Condition">
+                <el-select v-model="item.condition" placeholder="Please select" clearable>
+                  <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Used Age">
+                <el-select v-model="item.usedAge" placeholder="Please select" clearable>
+                  <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Available">
+                <el-input disabled>999</el-input>
+              </el-form-item>
+            </el-row>
+          </template>
+        </el-card>
+        
 
         <template v-if="isMoveOrReturn">
           <el-row>

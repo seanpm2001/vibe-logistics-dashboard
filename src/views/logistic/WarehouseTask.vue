@@ -38,7 +38,7 @@
       <el-table-column label="Order ID" width="120px" align="center">
         <template v-slot="{ row }">
           <el-tag
-            >#<span class="link-type">{{ row.id }}</span></el-tag
+            >#<span class="link-type">{{ row.orderId }}</span></el-tag
           >
         </template>
       </el-table-column>
@@ -202,7 +202,7 @@ const specifySerailArr = ref([{
 }]);
 
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
-// let contrastData = null;
+const contrastData = ref(null);
 const showTaskPattern = ref(null);
 const taskPatternEnum = {
   'MY-ONLY': 'My task only',
@@ -247,16 +247,19 @@ const listShipments = (_orderId, _callback) => {
 };
 
 const handleDetailRow = (_row, _type) => {
-  const orderId = _row.id;
+  const taskId = _row.id;
   if (_type === 'remove') {
-    deleteTaskAPI(orderId).then(() => fetchList());
+    deleteTaskAPI(taskId).then(() => fetchList());
     return;
   }
+  findTaskAPI(taskId).then((_data) => {
+    taskItem.value = Object.assign({}, _data); // copy obj
+    _type === 'edit' && (contrastData.value = Object.assign({}, _data));
+  });
+  const orderId = _row.orderId;
   findAssignedOrderAPI(orderId).then((_data) => {
-    taskItem.value = Object.assign({}, emptyTaskItem);
-    taskItem.value.orderId = orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    dialogStatus.value = 'create';
+    dialogStatus.value = 'update';
     dialogTaskVisible.value = true;
   });
 };

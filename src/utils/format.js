@@ -127,7 +127,6 @@ export function jsonToUnderline(obj) {
       jsonToUnderline(v);
     });
   } else if (obj instanceof Object) {
-    console.log('obj: ', obj);
     Object.keys(obj).forEach(function(key) {
       if (!obj[key]) {
         delete obj[key];
