@@ -6,17 +6,21 @@ import { ElMessage } from 'element-plus';
 import requester, { mockRequester } from '/@/utils/http';
 import { jsonToUnderline } from '/@/utils/format';
 
-const handleReqElMsg = async (fn, action, name, id) => {
-  let item = null;
-  const isCreation = action === 'create';
-  await fn
-    .then(_data => {
-      item = _data?.item;
-      ElMessage.success(`${action} ${name} (ID: ${isCreation ? _data.id : id}) successfully.`, 3);
-    })
-    .catch(() => ElMessage.error(`${action} ${name} ${isCreation ? '' : '(ID: ' + id +') '} failed.`, 3));
-  
-  return item;
+const handleReqElMsg = (fn, action, name, id) => {
+  return new Promise((resolve, reject) => {
+    let item = null;
+    const isCreation = action === 'create';
+    fn
+      .then(_data => {
+        item = _data?.item;
+        resolve(item);
+        ElMessage.success(`${action} ${name} (ID: ${isCreation ? _data.id : id}) successfully.`, 3);
+      })
+      .catch(err => {
+        ElMessage.error(`${action} ${name} ${isCreation ? '' : '(ID: ' + id +') '} failed.`, 3);
+        reject(err);
+      });
+  });
 };
 
 /* 海运 Freight API */

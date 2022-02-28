@@ -119,7 +119,7 @@ export function jsonToHump(obj) {
     });
   }
 }
- 
+
 // JSON对象的key值转换为下划线格式 顺便删除‘空字段’
 export function jsonToUnderline(obj) {
   if (obj instanceof Array) {
@@ -127,6 +127,7 @@ export function jsonToUnderline(obj) {
       jsonToUnderline(v);
     });
   } else if (obj instanceof Object) {
+    console.log('obj: ', obj);
     Object.keys(obj).forEach(function(key) {
       if (!obj[key]) {
         delete obj[key];

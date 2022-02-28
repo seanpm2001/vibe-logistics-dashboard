@@ -1,9 +1,9 @@
-// 合并products array为一个{productCode: totalQuantity}的对象
+// 合并products array为一个{sku: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
   const result = {};
   const units = [];
   arr.forEach(item => {
-    const code = item.productCode;
+    const code = item.sku;
     result[code] = (result[code] + item.quantity) || item.quantity;
   });
   return result;
@@ -18,6 +18,6 @@ export const formatAssignedOrderItem = orderItem => {
   });
   orderItem = Object.assign(orderItem, raws[0]);
   orderItem.id = originId;
-  orderItem.products = combineSameProductQuantity(productsArr); // {productCode: totalQuantity}
+  orderItem.products = combineSameProductQuantity(productsArr); // {sku: totalQuantity}
   return orderItem;
 };

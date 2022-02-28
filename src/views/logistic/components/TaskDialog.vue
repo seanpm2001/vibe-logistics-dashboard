@@ -20,7 +20,7 @@
       >
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Type">
-            <el-select v-model="taskItem.type" :disabled="isDialogPattern('view')" placeholder="Please select">
+            <el-select v-model="taskItem.taskType" :disabled="isDialogPattern('view')" placeholder="Please select">
               <el-option v-for="(item, key) in taskTypeEnum" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
@@ -62,16 +62,16 @@
           </el-form-item>
         </el-row>
 
-        <template v-for="(item, index) in taskItem.units" :key="item.productCode">
+        <template v-for="(item, index) in taskItem.units" :key="item.sku">
           <el-row align="middle" class="add-minus-row">
             <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
             <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
             <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
               <el-select
-                v-model="item.productCode" :disabled="isDialogPattern('view')" placeholder="Please select"
+                v-model="item.sku" :disabled="isDialogPattern('view')" placeholder="Please select"
                 filterable allow-create default-first-option
               >
-                <el-option v-for="(item, index) in skuList" :key="index" :label="item.productCode" :value="item.productCode" />
+                <el-option v-for="(item, key) in skuList" :key="key" :label="key" :value="key" />
               </el-select>
             </el-form-item>
             <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
@@ -104,10 +104,10 @@
             </el-form-item>
           </el-row>
           <template v-if="checkedSpecifySerial[0]">
-            <template v-for="(item, index) in taskItem.specifySerailArr" :key="index">
+            <template v-for="(item, index) in specifySerailArr" :key="index">
               <el-row align="middle" class="add-minus-row">
                 <svg-icon class="icon" icon-name="add" @click="onSpecifySerialChange(index, 'add')" />
-                <svg-icon class="icon" :style="taskItem.specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onSpecifySerialChange(index, 'minus')" />
+                <svg-icon class="icon" :style="specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onSpecifySerialChange(index, 'minus')" />
                 <el-form-item label="Unit Serial">
                   <el-select
                     v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
@@ -135,10 +135,10 @@
           </el-tooltip>
         </el-row>
         <template v-if="showUsedUnits">
-          <template v-for="(item, index) in taskItem.usedUnitArr" :key="index">
+          <template v-for="(item, index) in usedUnitArr" :key="index">
             <el-row justify="space-between" align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onUsedUnitChange(index, 'add')" />
-              <svg-icon class="icon" :style="taskItem.usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
+              <svg-icon class="icon" :style="usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
               <el-form-item label="Used Age">
                 <el-select v-model="item.usedAge" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
@@ -199,7 +199,7 @@ import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
 import {
-  taskTypeEnum, taskReasonEnum, taskStatusEnum,
+  taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
   usedAgeEnum, reversedUsedAgeEnum, conditionEnum, reversedConditionEnum
 } from '/@/enums/logistic';
 
@@ -225,14 +225,15 @@ const emit = defineEmits(['fetchList']);
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
 const taskItem = inject('taskItem');
-console.log('taskItem: ', taskItem.value);
+const usedUnitArr = inject('usedUnitArr');
+const specifySerailArr = inject('specifySerailArr');
 const taskOrderItem = inject('taskOrderItem');
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const unitList = computed(() => store.getters.unitList);
-const skuList = computed(() => []);
+const skuList = computed(() => skuProdcutEnum);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
@@ -269,6 +270,7 @@ const isDialogPattern = type => props.dialogStatus === type;
 const handleWarehouseTask = _type => {
   if (_type === 'create') {
     createTaskAPI(taskItem.value).then(_data => {
+      console.log('_data: ', _data);
       taskItem.value = _data;
     });
   } else {
@@ -279,19 +281,19 @@ const handleWarehouseTask = _type => {
 };
 
 const onUsedUnitChange = (_idx, _type) => {
-  const unitArr = taskItem.value.usedUnitArr;
+  const unitArr = usedUnitArr.value;
   _type === 'add' ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(_idx, 1);
 };
 
 const onSpecifySerialChange = (_idx, _type) => {
-  const serialArr = taskItem.value.specifySerailArr;
+  const serialArr = specifySerailArr.vallue;
   _type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(_idx--, 1);
 };
 
 const onProductChange = (_idx, _type) => {
   const units = taskItem.value.units;
   _type === 'add'
-    ? units.push({productCode: null, condition: null, usedAge: null, quantity: null})
+    ? units.push({sku: null, condition: null, usedAge: null, quantity: null})
     : units.splice(_idx--, 1);
 };
 

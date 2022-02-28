@@ -55,7 +55,7 @@
       <el-table-column label="WT Type" width="110px" align="center">
         <template v-slot="{ row }">
           <el-tag>
-            {{ taskTypeEnum[row.warehouseTaskType] }}
+            {{ taskTypeEnum[row.taskType] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -190,15 +190,16 @@ const taskItem = ref({
     usedAge: null,
     quantity: null,
   }],
-  usedUnitArr: [{
-    usedAge: null,
-    condition: null,
-    serial: null,
-  }],
-  specifySerailArr: [{
-    serial: null,
-  }],
 });
+
+const usedUnitArr = ref([{
+  usedAge: null,
+  condition: null,
+  serial: null,
+}]);
+const specifySerailArr = ref([{
+  serial: null,
+}]);
 
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 // let contrastData = null;
@@ -210,6 +211,8 @@ const taskPatternEnum = {
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
+provide('usedUnitArr', usedUnitArr);
+provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 /* End Data */
 

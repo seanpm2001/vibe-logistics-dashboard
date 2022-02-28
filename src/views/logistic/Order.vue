@@ -121,14 +121,12 @@
         <template v-slot="{ row }">
           <div class="product-row">
             <template v-if="showAssignedOrder">
-              <template v-for="(item, key) in row.products" :key="key">
+              <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="productIconMap[key] || 'product-other'" />
-                  <span class="mgl-5"
-                    >{{ productMap[key] || key }}:<el-tag class="mgl-5" size="small">{{
-                      item
-                    }}</el-tag></span
-                  >
+                  <svg-icon :icon-name="productIconMap[item.productCode] || 'product-other'" />
+                  <span class="mgl-5">{{ productMap[item.productCode] || item.productCode }}:
+                    <el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag>
+                  </span>
                 </div>
               </template>
             </template>
@@ -276,34 +274,33 @@ const taskItem = ref({
   orderId: null,
   sourceId: null,
   targetId: null,
-  type: null,
+  taskType: null,
   status: null,
   newAddress: null,
   note: null,
   units: [{
-    productCode: null,
+    sku: null,
     condition: null,
     usedAge: null,
     quantity: null,
   }],
-  usedUnitArr: [
-    {
-      usedAge: null,
-      condition: null,
-      serial: null,
-    },
-  ],
-  specifySerailArr: [
-    {
-      serial: null,
-    },
-  ],
 });
+const usedUnitArr = ref([{
+  usedAge: null,
+  condition: null,
+  serial: null,
+}]);
+const specifySerailArr = ref([{
+  serial: null,
+}]);
+
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
+provide('usedUnitArr', usedUnitArr);
+provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 /* End data */
 
