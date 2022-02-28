@@ -181,7 +181,6 @@ const taskItem = ref({
   sourceId: null,
   targetId: null,
   type: null,
-  status: null,
   newAddress: null,
   note: null,
   units: [{

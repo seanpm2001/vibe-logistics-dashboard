@@ -222,7 +222,6 @@ const listQuery = ref({
   sort: '+id'
 });
 
-
 const sortEnum = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
 
 const tableKey = ref(0);
@@ -239,7 +238,6 @@ const taskItem = ref({
   sourceId: null,
   targetId: null,
   type: null,
-  status: null,
   usedUnitArr: [{
     usedAge: null,
     condition: null,

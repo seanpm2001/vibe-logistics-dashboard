@@ -16,7 +16,6 @@
         ref="dataForm"
         :model="taskItem"
         label-position="left"
-        label-width="170px"
       >
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Type">
@@ -44,21 +43,16 @@
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
-          <el-form-item label="Task Status">
-            <el-select v-model="taskItem.status" :disabled="isDialogPattern('view')" placeholder="Please select">
-              <el-option v-for="(item, key) in taskStatusEnum" :key="item" :label="item" :value="key" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="On hold">
-            <el-switch v-model="isOnHold" :disabled="isDialogPattern('view')" @click="onHoldTask">
-              On hold:
-            </el-switch>
-          </el-form-item>
           <el-form-item label="New Address">
             <el-input v-model="taskItem.newAddress" placeholder="New Address"/>
           </el-form-item>
           <el-form-item label="Note">
             <el-input v-model="taskItem.note" placeholder="Note"/>
+          </el-form-item>
+          <el-form-item label="On hold">
+            <el-switch v-model="isOnHold" :disabled="isDialogPattern('view')" @click="onHoldTask">
+              On hold:
+            </el-switch>
           </el-form-item>
         </el-row>
 
@@ -207,7 +201,6 @@ import {
   usedAgeEnum, reversedUsedAgeEnum, conditionEnum, reversedConditionEnum
 } from '/@/enums/logistic';
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   emptyTaskItem: {
     type: Object,
@@ -223,7 +216,6 @@ const props = defineProps({
   },
 });
 
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['fetchList']);
 
 /* Start data */

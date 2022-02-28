@@ -22,7 +22,9 @@
         <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
         <svg-icon class="icon" :style="shipPackage.unitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
         <el-form-item label="Unit Status">
-          <el-input v-model="item.status" placeholder="Unit Status"/>
+          <el-select :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
+            <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
+          </el-select>
         </el-form-item>
         <el-form-item label="Unit Serial">
           <el-input v-model="item.serial" placeholder="Unit Serial"/>
