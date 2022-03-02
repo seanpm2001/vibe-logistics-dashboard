@@ -252,6 +252,7 @@ import {
   unassignOrdersAPI,
   findUnitAPI,
   findAssignedOrderAPI,
+  findTaskAPI
 } from '/@/api/logistic';
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
@@ -290,6 +291,14 @@ const taskItem = ref({
     usedAge: null,
     quantity: null,
   }],
+  // shipment info
+  carrier: null,
+  deliveryCost: null,
+  liftgateCost: null,
+  limitedAccessCost: null,
+  residentialCost: null,
+  insideCost: null,
+  insureCostL: null,
 });
 const usedUnitArr = ref([{
   usedAge: null,
@@ -426,9 +435,11 @@ const addWarehouseTask = (_orderId, _isAfterAssign) => {
 };
 
 const editWarehouseTask = (_taskItem) => {
-  taskItem.value = Object.assign({}, _taskItem);
-  dialogStatus.value = 'update';
-  dialogTaskVisible.value = true;
+  findTaskAPI(_taskItem.id).then(_data => {
+    taskItem.value = _data;
+    dialogStatus.value = 'update';
+    dialogTaskVisible.value = true;
+  });
 };
 
 const handleSelectionChange = (_selectedArr) => {

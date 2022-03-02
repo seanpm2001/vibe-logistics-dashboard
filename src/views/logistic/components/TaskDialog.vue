@@ -251,6 +251,8 @@ const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
 const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
 const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.type));
 const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type));
+
+provide('taskItem', taskItem);
 /* End data */
 
 // watchEffect(() => {
@@ -264,8 +266,8 @@ const isDialogPattern = type => props.dialogStatus === type;
 const handleWarehouseTask = _type => {
   if (_type === 'create') {
     createTaskAPI(taskItem.value).then(_data => {
-      console.log('_data: ', _data);
       taskItem.value = _data;
+      emit('fetchList');
     });
   } else {
     updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {

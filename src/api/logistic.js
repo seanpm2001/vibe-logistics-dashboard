@@ -160,13 +160,13 @@ export async function findTaskAPI (taskId) {
 export async function updateTaskAPI (taskId, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
+    requester.put(`/warehouse/task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
   );
   return item;
 }
 export async function deleteTaskAPI (taskId) {
   handleReqElMsg(
-    requester.delete(`task/${taskId}`), 'Delete', 'Warehouse Task', taskId
+    requester.delete(`/warehouse/task/${taskId}`), 'Delete', 'Warehouse Task', taskId
   );
 }
 

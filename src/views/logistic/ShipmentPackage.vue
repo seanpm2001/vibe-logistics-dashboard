@@ -95,7 +95,6 @@
         class-name="small-padding fixed-width"
       >
         <template v-slot="{ row, $index }">
-          <el-button size="small" type="primary"> Pendenging Warehousing Task </el-button>
           <el-popconfirm
             @confirm="deleteShipment(row, $index)"
             confirm-button-text="OK"
