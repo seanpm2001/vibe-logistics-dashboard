@@ -27,6 +27,7 @@
         />
       </el-form-item>
     </el-form>
+    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
     <div>Price: {{price || 'TBA'}}</div>
   </div>
 </template>
