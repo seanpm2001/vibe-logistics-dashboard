@@ -40,11 +40,12 @@ export const destPortEnum = {
   MELBOURNE: 'Melbourne'
 };
 export const packageStatusEnum = {
-  DELIVERED: 'Delivered',
-  DELIVEREING: 'Delivering',
-  PARTIALLY_DELIVERED: 'Partially Delivered',
+  DELIVERING: 'Delivering',
+  DELIVERED_BUT_UNCHECKED: 'Delivered but unchecked',
+  COMPLETE_WITH_DELIVERED: 'Complete with delivered',
+  COMPLETE_WITH_RETURNED: 'Complete with returned',
   RETURNING: 'Returning',
-  RETURNED: 'Returned',
+  RETURNED_BUT_UNCHECKED: 'Returned but unchecked',
   LOST: 'Lost'
 };
 export const taskStatusEnum = {
