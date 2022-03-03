@@ -660,16 +660,25 @@ export const calCostFn = (country, number, area, product, transport) => {
       const unitPrice = USfreightEunm[product][area][transport]["unitPrice"];
       const tenUnitPrice =
         USfreightEunm[product][area][transport]["tenUnitPrice"];
-      if (product == "B75" || product == "BS75") {
+      if (product === "B75" || product === "BS75") {
         // 由于75产品价格非线形对其做特殊处理
+        let totalPrice = 0;
+        if (number > 3) {
+          totalPrice +=
+            (number / 3) *
+            USfreightEunm[product][area][transport]["numberThree"];
+          number %= 3;
+        }
         switch (number) {
           case 1:
-            return USfreightEunm[product][area][transport]["numberOne"];
+            totalPrice += USfreightEunm[product][area][transport]["numberOne"];
           case 2:
-            return USfreightEunm[product][area][transport]["numberTwo"];
+            totalPrice += USfreightEunm[product][area][transport]["numberTwo"];
           case 3:
-            return USfreightEunm[product][area][transport]["numberThree"];
+            totalPrice +=
+              USfreightEunm[product][area][transport]["numberThree"];
         }
+        return totalPrice;
       }
       return number < 10
         ? nitialPrice + unitPrice * number
