@@ -584,58 +584,58 @@ export const CAfreightEnum = {
 
 // US area
 const westAreaArr = [
-  "WA",
-  "OR",
-  "CA",
-  "NV",
-  "ID",
-  "UT",
-  "AZ",
-  "NM",
-  "CO",
-  "MT",
-  "WY",
+  'WA',
+  'OR',
+  'CA',
+  'NV',
+  'ID',
+  'UT',
+  'AZ',
+  'NM',
+  'CO',
+  'MT',
+  'WY',
 ];
 const middleAreaArr = [
-  "AL",
-  "AR",
-  "IL",
-  "IN",
-  "IA",
-  "KS",
-  "KY",
-  "LA",
-  "MI",
-  "MN",
-  "MS",
-  "MO",
-  "NE",
-  "ND",
-  "OH",
-  "OK",
-  "SD",
-  "TN",
-  "TX",
-  "WI",
+  'AL',
+  'AR',
+  'IL',
+  'IN',
+  'IA',
+  'KS',
+  'KY',
+  'LA',
+  'MI',
+  'MN',
+  'MS',
+  'MO',
+  'NE',
+  'ND',
+  'OH',
+  'OK',
+  'SD',
+  'TN',
+  'TX',
+  'WI',
 ];
 const eastAreaArr = [
-  "CT",
-  "DE",
-  "FL",
-  "GA",
-  "ME",
-  "MD",
-  "MA",
-  "NH",
-  "NJ",
-  "NY",
-  "NC",
-  "PA",
-  "RI",
-  "SC",
-  "VT",
-  "VA",
-  "WV",
+  'CT',
+  'DE',
+  'FL',
+  'GA',
+  'ME',
+  'MD',
+  'MA',
+  'NH',
+  'NJ',
+  'NY',
+  'NC',
+  'PA',
+  'RI',
+  'SC',
+  'VT',
+  'VA',
+  'WV',
 ];
 // const caAreaArr = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'NT', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
 
@@ -644,53 +644,51 @@ const isMiddleUs = (area) => middleAreaArr.includes(area);
 const isEastUs = (area) => eastAreaArr.includes(area);
 
 const formatUSArea = (area) => {
-  if (isWestUs(area)) return "WEST";
-  if (isMiddleUs(area)) return "MIDDLE";
-  if (isEastUs(area)) return "EAST";
+  if (isWestUs(area)) return 'WEST';
+  if (isMiddleUs(area)) return 'MIDDLE';
+  if (isEastUs(area)) return 'EAST';
   return area;
 };
 
 export const calCostFn = (country, number, area, product, transport) => {
   try {
-    if (country === "US") {
+    if (country === 'US') {
       area = formatUSArea(area);
-      console.log("area: ", area);
       const nitialPrice =
-        USfreightEunm[product][area][transport]["nitialPrice"];
-      const unitPrice = USfreightEunm[product][area][transport]["unitPrice"];
+        USfreightEunm[product][area][transport]['nitialPrice'];
+      const unitPrice = USfreightEunm[product][area][transport]['unitPrice'];
       const tenUnitPrice =
-        USfreightEunm[product][area][transport]["tenUnitPrice"];
-      if (product === "B75" || product === "BS75") {
+        USfreightEunm[product][area][transport]['tenUnitPrice'];
+      if (product === 'S75') product = 'B75'; // prodcut S75 和 B75价格逻辑一致
+      if (product === 'B75' || product === 'BS75') {
         // 由于75产品价格非线形对其做特殊处理
         let totalPrice = 0;
-        console.log("(number / 3)" + parseInt(number / 3));
-        console.log("(number % 3)" + (number % 3));
 
         if (number >= 3) {
           totalPrice +=
             parseInt(number / 3) *
-            USfreightEunm[product][area][transport]["numberThree"];
+            USfreightEunm[product][area][transport]['numberThree'];
           number = number % 3;
         }
         switch (number) {
-          case 1:
-            totalPrice += USfreightEunm[product][area][transport]["numberOne"];
-            break;
-          case 2:
-            totalPrice += USfreightEunm[product][area][transport]["numberTwo"];
-            break;
+        case 1:
+          totalPrice += USfreightEunm[product][area][transport]['numberOne'];
+          break;
+        case 2:
+          totalPrice += USfreightEunm[product][area][transport]['numberTwo'];
+          break;
         }
         return totalPrice;
       }
       return number < 10
         ? nitialPrice + unitPrice * number
         : nitialPrice + unitPrice * 10 + tenUnitPrice * (10 - number);
-    } else if (country === "CANADA") {
+    } else if (country === 'CANADA') {
       const nitialPrice =
-        CAfreightEnum[area][product][transport]["nitialPrice"];
-      const unitPrice = CAfreightEnum[area][product][transport]["unitPrice"];
+        CAfreightEnum[area][product][transport]['nitialPrice'];
+      const unitPrice = CAfreightEnum[area][product][transport]['unitPrice'];
       const tenUnitPrice =
-        CAfreightEnum[area][product][transport]["tenUnitPrice"];
+        CAfreightEnum[area][product][transport]['tenUnitPrice'];
       return number < 10
         ? nitialPrice + unitPrice * number
         : nitialPrice + unitPrice * 10 + tenUnitPrice * (10 - number);

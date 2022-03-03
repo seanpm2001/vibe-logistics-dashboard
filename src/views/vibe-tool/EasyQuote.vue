@@ -29,26 +29,27 @@
     </el-form>
     <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
     <div>Price: {{price || 'TBA'}}</div>
-    <button @click="resetFunc" id="resetButton">RESET</button>
-    <div class="note">Note: <br><br>
-1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
-<br>
-<br>
-2. Because of COVID pandemic, inside delivery (white gloves services) will not be provided in Canada. If customers really need this service, we need to contact carrier and ask the price case by case.
-<br>
-<br>  
-3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.</div>
-    
+    <el-button type="danger" @click="resetFunc" class="resetButton">RESET</el-button>
+    <el-card class="note">
+      Note:
+      <br><br>
+      1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
+      <br>
+      <br>
+      2. Because of COVID pandemic, inside delivery (white gloves services) will not be provided in Canada. If customers really need this service, we need to contact carrier and ask the price case by case.
+      <br>
+      <br>  
+      3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.
+    </el-card>
   </div>
 </template>
 
 <script setup>
 import { calCostFn } from '/@/enums/easy-quote';
-import { reactive } from 'vue' 
-let board55Num = ref(0);  
-let stand55Num = ref(0);
-let board75Num = ref(0);
-let stand75Num = ref(0);
+const board55Num = ref(0);  
+const stand55Num = ref(0);
+const board75Num = ref(0);
+const stand75Num = ref(0);
 const price = ref(null);
 let total = 0;
 
@@ -56,14 +57,15 @@ const hasProduct55 = () => board55Num.value > 0 || stand55Num.value > 0;
 const hasProduct75 = () => board75Num.value > 0 || stand75Num.value > 0;
 const hasProduct = () => hasProduct55() || hasProduct75();
 
-let cascaderArr = ref([]);
+const cascaderArr = ref([]);
 
 function resetFunc (){
-  board55Num.value = 0
-  stand55Num.value = 0
-  board75Num.value = 0
-  stand75Num.value = 0
-  cascaderArr.value=[]
+  board55Num.value = 0;
+  stand55Num.value = 0;
+  board75Num.value = 0;
+  stand75Num.value = 0;
+  cascaderArr.value = [];
+  price.value = 'TBA';
 }
 
 const onCascaderArrChange = arr => {
@@ -243,10 +245,10 @@ const options = ref([
 .cascader-font
   font-size: 14px
   color: rgb(96, 98, 102)
-#resetButton
+.resetButton
   margin-top: 10px
 .note
-  width: 500px
+  width: 550px
   margin-top: 10px
 
   </style>
