@@ -150,7 +150,7 @@
       <el-table-column label="Warehouse Task" width="240px" align="center">
         <template v-slot="{ row }">
           <template v-for="(item, index) in row.tasks" :key="item.id">
-            <el-tag class="cursor-pointer" @click="editWarehouseTask(item)">Task {{index+1}}</el-tag>
+            <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item)">Task {{index+1}}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -434,11 +434,14 @@ const addWarehouseTask = (_orderId, _isAfterAssign) => {
   });
 };
 
-const editWarehouseTask = (_taskItem) => {
-  findTaskAPI(_taskItem.id).then(_data => {
-    taskItem.value = _data;
-    dialogStatus.value = 'update';
-    dialogTaskVisible.value = true;
+const editWarehouseTask = (_orderId, _taskItem) => {
+  findAssignedOrderAPI(_orderId).then((_data) => {
+    taskOrderItem.value = formatAssignedOrderItem(_data);
+    findTaskAPI(_taskItem.id).then(_data => {
+      taskItem.value = _data;
+      dialogStatus.value = 'update';
+      dialogTaskVisible.value = true;
+    });
   });
 };
 
