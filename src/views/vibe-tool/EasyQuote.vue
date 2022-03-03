@@ -12,7 +12,7 @@
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
         <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
-      <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
+      <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
         <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item label="Country/Area/Transport:">

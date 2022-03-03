@@ -663,20 +663,22 @@ export const calCostFn = (country, number, area, product, transport) => {
       if (product === "B75" || product === "BS75") {
         // 由于75产品价格非线形对其做特殊处理
         let totalPrice = 0;
-        if (number > 3) {
+        console.log("(number / 3)" + parseInt(number / 3));
+        console.log("(number % 3)" + (number % 3));
+
+        if (number >= 3) {
           totalPrice +=
-            (number / 3) *
+            parseInt(number / 3) *
             USfreightEunm[product][area][transport]["numberThree"];
-          number %= 3;
+          number = number % 3;
         }
         switch (number) {
           case 1:
             totalPrice += USfreightEunm[product][area][transport]["numberOne"];
+            break;
           case 2:
             totalPrice += USfreightEunm[product][area][transport]["numberTwo"];
-          case 3:
-            totalPrice +=
-              USfreightEunm[product][area][transport]["numberThree"];
+            break;
         }
         return totalPrice;
       }
