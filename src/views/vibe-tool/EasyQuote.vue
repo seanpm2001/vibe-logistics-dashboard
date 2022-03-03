@@ -12,7 +12,7 @@
       <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
         <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
-      <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
+      <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
         <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
       </el-form-item>
       <el-form-item label="Country/Area/Transport:">
@@ -29,16 +29,26 @@
     </el-form>
     <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
     <div>Price: {{price || 'TBA'}}</div>
+    <button @click="resetFunc" id="resetButton">RESET</button>
+    <div class="note">Note: <br><br>
+1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
+<br>
+<br>
+2. Because of COVID pandemic, inside delivery (white gloves services) will not be provided in Canada. If customers really need this service, we need to contact carrier and ask the price case by case.
+<br>
+<br>  
+3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.</div>
+    
   </div>
 </template>
 
 <script setup>
 import { calCostFn } from '/@/enums/easy-quote';
-
-const board55Num = ref(0);
-const stand55Num = ref(0);
-const board75Num = ref(0);
-const stand75Num = ref(0);
+import { reactive } from 'vue' 
+let board55Num = ref(0);  
+let stand55Num = ref(0);
+let board75Num = ref(0);
+let stand75Num = ref(0);
 const price = ref(null);
 let total = 0;
 
@@ -46,7 +56,16 @@ const hasProduct55 = () => board55Num.value > 0 || stand55Num.value > 0;
 const hasProduct75 = () => board75Num.value > 0 || stand75Num.value > 0;
 const hasProduct = () => hasProduct55() || hasProduct75();
 
-const cascaderArr = ref([]);
+let cascaderArr = ref([]);
+
+function resetFunc (){
+  board55Num.value = 0
+  stand55Num.value = 0
+  board75Num.value = 0
+  stand75Num.value = 0
+  cascaderArr.value=[]
+}
+
 const onCascaderArrChange = arr => {
   cascaderArr.value = arr;
   calculatePrice(arr);
@@ -224,4 +243,10 @@ const options = ref([
 .cascader-font
   font-size: 14px
   color: rgb(96, 98, 102)
-</style>
+#resetButton
+  margin-top: 10px
+.note
+  width: 500px
+  margin-top: 10px
+
+  </style>
