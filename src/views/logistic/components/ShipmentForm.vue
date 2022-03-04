@@ -53,7 +53,7 @@
       <template v-for="(item, index) in packageArr" :key="index">
         <PackageForm
           :ref="`package-${index}`"
-          :shipmentId="taskItem?.id"
+          :taskId="taskItem?.id"
           :packageIdx="index"
           :packageItem="item"
           :warehouseEnum="warehouseEnum"
@@ -76,7 +76,7 @@
 
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
-import { updateTaskAPI } from '/@/api/logistic';
+import { updateTaskAPI, getTaskPackagesAPI } from '/@/api/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -94,31 +94,25 @@ const props = defineProps({
   }
 });
 
-// const taskItem = ref({
-//   id: 0,
-//   carrier: null,
-//   deliveryCost: null,
-//   liftgateCost: null,
-//   limitedAccessCost: null,
-//   residentialCost: null,
-//   insideCost: null,
-//   insureCostL: null,
-// });
-// const emptyShipmentItem = JSON.parse(JSON.stringify(taskItem))._value;
-
 /* Start Data */
 const taskItem = inject('taskItem');
+const packageArr = inject('packageArr');
 
-const packageArr = ref([]);
 const emptyPackage = {
   trackingNumber: null,
   status: null,
-  unitArr: [{
+  units: [{
     serial: null,
     status: null,
   }],
 };
-
+/* End Data */
+watchEffect(() => {
+  const taskId = props.taskId;
+  taskId && getTaskPackagesAPI(taskId).then(_data => {
+    packageArr.value = _data;
+  });
+});
 const isDialogPattern = type => props.dialogStatus === type;
 
 const disableNewPackage = computed(() => {
@@ -128,10 +122,6 @@ const disableNewPackage = computed(() => {
 });
 
 const addPackage = () => {
-  // if (!formData.value.id) {
-  //   ElMessage.error('You need to "Submit Shipment Section" before "Add Shipment"', 3);
-  //   return;
-  // }
   packageArr.value.push(Object.assign({}, emptyPackage));
   console.log('packageArr.value: ', packageArr.value);
 };
@@ -154,7 +144,8 @@ const handleShipment = (type) => {
 const removePackage = (idx, shipmentId) => {
   packageArr.value.splice(idx, 1);
 };
-const submitPackage = (shipment, freightId, shipmentIdx) => {
+const submitPackage = (shipment, taskId, packageIdx) => {
+  console.log('shipment, taskId, packageIdx: ', shipment, taskId, packageIdx);
 };
 const updatePackage = (data, shipmentIdx) => {
   console.log('shipmentIdx: ', shipmentIdx);

@@ -4,6 +4,7 @@
     title="Warehouse Task"
     v-model="dialogTaskVisible"
     :close-on-click-modal="false"
+    :before-close="beforeCloseDialog"
   >
     <template v-if="taskOrderItem">
       <OrderDescription
@@ -170,9 +171,9 @@
 
         <el-card>
           <ShipmentForm
-            :ref="`shipmentForm`"
-            :taskId="taskItem.id"
-            :orderId="taskItem.orderId"
+            ref="shipmentForm"
+            :taskId="taskItem?.id"
+            :orderId="taskItem?.orderId"
             :warehouseEnum="warehouseEnum"
             :dialogStatus="dialogStatus"
           />
@@ -241,6 +242,7 @@ const filterUnitArr = filterObj => {
   });
 }; 
 
+const packageArr = ref([]);
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
 const checkedSpecifySerial = ref([]);
@@ -252,6 +254,7 @@ const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
 const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.type));
 const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type));
 
+provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
@@ -299,9 +302,37 @@ const onHoldTask = () => {
 
 const resetForm = () => {
   proxy.$nextTick(() => {
-    taskItem.value = Object.assign({}, props.emptyFreightForm);
+    packageArr.value = [];
+    taskItem.value = Object.assign({}, props.emptyTaskItem);
     proxy.$refs['dataForm'].clearValidate();
   });
+};
+
+const beforeCloseDialog = (done) => {
+  if (props.dialogStatus !== 'edit') {
+    resetForm();
+    done();
+    return;
+  }
+
+  const isChanged =
+    JSON.stringify(contrastData.value) !== JSON.stringify(taskItem.value);
+  if (!isChanged) {
+    resetForm();
+    done();
+  }
+  isChanged &&
+    ElMessageBox.confirm('Unsaved changes, are you sure to leave?', 'Warning', {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          resetForm();
+          done();
+        }
+      },
+    });
 };
 
 function initGlobalData() {

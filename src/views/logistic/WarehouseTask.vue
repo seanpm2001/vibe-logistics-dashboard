@@ -141,7 +141,6 @@ import {
   queryTasksAPI,
   findTaskAPI,
   deleteTaskAPI,
-  listShipmentsAPI,
   findAssignedOrderAPI,
 } from '/@/api/logistic';
 import {
@@ -236,13 +235,6 @@ const handlePagination = (_config) => {
 
 const handleCloseDrawer = (done) => {
   done();
-};
-
-const listShipments = (_orderId, _callback) => {
-  listShipmentsAPI(_orderId).then((_data) => {
-    shipmentArr.value = _data;
-    _callback && _callback();
-  });
 };
 
 const handleDetailRow = (_row, _type) => {

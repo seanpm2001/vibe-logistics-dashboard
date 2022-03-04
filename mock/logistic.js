@@ -1,43 +1,8 @@
 import Mock from 'mockjs';
 
-const shipmentList = [];
-const packageList = [];
 const unitList = [];
-const taskList = [];
 const count = 50;
 
-for (let i = 0; i < count; i++) {
-  shipmentList.push(Mock.mock({
-    id: '@increment',
-    orderId: 1,
-    'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
-    'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
-    'lastModified': '2020-05-22 by vibe',
-    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    content: {
-      '55V1B': 270,
-      '55V1WS': 60
-    }
-  }));
-}
-
-for (let i = 0; i < 50; i++) {
-  packageList.push(Mock.mock({
-    id: '@increment',
-    'trackingNumber|1': ['52358899', '55658899', '54554465'],
-    'shippingCarrier|1': ['UPS', 'GLS', 'Daylight'],
-    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    'lastModified': '2020-05-22 by vibe',
-    content: {
-      '55V1B': 90,
-      '55V1WS': 20
-    },
-    'serials|2-4': [{
-      id: '@increment',
-      'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033']
-    }]
-  }));
-}
 
 const unitObj = Mock.mock({
   'serial|1': ['QCXM8JA001420', 'QCXM8JA001011', 'QTXM8AB001033', 'QTXM8AB001011', 'QTXM8AB001022', 'QTXM8AB001045'],
@@ -58,21 +23,6 @@ for (let i = 0; i < 20; i++) {
     'condition|1': ['SCRAP', 'GOOD', 'DAMAGED'],
     'ownerId': 'COI-4564',
     'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-  }));
-}
-for (let i = 0; i < count; i++) {
-  taskList.push(Mock.mock({
-    id: '@integer(1, 23)',
-    orderId: 1,
-    'sourceId': '@integer(1, 18)',
-    'targetId': '@integer(1, 18)',
-    'warehouseTaskType|1': ['FULFILLMENT', 'REPLACE', 'RETURN'],
-    'lastModified': '2020-05-22 by vibe',
-    'status|1': ['LOST', 'DELIVERED', 'RETURNED'],
-    content: {
-      '55V1B': 270,
-      '55V1WS': 60
-    }
   }));
 }
 
@@ -126,33 +76,6 @@ for (let i = 0; i < count; i++) {
 export default [
   // mock get all routes form server
   {
-    url: '/mock/api/shipments',
-    type: 'get',
-    response: config => {
-      return {
-        code: 20000,
-        data: {
-          total: shipmentList.length,
-          items: shipmentList
-        }
-      };
-    }
-  },
-  {
-    url: RegExp('/packages'),
-    type: 'get',
-    response: config => {
-
-      return {
-        code: 20000,
-        data: {
-          items: packageList,
-          total: packageList.length
-        }
-      };
-    }
-  },
-  {
     url: RegExp('/units'),
     type: 'get',
     response: config => {
@@ -175,19 +98,6 @@ export default [
         code: 20000,
         data: {
           item: unitObj
-        }
-      };
-    }
-  },
-  {
-    url: '/mock/api/tasks',
-    type: 'get',
-    response: config => {
-      return {
-        code: 20000,
-        data: {
-          total: taskList.length,
-          items: taskList
         }
       };
     }

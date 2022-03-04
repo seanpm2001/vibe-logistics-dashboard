@@ -48,12 +48,12 @@
     <el-card class="ups-price-card">
       <strong>US 55 UPS:</strong>
       <el-row align="middle">
-        PR: $375 per box
+        For Puerto Rico: $375 per box
         <el-input-number v-model="prUPSNum"></el-input-number>
         <strong>Price: ${{prUPSNum * 375}}</strong>
       </el-row>
       
-      <strong>Other: </strong>
+      <strong>Other States(max 4 boxes): </strong>
       <el-row align="middle">
         55 Board Number($175/box):
         <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
@@ -65,7 +65,6 @@
       <el-row align="middle">
         <strong>Price: ${{upsPrice}}</strong>
       </el-row>
-      
     </el-card>
   </div>
 </template>

@@ -170,54 +170,37 @@ export async function deleteTaskAPI (taskId) {
   );
 }
 
-/* 物流 Shipment API */
-export async function listShipmentsAPI (orderId) {
-  requester.defaults.baseURL = '/api';
-  const res = await mockRequester.get(`/order/${orderId}/shipments`);
-  return res.data;
-}
-export async function createShipmentAPI (taskId, data) {
-  jsonToUnderline(data);
-  const item = handleReqElMsg(
-    requester.post(`task/${taskId}/shipments`, data), 'Create', 'Shipment'
-  );
-  return item;
-}
-export async function updateShipmentAPI (shipmentId, updates) {
-  jsonToUnderline(updates);
-  const item = handleReqElMsg(
-    requester.put(`shipment/${shipmentId}`, updates), 'Update', 'Shipment', shipmentId
-  );
-  return item;
-}
-export async function deleteShipmentAPI (shipmentId) {
-  handleReqElMsg(
-    requester.delete(`shipment/${shipmentId}`), 'Delete', 'Shipment', shipmentId
-  );
-}
-
 /* 批次 Shipment Package API */
-export async function queryPackagesAPI (shipmentId) {
-  const res = await requester.get('/packages');
-  return res.data;
+export async function queryPackagesAPI (params) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  jsonToUnderline(params);
+  const res = await requester.get('/warehouse/packages', {
+    params,
+  });
+  return res;
 }
-export async function createPackageAPI (shipmentId, data) {
+export async function createPackageAPI (taskId, data) {
   jsonToUnderline(data);
   const item = handleReqElMsg(
-    requester.post(`shipment/${shipmentId}/packages`, data), 'Create', 'Package'
+    requester.post(`/warehouse/task/${taskId}/packages`, data), 'Create', 'Package'
   );
   return item;
+}
+export async function getTaskPackagesAPI (taskId) {
+  requester.defaults.baseURL = 'https://logistics.vibe.dev/api';
+  const res = await requester.get(`/warehouse/task/${taskId}/packages`);
+  return res.items;
 }
 export async function updatePackageAPI (packageId, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`package/${packageId}`, updates), 'Update', 'Package', packageId
+    requester.put(`/warehouse/package/${packageId}`, updates), 'Update', 'Package', packageId
   );
   return item;
 }
 export async function deletePackageAPI (packageId) {
   handleReqElMsg(
-    requester.delete(`package/${packageId}`), 'Delete', 'Package', packageId
+    requester.delete(`/warehouse/package/${packageId}`), 'Delete', 'Package', packageId
   );
 }
 
