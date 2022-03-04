@@ -5,16 +5,16 @@
       label-position="left"
       >
         <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
-          <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
-          <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-          <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
-          <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item label="Country/Area/Transport:">
           <el-cascader
@@ -67,7 +67,7 @@
           <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
         </el-row>
         <el-row align="middle">
-          55 Stand Number($80/box):
+          55 Stand Number($80/box):&nbsp;
           <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
         </el-row>
         <strong class="price">Price: ${{upsPrice}}</strong>
@@ -321,6 +321,8 @@ const options = ref([
   &.specify-price-card
     .el-input-number
       margin: 0 16px
+    .el-row
+      margin-top: 5px
 :deep(.el-cascader)
   width: 300px
 
