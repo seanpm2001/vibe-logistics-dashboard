@@ -90,7 +90,7 @@ export default [
     }
   },
   {
-    url: RegExp('/mock/api/unit/[0-9]+'),
+    url: RegExp('/mock/api/unit/*'),
     type: 'get',
     response: config => {
 

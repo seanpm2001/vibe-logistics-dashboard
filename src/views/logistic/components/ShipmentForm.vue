@@ -8,7 +8,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Carrier">
         <el-select :disabled="isDialogPattern('view')" v-model="taskItem.carrier" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
+          <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-form-item>
     </el-row>
@@ -73,10 +73,10 @@
 </template>
 
 <script setup>
-
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, getTaskPackagesAPI } from '/@/api/logistic';
+import { carrierEnum } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

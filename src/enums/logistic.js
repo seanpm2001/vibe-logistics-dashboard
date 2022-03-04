@@ -94,6 +94,13 @@ export const reversedConditionEnum = {
   'Scrap': 'SCRAP',
   'Damaged': 'DAMAGED',
 };
+export const carrierEnum = {
+  TRUCK: 'Truck',
+  GLS: 'GLS',
+  FEDEX: 'Fedex',
+  UPS: 'UPS',
+  AIR: 'AIR',
+};
 export const productMap = {
   '55V1B': '55 V1 Board',
   '55V1WS': '55 V1 White Stand',

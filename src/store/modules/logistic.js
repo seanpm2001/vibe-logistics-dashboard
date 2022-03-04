@@ -1,4 +1,4 @@
-import { listUnitsAPI, listWarehousesAPI } from '/@/api/logistic';
+import { queryUnitsAPI, listWarehousesAPI } from '/@/api/logistic';
 import { fixedWarehouseEnum } from '/@/enums/logistic';
 
 export const logistic = {
@@ -39,7 +39,7 @@ export const logistic = {
   actions: {
     async setUnitList ({ commit }) {
       return new Promise(resolve => {
-        listUnitsAPI()
+        queryUnitsAPI()
           .then(_data => {
             commit('SET_UNIT_LIST', _data);
           })

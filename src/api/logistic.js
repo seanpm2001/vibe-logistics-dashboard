@@ -205,7 +205,7 @@ export async function deletePackageAPI (packageId) {
 }
 
 /* 单个商品 Unit API */
-export async function listUnitsAPI () {
+export async function queryUnitsAPI (params) {
   const res = await requester.get('/units');
   return res.data.items;
 }

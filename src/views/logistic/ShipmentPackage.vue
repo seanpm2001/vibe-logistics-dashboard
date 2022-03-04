@@ -48,22 +48,19 @@
         align="center"
         width="120px"
       />
-      <el-table-column
-        label="Carrier"
-        prop="shippingCarrier"
-        align="center"
-        width="100"
-      />
-      <el-table-column label="Last Modified" width="160px" align="center">
+      <el-table-column label="Carrier" width="160px" align="center">
         <template v-slot="{ row }">
-          {{ row.lastModified }}
+          {{ carrierEnum[row.carrier] }}
         </template>
       </el-table-column>
-      <el-table-column label="Status" width="120px" align="center">
+      <el-table-column label="Units's Serials: Status" width="350px">
         <template v-slot="{ row }">
-          <el-tag>
-            {{ packageStatusEnum[row.status] }}
-          </el-tag>
+          <template v-for="item in row.units" :key="item">
+            <span class="link" @click="viewItemSerial(item.serial)">{{ item.serial }}</span>
+            <el-select style="width: 150px;" :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
+              <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
+            </el-select>
+          </template>
         </template>
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="200px">
@@ -80,11 +77,9 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="Units's Serials" width="150px">
+         <el-table-column label="Last Modified" width="160px" align="center">
         <template v-slot="{ row }">
-          <template v-for="item in row.serials" :key="item">
-            <p class="link" @click="viewItemSerial(item.id)">{{ item.serial }}</p>
-          </template>
+          {{ row.lastModified }}
         </template>
       </el-table-column>
       <el-table-column
@@ -135,11 +130,13 @@ import {
   taskTypeEnum,
   productMap,
   productIconMap,
+  carrierEnum,
 } from '/@/enums/logistic';
 
 /* Start data */
 const store = useStore();
 const { proxy } = getCurrentInstance();
+
 const listQuery = ref({
   page: 1,
   perPage: 10,
@@ -222,8 +219,8 @@ const handleDelSelected = () => {
   fetchList();
 };
 
-const viewItemSerial = (_unitId) => {
-  findUnitAPI(_unitId).then((_data) => {
+const viewItemSerial = (_unitSerial) => {
+  findUnitAPI(_unitSerial).then((_data) => {
     unitItem.value = _data;
     drawerUnitVisible.value = true;
   });
@@ -233,7 +230,6 @@ onMounted(() => {
   listQuery.value = store.getters.listQuery['package'];
   fetchList();
 });
-
 onBeforeUnmount(() => {
   store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
@@ -282,6 +278,7 @@ onBeforeUnmount(() => {
   width: 100%
 
 .link
+  margin-right: 15px
   color: #66c
   &:hover
     cursor: pointer
