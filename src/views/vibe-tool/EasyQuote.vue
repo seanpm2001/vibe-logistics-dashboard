@@ -1,51 +1,89 @@
 <template>
   <div class="page">
-    <el-form
-     label-position="left"
-    >
-      <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
-        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
-      </el-form-item>
-      <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
-        <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
-      </el-form-item>
-      <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-        <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
-      </el-form-item>
-      <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
-        <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
-      </el-form-item>
-      <el-form-item label="Country/Area/Transport:">
-        <el-cascader
-          :disabled="!hasProduct()"
-          placeholder="Country/Area/Transport"
-          :options="options"
-          :props="{ expandTrigger: 'hover' }"
-          clearable
-          filterable
-          @change="onCascaderArrChange"
-        />
-      </el-form-item>
-    </el-form>
-    <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
-    <div>Price: {{price || 'TBA'}}</div>
-    <el-button type="danger" @click="resetFunc" class="resetButton">RESET</el-button>
-    <el-card class="note">
-      Note:
-      <br><br>
-      1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
-      <br>
-      <br>
-      2. Because of COVID pandemic, inside delivery (white gloves services) will not be provided in Canada. If customers really need this service, we need to contact carrier and ask the price case by case.
-      <br>
-      <br>  
-      3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.
+    <el-card>
+      <el-form
+      label-position="left"
+      >
+        <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
+          <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
+        </el-form-item>
+        <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
+          <el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
+        </el-form-item>
+        <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
+          <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
+        </el-form-item>
+        <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
+          <el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Country/Area/Transport:">
+          <el-cascader
+            :disabled="!hasProduct()"
+            placeholder="Country/Area/Transport"
+            :options="options"
+            :props="{ expandTrigger: 'hover' }"
+            clearable
+            filterable
+            @change="onCascaderArrChange"
+          />
+        </el-form-item>
+      </el-form>
+      <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
+      <div>Price: {{price || 'TBA'}}</div>
+      <el-button type="danger" @click="resetFunc" class="resetButton">RESET</el-button>
+      <el-divider />
+      <div class="note">
+        Note:
+        <br><br>
+        1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
+        <br>
+        <br>
+        2. Because of COVID pandemic, inside delivery (white gloves services) will not be provided in Canada. If customers really need this service, we need to contact carrier and ask the price case by case.
+        <br>
+        <br>  
+        3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.
+      </div>
+    </el-card>
+    
+    <el-card class="ups-price-card">
+      <strong>US 55 UPS:</strong>
+      <el-row align="middle">
+        PR: $375 per box
+        <el-input-number v-model="prUPSNum"></el-input-number>
+        <strong>Price: ${{prUPSNum * 375}}</strong>
+      </el-row>
+      
+      <strong>Other: </strong>
+      <el-row align="middle">
+        55 Board Number($175/box):<el-input-number :disabled="disableUPSInput" v-model="ups55BoardNum"></el-input-number>
+      </el-row>
+      <el-row align="middle">
+        55 Stand Number($80/box):<el-input-number :disabled="disableUPSInput" v-model="ups55StandNum"></el-input-number>
+      </el-row>
+      <el-row align="middle">
+        <strong>Price: ${{upsPrice}}</strong>
+      </el-row>
+      
     </el-card>
   </div>
 </template>
 
 <script setup>
 import { calCostFn } from '/@/enums/easy-quote';
+/* Start 单独拎出来的数据 */
+const prUPSNum = ref(0);
+const ups55BoardNum = ref(0);
+const ups55StandNum = ref(0);
+const upsPrice = computed(() => {
+  return ups55BoardNum.value * 175 + ups55StandNum.value * 80;
+});
+const disableUPSInput = computed(() => {
+  if(ups55BoardNum.value + ups55StandNum.value >= 4)
+    return true;
+  return false;
+});
+
+/* End */
 const board55Num = ref(0);  
 const stand55Num = ref(0);
 const board75Num = ref(0);
@@ -120,7 +158,7 @@ const calculatePrice = arr => {
     if (b75num > s75num) { // 75 after 1 board
       total += calCostFn(country, unitNum, area, 'B75', transport);
     } else if (b75num < s75num) { // 75 after 1 stand
-      total += calCostFn(country, unitNum, area, 'S75', transport);
+      total += calCostFn(country, unitNum, area, 'B55', transport); // Price Stand 75 === Borad 55
     }
     total += calCostFn(country, setNum, area, 'BS75', transport);
   }
@@ -240,6 +278,12 @@ const options = ref([
 .page
   padding: 32px
 
+:deep(.el-card)
+  width: 50%
+  min-width: 725px
+  &.ups-price-card
+    .el-input-number
+      margin: 0 16px
 :deep(.el-cascader)
   width: 300px
 

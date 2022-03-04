@@ -43,8 +43,8 @@ export const USfreightEunm = {
     PR: {
       UPS: {
         nitialPrice: 0,
-        unitPrice: 350,
-        tenUnitPrice: 350,
+        unitPrice: 375,
+        tenUnitPrice: 375,
       },
     },
   },
