@@ -67,14 +67,7 @@
           <strong>Price: ${{upsPrice}}</strong>
         </el-row>
       </el-card>
-      <el-card class="specify-price-card">
-        TBA
-        <br>
-        <strong>Alaska(AK)/Hawaii(HI) AIR:</strong>
-        <el-input-number v-model="airAKUnitNum"></el-input-number>
-      </el-card>
     </div>
-
   </div>
 </template>
 
@@ -86,16 +79,6 @@ const ups55BoardNum = ref(0);
 const ups55StandNum = ref(0);
 const upsPrice = computed(() => {
   return ups55BoardNum.value * 175 + ups55StandNum.value * 80;
-});
-
-const airUnitNum = ref(0);
-const ariPrice = computed(() => {
-
-});
-
-const airAKUnitNum = ref(0);
-const ariAKPrice = computed(() => {
-  
 });
 
 /* End */
@@ -135,16 +118,41 @@ const disable75Input = computed(() => {
     return true;
 });
 
+const multPrice = (a, b, c, d) => {
+  a *= 1.5;
+  b *= 1.5;
+  c *= 1.5;
+  d *= 1.5;
+};
+
 const calculatePrice = arr => { 
   if (!arr || arr.length === 0) {
     price.value = 'TBA';
     return;
   }
-  const [country, area, transport] = arr;
+  const [country, area] = arr;
+  let transport = arr[2];
+  // eslint-disable prefer-const
   const b55num = board55Num.value || 0;
   const s55num = stand55Num.value || 0;
   const b75num = board75Num.value || 0;
   const s75num = stand75Num.value || 0;
+
+  if (transport === 'AIR') {
+    const sum = b55num + s55num + b75num + s75num;
+    if ((area === 'AK' || area === 'HI')) {
+      sum > 3 && multPrice(b55num, s55num, b75num, s75num);
+    } else {
+      if (sum > 4)
+        multPrice(b55num, s55num, b75num, s75num);
+      else {
+        price.value = 'Continue to increase. For 1-4 Units Air Price, See UPS expedite shipping quote.';
+        return;
+      }
+    }
+    transport = 'TRUCK'; // AIR 价格按照(加倍后)的TRUCK来
+  }
+  console.log(b55num, s55num, b75num, s75num, area, transport);
 
   // product 55 price
   if (b55num > 0 && (s55num === 0)) { // only 55 board
@@ -183,18 +191,24 @@ const calculatePrice = arr => {
 
 const USGlsChildren = computed(() => {
   return [
-    { value: 'GLS', label: 'GLS' },
     { value: 'TRUCK', label: 'Truck' },
+    { value: 'AIR', label: 'AIR' },
+    { value: 'GLS', label: 'GLS' },
   ];
 });
 const USTruckChildren = [
   { value: 'TRUCK', label: 'Truck' },
+  { value: 'AIR', label: 'AIR' },
 ];
 const CAChildren = computed(() => {
   if (hasProduct75())
-    return [{ value: 'TRUCK', label: 'Truck' }];
+    return [
+      { value: 'TRUCK', label: 'Truck' },
+      { value: 'AIR', label: 'AIR' },
+    ];
   return [
     { value: 'TRUCK', label: 'Truck' },
+    { value: 'AIR', label: 'AIR' },
     { value: 'FEDEX', label: 'FedEx-Amazon'},
   ];
 });
@@ -279,6 +293,7 @@ const options = ref([
       { value: 'AK', label: 'AK-Alaska', children: USTruckChildren },
       { value: 'HI', label: 'HI-Hawaii', children: [
         { value: 'TRUCK', label: 'Truck' },
+        { value: 'AIR', label: 'AIR' },
         { value: 'LCL', label: 'LCL' },
       ] },
       { value: 'PR', label: 'PR', children: [
