@@ -195,7 +195,7 @@
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import FreightForm from './components/FreightForm.vue';
+import FreightForm from './FreightForm.vue';
 import { parseTime } from '/@/utils/format';
 import {
   queryFreightsAPI,

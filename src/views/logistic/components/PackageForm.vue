@@ -29,7 +29,7 @@
         <el-form-item label="Unit Serial">
           <el-select
             v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-            filterable allow-create default-first-option
+            @change="filterUnitArr(item)" filterable allow-create default-first-option
           >
             <el-option v-for="(item, index) in unitList" :key="index" :label="item.serial" :value="item.serial" />
           </el-select>
@@ -60,8 +60,9 @@
 
 <script setup>
 import { useStore } from 'vuex';
+import { debounce } from '/@/utils';
 import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from 'element-plus';
-import { createPackageAPI, deletePackageAPI, updatePackageAPI } from '/@/api/logistic';
+import { createPackageAPI, deletePackageAPI, updatePackageAPI, queryUnitsAPI } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
@@ -87,9 +88,19 @@ const props = defineProps({
 const store = useStore();
 
 const defaultUnitStatus = ref(null);
-const unitList = computed(() => store.getters['unitList']);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
+
+const unitList = computed(() => store.getters['unitList']);
+const filterUnitArr = filterObj => {
+  console.log('filterObj: ', filterObj);
+  // debounce(() => {
+  //   queryUnitsAPI({ search: filterObj.serial }).then(_data => {
+  //     console.log('_data: ', _data);
+  //     unitList.value = _data;
+  //   });
+  // }, 500, 1000);
+}; 
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);

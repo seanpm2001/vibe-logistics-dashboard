@@ -76,33 +76,6 @@ for (let i = 0; i < count; i++) {
 export default [
   // mock get all routes form server
   {
-    url: RegExp('/units'),
-    type: 'get',
-    response: config => {
-
-      return {
-        code: 20000,
-        data: {
-          items: unitList,
-          total: unitList.length
-        }
-      };
-    }
-  },
-  {
-    url: RegExp('/mock/api/unit/*'),
-    type: 'get',
-    response: config => {
-
-      return {
-        code: 20000,
-        data: {
-          item: unitObj
-        }
-      };
-    }
-  },
-  {
     url: '/mock/api/inventories',
     type: 'get',
     response: config => {

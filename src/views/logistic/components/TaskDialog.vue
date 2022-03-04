@@ -176,6 +176,7 @@
             :orderId="taskItem?.orderId"
             :warehouseEnum="warehouseEnum"
             :dialogStatus="dialogStatus"
+            @fetchList="fetchList"
           />
         </el-card>
       </el-form>
@@ -193,7 +194,7 @@
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage, ElTooltip } from 'element-plus';
-import { throttle } from '/@/utils';
+import { throttle, debounce } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from './OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
@@ -218,6 +219,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['fetchList']);
+const fetchList = () => emit['fetchList'];
 
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
@@ -233,13 +235,21 @@ const unitList = computed(() => store.getters.unitList);
 const skuList = computed(() => skuProdcutEnum);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
-  filteredUnitArr.value = unitList.value.filter(unit => {
-    if (!filterObj.usedAge && !filterObj.condition) return true;
-    if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
-    if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
-    if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
-    return false;
-  });
+  console.log('filterObj: ', filterObj);
+  debounce(() => {
+    queryUnitsAPI({ search: filterObj.serial }).then(_data => {
+      console.log('_data: ', _data);
+      filteredUnitArr.value = _data;
+    });
+  }, 500, 1000);
+  // filteredUnitArr.value = unitList.value.filter(unit => {
+  //   if (!filterObj.usedAge && !filterObj.condition) return true;
+  //   if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
+  //   if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
+  //   if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
+  //   return false;
+  // });
+  return [];
 }; 
 
 const packageArr = ref([]);

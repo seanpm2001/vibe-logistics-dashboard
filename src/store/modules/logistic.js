@@ -39,8 +39,9 @@ export const logistic = {
   actions: {
     async setUnitList ({ commit }) {
       return new Promise(resolve => {
-        queryUnitsAPI()
+        queryUnitsAPI({ search: '' })
           .then(_data => {
+            console.log('_data: ', _data);
             commit('SET_UNIT_LIST', _data);
           })
           .finally(() => resolve());

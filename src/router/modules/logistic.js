@@ -21,13 +21,13 @@ export const logisticRouter = [
       },
       {
         path: 'package',
-        component: () => import('/@/views/logistic/ShipmentPackage.vue'),
+        component: () => import('/@/views/logistic/package/Index.vue'),
         name: 'ShipmentPackage',
         meta: { title: 'Package', icon: 'sidebar-package' }
       },
       {
         path: 'freight',
-        component: () => import('/@/views/logistic/Freight.vue'),
+        component: () => import('/@/views/logistic/freight/Index.vue'),
         name: 'Freight',
         meta: { title: 'Freight', icon: 'sidebar-freight' }
       },

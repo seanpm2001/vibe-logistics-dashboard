@@ -80,7 +80,6 @@
 </template>
 
 <script setup>
-
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '/@/utils/excel';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/api/logistic';

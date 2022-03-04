@@ -53,13 +53,15 @@
           {{ carrierEnum[row.carrier] }}
         </template>
       </el-table-column>
-      <el-table-column label="Units's Serials: Status" width="350px">
+      <el-table-column label="Units's Serials: Status" width="480px">
         <template v-slot="{ row }">
           <template v-for="item in row.units" :key="item">
             <span class="link" @click="viewItemSerial(item.serial)">{{ item.serial }}</span>
-            <el-select style="width: 150px;" :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
+            <el-select style="width: 210px; margin-right: 10px;" :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
               <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
             </el-select>
+            <el-button size="small" type="primary" @click="editHousingTask">Warehousing</el-button>
+            <br>
           </template>
         </template>
       </el-table-column>
@@ -116,13 +118,20 @@
     <el-drawer v-model="drawerUnitVisible" title="Unit Info" size="50%" direction="ltr">
       <UnitDescription />
     </el-drawer>
+
+    <HousingDialog
+      ref="housingDialog"
+      :emptyHousingItem="emptyHousingItem"
+      :dialogStatus="dialogStatus"
+    />
   </div>
 </template>
 
 <script setup>
 import { useStore } from 'vuex';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import UnitDescription from './components/UnitDescription.vue';
+import UnitDescription from '../components/UnitDescription.vue';
+import HousingDialog from './WarehousingDialog.vue';
 import { parseTime } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from '/@/api/logistic';
 import {
@@ -163,7 +172,9 @@ const rules = ref({
 });
 const downloadLoading = ref(false);
 const disableNewBatch = ref(true);
+const dialogHousingVisible = ref(false);
 
+provide('dialogHousingVisible', dialogHousingVisible);
 provide('unitItem', unitItem);
 /* End data */
 const isDialogPattern = (type) => dialogStatus.value === type;
@@ -186,19 +197,8 @@ const handleCloseDrawer = (done) => {
   done();
 };
 
-const handleDetailRow = (_row, _type) => {
-  const shipmentId = _row.id;
-  if (_type === 'remove') {
-    deletePackageAPI(shipmentId).then(() => {
-      fetchList();
-    });
-    return;
-  }
-
-  // queryPackagesAPI(_row.id).then(_data => {
-  //   packageList.value = _data;
-  //   dialogTableVisible.value = true;
-  // });
+const editHousingTask = () => {
+  dialogHousingVisible.value = true;
 };
 
 const handleFilter = () => {

@@ -78,7 +78,6 @@ import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, getTaskPackagesAPI } from '/@/api/logistic';
 import { carrierEnum } from '/@/enums/logistic';
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   taskId: {
     type: Number,
@@ -93,6 +92,8 @@ const props = defineProps({
     required: true
   }
 });
+
+const emit = defineEmits(['fetchList']);
 
 /* Start Data */
 const taskItem = inject('taskItem');
@@ -137,6 +138,7 @@ const handleShipment = (type) => {
   if (type === 'update') {
     updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
       taskItem.value = _data;
+      emit('fetchList');
     });
   }
 };

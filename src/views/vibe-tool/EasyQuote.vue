@@ -58,7 +58,7 @@
         <strong>For Alaska, Hawaii, Puerto Rico: $375 per box:</strong>
         <el-row align="middle">
           Unit Number:
-          <el-input-number v-model="prUPSNum"></el-input-number>
+          <el-input-number :min="0" v-model="prUPSNum"></el-input-number>
         </el-row>
         
         <strong class="price">Price: ${{prUPSNum * 375}}</strong>
@@ -66,11 +66,11 @@
         <strong>For US other states (max 4 boxes): </strong>
         <el-row align="middle">
           55 Board Number($175/box):
-          <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
+          <el-input-number :min="0" :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
         </el-row>
         <el-row align="middle">
           55 Stand Number($80/box):&nbsp;
-          <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
+          <el-input-number :min="0" :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
         </el-row>
         <strong class="price">Price: ${{upsPrice}}</strong>
       </el-card>
