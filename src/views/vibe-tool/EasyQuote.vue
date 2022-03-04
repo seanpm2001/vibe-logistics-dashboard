@@ -45,27 +45,36 @@
       </div>
     </el-card>
     
-    <el-card class="ups-price-card">
-      <strong>US 55 UPS:</strong>
-      <el-row align="middle">
-        For Puerto Rico: $375 per box
-        <el-input-number v-model="prUPSNum"></el-input-number>
-        <strong>Price: ${{prUPSNum * 375}}</strong>
-      </el-row>
-      
-      <strong>Other States(max 4 boxes): </strong>
-      <el-row align="middle">
-        55 Board Number($175/box):
-        <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
-      </el-row>
-      <el-row align="middle">
-        55 Stand Number($80/box):
-        <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
-      </el-row>
-      <el-row align="middle">
-        <strong>Price: ${{upsPrice}}</strong>
-      </el-row>
-    </el-card>
+    <div>
+      <el-card class="specify-price-card">
+        <strong>US 55 UPS:</strong>
+        <el-row align="middle">
+          For Puerto Rico: $375 per box
+          <el-input-number v-model="prUPSNum"></el-input-number>
+          <strong>Price: ${{prUPSNum * 375}}</strong>
+        </el-row>
+        
+        <strong>Other States(max 4 boxes): </strong>
+        <el-row align="middle">
+          55 Board Number($175/box):
+          <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
+        </el-row>
+        <el-row align="middle">
+          55 Stand Number($80/box):
+          <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
+        </el-row>
+        <el-row align="middle">
+          <strong>Price: ${{upsPrice}}</strong>
+        </el-row>
+      </el-card>
+      <el-card class="specify-price-card">
+        TBA
+        <br>
+        <strong>Alaska(AK)/Hawaii(HI) AIR:</strong>
+        <el-input-number v-model="airAKUnitNum"></el-input-number>
+      </el-card>
+    </div>
+
   </div>
 </template>
 
@@ -77,6 +86,16 @@ const ups55BoardNum = ref(0);
 const ups55StandNum = ref(0);
 const upsPrice = computed(() => {
   return ups55BoardNum.value * 175 + ups55StandNum.value * 80;
+});
+
+const airUnitNum = ref(0);
+const ariPrice = computed(() => {
+
+});
+
+const airAKUnitNum = ref(0);
+const ariAKPrice = computed(() => {
+  
 });
 
 /* End */
@@ -272,12 +291,14 @@ const options = ref([
 
 <style lang="sass" scoped>
 .page
-  padding: 32px
+  padding-top: 32px
+  display: flex
+  justify-content: space-around
+  flex-wrap: wrap
 
 :deep(.el-card)
-  width: 50%
-  min-width: 725px
-  &.ups-price-card
+  width: 620px
+  &.specify-price-card
     .el-input-number
       margin: 0 16px
 :deep(.el-cascader)
@@ -289,7 +310,6 @@ const options = ref([
 .resetButton
   margin-top: 10px
 .note
-  width: 550px
   margin-top: 10px
 
   </style>
