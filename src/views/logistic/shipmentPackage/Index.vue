@@ -121,7 +121,8 @@
 
     <HousingDialog
       ref="housingDialog"
-      :emptyHousingItem="emptyHousingItem"
+      :warehouseEnum="warehouseEnum"
+      :emptyWarehousingItem="emptyWarehousingItem"
       :dialogStatus="dialogStatus"
     />
   </div>
@@ -145,6 +146,7 @@ import {
 /* Start data */
 const store = useStore();
 const { proxy } = getCurrentInstance();
+const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const listQuery = ref({
   page: 1,
@@ -161,19 +163,19 @@ const listLoading = ref(true);
 const drawerUnitVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
-const titleMap = ref({
-  view: 'View',
-  update: 'Edit',
-  create: 'Create',
+
+const warehousingItem = ref({
+  id: null,
+  targetId: null,
+  packageId: null,
+  taskId: null,
+  taskType: null,
 });
-const rules = ref({
-  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
-  number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
-});
-const downloadLoading = ref(false);
-const disableNewBatch = ref(true);
+const emptyWarehousingItem = JSON.parse(JSON.stringify(warehousingItem))._value;
+
 const dialogHousingVisible = ref(false);
 
+provide('warehousingItem', warehousingItem);
 provide('dialogHousingVisible', dialogHousingVisible);
 provide('unitItem', unitItem);
 /* End data */
@@ -226,7 +228,15 @@ const viewItemSerial = (_unitSerial) => {
   });
 };
 
+function initGlobalData() {
+  if (JSON.stringify(warehouseEnum.value) === '{}')
+    // init warehouseEnum:{}
+    store.dispatch('logistic/setWarehouseEnum');
+}
+
 onMounted(() => {
+  initGlobalData();
+
   listQuery.value = store.getters.listQuery['package'];
   fetchList();
 });
