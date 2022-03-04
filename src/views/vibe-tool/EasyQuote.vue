@@ -29,11 +29,13 @@
         </el-form-item>
       </el-form>
       <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
-      <div>Price: {{price || 'TBA'}}</div>
+      <div>
+        <strong class="price">Price: {{price || 'TBA'}}</strong>
+      </div>
       <el-button type="danger" @click="resetFunc" class="resetButton">RESET</el-button>
       <el-divider />
       <div class="note">
-        Note:
+        <strong>Note:</strong>
         <br><br>
         1. If you want to mix 55 & 75 product together in this calculator, we advise you to click "Reset" button first and refill the number & C/A/T, because 55 & 75 may have different available transport and system will judge this by the number you fill.
         <br>
@@ -42,19 +44,24 @@
         <br>
         <br>  
         3. The price calculated here does not contain any inside delivery service fee. Some truck carriers in US may afford this service. If customers in US need this service, they should note this need when making the order. Each order will charge $75-100 additional fee.
+        <br>
+        <br>
+        4. UPS expedite shipping quote procedure link⬇.
+        <a target="_blank" href="https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3">https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3</a>
       </div>
     </el-card>
     
     <div>
       <el-card class="specify-price-card">
-        <strong>US 55 UPS:</strong>
+        <strong>UPS Truck (for US 55 products only):</strong>
         <el-row align="middle">
-          For Puerto Rico: $375 per box
+          For Alaska, Hawaii, Puerto Rico: $375 per box
           <el-input-number v-model="prUPSNum"></el-input-number>
-          <strong>Price: ${{prUPSNum * 375}}</strong>
         </el-row>
         
-        <strong>Other States(max 4 boxes): </strong>
+        <strong class="price">Price: ${{prUPSNum * 375}}</strong>
+        <el-divider />
+        <strong>For US other states (max 4 boxes): </strong>
         <el-row align="middle">
           55 Board Number($175/box):
           <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
@@ -63,9 +70,7 @@
           55 Stand Number($80/box):
           <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
         </el-row>
-        <el-row align="middle">
-          <strong>Price: ${{upsPrice}}</strong>
-        </el-row>
+        <strong class="price">Price: ${{upsPrice}}</strong>
       </el-card>
     </div>
   </div>
@@ -146,7 +151,7 @@ const calculatePrice = arr => {
       if (sum > 4)
         multPrice(b55num, s55num, b75num, s75num);
       else {
-        price.value = 'Continue to increase. For 1-4 Units Air Price, See UPS expedite shipping quote.';
+        price.value = 'For 1-4 units of UPS Air price, see UPS expedite shipping quote procedure in Note 4 below';
         return;
       }
     }
@@ -192,23 +197,23 @@ const calculatePrice = arr => {
 const USGlsChildren = computed(() => {
   return [
     { value: 'TRUCK', label: 'Truck' },
-    { value: 'AIR', label: 'AIR' },
+    { value: 'AIR', label: 'UPS Air' },
     { value: 'GLS', label: 'GLS' },
   ];
 });
 const USTruckChildren = [
   { value: 'TRUCK', label: 'Truck' },
-  { value: 'AIR', label: 'AIR' },
+  { value: 'AIR', label: 'UPS Air' },
 ];
 const CAChildren = computed(() => {
   if (hasProduct75())
     return [
       { value: 'TRUCK', label: 'Truck' },
-      { value: 'AIR', label: 'AIR' },
+      { value: 'AIR', label: 'UPS Air' },
     ];
   return [
     { value: 'TRUCK', label: 'Truck' },
-    { value: 'AIR', label: 'AIR' },
+    { value: 'AIR', label: 'UPS Air' },
     { value: 'FEDEX', label: 'FedEx-Amazon'},
   ];
 });
@@ -293,7 +298,7 @@ const options = ref([
       { value: 'AK', label: 'AK-Alaska', children: USTruckChildren },
       { value: 'HI', label: 'HI-Hawaii', children: [
         { value: 'TRUCK', label: 'Truck' },
-        { value: 'AIR', label: 'AIR' },
+        { value: 'AIR', label: 'UPS Air' },
         { value: 'LCL', label: 'LCL' },
       ] },
       { value: 'PR', label: 'PR', children: [
@@ -327,4 +332,11 @@ const options = ref([
 .note
   margin-top: 10px
 
-  </style>
+strong
+  margin-bottom: 5px
+  font-size: 18px
+  color: rgb(96, 98, 102)
+  &.price
+    font-size: 16px
+    color: #000
+</style>
