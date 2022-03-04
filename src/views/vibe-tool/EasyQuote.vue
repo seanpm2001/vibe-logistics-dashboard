@@ -55,10 +55,12 @@
       
       <strong>Other: </strong>
       <el-row align="middle">
-        55 Board Number($175/box):<el-input-number :disabled="disableUPSInput" v-model="ups55BoardNum"></el-input-number>
+        55 Board Number($175/box):
+        <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
       </el-row>
       <el-row align="middle">
-        55 Stand Number($80/box):<el-input-number :disabled="disableUPSInput" v-model="ups55StandNum"></el-input-number>
+        55 Stand Number($80/box):
+        <el-input-number :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
       </el-row>
       <el-row align="middle">
         <strong>Price: ${{upsPrice}}</strong>
@@ -76,11 +78,6 @@ const ups55BoardNum = ref(0);
 const ups55StandNum = ref(0);
 const upsPrice = computed(() => {
   return ups55BoardNum.value * 175 + ups55StandNum.value * 80;
-});
-const disableUPSInput = computed(() => {
-  if(ups55BoardNum.value + ups55StandNum.value >= 4)
-    return true;
-  return false;
 });
 
 /* End */
