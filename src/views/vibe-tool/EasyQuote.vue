@@ -77,7 +77,7 @@ const disable75Input = computed(() => {
   const arr = cascaderArr.value;
   if (!arr || arr.length === 0) return false;
   const transport = cascaderArr.value[2];
-  const disabledArr = ['FEDEX', 'GLS'];
+  const disabledArr = ['FEDEX'];
   if (disabledArr.includes(transport))
     return true;
 });
@@ -116,6 +116,7 @@ const calculatePrice = arr => {
   } else if (b75num !==0 && (s75num !==0)) { // 75 board + stand
     const setNum = Math.min(b75num, s75num);
     const unitNum = Math.abs(b75num - s75num);
+    console.log('unitNum: ', unitNum);
     if (b75num > s75num) { // 75 after 1 board
       total += calCostFn(country, unitNum, area, 'B75', transport);
     } else if (b75num < s75num) { // 75 after 1 stand
@@ -128,8 +129,6 @@ const calculatePrice = arr => {
 };
 
 const USGlsChildren = computed(() => {
-  if (hasProduct75())
-    return [{ value: 'TRUCK', label: 'Truck' }];
   return [
     { value: 'GLS', label: 'GLS' },
     { value: 'TRUCK', label: 'Truck' },
@@ -225,9 +224,11 @@ const options = ref([
       { value: 'WV', label: 'WV-West Virginia', children: USTruckChildren },
       // AK, HI, PR
       { value: 'AK', label: 'AK-Alaska', children: USTruckChildren },
-      { value: 'HI', label: 'HI-Hawaii', children: USTruckChildren },
+      { value: 'HI', label: 'HI-Hawaii', children: [
+        { value: 'TRUCK', label: 'Truck' },
+        { value: 'LCL', label: 'LCL' },
+      ] },
       { value: 'PR', label: 'PR', children: [
-        { value: 'PARCEL', label: 'Parcel' },
         { value: 'TRUCK', label: 'Truck' },
       ]},
     ]
