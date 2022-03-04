@@ -53,9 +53,11 @@
     
     <div>
       <el-card class="specify-price-card">
-        <strong>UPS Truck (for US 55 products only):</strong>
+        <strong style="font-size: 20px; color: #000">UPS Truck (for US 55 products only)</strong>
+        <el-divider />
+        <strong>For Alaska, Hawaii, Puerto Rico: $375 per box:</strong>
         <el-row align="middle">
-          For Alaska, Hawaii, Puerto Rico: $375 per box
+          Unit Number:
           <el-input-number v-model="prUPSNum"></el-input-number>
         </el-row>
         
@@ -322,7 +324,7 @@ const options = ref([
     .el-input-number
       margin: 0 16px
     .el-row
-      margin-top: 5px
+      margin-top: 8px
 :deep(.el-cascader)
   width: 300px
 
