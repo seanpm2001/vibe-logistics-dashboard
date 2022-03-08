@@ -239,7 +239,6 @@ const taskItem = ref({
   targetId: null,
   type: null,
   usedUnitArr: [{
-    usedAge: null,
     condition: null,
     serial: null,
   }],

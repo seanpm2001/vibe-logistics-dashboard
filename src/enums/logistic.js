@@ -72,18 +72,6 @@ export const taskReasonEnum = {
   HARDWARE_DEFECT: 'Hardware Defect',
   PACKAGE_LOST: 'Package Lost'
 };
-export const usedAgeEnum = {
-  BRAND_NEW: 'Brand New',
-  WITHIN_3_MONTHS: 'Used < 3 months',
-  BETWEEN_3_TO_12_MONTHS: 'Used 3-12 months',
-  OVER_12_MONTHS: 'Used > 12 months'
-};
-export const reversedUsedAgeEnum = {
-  'Brand New': 'BRAND_NEW',
-  'Used < 3 months': 'WITHIN_3_MONTHS',
-  'Used 3-12 months': 'BETWEEN_3_TO_12_MONTHS',
-  'Used > 12 months': 'OVER_12_MONTHS'
-};
 export const conditionEnum = {
   GOOD: 'Good',
   SCRAP: 'Scrap',

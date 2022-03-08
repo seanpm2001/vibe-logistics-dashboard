@@ -185,13 +185,11 @@ const taskItem = ref({
   units: [{
     sku: null,
     condition: null,
-    usedAge: null,
     quantity: null,
   }],
 });
 
 const usedUnitArr = ref([{
-  usedAge: null,
   condition: null,
   serial: null,
 }]);

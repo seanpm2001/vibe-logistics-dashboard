@@ -288,7 +288,6 @@ const taskItem = ref({
   units: [{
     sku: null,
     condition: null,
-    usedAge: null,
     quantity: null,
   }],
   // shipment info
@@ -301,7 +300,6 @@ const taskItem = ref({
   insureCostL: null,
 });
 const usedUnitArr = ref([{
-  usedAge: null,
   condition: null,
   serial: null,
 }]);
@@ -450,6 +448,7 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 const handlePagination = (_config) => {
+  console.log('_config: ', _config);
   listQuery.value = Object.assign(listQuery.value, _config);
 };
 

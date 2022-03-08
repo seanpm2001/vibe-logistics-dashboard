@@ -80,11 +80,6 @@
                   <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="Used Age">
-                <el-select v-model="item.usedAge" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
-                </el-select>
-              </el-form-item>
               <el-form-item label="Available">
                 <el-input disabled>999</el-input>
               </el-form-item>
@@ -138,11 +133,6 @@
             <el-row justify="space-between" align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onUsedUnitChange(index, 'add')" />
               <svg-icon class="icon" :style="usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
-              <el-form-item label="Used Age">
-                <el-select v-model="item.usedAge" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
-                </el-select>
-              </el-form-item>
               <el-form-item label="Condition">
                 <el-select v-model="item.condition" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
@@ -200,7 +190,7 @@ import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
-  usedAgeEnum, reversedUsedAgeEnum, conditionEnum, reversedConditionEnum
+  conditionEnum, reversedConditionEnum
 } from '/@/enums/logistic';
 
 const props = defineProps({
@@ -291,7 +281,7 @@ const handleWarehouseTask = _type => {
 
 const onUsedUnitChange = (_idx, _type) => {
   const unitArr = usedUnitArr.value;
-  _type === 'add' ? unitArr.push({serial: null, condition: null, usedAge: null}) : unitArr.splice(_idx, 1);
+  _type === 'add' ? unitArr.push({serial: null, condition: null}) : unitArr.splice(_idx, 1);
 };
 
 const onSpecifySerialChange = (_idx, _type) => {
@@ -302,7 +292,7 @@ const onSpecifySerialChange = (_idx, _type) => {
 const onProductChange = (_idx, _type) => {
   const units = taskItem.value.units;
   _type === 'add'
-    ? units.push({sku: null, condition: null, usedAge: null, quantity: null})
+    ? units.push({sku: null, condition: null, quantity: null})
     : units.splice(_idx--, 1);
 };
 

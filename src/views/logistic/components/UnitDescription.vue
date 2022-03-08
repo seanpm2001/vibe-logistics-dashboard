@@ -8,12 +8,6 @@
       {{unitItem.serial}}
     </el-descriptions-item>
     <el-descriptions-item>
-      <template #label>Used Age</template>
-      <el-select v-model="unitItem.usedAge" placeholder="Please select">
-        <el-option v-for="(item, key) in usedAgeEnum" :key="item" :label="item" :value="key" />
-      </el-select>
-    </el-descriptions-item>
-    <el-descriptions-item>
       <template #label>SKU</template>
       {{unitItem.sku}}
     </el-descriptions-item>
@@ -48,7 +42,7 @@
 <script setup>
 
 import { ElMessageBox } from 'element-plus';
-import { packageStatusEnum, usedAgeEnum, conditionEnum } from '/@/enums/logistic';
+import { packageStatusEnum, conditionEnum } from '/@/enums/logistic';
 
 const unitItem = inject('unitItem');
 
