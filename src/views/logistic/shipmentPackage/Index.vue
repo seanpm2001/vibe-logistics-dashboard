@@ -50,7 +50,7 @@
       />
       <el-table-column label="Carrier" width="160px" align="center">
         <template v-slot="{ row }">
-          {{ carrierEnum[row.carrier] }}
+          {{ warehouseEnum[row.task.carrier] }}
         </template>
       </el-table-column>
       <el-table-column label="Units's Serials: Status" width="480px">
@@ -67,12 +67,12 @@
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="200px">
         <template v-slot="{ row }">
-          <template v-for="(item, key) in row.content" :key="item">
+          <template v-for="item in row.task.units" :key="item.sku">
             <div>
-              <svg-icon :icon-name="productIconMap[key]" />
+              <svg-icon :icon-name="productIconMap[item.sku] || 'product-other'" />
               <span class="mgl-5"
-                >{{ productMap[key] }}:<el-tag class="mgl-5" size="small">{{
-                  item
+                >{{ productMap[item.sku] || item.sku }}:<el-tag class="mgl-5" size="small">{{
+                  item.quantity
                 }}</el-tag></span
               >
             </div>

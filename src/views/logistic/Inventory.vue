@@ -206,7 +206,7 @@
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
 import { parseTime } from '/@/utils/format';
-import TaskDialog from './components/TaskDialog.vue';
+import TaskDialog from './components/taskDialog/Index.vue';
 import { listInventoriesAPI } from '/@/api/logistic';
 
 /* Start Data */

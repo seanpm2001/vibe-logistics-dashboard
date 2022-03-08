@@ -57,11 +57,11 @@ const props = defineProps({
   },
 });
 
-/* Start data */
+/* Start Data */
 const warehousingItem = inject('warehousingItem');
 const dialogHousingVisible = inject('dialogHousingVisible');
 
-/* End data */
+/* End Data */
 const isDialogPattern = (type) => props.dialogStatus === type;
 
 const beforeCloseDialog = () => {
