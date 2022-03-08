@@ -226,20 +226,16 @@ const skuList = computed(() => skuProdcutEnum);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
-  debounce(() => {
-    queryUnitsAPI({ search: filterObj.serial }).then(_data => {
-      console.log('_data: ', _data);
-      filteredUnitArr.value = _data;
-    });
-  }, 500, 1000);
-  // filteredUnitArr.value = unitList.value.filter(unit => {
-  //   if (!filterObj.usedAge && !filterObj.condition) return true;
-  //   if (!filterObj.usedAge && (filterObj.condition === unit.condition)) return true;
-  //   if (!filterObj.condition && (filterObj.usedAge === unit.usedAge)) return true;
-  //   if (filterObj.condition === unit.condition && (filterObj.usedAge === unit.usedAge)) return true;
-  //   return false;
-  // });
-  return [];
+  // debounce(() => {
+  //   queryUnitsAPI({ search: filterObj.serial }).then(_data => {
+  //     console.log('_dat2a: ', _data);
+  //     filteredUnitArr.value = _data;
+  //     // 
+  //   });
+  // }, 500, 1000);
+  filteredUnitArr.value = unitList.value.filter(
+    unit => !filterObj.condition || !unit.condition || filterObj.condition === unit.condition
+  );
 }; 
 
 const packageArr = ref([]);

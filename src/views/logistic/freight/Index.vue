@@ -436,6 +436,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
+    perPage: listQuery.perPage,
     pageName: 'freight',
   });
 });
