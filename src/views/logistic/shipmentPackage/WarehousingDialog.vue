@@ -64,8 +64,8 @@ const dialogHousingVisible = inject('dialogHousingVisible');
 /* End Data */
 const isDialogPattern = (type) => props.dialogStatus === type;
 
-const beforeCloseDialog = () => {
-  
+const beforeCloseDialog = done => {
+  done();
 };
 </script>
 

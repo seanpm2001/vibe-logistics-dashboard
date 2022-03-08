@@ -60,7 +60,7 @@
             <el-select style="width: 210px; margin-right: 10px;" :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
               <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
             </el-select>
-            <el-button size="small" type="primary" @click="editHousingTask">Warehousing</el-button>
+            <el-button size="small" type="primary" @click="editHousingTask(item, row.task)">Warehousing</el-button>
             <br>
           </template>
         </template>
@@ -199,7 +199,13 @@ const handleCloseDrawer = (done) => {
   done();
 };
 
-const editHousingTask = () => {
+const editHousingTask = (_unit, _task) => {
+  warehousingItem.value = Object.assign({}, {
+    taskId: _task.id,
+    targetId: _task.targetId,
+    taskType: _task.taskType,
+    packageId: _unit.packageId,
+  });
   dialogHousingVisible.value = true;
 };
 
