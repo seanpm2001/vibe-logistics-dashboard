@@ -4,6 +4,8 @@
       <el-form
       label-position="left"
       >
+        <strong style="font-size: 20px; color: #000">General Transports (Recommended)</strong>
+        <el-divider />
         <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
           &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
         </el-form-item>
@@ -73,6 +75,12 @@
           <el-input-number :min="0" :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
         </el-row>
         <strong class="price">Price: ${{upsPrice}}</strong>
+        <el-divider />
+        <div class="note">
+          <strong>Note:</strong>
+          <br><br>
+          1. For orders over 5 boxes (units), we advise to use the general tranports in the left, though UPS truck price seems cheaper. Because for shipping an express parcel, UPS will not use pallet to protect our product, which is not safe enough for high volume.
+        </div>
       </el-card>
     </div>
   </div>
@@ -147,8 +155,12 @@ const calculatePrice = arr => {
 
   if (transport === 'AIR') {
     const sum = b55num + s55num + b75num + s75num;
-    if ((area === 'AK' || area === 'HI')) {
-      sum > 3 && multPrice(b55num, s55num, b75num, s75num);
+    if (hasProduct75()) {
+      if (area === 'AK' || area === 'HI') { // AK/HI 地区sum>3 价格 * 1.5 否则不变，其他地区 价格 * 1.5 
+        sum > 3 && multPrice(b55num, s55num, b75num, s75num);
+      } else {
+        multPrice(b55num, s55num, b75num, s75num);
+      }
     } else {
       if (sum > 4)
         multPrice(b55num, s55num, b75num, s75num);
