@@ -650,45 +650,61 @@ const formatUSArea = (area) => {
   return area;
 };
 
+function deal75USPrice (number, area, product, transport) {
+  let totalPrice = 0;
+  let isAir = false;
+  if (transport === 'AIR') { // Air 逻辑处理
+    isAir = true;
+    transport = 'TRUCK';
+  }
+  if (number >= 3) {
+    totalPrice +=
+      parseInt(number / 3) *
+      USfreightEunm[product][area][transport]['numberThree'];
+    number = number % 3;
+  }
+  switch (number) {
+  case 1:
+    totalPrice += USfreightEunm[product][area][transport]['numberOne'];
+    break;
+  case 2:
+    totalPrice += USfreightEunm[product][area][transport]['numberTwo'];
+    break;
+  }
+  isAir && (totalPrice *= 1.5); 
+  return totalPrice;
+}
+
 export const calCostFn = (country, number, area, product, transport) => {
+  console.log('country, number, area, product, transport: ', country, number, area, product, transport);
   try {
     if (country === 'US') {
       area = formatUSArea(area);
-      const nitialPrice =
-        USfreightEunm[product][area][transport]['nitialPrice'];
-      const unitPrice = USfreightEunm[product][area][transport]['unitPrice'];
-      const tenUnitPrice =
-        USfreightEunm[product][area][transport]['tenUnitPrice'];
       if (product === 'S75') product = 'B75'; // prodcut S75 和 B75价格逻辑一致
-      if (product === 'B75' || product === 'BS75') {
-        // 由于75产品价格非线形对其做特殊处理
-        let totalPrice = 0;
-
-        if (number >= 3) {
-          totalPrice +=
-            parseInt(number / 3) *
-            USfreightEunm[product][area][transport]['numberThree'];
-          number = number % 3;
-        }
-        switch (number) {
-        case 1:
-          totalPrice += USfreightEunm[product][area][transport]['numberOne'];
-          break;
-        case 2:
-          totalPrice += USfreightEunm[product][area][transport]['numberTwo'];
-          break;
-        }
-        return totalPrice;
+      if (product === 'B75' || product === 'BS75') { // 由于75产品价格非线形对其做特殊处理
+        return deal75USPrice(number, area, product, transport);
       }
+
+      if (transport === 'AIR') { // AIR price = 1.5 * Truck pirce
+        number *= 1.5;
+        transport = 'TRUCK';
+      } 
+      const nitialPrice = USfreightEunm[product][area][transport]['nitialPrice'];
+      const unitPrice = USfreightEunm[product][area][transport]['unitPrice'];
+      const tenUnitPrice = USfreightEunm[product][area][transport]['tenUnitPrice'];
+      // 计算 55 US 价格
       return number < 10
         ? nitialPrice + unitPrice * number
         : nitialPrice + unitPrice * 10 + tenUnitPrice * (10 - number);
     } else if (country === 'CANADA') {
-      const nitialPrice =
-        CAfreightEnum[area][product][transport]['nitialPrice'];
+      if (transport === 'AIR') { // AIR price = 1.5 * Truck pirce
+        number *= 1.5;
+        transport = 'TRUCK';
+      }
+      const nitialPrice = CAfreightEnum[area][product][transport]['nitialPrice'];
       const unitPrice = CAfreightEnum[area][product][transport]['unitPrice'];
-      const tenUnitPrice =
-        CAfreightEnum[area][product][transport]['tenUnitPrice'];
+      const tenUnitPrice = CAfreightEnum[area][product][transport]['tenUnitPrice'];
+      
       return number < 10
         ? nitialPrice + unitPrice * number
         : nitialPrice + unitPrice * 10 + tenUnitPrice * (10 - number);

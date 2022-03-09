@@ -133,11 +133,11 @@ const disable75Input = computed(() => {
     return true;
 });
 
-const multPrice = (a, b, c, d) => {
-  a *= 1.5;
-  b *= 1.5;
-  c *= 1.5;
-  d *= 1.5;
+const multPrice = () => {
+  board55Num.value *= 1.5;
+  stand55Num.value *= 1.5;
+  board75Num.value *= 1.5;
+  stand75Num.value *= 1.5;
 };
 
 const calculatePrice = arr => { 
@@ -146,7 +146,7 @@ const calculatePrice = arr => {
     return;
   }
   const [country, area] = arr;
-  let transport = arr[2];
+  const transport = arr[2];
   // eslint-disable prefer-const
   const b55num = board55Num.value || 0;
   const s55num = stand55Num.value || 0;
@@ -155,23 +155,13 @@ const calculatePrice = arr => {
 
   if (transport === 'AIR') {
     const sum = b55num + s55num + b75num + s75num;
-    if (hasProduct75()) {
-      if (area === 'AK' || area === 'HI') { // AK/HI 地区sum>3 价格 * 1.5 否则不变，其他地区 价格 * 1.5 
-        sum > 3 && multPrice(b55num, s55num, b75num, s75num);
-      } else {
-        multPrice(b55num, s55num, b75num, s75num);
-      }
-    } else {
-      if (sum > 4)
-        multPrice(b55num, s55num, b75num, s75num);
-      else {
+    if (!hasProduct75()) {
+      if (sum < 5) {
         price.value = 'For 1-4 units of UPS Air price, see UPS expedite shipping quote procedure in Note 4 below';
         return;
       }
     }
-    transport = 'TRUCK'; // AIR 价格按照(加倍后)的TRUCK来
   }
-  console.log(b55num, s55num, b75num, s75num, area, transport);
 
   // product 55 price
   if (b55num > 0 && (s55num === 0)) { // only 55 board
@@ -196,7 +186,6 @@ const calculatePrice = arr => {
   } else if (b75num !==0 && (s75num !==0)) { // 75 board + stand
     const setNum = Math.min(b75num, s75num);
     const unitNum = Math.abs(b75num - s75num);
-    console.log('unitNum: ', unitNum);
     if (b75num > s75num) { // 75 after 1 board
       total += calCostFn(country, unitNum, area, 'B75', transport);
     } else if (b75num < s75num) { // 75 after 1 stand
@@ -204,6 +193,7 @@ const calculatePrice = arr => {
     }
     total += calCostFn(country, setNum, area, 'BS75', transport);
   }
+
   price.value = total === 0 ? 'TBA' : '$' + total;
   total = 0;
 };
@@ -211,23 +201,23 @@ const calculatePrice = arr => {
 const USGlsChildren = computed(() => {
   return [
     { value: 'TRUCK', label: 'Truck' },
-    { value: 'AIR', label: 'UPS Air' },
+    { value: 'AIR', label: 'Air' },
     { value: 'GLS', label: 'GLS' },
   ];
 });
 const USTruckChildren = [
   { value: 'TRUCK', label: 'Truck' },
-  { value: 'AIR', label: 'UPS Air' },
+  { value: 'AIR', label: 'Air' },
 ];
 const CAChildren = computed(() => {
   if (hasProduct75())
     return [
       { value: 'TRUCK', label: 'Truck' },
-      { value: 'AIR', label: 'UPS Air' },
+      { value: 'AIR', label: 'Air' },
     ];
   return [
     { value: 'TRUCK', label: 'Truck' },
-    { value: 'AIR', label: 'UPS Air' },
+    { value: 'AIR', label: 'Air' },
     { value: 'FEDEX', label: 'FedEx-Amazon'},
   ];
 });
@@ -312,7 +302,7 @@ const options = ref([
       { value: 'AK', label: 'AK-Alaska', children: USTruckChildren },
       { value: 'HI', label: 'HI-Hawaii', children: [
         { value: 'TRUCK', label: 'Truck' },
-        { value: 'AIR', label: 'UPS Air' },
+        { value: 'AIR', label: 'Air' },
         { value: 'LCL', label: 'LCL' },
       ] },
       { value: 'PR', label: 'PR', children: [
