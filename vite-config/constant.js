@@ -25,7 +25,7 @@ export const MOCK_API_TARGET_URL = '/api/mock';
 export const ANALYSIS = false;
 
 // 代码压缩
-export const COMPRESSION = true;
+// export const COMPRESSION = false;
 
 // 删除 console
 export const VITE_DROP_CONSOLE = false;
