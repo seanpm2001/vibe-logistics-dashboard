@@ -10,28 +10,19 @@
       <el-form-item label="*Tracking Number">
         <el-input v-model="taskPackage.trackingNumber" placeholder="Tracking Number"/>
       </el-form-item>
-      <el-form-item label="Default Unit Status">
-        <el-select :disabled="isDialogPattern('view')" v-model="defaultUnitStatus" placeholder="Please select">
-          <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
-        </el-select>
-      </el-form-item>
     </el-row>
 
     <template v-for="(item, index) in taskPackage.units" :key="index">
       <el-row align="middle" class="add-minus-row">
         <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
         <svg-icon class="icon" :style="taskPackage.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
-        <el-form-item label="Unit Status">
-          <el-select :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
-            <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
-          </el-select>
-        </el-form-item>
+        
         <el-form-item label="Unit Serial">
           <el-select
-            v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-            @change="filterUnitArr(item)" filterable allow-create default-first-option
+            v-model="item.serial" :disabled="isDialogPattern('view')" style="width: 260px" placeholder="Please select"
+            @focus="filterUnitArr(item)" filterable allow-create default-first-option
           >
-            <el-option v-for="(item, index) in unitList" :key="index" :label="item.serial" :value="item.serial" />
+            <el-option v-for="unit in unitList" :key="unit.serial" :label="unit.serial + ' : ' + unit.sku" :value="unit.serial" />
           </el-select>
         </el-form-item>
       </el-row>
@@ -85,22 +76,21 @@ const props = defineProps({
   }
 });
 
+/* Start Data */
+const taskItem = inject('taskItem');
 const store = useStore();
 
-const defaultUnitStatus = ref(null);
+const taskProducts = Object.assign({}, taskItem.units);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
 
 const unitList = computed(() => store.getters['unitList']);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
-  // debounce(() => {
-  //   queryUnitsAPI({ search: filterObj.serial }).then(_data => {
-  //     console.log('_data: ', _data);
-  //     unitList.value = _data;
-  //   });
-  // }, 500, 1000);
+  console.log('taskProducts: ', taskProducts);
+  
 }; 
+/* End Data */
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
@@ -113,7 +103,7 @@ const xmlFileList = ref([]);
 
 const handleUnitChange = (idx, type) => {
   const unitArr = taskPackage.value.units;
-  type === 'add' ? unitArr.push({serial: null, status: defaultUnitStatus.value}) : unitArr.splice(idx, 1);
+  type === 'add' ? unitArr.push({serial: null}) : unitArr.splice(idx, 1);
 };
 
 const handleDeletePackage = () => {

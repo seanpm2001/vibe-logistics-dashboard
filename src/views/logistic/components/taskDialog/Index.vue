@@ -226,13 +226,6 @@ const skuList = computed(() => skuProdcutEnum);
 const filteredUnitArr = shallowRef(null);
 const filterUnitArr = filterObj => {
   console.log('filterObj: ', filterObj);
-  // debounce(() => {
-  //   queryUnitsAPI({ search: filterObj.serial }).then(_data => {
-  //     console.log('_dat2a: ', _data);
-  //     filteredUnitArr.value = _data;
-  //     // 
-  //   });
-  // }, 500, 1000);
   filteredUnitArr.value = unitList.value.filter(
     unit => !filterObj.condition || !unit.condition || filterObj.condition === unit.condition
   );
@@ -253,12 +246,6 @@ const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type
 provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
-
-// watchEffect(() => {
-//   if (isReturnOrRepalce.value) {
-//     console.log('isReturnOrRepalce: ', isReturnOrRepalce);
-//   }
-// });
 
 const isDialogPattern = type => props.dialogStatus === type;
 
