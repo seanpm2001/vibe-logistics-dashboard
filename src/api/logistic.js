@@ -206,7 +206,7 @@ export async function deletePackageAPI (packageId) {
 
 /* 单个商品 Unit API */
 export async function queryUnitsAPI (params) {
-  requester.defaults.baseURL = '/api';
+  requester.defaults.baseURL = '/https://logistics.vibe.dev/api';
   jsonToUnderline(params);
   const res = await requester.get('/units/search', params);
   return res.items;
