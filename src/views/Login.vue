@@ -220,12 +220,10 @@ const submitLogin = async (signInPattern) => {
           .dispatch('user/login', signInForm)
           .then(() => {
             router.push({ path: redirect.value || '/', query: otherQuery.value });
-            btnLoading.value = false;
           })
           .catch((err) => {
-            console.log('err: ', err);
-            btnLoading.value = false;
-          });
+            console.log('login err: ', err);
+          }).finally(() => btnLoading.value = false);
       } else {
         return false;
       }

@@ -206,7 +206,7 @@ export async function deletePackageAPI (packageId) {
 
 /* 单个商品 Unit API */
 export async function queryUnitsAPI (params) {
-  console.log('param3s: ', params);
+  requester.defaults.baseURL = '/api';
   jsonToUnderline(params);
   const res = await requester.get('/units/search', params);
   return res.items;
@@ -250,6 +250,7 @@ export async function loginAPI(formInfo) {
   await requester.post('/login', formInfo)
     .then(_data => {
       res = _data;
+      ElMessage.success('Welcome to Vibe Logisitc System.', 3);
     })
     .catch(() => ElMessage.error('Wrong username or password.', 3));
   return res;

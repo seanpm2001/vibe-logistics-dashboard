@@ -1320,19 +1320,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ctrl/tinycolor@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "@ctrl/tinycolor@npm:3.4.0"
-  checksum: 28217900f3c077d2000f95034a068e755b87e864481f7cf7c1e65442d51fe33283762860c3ee86961a48d9ea5deba73b06e3c961e6da6748054a79162b3a31c9
-  languageName: node
-  linkType: hard
-
-"@element-plus/icons-vue@npm:^0.2.6":
-  version: 0.2.7
-  resolution: "@element-plus/icons-vue@npm:0.2.7"
-  peerDependencies:
-    vue: ^3.2.0
-  checksum: 809db3671b6aacae5802b57333f6ff8a92f36993dc57d5690a1a01b7962ef43e4d8794ca62af023ec0bfada950105043d51b732a4c8063b572912a5f0681f699
+"@element-plus/icons@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@element-plus/icons@npm:0.0.11"
+  checksum: 797c3bd9aa4284642c9200483bbcda1757219e93f5aac787463ef9a62bbe5ba37012aa66fb984d3785aa8c59db183b3e530ec4496f3cd0762b85b8436a8e0495
   languageName: node
   linkType: hard
 
@@ -1521,7 +1512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.2":
+"@popperjs/core@npm:^2.10.2":
   version: 2.11.2
   resolution: "@popperjs/core@npm:2.11.2"
   checksum: 5695bf020eda54636e16a62dc9b5fdd92beaf7b2d19f62fcef049d57c5cff92773562d80cbf760b217c3ec928da310eb24994ab6a00fd39dffa0af9b5dfc01a6
@@ -2365,11 +2356,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:^7.6.0":
-  version: 7.6.2
-  resolution: "@vueuse/core@npm:7.6.2"
+"@vueuse/core@npm:~6.1.0":
+  version: 6.1.0
+  resolution: "@vueuse/core@npm:6.1.0"
   dependencies:
-    "@vueuse/shared": 7.6.2
+    "@vueuse/shared": 6.1.0
     vue-demi: "*"
   peerDependencies:
     "@vue/composition-api": ^1.1.0
@@ -2379,13 +2370,13 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 60ed01a9bcfdd949149fe0048cab9a00df445712334e9f7923094f9569b59b5ff97f15f827e32cf2143a85d930369067970a8993e7043787151e0e4a767fbf80
+  checksum: 5c28cebfece10df5c4f67a6e253f6c704f3d04d1a373e80deb3383a5d3a77a16d1662263425a0be3ea0f621a73e49736b112cd2bfff64e13dbda221afff1d721
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:7.6.2":
-  version: 7.6.2
-  resolution: "@vueuse/shared@npm:7.6.2"
+"@vueuse/shared@npm:6.1.0":
+  version: 6.1.0
+  resolution: "@vueuse/shared@npm:6.1.0"
   dependencies:
     vue-demi: "*"
   peerDependencies:
@@ -2396,7 +2387,7 @@ __metadata:
       optional: true
     vue:
       optional: true
-  checksum: 824043ef06f71090220f2a053430c124e283a0cfa381e2f780b4b27390353d503d6f9d8bc68323136922b9585eabd1c9b9588c3c921b64e5042a0ba4b0587cd1
+  checksum: 026cf7131123badb6c89152fabb6c9958c66702e5e78ae0f9f481c0abaf788f1137b825d1e29f6c3cf19696b35c295c80f60466f8180e7865a64231052ed9feb
   languageName: node
   linkType: hard
 
@@ -3031,7 +3022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-validator@npm:^4.0.7":
+"async-validator@npm:^4.0.3":
   version: 4.0.7
   resolution: "async-validator@npm:4.0.7"
   checksum: c4a764fb7f7bb1e777a9e47d0b405cf9add9db017793363ebdeb3d6f3e6f19bf0b4256a710a76d357ae18acdae102b3c3e0fbde8d72cc27eca7ce27ea439c3f7
@@ -5256,24 +5247,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"element-plus@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "element-plus@npm:2.0.2"
+"element-plus@npm:^1.1.0-beta.20":
+  version: 1.1.0-beta.24
+  resolution: "element-plus@npm:1.1.0-beta.24"
   dependencies:
-    "@ctrl/tinycolor": ^3.4.0
-    "@element-plus/icons-vue": ^0.2.6
-    "@popperjs/core": ^2.11.2
-    "@vueuse/core": ^7.6.0
-    async-validator: ^4.0.7
+    "@element-plus/icons": ^0.0.11
+    "@popperjs/core": ^2.10.2
+    "@vueuse/core": ~6.1.0
+    async-validator: ^4.0.3
     dayjs: ^1.10.7
     lodash: ^4.17.21
-    lodash-es: ^4.17.21
-    lodash-unified: ^1.0.1
-    memoize-one: ^6.0.0
-    normalize-wheel-es: ^1.1.1
+    memoize-one: ^5.2.1
+    normalize-wheel-es: ^1.1.0
+    resize-observer-polyfill: ^1.5.1
   peerDependencies:
     vue: ^3.2.0
-  checksum: 1bf94ab1f96af41edd60a3b70233950d2316b15d01b5ce600e7c927ffdc949c2b17dadff4686c507526dc807f39a662f149063b20cc30512294b1d3711994135
+  checksum: d14f69708b7ebe1dc80a0244aec2444673e8a7105e43e6e8794e8005461af67caa2c8262726b9089cf3f51731417daaa64ecb1420b187a5db9e1ba198d932e4b
   languageName: node
   linkType: hard
 
@@ -8352,24 +8341,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash-es@npm:4.17.21"
-  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
-  languageName: node
-  linkType: hard
-
-"lodash-unified@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "lodash-unified@npm:1.0.1"
-  peerDependencies:
-    "@types/lodash-es": "*"
-    lodash: "*"
-    lodash-es: "*"
-  checksum: 5356366c53cabecb0b3ca5851135ad4fd4059984908c5669577463a758014a39ab3f218f3feefa2f732f32279f3cb23d967e2c11f988b93d21333e645e4dc6af
-  languageName: node
-  linkType: hard
-
 "lodash.debounce@npm:^4.0.8":
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
@@ -8600,10 +8571,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"memoize-one@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "memoize-one@npm:6.0.0"
-  checksum: f185ea69f7cceae5d1cb596266dcffccf545e8e7b4106ec6aa93b71ab9d16460dd118ac8b12982c55f6d6322fcc1485de139df07eacffaae94888b9b3ad7675f
+"memoize-one@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "memoize-one@npm:5.2.1"
+  checksum: a3cba7b824ebcf24cdfcd234aa7f86f3ad6394b8d9be4c96ff756dafb8b51c7f71320785fbc2304f1af48a0467cbbd2a409efc9333025700ed523f254cb52e3d
   languageName: node
   linkType: hard
 
@@ -9262,7 +9233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-wheel-es@npm:^1.1.1":
+"normalize-wheel-es@npm:^1.1.0":
   version: 1.1.1
   resolution: "normalize-wheel-es@npm:1.1.1"
   checksum: f8567fe8ab486330c8355c088bbac5eff1796de57e3cf2e4275288c2b4d6adecb958a0f7e437d342d623c38881beb81b65ea485e0d837f6e8d562fae469b626a
@@ -11065,6 +11036,13 @@ __metadata:
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
   checksum: eee0e303adffb69be55d1a214e415cf42b7441ae858c76dfc5353148644f6fd6e698926fc4643f510d5c126d12a705e7c8ed7e38061113bdf37547ab356797ff
+  languageName: node
+  linkType: hard
+
+"resize-observer-polyfill@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "resize-observer-polyfill@npm:1.5.1"
+  checksum: 57e7f79489867b00ba43c9c051524a5c8f162a61d5547e99333549afc23e15c44fd43f2f318ea0261ea98c0eb3158cca261e6f48d66e1ed1cd1f340a43977094
   languageName: node
   linkType: hard
 
@@ -13061,7 +13039,7 @@ __metadata:
     babel-eslint: ^10.1.0
     core-js: ^3.21.0
     cross-env: ^7.0.3
-    element-plus: ^2.0.2
+    element-plus: ^1.1.0-beta.20
     eslint: ^7.x
     eslint-plugin-vue: ^8.4.1
     fast-glob: ^3.2.11
