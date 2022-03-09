@@ -1,38 +1,73 @@
 <template>
   <div>
     <el-row class="header" justify="space-between" :gutter="3">
-      <span>
-        Package <span v-if="taskPackage?.id"> [Database]</span>:
-      </span> 
-      <svg-icon class="icon close-icon" icon-name="close" @click="handleDeletePackage"></svg-icon>
+      <span> Package <span v-if="taskPackage?.id"> [Database]</span>: </span>
+      <svg-icon
+        class="icon close-icon"
+        icon-name="close"
+        @click="handleDeletePackage"
+      ></svg-icon>
     </el-row>
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="*Tracking Number">
-        <el-input v-model="taskPackage.trackingNumber" placeholder="Tracking Number"/>
+        <el-input
+          v-model="taskPackage.trackingNumber"
+          placeholder="Tracking Number"
+        />
       </el-form-item>
     </el-row>
 
     <template v-for="(item, index) in taskPackage.units" :key="index">
       <el-row align="middle" class="add-minus-row">
-        <svg-icon class="icon" icon-name="add" @click="handleUnitChange(index, 'add')" />
-        <svg-icon class="icon" :style="taskPackage.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="handleUnitChange(index, 'minus')" />
-        
+        <svg-icon
+          class="icon"
+          :style="taskPackage.units.length >= quantityNum ? 'visibility: hidden;' : ''"
+          icon-name="add"
+          @click="handleUnitChange(index, 'add')"
+        />
+        <svg-icon
+          class="icon"
+          :style="taskPackage.units.length <= 1 ? 'visibility: hidden;' : ''"
+          icon-name="minus"
+          @click="handleUnitChange(index, 'minus')"
+        />
+
         <el-form-item label="Unit Serial">
           <el-select
-            v-model="item.serial" :disabled="isDialogPattern('view')" style="width: 260px" placeholder="Please select"
-            @focus="filterUnitArr(item)" filterable allow-create default-first-option
+            v-model="item.serial"
+            :disabled="isDialogPattern('view')"
+            style="width: 260px"
+            placeholder="Please select"
+            filterable
+            allow-create
+            default-first-option
           >
-            <el-option v-for="unit in unitList" :key="unit.serial" :label="unit.serial + ' : ' + unit.sku" :value="unit.serial" />
+            <el-option
+              v-for="unit in unitList"
+              :key="unit.serial"
+              :label="unit.serial + ' : ' + unit.sku"
+              :value="unit.serial"
+            />
           </el-select>
         </el-form-item>
       </el-row>
     </template>
-    
+
     <div class="f-row controls" v-if="!isDialogPattern('view')">
-      <el-button :disabled="!taskId" v-if="taskPackage?.id" type="primary" @click="handlePackage('update')">
+      <el-button
+        :disabled="!taskId"
+        v-if="taskPackage?.id"
+        type="primary"
+        @click="handlePackage('update')"
+      >
         Update Package
       </el-button>
-      <el-button :disabled="!taskId" v-else type="primary" @click="handlePackage('create')">
+      <el-button
+        :disabled="!taskId"
+        v-else
+        type="primary"
+        @click="handlePackage('create')"
+      >
         Submit Package
       </el-button>
       <el-popover
@@ -50,52 +85,76 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
-import { debounce } from '/@/utils';
-import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from 'element-plus';
-import { createPackageAPI, deletePackageAPI, updatePackageAPI, queryUnitsAPI } from '/@/api/logistic';
-import { packageStatusEnum } from '/@/enums/logistic';
+import { useStore } from "vuex";
+import { debounce } from "/@/utils";
+import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from "element-plus";
+import {
+  createPackageAPI,
+  deletePackageAPI,
+  updatePackageAPI,
+  queryUnitsAPI,
+} from "/@/api/logistic";
+import { packageStatusEnum } from "/@/enums/logistic";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
   taskId: {
     type: Number,
-    required: true
+    required: true,
   },
   packageIdx: {
     type: Number,
-    required: true
+    required: true,
   },
   packageItem: {
     type: Object,
-    required: true
+    required: true,
   },
   dialogStatus: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 /* Start Data */
-const taskItem = inject('taskItem');
+const taskItem = inject("taskItem");
+
 const store = useStore();
 
-const taskProducts = Object.assign({}, taskItem.units);
+const taskProducts = Object.assign({}, taskItem.value.units);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
 
-const unitList = computed(() => store.getters['unitList']);
-const filterUnitArr = filterObj => {
-  console.log('filterObj: ', filterObj);
-  console.log('taskProducts: ', taskProducts);
-  
-}; 
+const unitList = computed(() => {
+  return store.getters["unitList"].filter(item => {
+    for (let i in taskProducts) {
+      if (item.sku === taskProducts[i].sku) return true;
+    }
+  })
+});
+const quantityNum = computed(() => {
+  let sum=0
+  for (let i in taskProducts) {
+    sum += taskProducts[i].quantity
+  }
+  return sum;
+});
+// const filterUnitArr = (filterObj) => {
+//   console.log("quantityNum: ", quantityNum.value);
+//   console.log("unitList", unitList.value);
+//   unitList.value = unitList.value.filter((item) => {
+//     for (let i in taskProducts) {
+//       if (item.sku === taskProducts[i].sku) return true;
+//     }
+//   });
+//   // console.log("filterUnitList", filterUnitList);
+// };
 /* End Data */
 
 // eslint-disable-next-line no-undef
-const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
+const emit = defineEmits(["deletePackage", "createPackage", "editPackage"]);
 
-const isDialogPattern = type => props.dialogStatus === type;
+const isDialogPattern = (type) => props.dialogStatus === type;
 
 const dialogExcelVisible = ref(false);
 
@@ -103,48 +162,45 @@ const xmlFileList = ref([]);
 
 const handleUnitChange = (idx, type) => {
   const unitArr = taskPackage.value.units;
-  type === 'add' ? unitArr.push({serial: null}) : unitArr.splice(idx, 1);
+  type === "add" ? unitArr.push({ serial: null }) : unitArr.splice(idx, 1);
 };
 
 const handleDeletePackage = () => {
   const packageId = taskPackage.value?.id;
-  console.log('packageId: ', packageId);
-  if (packageId) { // 删除数据库中的package
-    ElMessageBox.confirm(
-      `Remove the package (ID:${packageId})?`,
-      'Warning',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-        callback: (action) => {
-          if (action === 'confirm') {
-            deletePackageAPI(packageId).then(() => {
-              emit('deletePackage', props.packageIdx);
-            });
-          } else if (action === 'cancel') {
-            ElMessage.info('Delete canceled');
-          }
-        },
-      }
-    );
+  console.log("packageId: ", packageId);
+  if (packageId) {
+    // 删除数据库中的package
+    ElMessageBox.confirm(`Remove the package (ID:${packageId})?`, "Warning", {
+      confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
+      type: "warning",
+      callback: (action) => {
+        if (action === "confirm") {
+          deletePackageAPI(packageId).then(() => {
+            emit("deletePackage", props.packageIdx);
+          });
+        } else if (action === "cancel") {
+          ElMessage.info("Delete canceled");
+        }
+      },
+    });
     return;
   }
-  emit('deletePackage', props.packageIdx); // 删除新创建还未提交的package
+  emit("deletePackage", props.packageIdx); // 删除新创建还未提交的package
 };
 
-const handlePackage = _type => {
-  if (_type === 'create') {
-    createPackageAPI(props.taskId, taskPackage.value).then(_data => {
+const handlePackage = (_type) => {
+  if (_type === "create") {
+    createPackageAPI(props.taskId, taskPackage.value).then((_data) => {
       taskPackage.value = _data;
-      emit('createPackage', _data, props.taskId ,props.packageIdx);
+      emit("createPackage", _data, props.taskId, props.packageIdx);
     });
   } else {
-    updatePackageAPI(taskPackage.value.id, taskPackage.value).then(_data => {
+    updatePackageAPI(taskPackage.value.id, taskPackage.value).then((_data) => {
       taskPackage.value = _data;
-      emit('updatePackage', _data, props.packageIdx);
+      emit("updatePackage", _data, props.packageIdx);
     });
-    emit('editPackage', taskPackage.value?.id);
+    emit("editPackage", taskPackage.value?.id);
   }
 };
 // const handlePackage = (type) => {
@@ -165,8 +221,9 @@ const handlePackage = _type => {
 //   }
 // };
 function initGlobalData() {
-  if (unitList.value.length === 0) // init unitList:[]
-    store.dispatch('logistic/setUnitList');
+  if (unitList.value.length === 0)
+    // init unitList:[]
+    store.dispatch("logistic/setUnitList");
 }
 
 onMounted(() => {
@@ -186,5 +243,4 @@ onMounted(() => {
     padding-left: 16px
     font-size: 16px
     font-weight: 500
-
 </style>
