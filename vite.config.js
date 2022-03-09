@@ -40,14 +40,13 @@ export default (({command}) => {
       target: 'modules',
       outDir: 'dist', //指定输出路径
       assetsDir: 'assets', // 指定生成静态资源的存放路径
-      minify: false,
-      // minify: 'terser', // 混淆器，terser构建后文件体积更小
-      // terserOptions: {
-      //   compress: {
-      //     keep_infinity: true,
-      //     drop_console: VITE_DROP_CONSOLE,
-      //   },
-      // },
+      minify: 'terser', // 混淆器，terser构建后文件体积更小
+      terserOptions: {
+        compress: {
+          keep_infinity: true,
+          drop_console: VITE_DROP_CONSOLE,
+        },
+      },
     },
     port: VITE_PORT,
     open: true,
