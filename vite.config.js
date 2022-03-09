@@ -47,7 +47,7 @@ export default (({command}) => {
       //     keep_infinity: true,
       //     drop_console: VITE_DROP_CONSOLE,
       //   },
-      },
+      // },
     },
     port: VITE_PORT,
     open: true,
