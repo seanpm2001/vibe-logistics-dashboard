@@ -77,7 +77,7 @@ requester.interceptors.response.use(
   error => {
     // eslint-disable-next-line no-undef
     tryHideFullScreenLoading();
-    console.log('err' + error); // for debug
+    console.log('http err' + error); // for debug
     ElMessage({
       message: error.message,
       type: 'error',

@@ -18,7 +18,7 @@ export function createVitePlugins(isBuild) {
     }),
     // svgBuilder('./src/icons/svg/'), // 已经将src/icons/svg/下的svg全部导入，无需再单独导入
     Components({
-      resolvers: [ElementPlusResolver({importStyle: 'sass'})],
+      resolvers: [ElementPlusResolver()],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
     }),
   ];

@@ -250,7 +250,6 @@ export async function loginAPI(formInfo) {
   await requester.post('/login', formInfo)
     .then(_data => {
       res = _data;
-      ElMessage.success('Welcome to Vibe Logisitc System.', 3);
     })
     .catch(() => ElMessage.error('Wrong username or password.', 3));
   return res;
