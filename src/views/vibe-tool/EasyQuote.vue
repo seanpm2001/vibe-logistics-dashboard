@@ -7,16 +7,16 @@
         <strong style="font-size: 20px; color: #000">General Transports (Recommended)</strong>
         <el-divider />
         <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
-          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
-          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
-          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" style="width: 100px" placeholder="0"></el-input-number>
+          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" placeholder="0"></el-input-number>
         </el-form-item>
         <el-form-item label="Country/Area/Transport:">
           <el-cascader
@@ -301,7 +301,6 @@ const options = ref([
       // AK, HI, PR
       { value: 'AK', label: 'AK-Alaska', children: USTruckChildren },
       { value: 'HI', label: 'HI-Hawaii', children: [
-        { value: 'TRUCK', label: 'Truck' },
         { value: 'AIR', label: 'Air' },
         { value: 'LCL', label: 'LCL' },
       ] },

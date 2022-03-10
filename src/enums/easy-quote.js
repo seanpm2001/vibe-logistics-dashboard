@@ -34,7 +34,7 @@ export const USfreightEunm = {
       },
     },
     HI: {
-      CLC: {
+      LCL: {
         nitialPrice: 600,
         unitPrice: 200,
         tenUnitPrice: 120,
@@ -83,7 +83,7 @@ export const USfreightEunm = {
       },
     },
     HI: {
-      CLC: {
+      LCL: {
         nitialPrice: 650,
         unitPrice: 250,
         tenUnitPrice: 220,
@@ -127,7 +127,7 @@ export const USfreightEunm = {
       },
     },
     HI: {
-      CLC: {
+      LCL: {
         nitialPrice: 380,
         unitPrice: 120,
         tenUnitPrice: 110,
