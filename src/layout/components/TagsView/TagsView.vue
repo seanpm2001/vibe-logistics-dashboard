@@ -36,8 +36,6 @@
 import ScrollPane from './ScrollPane.vue';
 
 import { resolve } from '/@/utils/path';
-import { useStore } from 'vuex';
-
 const { proxy } = getCurrentInstance();
 
 const store = useStore();

@@ -181,9 +181,7 @@
 
 </template>
 
-<script setup>
-import { useStore } from 'vuex';
-import { ElMessage, ElTooltip } from 'element-plus';
+<script setup>import { ElMessage, ElTooltip } from 'element-plus';
 import { throttle, debounce } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';

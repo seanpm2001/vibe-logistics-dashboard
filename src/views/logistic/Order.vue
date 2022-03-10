@@ -240,9 +240,7 @@
   </div>
 </template>
 
-<script setup>
-import { useStore } from 'vuex';
-import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';
 import OrderDescription from './components/OrderDescription.vue';
 import {

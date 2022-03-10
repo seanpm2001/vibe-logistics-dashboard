@@ -90,8 +90,6 @@
 <script setup>
 // 局部组件（导入）
 import Captcha from '/@/components/Captcha/Index.vue';
-import { useStore } from 'vuex';
-
 import { ElMessage } from 'element-plus';
 import { validUsername } from '/@/utils/validate';
 

@@ -70,9 +70,9 @@ defineExpose({
   moveToTarget,
 });
 
-onMounted(() => {
-  scrollWrapper.value.addEventListener('scroll', emitScroll, true);
-});
+// onMounted(() => {
+//   scrollWrapper.value.addEventListener('scroll', emitScroll, true);
+// });
 </script>
 
 <style lang="sass" scoped>

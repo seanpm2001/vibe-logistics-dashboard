@@ -84,9 +84,7 @@
   </div>
 </template>
 
-<script setup>
-import { useStore } from 'vuex';
-import { debounce } from '/@/utils';
+<script setup>import { debounce } from '/@/utils';
 import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from 'element-plus';
 import {
   createPackageAPI,

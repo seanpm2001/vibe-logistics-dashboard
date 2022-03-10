@@ -34,8 +34,6 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
-
 import Breadcrumb from '/@/components/Breadcrumb.vue';
 
 const store = useStore();

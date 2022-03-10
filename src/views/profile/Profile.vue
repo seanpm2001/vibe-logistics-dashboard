@@ -26,8 +26,6 @@
 </template>
 
 <script setup>
-
-import { useStore } from 'vuex';
 import Timeline from './components/Timeline.vue';
 
 const store = useStore();

@@ -128,9 +128,7 @@
   </div>
 </template>
 
-<script setup>
-import { useStore } from 'vuex';
-import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from '../components/UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
 import { parseTime } from '/@/utils/format';

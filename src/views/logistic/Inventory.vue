@@ -202,9 +202,7 @@
   </div>
 </template>
 
-<script setup>
-import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus';
+<script setup>import { ElMessage } from 'element-plus';
 import { parseTime } from '/@/utils/format';
 import TaskDialog from './components/taskDialog/Index.vue';
 import { listInventoriesAPI } from '/@/api/logistic';

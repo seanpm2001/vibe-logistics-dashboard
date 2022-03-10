@@ -19,8 +19,6 @@
 </template>
 
 <script setup>
-
-import { useStore } from 'vuex';
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
 

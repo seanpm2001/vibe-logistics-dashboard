@@ -1,9 +1,8 @@
 import vue from '@vitejs/plugin-vue';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
-// import { svgBuilder } from './svgBuilder'; 
+import AutoImport from 'unplugin-auto-import/vite';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
-import { AutoImportDeps } from './autoImport';
 import { configVisualizerPlugin } from './visualizer';
 import { configStyleImportPlugin } from './styleImport';
 import { resolve } from 'path';
@@ -12,11 +11,14 @@ export function createVitePlugins(isBuild) {
   const vitePlugins = [
     // vue支持
     vue(),
-    AutoImportDeps(), // 自动按需引入依赖
     createSvgIconsPlugin({
       iconDirs: [resolve(process.cwd(), './src/icons/svg')],
     }),
-    // svgBuilder('./src/icons/svg/'), // 已经将src/icons/svg/下的svg全部导入，无需再单独导入
+    AutoImport({ // 自动按需引入依赖
+      // resolvers: [ElementPlusResolver()],
+      imports: ['vue', 'vue-router', 'vuex'],
+      dts: 'src/auto-imports.d.ts',
+    }),
     Components({
       resolvers: [ElementPlusResolver()],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
