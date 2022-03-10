@@ -77,7 +77,7 @@
               <div class="divider" style="margin-right: 100%; margin-bottom: 16px;" />
               <el-form-item label="Condition">
                 <el-select v-model="item.condition" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
+                  <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Available">
@@ -135,7 +135,7 @@
               <svg-icon class="icon" :style="usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
               <el-form-item label="Condition">
                 <el-select v-model="item.condition" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
+                  <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Unit Serial">
@@ -188,7 +188,7 @@ import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
-  conditionEnum, reversedConditionEnum
+  unitConditionEnum, reversedConditionEnum
 } from '/@/enums/logistic';
 
 const props = defineProps({

@@ -23,7 +23,7 @@
     <el-descriptions-item>
       <template #label>Condition</template>
       <el-select v-model="unitItem.condition" placeholder="Please select">
-        <el-option v-for="(item, key) in conditionEnum" :key="item" :label="item" :value="key" />
+        <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
       </el-select>
     </el-descriptions-item>
     <el-descriptions-item>
@@ -42,7 +42,7 @@
 <script setup>
 
 import { ElMessageBox } from 'element-plus';
-import { packageStatusEnum, conditionEnum } from '/@/enums/logistic';
+import { packageStatusEnum, unitConditionEnum } from '/@/enums/logistic';
 
 const unitItem = inject('unitItem');
 

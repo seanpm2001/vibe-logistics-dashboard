@@ -204,6 +204,7 @@ const editHousingTask = (_unit, _task) => {
     taskType: _task.taskType,
     packageId: _unit.packageId,
   });
+  unitItem.value = _unit;
   dialogHousingVisible.value = true;
 };
 

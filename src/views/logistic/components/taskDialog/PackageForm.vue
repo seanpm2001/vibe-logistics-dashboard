@@ -70,22 +70,20 @@
       >
         Submit Package
       </el-button>
-      <el-popover
+      <el-tooltip
         class="tips"
-        trigger="hover"
+        effect="light"
         content="You need to have/submit a 'Shipment' part before 'Submit Package'"
         placement="right"
       >
-        <template #reference>
-          <svg-icon class="mgl-5" icon-name="tips" />123
-        </template>
-      </el-popover>
+        <svg-icon class="mgl-5" icon-name="tips" />123
+      </el-tooltip>
     </div>
   </div>
 </template>
 
 <script setup>import { debounce } from '/@/utils';
-import { ElMessage, ElMessageBox, ElTooltip, ElPopover } from 'element-plus';
+import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
   createPackageAPI,
   deletePackageAPI,

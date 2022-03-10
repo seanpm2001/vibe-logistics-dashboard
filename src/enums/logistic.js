@@ -72,13 +72,24 @@ export const taskReasonEnum = {
   HARDWARE_DEFECT: 'Hardware Defect',
   PACKAGE_LOST: 'Package Lost'
 };
-export const conditionEnum = {
+export const unitConditionEnum = {
   GOOD: 'Good',
+  FIXED_CLASS_A: 'Fixed Class A',
+  FIXED_CLASS_B: 'Fixed Class B',
+  FIXED_CLASS_C: 'Fixed Class C',
   SCRAP: 'Scrap',
+  DAMAGED: 'Damaged',
+};
+export const packageConditionEnum = {
+  GOOD: 'Good',
+  MISSING: 'Missing',
   DAMAGED: 'Damaged',
 };
 export const reversedConditionEnum = {
   'Good': 'GOOD',
+  'Fixed Class A': 'FIXED_CLASS_A',
+  'Fixed Class B': 'FIXED_CLASS_B',
+  'Fixed Class C': 'FIXED_CLASS_C',
   'Scrap': 'SCRAP',
   'Damaged': 'DAMAGED',
 };
