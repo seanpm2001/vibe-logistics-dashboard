@@ -5,6 +5,11 @@ export const vibeToolRouter = [
     hidden: true
   },
   {
+    path: '/supply',
+    component: () => import('/@/views/vibe-tool/Supply.vue'),
+    hidden: true
+  },
+  {
     path: '/test-png',
     component: () => import('/@/views/vibe-tool/TestPng.vue'),
     hidden: true

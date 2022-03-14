@@ -74,7 +74,6 @@
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
                 <el-input v-model="item.quantity" placeholder="Quantity" />
               </el-form-item>
-              <div class="divider" style="margin-right: 100%; margin-bottom: 16px;" />
               <el-form-item label="Condition">
                 <el-select v-model="item.condition" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
@@ -82,6 +81,19 @@
               </el-form-item>
               <el-form-item label="Available">
                 <el-input disabled>999</el-input>
+              </el-form-item>
+              <el-form-item label="Serials">
+                <el-select
+                  v-model="item.serialNote" :disabled="isDialogPattern('view')" placeholder="Please select"
+                  filterable allow-create default-first-option multiple style="width: 260px"
+                >
+                  <el-option
+                    v-for="unit in unitList"
+                    :key="unit.serial"
+                    :label="unit.serial + ' : ' + unit.sku"
+                    :value="unit.serial"
+                  />
+                </el-select>
               </el-form-item>
             </el-row>
           </template>
@@ -107,46 +119,16 @@
                     v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
                     filterable allow-create default-first-option
                   >
-                    <el-option v-for="(item, index) in unitList" :key="index" :label="item.serial" :value="item.serial" />
+                    <el-option
+                      v-for="unit in unitList"
+                      :key="unit.serial"
+                      :label="unit.serial + ' : ' + unit.sku"
+                      :value="unit.serial"
+                    />
                   </el-select>
                 </el-form-item>
               </el-row>
             </template>
-          </template>
-        </template>
-
-        <el-row align="middle">
-          <el-checkbox v-model="showUsedUnits">
-            Show Used Units
-          </el-checkbox>
-          <el-tooltip
-            class="tips"
-            effect="light"
-            content="For performance reasons, there is a 1-second delay in updating the unit selection list. If you operate both units within 1 second, the data will be empty. Click refresh list again."
-            placement="right"
-          >
-            <svg-icon class="mgl-5" icon-name="tips" />
-          </el-tooltip>
-        </el-row>
-        <template v-if="showUsedUnits">
-          <template v-for="(item, index) in usedUnitArr" :key="index">
-            <el-row justify="space-between" align="middle" class="add-minus-row">
-              <svg-icon class="icon" icon-name="add" @click="onUsedUnitChange(index, 'add')" />
-              <svg-icon class="icon" :style="usedUnitArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onUsedUnitChange(index, 'minus')" />
-              <el-form-item label="Condition">
-                <el-select v-model="item.condition" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Unit Serial">
-                <el-select
-                  v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-                  @focus="filterUnitArr(item)" filterable allow-create default-first-option
-                >
-                  <el-option v-for="(item, index) in filteredUnitArr" :key="index" :label="item.serial" :value="item.serial" />
-                </el-select>
-              </el-form-item>
-            </el-row>
           </template>
         </template>
 
@@ -212,22 +194,20 @@ const fetchList = () => emit['fetchList'];
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
 const taskItem = inject('taskItem');
-const usedUnitArr = inject('usedUnitArr');
 const specifySerailArr = inject('specifySerailArr');
 const taskOrderItem = inject('taskOrderItem');
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
 
-const unitList = computed(() => store.getters.unitList);
-const skuList = computed(() => skuProdcutEnum);
-const filteredUnitArr = shallowRef(null);
-const filterUnitArr = filterObj => {
-  console.log('filterObj: ', filterObj);
-  filteredUnitArr.value = unitList.value.filter(
-    unit => !filterObj.condition || !unit.condition || filterObj.condition === unit.condition
-  );
-}; 
+const unitList = computed(() => {
+  const taskProducts = taskItem.value.units;
+  return store.getters['unitList'].filter(item => {
+    for (const i in taskProducts) {
+      if (item.sku === taskProducts[i].sku) return true;
+    }
+  });
+});
 
 const packageArr = ref([]);
 const isOnHold = ref(false);
@@ -258,11 +238,6 @@ const handleWarehouseTask = _type => {
       taskItem.value = _data;
     });
   }
-};
-
-const onUsedUnitChange = (_idx, _type) => {
-  const unitArr = usedUnitArr.value;
-  _type === 'add' ? unitArr.push({serial: null, condition: null}) : unitArr.splice(_idx, 1);
 };
 
 const onSpecifySerialChange = (_idx, _type) => {

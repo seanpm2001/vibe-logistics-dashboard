@@ -7,8 +7,8 @@ import { getToken } from '/@/utils/auth'; // get token from cookie
 import getPageTitle from '/@/utils/get-page-title';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
-
-const whiteList = ['/login', '/auth-redirect', '/easy-quote', '/test-png']; // no redirect whitelist
+// no redirect whitelist
+const whiteList = ['/login', '/auth-redirect', '/easy-quote', '/supply', '/test-png'];
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar

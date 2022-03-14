@@ -187,10 +187,6 @@ const taskItem = ref({
   }],
 });
 
-const usedUnitArr = ref([{
-  condition: null,
-  serial: null,
-}]);
 const specifySerailArr = ref([{
   serial: null,
 }]);
@@ -205,7 +201,6 @@ const taskPatternEnum = {
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
-provide('usedUnitArr', usedUnitArr);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 /* End Data */

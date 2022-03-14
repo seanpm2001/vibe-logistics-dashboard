@@ -287,6 +287,7 @@ const taskItem = ref({
     sku: null,
     condition: null,
     quantity: null,
+    serialNote: null,
   }],
   // shipment info
   carrier: null,
@@ -297,10 +298,7 @@ const taskItem = ref({
   insideCost: null,
   insureCostL: null,
 });
-const usedUnitArr = ref([{
-  condition: null,
-  serial: null,
-}]);
+
 const specifySerailArr = ref([{
   serial: null,
 }]);
@@ -310,7 +308,6 @@ const contrastData = ref(null);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
-provide('usedUnitArr', usedUnitArr);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 /* End data */
