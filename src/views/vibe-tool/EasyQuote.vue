@@ -79,7 +79,7 @@
         <div class="note">
           <strong>Note:</strong>
           <br><br>
-          1. For orders over 5 boxes (units), we advise to use the general tranports in the left, though UPS truck price seems cheaper. Because for shipping an express parcel, UPS will not use pallet to protect our product, which is not safe enough for high volume.
+          1. For orders over 5 boxes (units), we advise to use the general tranports above, though UPS truck price seems cheaper. Because for shipping an express parcel, UPS will not use pallet to protect our product, which is not safe enough for high volume.
         </div>
       </el-card>
     </div>
@@ -315,6 +315,7 @@ const options = ref([
 <style lang="sass" scoped>
 .page
   padding-top: 32px
+  padding-bottom: 32px
 
 :deep(.el-card)
   width: 620px
