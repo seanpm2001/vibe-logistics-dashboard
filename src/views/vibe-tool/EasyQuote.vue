@@ -55,7 +55,7 @@
     
     <div>
       <el-card class="specify-price-card">
-        <strong style="font-size: 20px; color: #000">UPS Truck (for US 55 products only)</strong>
+        <strong style="font-size: 20px; color: #000">UPS Parcel (for US 55 products only)</strong>
         <el-divider />
         <strong>For Alaska, Hawaii, Puerto Rico: $375 per box:</strong>
         <el-row align="middle">
@@ -202,7 +202,7 @@ const USGlsChildren = computed(() => {
   return [
     { value: 'TRUCK', label: 'Truck' },
     { value: 'AIR', label: 'Air' },
-    { value: 'GLS', label: 'GLS' },
+    // { value: 'GLS', label: 'GLS' },
   ];
 });
 const USTruckChildren = [
@@ -315,13 +315,12 @@ const options = ref([
 <style lang="sass" scoped>
 .page
   padding-top: 32px
-  display: flex
-  justify-content: space-around
-  flex-wrap: wrap
 
 :deep(.el-card)
   width: 620px
+  margin: 0 auto
   &.specify-price-card
+    margin-top: 32px
     .el-input-number
       margin: 0 16px
     .el-row
