@@ -11,18 +11,14 @@
       v-model="warehousingItem"
     >
       <el-form-item label="Target Warehouse">
-        <el-select v-model="warehousingItem.targetId" :disabled="isDialogPattern('view')" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
-        </el-select>
+        <el-tag>#{{warehouseEnum[warehousingItem.targetId]}}</el-tag>
       </el-form-item>
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Origin Warehouse Task">
           <el-tag>#{{warehousingItem.taskId}}</el-tag>
         </el-form-item>
         <el-form-item label="Origin Warehouse Task Type">
-          <el-select v-model="warehousingItem.taskType" :disabled="isDialogPattern('view')" placeholder="Please select">
-            <el-option v-for="(item, key) in taskTypeEnum" :key="item" :label="item" :value="key" />
-            </el-select>
+          <el-tag>#{{taskTypeEnum[warehousingItem.taskType]}}</el-tag>
         </el-form-item>
       </el-row>
       <el-row justify="space-between" :gutter="3">

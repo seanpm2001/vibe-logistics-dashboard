@@ -56,9 +56,15 @@
             </el-switch>
           </el-form-item>
         </el-row>
-
+        
         <el-card>
           Product: 
+          <el-form-item label="Specify Serial">
+            <el-checkbox-group v-model="checkedSpecifySerial" :max="1">
+              <el-checkbox :key="true" :label="true">true</el-checkbox>
+              <el-checkbox :key="false" :label="false">false</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
           <template v-for="(item, index) in taskItem.units" :key="item.sku">
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
@@ -68,7 +74,7 @@
                   v-model="item.sku" :disabled="isDialogPattern('view')" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, key) in skuList" :key="key" :label="key" :value="key" />
+                  <el-option v-for="(item, key) in unitList" :key="key" :label="key" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
@@ -82,7 +88,7 @@
               <el-form-item label="Available">
                 <el-input disabled>999</el-input>
               </el-form-item>
-              <el-form-item label="Serials">
+              <el-form-item v-show="checkedSpecifySerial[0]" label="Serials">
                 <el-select
                   v-model="item.serialNote" :disabled="isDialogPattern('view')" placeholder="Please select"
                   filterable allow-create default-first-option multiple style="width: 260px"
@@ -99,38 +105,6 @@
           </template>
         </el-card>
         
-
-        <template v-if="isMoveOrReturn">
-          <el-row>
-            <el-form-item label="Specify Serial">
-              <el-checkbox-group  v-model="checkedSpecifySerial" :max="1">
-                <el-checkbox :key="true" :label="true">true</el-checkbox>
-                <el-checkbox :key="false" :label="false">false</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-row>
-          <template v-if="checkedSpecifySerial[0]">
-            <template v-for="(item, index) in specifySerailArr" :key="index">
-              <el-row align="middle" class="add-minus-row">
-                <svg-icon class="icon" icon-name="add" @click="onSpecifySerialChange(index, 'add')" />
-                <svg-icon class="icon" :style="specifySerailArr.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onSpecifySerialChange(index, 'minus')" />
-                <el-form-item label="Unit Serial">
-                  <el-select
-                    v-model="item.serial" :disabled="isDialogPattern('view')" placeholder="Please select"
-                    filterable allow-create default-first-option
-                  >
-                    <el-option
-                      v-for="unit in unitList"
-                      :key="unit.serial"
-                      :label="unit.serial + ' : ' + unit.sku"
-                      :value="unit.serial"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-row>
-            </template>
-          </template>
-        </template>
 
         <template v-if="!isDialogPattern('view')">
           <el-button v-if="taskItem.id" type="primary" @click="handleWarehouseTask('update')">
@@ -213,13 +187,12 @@ const packageArr = ref([]);
 const isOnHold = ref(false);
 const showUsedUnits = ref(false);
 const checkedSpecifySerial = ref([]);
-const showSpecifySerails = ref(false);
 const disableNewShipment = ref(false);
 
 const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
 const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
-const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.type));
-const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.type));
+const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.taskType));
+// const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.taskType));
 
 provide('packageArr', packageArr);
 provide('taskItem', taskItem);
