@@ -47,17 +47,8 @@
           <svg-icon class="icon" :style="step2.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onStep2Change(index, 'minus')" />
           <el-form-item label="From:">
             <el-date-picker
-              v-model="item.from"
-              type="datetime"
-              format="YYYY/MM/DD"
-              value-format="YYYY-MM-DD"
-            />
-          </el-form-item>
-          <el-form-item label="To:">
-            <el-date-picker
-              v-model="item.to"
-              type="datetime"
-              format="YYYY/MM/DD"
+              v-model="item.dateRange"
+              type="daterange"
               value-format="YYYY-MM-DD"
             />
           </el-form-item>
@@ -162,94 +153,16 @@
         </el-table-column>
       </el-table>
       <el-divider />
-
-      <span class="step-title">
-        Product Plan Table
-      </span>
-      <el-row>
-        <el-form-item label="From:">
-          <el-date-picker
-            v-model="planFrom"
-            type="datetime"
-            format="YYYY/MM/DD"
-            value-format="x"
-          />
-        </el-form-item>
-        <el-form-item label="To:">
-          <el-date-picker
-            v-model="planTo"
-            type="datetime"
-            format="YYYY/MM/DD"
-            value-format="x"
-          />
-        </el-form-item>
-        <el-form-item label="Time Dimension:">
-          
-        </el-form-item>
-      </el-row>
       
-      <el-row class="table">
-        <template v-for="(monthItem, month) in planTableEnum" :key="month">
-          <el-row>
-            <div class="f-col">
-              <p class="header">{{monthAbbrEnum[month]}}</p>
-              <p>Sales</p>
-              <p>Inventory</p>
-              <p>Min. Reserved Inventory</p>
-              <p>ETA US</p>
-              <p>ETD CN</p>
-              <p>Production</p>
-              <p>Material</p>
-            </div>
-            <template v-for="(item, day) in monthItem" :key="item">
-              <div class="f-col" >
-                <p class="header">{{day}}</p>
-                <p>{{item}}</p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-              </div>
-            </template>
-          </el-row>
+      <PlanTable
+        :planTableEnum="planTableEnum"
+        :monthAbbrEnum="monthAbbrEnum"
+      >
+        <template #footer>
+          <el-button @click="calPlanTable" class="mgt-5" type="primary">Calculate</el-button>
         </template>
-      </el-row>
-      <el-button @click="calPlanTable" class="mgt-5" type="primary">Calculate</el-button>
-
-      <el-divider />
-      <span class="step-title">
-        Final Outcomes Table
-      </span>
-      <el-row>
-        <el-form-item label="From - To:">
-          <el-date-picker
-            v-model="realFrom"
-            type="datetimerange"
-            format="YYYY/MM/DD"
-            value-format="x"
-          />
-        </el-form-item>
-        <el-form-item label="Time Dimension:">
-          
-        </el-form-item>
-      </el-row>
-
-      <el-row class="table">
-        <el-col class="table">
-          <p class="header">Apr.</p>
-          <p>Inventory</p>
-          <p>Min. Reserved Inventory</p>
-          <p>ETA US</p>
-          <p>ETD CN</p>
-          <p>Production</p>
-          <p>Material</p>
-        </el-col>
-        <template>
-        
-        </template>
-      </el-row>
+      </PlanTable>
+      <RealTable />
     </el-form>
   </div>
 </template>
@@ -257,48 +170,18 @@
 <script setup>
 import { skuProdcutEnum, fixedWarehouseEnum } from '/@/enums/logistic';
 import { monthDaysEnum, monthAbbrEnum, yearEnum } from '/@/enums/supply';
+import PlanTable from './PlanTable.vue';
+import RealTable from './RealTable.vue';
 
+/* Start Data */
 const planFrom = ref(null);
 const planTo = ref(null);
 
 const realFrom = ref(null);
 const realTo = ref(null);
 
-const planTableEnum = shallowRef(null);
-
-function getStartEndTime(itemIdx) {
-  const from = step2.value[itemIdx].from.split('-'); // [YY, MM, DD]
-  const to = step2.value[itemIdx].to.split('-');
-  return {
-    'start': { month: from[1], day: from[2]}, 
-    'end': { month: from[1], day: from[2]}, 
-  };
-}
-function calTableEnum(startMonth, endMonth) {
-  const temp = {};
-  for (let i = startMonth - 1; i <= endMonth; i++)
-    temp[i] = yearEnum[i];
-  planTableEnum.value = temp;
-}
-function calSales(startMonth, startDay, endMonth, endDay) {
-  const diffDay = (new Date(step2.value.to) - new Date(step2.value.from)) / 86400000;
-  console.log('diffDay: ', diffDay);
-  const averSaleInventory = step2.value.amount / diffDay;
-  console.log('averSaleInventory: ', averSaleInventory);
-  for (let month = startMonth; month <= endMonth; month++) {
-    for (let day = startDay; day <= monthDaysEnum[month]; day++) {
-      console.log('day: ', day);
-      planTableEnum.value[month][day] = averSaleInventory;
-    }
-  }
-}
-
-const calPlanTable = () => {
-  const time = getStartEndTime(0);
-  calTableEnum(time.start.month, time.end.month);
-  calSales(time.start.month, time.start.day, time.end.month, time.end.day);
-
-};
+const planTableEnum = ref(null);
+const planSales = ref(null); // plan table sales
 
 // 表格
 const sales = ref(null);
@@ -311,7 +194,7 @@ const product = ref(null);
 const timeOptions = ['day', 'week', 'month'];
 const ruleOptions = ['day Average', 'day ASCE', 'day DESC'];
 
-const step1 = ref({
+const step1 = ref({ // Step 1 - Basic Info
   vendor: null,
   warehouse: null,
   sku: null,
@@ -320,12 +203,11 @@ const step1 = ref({
 });
 
 const step2Item = {
-  from: null,
-  to: null,
+  dateRange: null,
   amount: null,
   rule: null,
 };
-const step2 = ref([step2Item]);
+const step2 = ref([step2Item]); // Step 2 - Sales Forecast
 
 const step3Item = {
   eta: '2022-03-15',
@@ -334,7 +216,7 @@ const step3Item = {
   leadTime2: { num: null, timeOption: null },
   leadTime3: { num: null, timeOption: null },
 };
-const step3 = ref([step3Item]);
+const step3 = ref([step3Item]); // Step 3 - Suggested ETA Plan
 
 const step4Item = {
   etd: null,
@@ -343,7 +225,54 @@ const step4Item = {
   leadTime2: { num: null, timeOption: null },
   leadTime3: { num: null, timeOption: null },
 };
-const step4 = ref([step4Item]);
+const step4 = ref([step4Item]); // Step 4 - Real Production Plan
+
+provide('planFrom', planFrom);
+provide('planTo', planTo);
+provide('realFrom', realFrom);
+/* End Data */
+
+function calStartEndTime(idx) {
+  const date = step2.value[idx].dateRange;
+  const start = date[0].split('-'); // [YY, MM, DD]
+  const end = date[1].split('-');
+  return {
+    'start': { month: Number(start[1]), day: Number(start[2])}, 
+    'end': { month: Number(end[1]), day: Number(end[2])}, 
+  };
+}
+function calTableEnum(startMonth, endMonth) {
+  const temp = {};
+  for (let i = startMonth - 1; i <= endMonth; i++)
+    temp[i] = yearEnum[i];
+  planTableEnum.value = Object.assign({}, temp);
+  console.log('planTableEnum.value: ', planTableEnum.value);
+}
+function calSales(idx, startMonth, startDay, endMonth, endDay) {
+  const saleItem = step2.value[idx];
+  const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
+  console.log('diffDay: ', diffDay);
+  const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
+  for (let month = startMonth; month <= endMonth; month++) {
+    let start = startDay, end = endDay;
+    if (endMonth > month) // 不是最后一个月
+      end = monthDaysEnum[month];
+    if (month > startMonth) // 不是第一个月
+      start = 1;
+    for (let day = start; day <= end; day++) {
+      planTableEnum.value[month][day]['sales'] = averSaleInventory;
+    }
+  }
+}
+
+const calPlanTable = () => {
+  const time = calStartEndTime(0);
+  const start = time.start;
+  const end = time.end;
+  calTableEnum(start.month, end.month);
+  calSales(0, start.month, start.day, end.month, end.day);
+
+};
 
 const onStep2Change = (_idx, _type) => {
   _type === 'add'
@@ -362,7 +291,7 @@ const onAddItem = () => {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .page
   position: relative
   padding: 40px 54px
@@ -381,6 +310,8 @@ const onAddItem = () => {
   line-height: 1.6
   color: #6666CC
 
+.el-table
+  max-width: 1200px
 
 .el-form .el-form-item
   margin-right: 16px
