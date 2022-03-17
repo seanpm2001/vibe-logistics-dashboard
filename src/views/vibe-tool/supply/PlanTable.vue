@@ -3,7 +3,7 @@
     Product Plan Table
   </span>
   <el-row>
-    <el-form-item label="From:">
+    <!-- <el-form-item label="From:">
       <el-date-picker
         v-model="planFrom"
         type="datetime"
@@ -18,9 +18,11 @@
         format="YYYY/MM/DD"
         value-format="x"
       />
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="Time Dimension:">
-      
+      <el-select style="width: 120px;" v-model="timeDimension" disabled placeholder="Time">
+        <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
+      </el-select>
     </el-form-item>
   </el-row>
   
@@ -52,16 +54,15 @@
       </el-row>
     </template>
   </el-row>
-  <slot name="footer" />
+  <slot name="btn" />
 </template>
 
 <script setup>
-
-/* Start Data */
-const planFrom = inject('planFrom');
-const planTo = inject('planTo');
-
 const props = defineProps({
+  timeOptions: {
+    type: Array,
+    required: true
+  },
   planTableEnum: {
     type: [Object, null],
     required: true,
@@ -71,6 +72,13 @@ const props = defineProps({
     required: true,
   },
 });
+
+/* Start Data */
+const planFrom = inject('planFrom');
+const planTo = inject('planTo');
+const timeDimension = ref('day');
+
+
 
 /* End Data */
 </script>

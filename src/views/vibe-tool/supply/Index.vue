@@ -7,171 +7,59 @@
     <el-divider />
 
     <el-form>
-      <span class="step-title">
-        Step 1 - Basic Info
-      </span>
-      <el-row>
-        <el-form-item label="Vendor:">
-          <el-select v-model="step1.vendor" placeholder="Please select">
-            <el-option v-for="(item, key) in fixedWarehouseEnum" :key="item" :label="item" :value="Number(key)" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Warehouse:">
-          <el-select v-model="step1.warehouse" placeholder="Please select">
-            <el-option v-for="(item, key) in fixedWarehouseEnum" :key="item" :label="item" :value="Number(key)" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="SKU:">
-          <el-select v-model="step1.sku" placeholder="Please select">
-            <el-option v-for="(item, key) in skuProdcutEnum" :key="key" :label="key" :value="key" />
-          </el-select>
-        </el-form-item>
-      </el-row>  
-      <el-row>
-        <el-form-item label="Initial Inventory:">
-          <el-input v-model="step1.initialInventory" placeholder="Initial Inventory:"></el-input>
-        </el-form-item>
-        <el-form-item label="Min. Inventory:">
-          <el-input style="width: 145px" v-model="step1.minInventory" placeholder="Min. Inventory:" />
-          % of +/- 2 weeks’ sales
-        </el-form-item>
-      </el-row>  
+      <Step1 />
       <el-divider />
 
-      <span class="step-title">
-        Step 2 - Sales Forecast
-      </span>
-      <template v-for="(item, idx) in step2" :key="idx">
-        <el-row class="add-minus-row" align="middle">
-          <svg-icon class="icon" icon-name="add" @click="onStep2Change(index, 'add')" />
-          <svg-icon class="icon" :style="step2.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onStep2Change(index, 'minus')" />
-          <el-form-item label="From:">
-            <el-date-picker
-              v-model="item.dateRange"
-              type="daterange"
-              value-format="YYYY-MM-DD"
-            />
-          </el-form-item>
-          <el-form-item label="With amount of ">
-            <el-input v-model="item.amount" placeholder="Amount" />
-          </el-form-item>
-          <el-form-item label="Ruled by">
-            <el-select v-model="item.rule" placeholder="Rule">
-              <el-option v-for="item in ruleOptions" :key="item" :label="item" :value="item" /> 
-            </el-select>
-          </el-form-item>
-        </el-row>
-        
-      </template>
+      <Step2
+        @onStep2Change="onStep2Change"
+      />
       <el-divider />
 
-      <span class="step-title">
-        Step 3 - Suggested ETA Plan
-      </span>
-      <el-table :data="step3" max-height="250">
-        <el-table-column prop="eta" label="ETA" width="200px" />
-        <el-table-column prop="amount" label="Amount" width="100px" />
-        <el-table-column label="Leading Time 1" width="300px" align="center">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime1.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime1.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Leading Time 2">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime2.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Leading Time 3">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime3.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime3.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="Operations" width="120px">
-          <template  v-slot="{ $index }">
-            <el-button type="danger" size="small" @click.prevent="deleteRow($index)">
-              Remove
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-button @click="onAddItem">Add Item</el-button>
-      <el-divider />
-
-      <span class="step-title">
-        Step 4 - Real Production Plan
-      </span>
-      <el-table :data="step4" max-height="250">
-        <el-table-column label="ETD" width="200px">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.etd" placeholder="Num"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="amount" label="Amount" width="100px">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.amount" placeholder="Num"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="Leading Time 1" width="300px" align="center">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime1.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime1.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Leading Time 2">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime2.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Leading Time 3">
-          <template v-slot="{ row }">
-            <el-input style="width: 70px;" v-model="row.leadTime3.num" placeholder="Num"></el-input>
-            <el-select style="width: 120px;" v-model="row.leadTime3.timeOption" placeholder="Time">
-              <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="Operations" width="120px">
-          <template  v-slot="{ $index }">
-            <el-button type="danger" size="small" @click.prevent="deleteRow($index)">
-              Remove
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <Step3
+        :timeOptions="timeOptions"
+        @deleteRow="deleteRow"
+      >
+        <template #btn>
+          <el-button @click="onAddItem">Add Item</el-button>
+        </template>
+      </Step3>
       <el-divider />
       
       <PlanTable
+        :timeOptions="timeOptions"
         :planTableEnum="planTableEnum"
         :monthAbbrEnum="monthAbbrEnum"
       >
-        <template #footer>
+        <template #btn>
           <el-button @click="calPlanTable" class="mgt-5" type="primary">Calculate</el-button>
         </template>
       </PlanTable>
-      <RealTable />
+
+      <el-divider />
+      <Step4
+        :timeOptions="timeOptions"
+        @deleteRow="deleteRow"
+      >
+      
+      </Step4>
+
+      <RealTable
+        :timeOptions="timeOptions"
+        :planTableEnum="planTableEnum"
+        :monthAbbrEnum="monthAbbrEnum"
+      />
     </el-form>
   </div>
 </template>
 
 <script setup>
 import { ElMessage } from'element-plus';
-import { skuProdcutEnum, fixedWarehouseEnum } from '/@/enums/logistic';
 import { monthDaysEnum, monthAbbrEnum, yearEnum } from '/@/enums/supply';
+import Step1 from './Step1.vue';
+import Step2 from './Step2.vue';
+import Step3 from './Step3.vue';
 import PlanTable from './PlanTable.vue';
+import Step4 from './Step4.vue';
 import RealTable from './RealTable.vue';
 
 /* Start Data */
@@ -193,7 +81,6 @@ const etd = ref(null);
 const product = ref(null);
 
 const timeOptions = ['day', 'week', 'month'];
-const ruleOptions = ['day Average', 'day ASCE', 'day DESC'];
 
 const step1 = ref({ // Step 1 - Basic Info
   vendor: null,
@@ -228,6 +115,10 @@ const step4Item = {
 };
 const step4 = ref([step4Item]); // Step 4 - Real Production Plan
 
+provide('step1', step1);
+provide('step2', step2);
+provide('step3', step3);
+provide('step4', step4);
 provide('planFrom', planFrom);
 provide('planTo', planTo);
 provide('realFrom', realFrom);
@@ -308,7 +199,7 @@ const onAddItem = () => {
 .page
   position: relative
   padding: 40px 54px
-.vibe-icon
+.svg-icon.vibe-icon
   width: 132px
   height: 32px
 .page-name
