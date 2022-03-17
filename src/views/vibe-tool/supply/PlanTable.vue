@@ -26,12 +26,12 @@
   
   <el-row class="table">
     <template v-for="(monthItem, month) in planTableEnum" :key="month">
-      <el-row>
-        <div class="f-col">
+      <el-row class='month-row mgr-5 no-warp'>
+        <div class="day-col f-col no-warp">
           <p class="header">{{monthAbbrEnum[month]}}</p>
           <p>Sales</p>
           <p>Inventory</p>
-          <p>Min. Reserved Inventory</p>
+          <p style="line-height: 18px">Min. Inventory</p>
           <p>ETA US</p>
           <p>ETD CN</p>
           <p>Production</p>

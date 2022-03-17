@@ -168,6 +168,7 @@
 </template>
 
 <script setup>
+import { ElMessage } from'element-plus';
 import { skuProdcutEnum, fixedWarehouseEnum } from '/@/enums/logistic';
 import { monthDaysEnum, monthAbbrEnum, yearEnum } from '/@/enums/supply';
 import PlanTable from './PlanTable.vue';
@@ -205,7 +206,7 @@ const step1 = ref({ // Step 1 - Basic Info
 const step2Item = {
   dateRange: null,
   amount: null,
-  rule: null,
+  rule: 'day Average',
 };
 const step2 = ref([step2Item]); // Step 2 - Sales Forecast
 
@@ -241,17 +242,16 @@ function calStartEndTime(idx) {
     'end': { month: Number(end[1]), day: Number(end[2])}, 
   };
 }
-function calTableEnum(startMonth, endMonth) {
+function calTableEnum(startMonth, endMonth, endDay) {
   const temp = {};
-  for (let i = startMonth - 1; i <= endMonth; i++)
-    temp[i] = yearEnum[i];
+  for (let month = startMonth - 1; month <= endMonth; month++)
+    temp[month] = yearEnum[month];
+  for (let day = endDay + 1; day <= monthDaysEnum[endMonth]; day++)
+    delete temp[endMonth][day];
   planTableEnum.value = Object.assign({}, temp);
-  console.log('planTableEnum.value: ', planTableEnum.value);
 }
-function calSales(idx, startMonth, startDay, endMonth, endDay) {
-  const saleItem = step2.value[idx];
+function calSales(saleItem, startMonth, startDay, endMonth, endDay) {
   const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
-  console.log('diffDay: ', diffDay);
   const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
   for (let month = startMonth; month <= endMonth; month++) {
     let start = startDay, end = endDay;
@@ -265,14 +265,27 @@ function calSales(idx, startMonth, startDay, endMonth, endDay) {
   }
 }
 
-const calPlanTable = () => {
+const calPlanTable = () => { // 计算 planTable 入口
+  const saleItem = step2.value[0]; // TODO: 遍历所有step2
+  if (!checkRequiredData(saleItem))
+    return;
   const time = calStartEndTime(0);
   const start = time.start;
   const end = time.end;
-  calTableEnum(start.month, end.month);
-  calSales(0, start.month, start.day, end.month, end.day);
+  calTableEnum(start.month, end.month, end.day);
+  calSales(saleItem, start.month, start.day, end.month, end.day);
 
 };
+
+function checkRequiredData (step2Item) {
+  let isValid = true;
+  if (!step2Item.dateRange?.length || !step2Item.amount) {
+    isValid = false;
+    ElMessage.error('Please fill out step2\'s data!', 3);
+  }
+  console.log('isValid: ', isValid);
+  return isValid;
+}
 
 const onStep2Change = (_idx, _type) => {
   _type === 'add'
@@ -317,11 +330,14 @@ const onAddItem = () => {
   margin-right: 16px
 
 .table
+  overflow: scroll
   flex-wrap: unset
-  .f-col
+  margin-right: 64px
+  .no-warp
     flex-wrap: nowrap
   p
-    height: 25px
-    padding: 3px
-    border: 1px solid #000
+    height: 36px
+    line-height: 36px
+    padding: 0 5px
+    border: 1px solid #ebeef5
 </style>
