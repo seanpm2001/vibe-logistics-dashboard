@@ -17,7 +17,7 @@
         <el-input v-model="item.amount" placeholder="Amount" />
       </el-form-item>
       <el-form-item label="Ruled by">
-        <el-select v-model="item.rule" placeholder="Rule">
+        <el-select v-model="item.rule" disabled placeholder="Rule">
           <el-option v-for="item in ruleOptions" :key="item" :label="item" :value="item" /> 
         </el-select>
       </el-form-item>
@@ -34,7 +34,7 @@ const ruleOptions = ['day Average', 'day ASCE', 'day DESC'];
 
 const onStep2Change = (idx, type) => {
   emit('onStep2Change', idx, type);
-}
+};
 </script>
 
 <style lang="sass" scoped>

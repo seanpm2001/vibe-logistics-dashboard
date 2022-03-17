@@ -31,8 +31,8 @@
     </el-table-column>
     <el-table-column label="Leading Time 3">
       <template v-slot="{ row }">
-        <el-input style="width: 70px;" v-model="row.leadTime3.num" placeholder="Num"></el-input>
-        <el-select style="width: 120px;" v-model="row.leadTime3.timeOption" placeholder="Time">
+        <el-input disabled style="width: 70px;" v-model="row.leadTime3.num" placeholder="Num"></el-input>
+        <el-select disabled style="width: 120px;" v-model="row.leadTime3.timeOption" placeholder="Time">
           <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
         </el-select>
       </template>

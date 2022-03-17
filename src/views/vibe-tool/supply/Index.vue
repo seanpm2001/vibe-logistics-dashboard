@@ -70,15 +70,6 @@ const realFrom = ref(null);
 const realTo = ref(null);
 
 const planTableEnum = ref(null);
-const planSales = ref(null); // plan table sales
-
-// 表格
-const sales = ref(null);
-const inventory = ref(null);
-const minInventory = ref(null);
-const eta = ref(null);
-const etd = ref(null);
-const product = ref(null);
 
 const timeOptions = ['day', 'week', 'month'];
 
