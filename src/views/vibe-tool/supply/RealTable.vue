@@ -13,24 +13,40 @@
         />
       </el-form-item> -->
       <el-form-item label="Time Dimension:">
-        <el-select style="width: 120px;" v-model="timeDimension" disabled placeholder="Time">
+        <el-select disabled style="width: 120px;" v-model="timeDimension" placeholder="Time">
           <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="item" :value="item" />
         </el-select>
       </el-form-item>
     </el-row>
 
     <el-row class="table">
-      <el-col class="table">
-        <p class="header">Apr.</p>
-        <p>Inventory</p>
-        <p>Min. Reserved Inventory</p>
-        <p>ETA US</p>
-        <p>ETD CN</p>
-        <p>Production</p>
-        <p>Material</p>
-      </el-col>
+      <template v-for="(monthItem, month) in realTableData" :key="month">
+        <el-row class='month-row mgr-5 no-warp'>
+          <div class="day-col f-col no-warp">
+            <p class="header">{{monthAbbrEnum[month]}}</p>
+            <p>Sales</p>
+            <p>Inventory</p>
+            <p style="line-height: 18px">Min. Inventory</p>
+            <p>ETA US</p>
+            <p>ETD CN</p>
+            <p>Production</p>
+            <p>Material</p>
+          </div>
+          <template v-for="(item, day) in monthItem" :key="item">
+            <div class="f-col" >
+              <p class="header">{{day}}</p>
+              <p>{{item?.sales}}</p>
+              <p>{{item?.inventory}}</p>
+              <p>{{item?.minInventory}}</p>
+              <p>{{item?.eta}}</p>
+              <p>{{item?.etd}}</p>
+              <p>{{item?.product}}</p>
+              <p></p>
+            </div>
+          </template>
+        </el-row>
+      </template>
     </el-row>
-    <slot name="footer" />
 </template>
 
 <script setup>
@@ -39,7 +55,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  planTableEnum: {
+  realTableData: {
     type: [Object, null],
     required: true,
   },

@@ -20,14 +20,14 @@
       />
     </el-form-item> -->
     <el-form-item label="Time Dimension:">
-      <el-select style="width: 120px;" v-model="timeDimension" disabled placeholder="Time">
+      <el-select disabled style="width: 120px;" v-model="timeDimension" placeholder="Time">
         <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="item" :value="item" />
       </el-select>
     </el-form-item>
   </el-row>
   
   <el-row class="table">
-    <template v-for="(monthItem, month) in planTableEnum" :key="month">
+    <template v-for="(monthItem, month) in planTableData" :key="month">
       <el-row class='month-row mgr-5 no-warp'>
         <div class="day-col f-col no-warp">
           <p class="header">{{monthAbbrEnum[month]}}</p>
@@ -54,7 +54,6 @@
       </el-row>
     </template>
   </el-row>
-  <slot name="btn" />
 </template>
 
 <script setup>
@@ -63,7 +62,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  planTableEnum: {
+  planTableData: {
     type: [Object, null],
     required: true,
   },

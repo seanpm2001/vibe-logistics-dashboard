@@ -21,7 +21,7 @@
   </el-row>  
   <el-row>
     <el-form-item label="*Initial Inventory:">
-      <el-input v-model="step1.initialInventory" placeholder="Initial Inventory:"></el-input>
+      <el-input-number :min="0" v-model="step1.initialInventory" placeholder="Initial Inventory:"></el-input-number>
     </el-form-item>
     <el-form-item label="*Min. Inventory:">
       <el-input style="width: 145px" v-model="step1.minInventoryPercent" placeholder="50" />

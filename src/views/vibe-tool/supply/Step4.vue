@@ -16,14 +16,14 @@
     <el-table-column label="*Leading Time 1" width="300px" align="center">
       <template v-slot="{ row }">
         <el-input style="width: 70px;" v-model="row.leadTime1.num" placeholder="Num"></el-input>
-        <el-select style="width: 120px;" v-model="row.leadTime1.timeUnit" placeholder="Time">
+        <el-select disabled style="width: 120px;" v-model="row.leadTime1.timeUnit" placeholder="Time">
           <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="key" :value="item" />
         </el-select>
       </template>
     </el-table-column>
     <el-table-column label="*Leading Time 2">
       <template v-slot="{ row }">
-        <el-input style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
+        <el-input disabled style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
         <el-select style="width: 120px;" v-model="row.leadTime2.timeUnit" placeholder="Time">
           <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="key" :value="item" />
         </el-select>
@@ -38,6 +38,7 @@
       </template>
     </el-table-column>
   </el-table>
+  <slot name="btn" />
 </template>
 
 <script setup>
