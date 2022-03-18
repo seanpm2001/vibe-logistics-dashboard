@@ -31,13 +31,13 @@
       <el-row class='month-row mgr-5 no-warp'>
         <div class="day-col f-col no-warp">
           <p class="header">{{monthAbbrEnum[month]}}</p>
-          <p class="grey">Sales</p>
-          <p class="light-grey">Inventory</p>
-          <p class="grey" style="line-height: 18px">Min. Inventory</p>
-          <p class="light-grey">ETA US</p>
-          <p class="grey">ETD CN</p>
-          <p class="light-grey">Production</p>
-          <p class="grey">Material</p>
+          <p class="header">Sales</p>
+          <p class="header">Inventory</p>
+          <p class="header" style="line-height: 18px">Min. Inventory</p>
+          <p class="header">ETA US</p>
+          <p class="header">ETD CN</p>
+          <p class="header">Production</p>
+          <p class="header">Material</p>
         </div>
         <template v-for="(item, day) in monthItem" :key="item">
           <div class="f-col" >
