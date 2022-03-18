@@ -38,7 +38,7 @@ const users = {
 export default [
   // user login
   // {
-  //   url: '/mock/api/user/login',
+  //   url: '/api/mock/user/login',
   //   method: 'post',
   //   response: config => {
   //     // const { username } = config.body;
@@ -63,11 +63,12 @@ export default [
 
   // get user info
   {
-    url: RegExp('/mock/api/user/info\.*'),
+    url: '/api/mock/user/info',
     method: 'get',
     response: config => {
       // const token = "admin-token"; // test
       const info = users['admin-token'];
+      console.log('info: ', info);
 
       // mock error
       if (!info) {
@@ -86,7 +87,7 @@ export default [
 
   // user logout
   {
-    url: '/mock/api/user/logout',
+    url: '/api/mock/user/logout',
     method: 'post',
     response: () => {
       return {

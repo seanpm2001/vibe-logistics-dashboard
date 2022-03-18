@@ -74,7 +74,7 @@ for (let i = 0; i < count; i++) {
 export default [
   // mock get all routes form server
   {
-    url: '/mock/api/inventories',
+    url: '/api/mock/inventories',
     type: 'get',
     response: config => {
       const { type, warehouse_name, page = 1, limit = 20, sort } = config.query;

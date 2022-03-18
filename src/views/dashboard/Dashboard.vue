@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole === 'admin' ? AdminDashboard : EditorDashboard" />
+    <component :is="currentRole === 'ADMIN' ? AdminDashboard : EditorDashboard" />
   </div>
 </template>
 
@@ -9,11 +9,11 @@ import AdminDashboard from './admin/Admin.vue';
 import EditorDashboard from './Editor.vue';
 
 const store = useStore();
-const currentRole = ref('admin');
-const roles = computed(() => store.getters['roles']);
+const currentRole = ref('ADMIN');
+const role = computed(() => store.getters['role']);
 
-if (!roles.value.includes('admin')) {
-  currentRole.value = 'editor';
+if (role.value !== 'ADMIN' ) {
+  currentRole.value = 'EDITOR';
 }
 
 </script>

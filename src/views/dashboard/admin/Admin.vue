@@ -3,7 +3,7 @@
     <div class="f-row">
       <pan-thumb :image="avatar">
         Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
+        <span class="pan-info-roles">{{ role }}</span>
       </pan-thumb>
       <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
       <div class="info-container">
@@ -29,7 +29,7 @@ const emptyGif = ref('https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddf
     
 const name = computed(() => store.getters['name']);
 const avatar = computed(() => store.getters['avatar']);
-const roles = computed(() => store.getters['roles']);
+const role = computed(() => store.getters['role']);
 </script>
 
 <style lang="sass" scoped>

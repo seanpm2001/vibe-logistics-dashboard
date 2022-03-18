@@ -1,10 +1,10 @@
 <template>
   <div>
     <div style="margin-bottom:15px;">
-      Your roles: {{ roles }}
+      Your roles: {{ role }}
     </div>
     Switch roles:
-    <el-radio-group v-model="roles[0]" @change="switchRoles">
+    <el-radio-group v-model="role" @change="switchRoles">
       <el-radio-button label="admin" />
       <el-radio-button label="manager" />
       <el-radio-button label="editor" />
@@ -18,7 +18,7 @@
 const store = useStore();
 const { proxy } = getCurrentInstance();
 
-const roles = computed(() => store.getters['roles']);
+const role = computed(() => store.getters['role']);
 
 const switchRoles = val => {
   store.dispatch('user/changeRoles', val).then(() => {

@@ -35,13 +35,13 @@ const activeTab = ref('activity');
 
 const name = ref(store.getters['name']);
 const avatar = ref(store.getters['avatar']);
-const roles = ref(store.getters['roles']);
+const role = ref(store.getters['role']);
 
 
 const getUser = () => {
   user.value = {
     name: name.value,
-    role: roles.value.join(' | '),
+    role: role,
     email: 'admin@test.com',
     avatar: avatar.value
   };

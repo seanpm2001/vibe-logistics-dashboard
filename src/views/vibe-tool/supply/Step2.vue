@@ -6,14 +6,14 @@
     <el-row class="add-minus-row" align="middle">
       <svg-icon class="icon" icon-name="add" @click="onStep2Change(index, 'add')" />
       <svg-icon class="icon" :style="step2.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onStep2Change(index, 'minus')" />
-      <el-form-item label="From:">
+      <el-form-item label="*From:">
         <el-date-picker
           v-model="item.dateRange"
           type="daterange"
           value-format="YYYY-MM-DD"
         />
       </el-form-item>
-      <el-form-item label="With amount of ">
+      <el-form-item label="*With amount of ">
         <el-input v-model="item.amount" placeholder="Amount" />
       </el-form-item>
       <el-form-item label="Ruled by">
@@ -22,6 +22,7 @@
         </el-select>
       </el-form-item>
     </el-row>
+    <slot name="btn" />
   </template>
 </template>
 

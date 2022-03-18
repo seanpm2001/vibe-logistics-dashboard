@@ -7,8 +7,8 @@ const getters = {
   isLogined: state => state.user.isLogined,
   token: state => state.user.token,
   avatar: state => state.user.avatar,
-  name: state => state.user.name,
-  roles: state => state.user.roles,
+  name: state => state.user.username,
+  role: state => state.user.role,
   permissionRroutes: state => state.permission.routes,
 
   unitList: state => state.logistic.unitList,

@@ -91,7 +91,7 @@ export default requester;
 
 export const mockRequester = axios.create({
   // baseURL: 'https://logistics.vibe.dev/api'
-  baseURL: '/mock/api',
+  baseURL: '/api/mock',
   timeout: 6000, // 设置超时时间
   withCredentials: true, // 允许携带cookie
   headers: { // 解决ie浏览器会自动缓存

@@ -95,6 +95,7 @@ import { validUsername } from '/@/utils/validate';
 
 /* Begin Data */
 const store = useStore();
+console.log('store: ', store);
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -214,8 +215,7 @@ const submitLogin = async (signInPattern) => {
     proxy.$refs.inForm.validate((valid) => {
       if (valid) {
         btnLoading.value = true;
-        store
-          .dispatch('user/login', signInForm)
+        store.dispatch('user/login', signInForm)
           .then(() => {
             router.push({ path: redirect.value || '/', query: otherQuery.value });
           })

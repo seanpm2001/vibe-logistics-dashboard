@@ -7,10 +7,10 @@ export const user = {
   state: {
     isLogined: false,
     token: getToken(),
-    name: '',
+    username: null,
     avatar: '/@/assets/img/common/avatar.gif',
-    introduction: '',
-    roles: []
+    email: null,
+    role: null,
   },
   mutations: {
     SET_LOGINED: (state, isLogined) => {
@@ -19,17 +19,17 @@ export const user = {
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction;
+    SET_EMAIL: (state, email) => {
+      state.email = email;
     },
-    SET_NAME: (state, name) => {
-      state.name = name;
+    SET_NAME: (state, username) => {
+      state.username = username;
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar;
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles;
+    SET_ROLE: (state, role) => {
+      state.role = role;
     }
   },
   actions: {
@@ -51,24 +51,23 @@ export const user = {
     // get user info
     getInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfoAPI(state.token).then(response => {
-          const { data } = response;
+        getInfoAPI(state.token).then(data => {
 
           if (!data) {
             reject('Verification failed, please Login again.');
           }
 
-          const { roles, name, avatar, introduction } = data;
+          const { role, username, avatar, email } = data;
 
-          // roles must be a non-empty array
-          if (!roles || roles.length <= 0) {
-            reject('getInfo: roles must be a non-null array!');
+          // role must be a non-empty array
+          if (!role || role.length <= 0) {
+            reject('getInfo: role must be a non-null array!');
           }
 
-          commit('SET_ROLES', roles);
-          commit('SET_NAME', name);
-          commit('SET_AVATAR', avatar);
-          commit('SET_INTRODUCTION', introduction);
+          commit('SET_ROLE', role);
+          commit('SET_NAME', username);
+          // commit('SET_AVATAR', avatar);
+          commit('SET_EMAIL', email);
           resolve(data);
         }).catch(error => {
           reject(error);
@@ -81,7 +80,7 @@ export const user = {
       return new Promise((resolve, reject) => {
         logoutAPI(state.token).then(() => {
           commit('SET_TOKEN', '');
-          commit('SET_ROLES', []);
+          commit('SET_ROLE', []);
           removeToken();
           resetRouter();
           commit('SET_LOGINED', false);
@@ -100,23 +99,21 @@ export const user = {
     resetToken({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        commit('SET_ROLES', []);
+        commit('SET_ROLE', []);
         removeToken();
         resolve();
       });
     },
 
     // dynamically modify permissions
-    async changeRoles({ commit, dispatch }, role) {
-      const token = role + '-token';
-      commit('SET_TOKEN', token);
+    async changeRoles({ commit, dispatch }) {
       setToken(token);
-      const { roles } = await dispatch('getInfo');
+      const { role } = await dispatch('getInfo');
 
       resetRouter();
-      // generate accessible routes map based on roles
+      // generate accessible routes map based on role
 
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
+      const accessRoutes = await dispatch('permission/generateRoutes', role, { root: true });
       // dynamically add accessible routes
       accessRoutes.forEach(item => {
         router.addRoute(item);

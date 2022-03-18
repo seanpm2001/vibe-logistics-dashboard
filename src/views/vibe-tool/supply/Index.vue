@@ -9,12 +9,14 @@
     <el-form>
       <Step1 />
       <el-divider />
-
       <Step2
         @onStep2Change="onStep2Change"
-      />
+      >
+        <template #btn>
+          <el-button @click="calStep3Data">Cal Step3 Data</el-button>
+        </template>
+      </Step2>
       <el-divider />
-
       <Step3
         :timeOptions="timeOptions"
         @deleteRow="deleteRow"
@@ -24,7 +26,6 @@
         </template>
       </Step3>
       <el-divider />
-      
       <PlanTable
         :timeOptions="timeOptions"
         :planTableEnum="planTableEnum"
@@ -183,6 +184,25 @@ const deleteRow = (index) => {
 const onAddItem = () => {
   step3.value.push(JSON.parse(JSON.stringify(step3Item)));
   step4.value.push(JSON.parse(JSON.stringify(step4Item)));
+};
+
+function calEtaAmount(saleItem, startMonth, startDay, endMonth, endDay) {
+  for (let month = startMonth; month <= endMonth; month++) {
+    let start = startDay, end = endDay;
+    if (endMonth > month) // 不是最后一个月
+      end = monthDaysEnum[month];
+    if (month > startMonth) // 不是第一个月
+      start = 1;
+    for (let day = start; day <= end; day++) {
+      planTableEnum.value[month][day]['eta'] = averSaleInventory;
+    }
+  }
+}
+
+const calStep3Data = () => {
+  const time = calStartEndTime(0);
+  const startDay = time.start.day;
+
 };
 </script>
 
