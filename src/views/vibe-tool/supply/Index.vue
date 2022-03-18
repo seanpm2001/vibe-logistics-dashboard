@@ -160,8 +160,7 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
         minInventory = minInventory + preSale + nextSale;
       }
       // set sales
-      const salesAmount = planTableData.value[month][day];
-      salesAmount['sales'] = averSaleInventory;
+      planTableData.value[month][day]['sales'] = averSaleInventory;
       // set minInventory
       minInventory *= (minInventoryPercent || 50)/100;
       planTableData.value[month][day]['minInventory'] = Math.ceil(minInventory);
@@ -172,9 +171,8 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
       const inventoryAmount = planTableData.value[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
       inventoryAmount['inventory'] = nextInventory;
 
-      nextInventory = inventoryAmount['inventory'] - salesAmount['sales'];
+      nextInventory = inventoryAmount['inventory'] - averSaleInventory;
       nextInventory < 0 && (nextInventory = 0);
-
 
       // set eta/etd/product Amount
       let etaAmount = minInventory - initialInventory + saleAmount;
@@ -256,4 +254,11 @@ const calRealTable = () => {
     height: 36px
     line-height: 36px
     border: 1px solid #ebeef5
+  .header
+    background-color: #66c
+    color: #fff
+  .grey
+    background-color: #ddd
+  .light-grey
+    background-color: #f9f8f5
 </style>

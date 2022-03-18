@@ -31,24 +31,24 @@
       <el-row class='month-row mgr-5 no-warp'>
         <div class="day-col f-col no-warp">
           <p class="header">{{monthAbbrEnum[month]}}</p>
-          <p>Sales</p>
-          <p>Inventory</p>
-          <p style="line-height: 18px">Min. Inventory</p>
-          <p>ETA US</p>
-          <p>ETD CN</p>
-          <p>Production</p>
-          <p>Material</p>
+          <p class="grey">Sales</p>
+          <p class="light-grey">Inventory</p>
+          <p class="grey" style="line-height: 18px">Min. Inventory</p>
+          <p class="light-grey">ETA US</p>
+          <p class="grey">ETD CN</p>
+          <p class="light-grey">Production</p>
+          <p class="grey">Material</p>
         </div>
         <template v-for="(item, day) in monthItem" :key="item">
           <div class="f-col" >
             <p class="header">{{day}}</p>
-            <p>{{item?.sales}}</p>
-            <p>{{item?.inventory}}</p>
-            <p>{{item?.minInventory}}</p>
-            <p>{{item?.eta}}</p>
-            <p>{{item?.etd}}</p>
-            <p>{{item?.product}}</p>
-            <p></p>
+            <p class="grey">{{item?.sales}}</p>
+            <p class="light-grey">{{item?.inventory}}</p>
+            <p class="grey">{{item?.minInventory}}</p>
+            <p class="light-grey">{{item?.eta}}</p>
+            <p class="grey">{{item?.etd}}</p>
+            <p class="light-grey">{{item?.product}}</p>
+            <p class="grey"></p>
           </div>
         </template>
       </el-row>
