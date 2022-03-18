@@ -419,6 +419,12 @@ export const monthDaysEnum = {
   11: 30,
   12: 31,
 };
+
+export const timeUnitEnum = {
+  day: 1,
+  week: 7,
+  // month: 30
+};
 // let year = {}
 // for (let i = 1; i <= 12; i++) {
 //   year[i] = {};

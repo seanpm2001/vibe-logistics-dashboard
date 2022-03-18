@@ -22,7 +22,6 @@
         </el-select>
       </el-form-item>
     </el-row>
-    <slot name="btn" />
   </template>
 </template>
 

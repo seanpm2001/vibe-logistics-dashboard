@@ -21,7 +21,7 @@
     </el-form-item> -->
     <el-form-item label="Time Dimension:">
       <el-select style="width: 120px;" v-model="timeDimension" disabled placeholder="Time">
-        <el-option v-for="(item, key) in timeOptions" :key="key" :label="item" :value="item" />
+        <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="item" :value="item" />
       </el-select>
     </el-form-item>
   </el-row>
@@ -46,8 +46,8 @@
             <p>{{item?.inventory}}</p>
             <p>{{item?.minInventory}}</p>
             <p>{{item?.eta}}</p>
-            <p></p>
-            <p></p>
+            <p>{{item?.etd}}</p>
+            <p>{{item?.product}}</p>
             <p></p>
           </div>
         </template>
@@ -59,8 +59,8 @@
 
 <script setup>
 const props = defineProps({
-  timeOptions: {
-    type: Array,
+  timeUnitEnum: {
+    type: Object,
     required: true
   },
   planTableEnum: {
