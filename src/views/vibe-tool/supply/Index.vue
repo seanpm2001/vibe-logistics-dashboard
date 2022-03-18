@@ -71,13 +71,13 @@ const step1 = ref({ // Step 1 - Basic Info
   vendor: null,
   warehouse: null,
   sku: null,
-  initialInventory: 30,
+  initialInventory: 200,
   minInventoryPercent: null,
 });
 
 const step2Item = {
   dateRange: ['2022-03-05', '2022-04-15'],
-  amount: 300,
+  amount: 400,
   rule: 'day Average',
 };
 const step2 = ref([step2Item]); // Step 2 - Sales Forecast
@@ -163,19 +163,18 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
       planTableData.value[month][day]['sales'] = averSaleInventory;
       // set minInventory
       minInventory *= (minInventoryPercent || 50)/100;
+      console.log('minInventory: ', minInventory);
       planTableData.value[month][day]['minInventory'] = Math.ceil(minInventory);
 
       const moment = Date.parse(new Date(`2022-${month}-${day}`)); // 当前日期的timestamp
+      
       // set inventory
       const inventoryTime = new Date(moment - 86400000);
       const inventoryAmount = planTableData.value[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
       inventoryAmount['inventory'] = nextInventory;
 
-      nextInventory = inventoryAmount['inventory'] - averSaleInventory;
-      nextInventory < 0 && (nextInventory = 0);
-
       // set eta/etd/product Amount
-      let etaAmount = minInventory - initialInventory + saleAmount;
+      let etaAmount = Math.ceil(minInventory - inventoryAmount['inventory'] + saleAmount);
       etaAmount < 0 && (etaAmount = 0);
       planTableData.value[month][day]['eta'] = etaAmount;
       
@@ -183,10 +182,13 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
       const productTime = new Date(moment - etdStep - productStep);
       planTableData.value[etdTime.getMonth() + 1][etdTime.getDate()]['etd'] = etaAmount;
       planTableData.value[productTime.getMonth() + 1][productTime.getDate()]['product'] = etaAmount;
-
       if (etaAmount > 0) { // 寻找第一个ETA Amount大于 0 的 eta
         biggerZeroArr.push({ month, day, etaAmount});
       }
+
+      // 更新 nextInventory
+      nextInventory = inventoryAmount['inventory'] - averSaleInventory + etaAmount;
+      nextInventory < 0 && (nextInventory = 0);
     }
   }
   const etaItem = biggerZeroArr[0];
