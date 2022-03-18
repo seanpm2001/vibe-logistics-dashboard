@@ -42,10 +42,10 @@
         <template v-for="(item, day) in monthItem" :key="item">
           <div class="f-col" >
             <p class="header">{{day}}</p>
-            <p>{{item?.sales || ''}}</p>
-            <p></p>
-            <p></p>
-            <p></p>
+            <p>{{item?.sales}}</p>
+            <p>{{item?.inventory}}</p>
+            <p>{{item?.minInventory}}</p>
+            <p>{{item?.eta}}</p>
             <p></p>
             <p></p>
             <p></p>

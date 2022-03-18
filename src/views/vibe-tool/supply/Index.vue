@@ -32,7 +32,7 @@
         :monthAbbrEnum="monthAbbrEnum"
       >
         <template #btn>
-          <el-button @click="calPlanTable" class="mgt-5" type="primary">Calculate</el-button>
+          <el-button :disabled="!planTableEnum" @click="calPlanTable" class="mgt-5" type="primary">Calculate</el-button>
         </template>
       </PlanTable>
 
@@ -55,7 +55,8 @@
 
 <script setup>
 import { ElMessage } from'element-plus';
-import { monthDaysEnum, monthAbbrEnum, yearEnum } from '/@/enums/supply';
+import { monthDaysEnum, monthAbbrEnum } from '/@/enums/supply';
+import { checkRequiredData, calTableEnum } from './util';
 import Step1 from './Step1.vue';
 import Step2 from './Step2.vue';
 import Step3 from './Step3.vue';
@@ -78,20 +79,20 @@ const step1 = ref({ // Step 1 - Basic Info
   vendor: null,
   warehouse: null,
   sku: null,
-  initialInventory: null,
-  minInventory: null,
+  initialInventory: 30,
+  minInventoryPercent: null,
 });
 
 const step2Item = {
-  dateRange: null,
-  amount: null,
+  dateRange: ['2022-03-05', '2022-04-15'],
+  amount: 300,
   rule: 'day Average',
 };
 const step2 = ref([step2Item]); // Step 2 - Sales Forecast
 
 const step3Item = {
-  eta: '2022-03-15',
-  amount: '100',
+  eta: 'Null',
+  amount: 'Null',
   leadTime1: { num: null, timeOption: null },
   leadTime2: { num: null, timeOption: null },
   leadTime3: { num: null, timeOption: null },
@@ -125,50 +126,10 @@ function calStartEndTime(idx) {
     'end': { month: Number(end[1]), day: Number(end[2])}, 
   };
 }
-function calTableEnum(startMonth, endMonth, endDay) {
-  const temp = {};
-  for (let month = startMonth - 1; month <= endMonth; month++)
-    temp[month] = yearEnum[month];
-  for (let day = endDay + 1; day <= monthDaysEnum[endMonth]; day++)
-    delete temp[endMonth][day];
-  planTableEnum.value = Object.assign({}, temp);
-}
-function calSales(saleItem, startMonth, startDay, endMonth, endDay) {
-  const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
-  const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
-  for (let month = startMonth; month <= endMonth; month++) {
-    let start = startDay, end = endDay;
-    if (endMonth > month) // 不是最后一个月
-      end = monthDaysEnum[month];
-    if (month > startMonth) // 不是第一个月
-      start = 1;
-    for (let day = start; day <= end; day++) {
-      planTableEnum.value[month][day]['sales'] = averSaleInventory;
-    }
-  }
-}
 
 const calPlanTable = () => { // 计算 planTable 入口
-  const saleItem = step2.value[0]; // TODO: 遍历所有step2
-  if (!checkRequiredData(saleItem))
-    return;
-  const time = calStartEndTime(0);
-  const start = time.start;
-  const end = time.end;
-  calTableEnum(start.month, end.month, end.day);
-  calSales(saleItem, start.month, start.day, end.month, end.day);
-
+  
 };
-
-function checkRequiredData (step2Item) {
-  let isValid = true;
-  if (!step2Item.dateRange?.length || !step2Item.amount) {
-    isValid = false;
-    ElMessage.error('Please fill out step2\'s data!', 3);
-  }
-  console.log('isValid: ', isValid);
-  return isValid;
-}
 
 const onStep2Change = (_idx, _type) => {
   _type === 'add'
@@ -186,7 +147,14 @@ const onAddItem = () => {
   step4.value.push(JSON.parse(JSON.stringify(step4Item)));
 };
 
-function calEtaAmount(saleItem, startMonth, startDay, endMonth, endDay) {
+function calStep3RelatedData(saleItem, startMonth, startDay, endMonth, endDay) {
+  // calculate Sales related
+  const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
+  const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
+  // calculate (Min)Inventory, ETA related
+  const biggerZeroArr = [];
+  const initialInventory = step1.value.initialInventory;
+  const minInventoryPercent = step1.value.minInventoryPercent;
   for (let month = startMonth; month <= endMonth; month++) {
     let start = startDay, end = endDay;
     if (endMonth > month) // 不是最后一个月
@@ -194,15 +162,43 @@ function calEtaAmount(saleItem, startMonth, startDay, endMonth, endDay) {
     if (month > startMonth) // 不是第一个月
       start = 1;
     for (let day = start; day <= end; day++) {
-      planTableEnum.value[month][day]['eta'] = averSaleInventory;
+      let minInventory = 0;
+      const saleAmount = averSaleInventory;
+      minInventory += saleAmount;
+      for(let i=1; i <= 14; i++) { // 计算
+        const preSale = planTableEnum.value[month][day-i]?.sales || 0;
+        const nextSale = planTableEnum.value[month][day+i]?.sales || 0;
+        minInventory = minInventory + preSale + nextSale;
+      }
+      minInventory *= (minInventoryPercent || 50)/100;
+      const etaAmount = minInventory - initialInventory + saleAmount;
+
+      planTableEnum.value[month][day]['sales'] = averSaleInventory;
+      planTableEnum.value[month][day]['inventory'] = initialInventory;
+      planTableEnum.value[month][day]['minInventory'] = Math.ceil(minInventory);
+      planTableEnum.value[month][day]['eta'] = etaAmount;
+
+      if (etaAmount > 0) { // 寻找第一个ETA Amount大于 0 的 eta
+        biggerZeroArr.push({ month, day, etaAmount});
+      }
     }
   }
+  const etaItem = biggerZeroArr[0];
+  if (etaItem) {
+    step3.value[0].eta = `2020-${etaItem.month}-${etaItem.day}`;
+    step3.value[0].amount = etaItem.etaAmount;
+  }
+
 }
 
 const calStep3Data = () => {
+  const saleItem = step2.value[0]; // TODO: 遍历所有step2
+  if (!checkRequiredData(saleItem))
+    return;
   const time = calStartEndTime(0);
-  const startDay = time.start.day;
-
+  const start = time.start, end = time.end;
+  planTableEnum.value = Object.assign({}, calTableEnum(start.month, end.month, end.day));
+  calStep3RelatedData(saleItem, start.month, start.day, end.month, end.day);
 };
 </script>
 

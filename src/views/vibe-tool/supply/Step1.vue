@@ -24,7 +24,7 @@
       <el-input v-model="step1.initialInventory" placeholder="Initial Inventory:"></el-input>
     </el-form-item>
     <el-form-item label="*Min. Inventory:">
-      <el-input style="width: 145px" v-model="step1.minInventory" placeholder="50" />
+      <el-input style="width: 145px" v-model="step1.minInventoryPercent" placeholder="50" />
       % of +/- 2 weeks’ sales
     </el-form-item>
   </el-row>  
