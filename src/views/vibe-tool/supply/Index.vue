@@ -216,15 +216,16 @@ const calPlanTable = () => {
 .el-form .el-form-item
   margin-right: 16px
 
-.table
+.el-row.table
   overflow: scroll
-  flex-wrap: unset
+  flex-wrap: nowrap
   margin-right: 64px
   .no-warp
     flex-wrap: nowrap
   p
+    padding: 0 5px
+    text-align: center
     height: 36px
     line-height: 36px
-    padding: 0 5px
     border: 1px solid #ebeef5
 </style>
