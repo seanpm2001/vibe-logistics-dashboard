@@ -82,23 +82,32 @@ const step2Item = {
 };
 const step2 = ref([step2Item]); // Step 2 - Sales Forecast
 
-const step3Item = {
+const tableItem = {
   eta: 'Null',
   amount: 'Null',
   leadTime1: { num: 7, timeUnit: 1 },
   leadTime2: { num: 8, timeUnit: 1 },
   leadTime3: { num: null, timeUnit: 1 },
 };
-const step3 = ref([step3Item]); // Step 3 - Suggested ETA Plan
+const step3 = ref([tableItem]); // Step 3 - Suggested ETA Plan
 
 const step4Item = {
-  etd: null,
-  amount: null,
-  leadTime1: { num: null, timeUnit: 1 },
-  leadTime2: { num: null, timeUnit: 1 },
+  production: '2022-03-08',
+  amount: 10,
+  leadTime1: { num: 7, timeUnit: 1 },
+  leadTime2: { num: 8, timeUnit: 1 },
   leadTime3: { num: null, timeUnit: 1 },
 };
-const step4 = ref([step4Item]); // Step 4 - Real Production Plan
+const step4 = ref([ // Step 4 - Real Production Plan
+  step4Item,
+  {
+    production: '2022-03-09',
+    amount: 15,
+    leadTime1: { num: 7, timeUnit: 1 },
+    leadTime2: { num: 8, timeUnit: 1 },
+    leadTime3: { num: null, timeUnit: 1 },
+  }
+]);
 
 provide('step1', step1);
 provide('step2', step2);
@@ -122,16 +131,15 @@ function calStartEndTime(idx) {
 const onStep2Change = (_idx, _type) => {
   if (_type === 'add') {
     step2.value.push(JSON.parse(JSON.stringify(step2Item)));
-    step3.value.push(JSON.parse(JSON.stringify(step3Item)));
-    step4.value.push(JSON.parse(JSON.stringify(step4Item)));
+    step3.value.push(JSON.parse(JSON.stringify(tableItem)));
   } else {
     step2.value.splice(_idx--, 1);
     step3.value.splice(_idx--, 1);
-    step4.value.splice(_idx--, 1);
   }
 };
 
-function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, endDay) {
+function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth, endDay) {
+  const _tableData = _type === 'plan' ? planTableData.value : realTableData.value;
   // calculate Sales related
   const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
   const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
@@ -140,8 +148,25 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
   const initialInventory = step1.value.initialInventory;
   const minInventoryPercent = step1.value.minInventoryPercent;
   // step3 leading time
-  const etdStep = planItem.leadTime1.num * planItem.leadTime1.timeUnit * 86400000;
-  const productStep = planItem.leadTime2.num * planItem.leadTime2.timeUnit * 86400000;
+  const etdStep = tableItem.leadTime1.num * tableItem.leadTime1.timeUnit * 86400000;
+  const productStep = tableItem.leadTime2.num * tableItem.leadTime2.timeUnit * 86400000;
+
+  if (_type === 'real') {
+    step4.value.forEach(item => {
+      const itemTimestamp = Date.parse(item.production);
+      const time = item.production.split('-');
+      const month = Number(time[1]), day = Number(time[2]);
+      _tableData[month][day]['production'] = item.amount;
+
+      const etdStep = 86400000 * item.leadTime1.num * item.leadTime1.timeUnit;
+      const etdTime = new Date(itemTimestamp + etdStep);
+      _tableData[etdTime.getMonth() + 1][etdTime.getDate()]['etd'] = item.amount;
+
+      const etaStep = 86400000 * item.leadTime2.num * item.leadTime2.timeUnit;
+      const etaTime = new Date(itemTimestamp + etdStep + etaStep);
+      _tableData[etaTime.getMonth() + 1][etaTime.getDate()]['eta'] = item.amount;
+    });
+  }
 
   let nextInventory = initialInventory;
   for (let month = startMonth; month <= endMonth; month++) {
@@ -155,46 +180,60 @@ function calPlanTableData(saleItem, planItem, startMonth, startDay, endMonth, en
       const saleAmount = averSaleInventory;
       minInventory += saleAmount;
       for(let i=1; i <= 14; i++) { // 计算 Min. Inventory = minInventoryPercent/100 * 时间点前后两周的总Sales Forecast，若时间点前后不足两周按已有的时间计算
-        const preSale = planTableData.value[month][day-i]?.sales || 0;
-        const nextSale = planTableData.value[month][day+i]?.sales || 0;
+        const preSale = _tableData[month][day-i]?.sales || 0;
+        const nextSale = _tableData[month][day+i]?.sales || 0;
         minInventory = minInventory + preSale + nextSale;
       }
       // set sales
-      planTableData.value[month][day]['sales'] = averSaleInventory;
+      _tableData[month][day]['sales'] = averSaleInventory;
+
       // set minInventory
       minInventory *= (minInventoryPercent || 50)/100;
-      console.log('minInventory: ', minInventory);
-      planTableData.value[month][day]['minInventory'] = Math.ceil(minInventory);
+      _tableData[month][day]['minInventory'] = Math.ceil(minInventory);
 
       const moment = Date.parse(new Date(`2022-${month}-${day}`)); // 当前日期的timestamp
-      
-      // set inventory
-      const inventoryTime = new Date(moment - 86400000);
-      const inventoryAmount = planTableData.value[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
-      inventoryAmount['inventory'] = nextInventory;
+    
+      if (_type === 'plan') {
+        // set 前一天的inventory
+        const inventoryTime = new Date(moment - 86400000);
+        const preInventoryAmount = _tableData[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
+        preInventoryAmount['inventory'] = nextInventory;
 
-      // set eta/etd/product Amount
-      let etaAmount = Math.ceil(minInventory - inventoryAmount['inventory'] + saleAmount);
-      etaAmount < 0 && (etaAmount = 0);
-      planTableData.value[month][day]['eta'] = etaAmount;
-      
-      const etdTime = new Date(moment - etdStep);
-      const productTime = new Date(moment - etdStep - productStep);
-      planTableData.value[etdTime.getMonth() + 1][etdTime.getDate()]['etd'] = etaAmount;
-      planTableData.value[productTime.getMonth() + 1][productTime.getDate()]['product'] = etaAmount;
-      if (etaAmount > 0) { // 寻找第一个ETA Amount大于 0 的 eta
-        biggerZeroArr.push({ month, day, etaAmount});
+        // set eta/etd/production Amount
+        let etaAmount = Math.ceil(minInventory - preInventoryAmount['inventory'] + saleAmount);
+        etaAmount < 0 && (etaAmount = 0);
+        _tableData[month][day]['eta'] = etaAmount;
+        
+        const etdTime = new Date(moment - etdStep);
+        const productTime = new Date(moment - etdStep - productStep);
+        _tableData[etdTime.getMonth() + 1][etdTime.getDate()]['etd'] = etaAmount;
+        _tableData[productTime.getMonth() + 1][productTime.getDate()]['production'] = etaAmount;
+        if (etaAmount > 0) { // 寻找第一个ETA Amount大于 0 的 eta
+          biggerZeroArr.push({ month, day, etaAmount});
+        }
+
+        // 更新 nextInventory
+        nextInventory = preInventoryAmount['inventory'] - averSaleInventory + etaAmount;
+        nextInventory < 0 && (nextInventory = 0);
+      } else if (_type === 'real') {
+        // set 前一天的inventory
+        const inventoryTime = new Date(moment - 86400000);
+        const preInventoryAmount = _tableData[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
+        preInventoryAmount['inventory'] = nextInventory;
+
+        const etaAmount = _tableData[month][day]['eta'] || 0;
+        nextInventory = preInventoryAmount['inventory'] - averSaleInventory + etaAmount;
+        nextInventory < 0 && (nextInventory = 0);
       }
-
-      // 更新 nextInventory
-      nextInventory = inventoryAmount['inventory'] - averSaleInventory + etaAmount;
-      nextInventory < 0 && (nextInventory = 0);
     }
   }
-  const etaItem = biggerZeroArr[0];
-  if (etaItem) {
-    step3.value[0].eta = `2020-${etaItem.month}-${etaItem.day}`;
-    step3.value[0].amount = etaItem.etaAmount;
+
+  if (_type === 'plan') {
+    const etaItem = biggerZeroArr[0];
+    if (etaItem) {
+      step3.value[0].eta = `2020-${etaItem.month}-${etaItem.day}`;
+      step3.value[0].amount = etaItem.etaAmount;
+    }
   }
 }
 
@@ -205,8 +244,8 @@ const calPlanTable = () => {
     return;
   const time = calStartEndTime(0);
   const start = time.start, end = time.end;
-  planTableData.value = Object.assign({}, calTableEnum(start.month, end.month, end.day));
-  calPlanTableData(saleItem, planItem, start.month, start.day, end.month, end.day);
+  planTableData.value = Object.assign({}, calTableEnum('plan', start.month, end.month, end.day));
+  calTableData('plan', saleItem, planItem, start.month, start.day, end.month, end.day);
 };
 
 const calRealTable = () => {
@@ -216,6 +255,8 @@ const calRealTable = () => {
     return;
   const time = calStartEndTime(0);
   const start = time.start, end = time.end;
+  realTableData.value = Object.assign({}, calTableEnum('real', start.month, end.month));
+  calTableData('real', saleItem, realItem, start.month, start.day, end.month, end.day);
 };
 </script>
 

@@ -40,7 +40,7 @@
               <p>{{item?.minInventory}}</p>
               <p>{{item?.eta}}</p>
               <p>{{item?.etd}}</p>
-              <p>{{item?.product}}</p>
+              <p>{{item?.production}}</p>
               <p></p>
             </div>
           </template>

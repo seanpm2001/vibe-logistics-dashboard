@@ -5,7 +5,7 @@
   <el-table :data="step3" max-height="250">
     <el-table-column prop="eta" label="ETA" width="200px" />
     <el-table-column prop="amount" label="Amount" width="100px" />
-    <el-table-column label="*Leading Time 1" width="300px" align="center">
+    <el-table-column label="*ETA -> ETD" width="300px" align="center">
       <template v-slot="{ row }">
         <el-input style="width: 70px;" v-model="row.leadTime1.num" placeholder="Num"></el-input>
         <el-select disabled style="width: 120px;" v-model="row.leadTime1.timeUnit" placeholder="Time">
@@ -13,7 +13,7 @@
         </el-select>
       </template>
     </el-table-column>
-    <el-table-column label="*Leading Time 2">
+    <el-table-column label="*ETD -> Production">
       <template v-slot="{ row }">
         <el-input style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
         <el-select disabled style="width: 120px;" v-model="row.leadTime2.timeUnit" placeholder="Time">

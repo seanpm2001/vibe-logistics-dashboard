@@ -47,7 +47,7 @@
             <p class="grey">{{item?.minInventory}}</p>
             <p class="light-grey">{{item?.eta}}</p>
             <p class="grey">{{item?.etd}}</p>
-            <p class="light-grey">{{item?.product}}</p>
+            <p class="light-grey">{{item?.production}}</p>
             <p class="grey"></p>
           </div>
         </template>
