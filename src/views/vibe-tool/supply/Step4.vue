@@ -41,17 +41,29 @@
         </el-select>
       </template>
     </el-table-column>
+    <el-table-column fixed="right" label="Operations" width="120px">
+      <template  v-slot="{ $index }">
+        <el-button type="danger" size="small" @click.prevent="deleteRow($index)">
+          Remove
+        </el-button>
+      </template>
+    </el-table-column>
   </el-table>
   <slot name="btn" />
 </template>
 
 <script setup>
+const emit = defineEmits(['onStep4Change']);
 const props = defineProps({
   timeUnitEnum: {
     type: Object,
     required: true
   }
 });
+
+const deleteRow = (idx)=> {
+  emit('onStep4Change', idx, 'remove');
+};
 
 const step4 = inject('step4');
 </script>

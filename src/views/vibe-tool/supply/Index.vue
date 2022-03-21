@@ -31,8 +31,10 @@
       <el-divider />
       <Step4
         :timeUnitEnum="timeUnitEnum"
+        @onStep4Change="onStep4Change"
       >
         <template #btn>
+          <el-button @click="onStep4Change(0, 'add')" class="mgt-5" type="primary">Add</el-button>
           <el-button @click="calRealTable" class="mgt-5" type="primary">Calculate Real Table</el-button>
         </template>
       </Step4>
@@ -127,6 +129,12 @@ function calStartEndTime(idx) {
     'end': { month: Number(end[1]), day: Number(end[2])}, 
   };
 }
+
+const onStep4Change = (_idx, _type) => {
+  _type === 'add'
+    ? step4.value.push(JSON.parse(JSON.stringify(tableItem)))
+    : step4.value.splice(_idx--, 1);
+};
 
 const onStep2Change = (_idx, _type) => {
   if (_type === 'add') {
@@ -280,7 +288,7 @@ const calRealTable = () => {
   color: #6666CC
 
 .el-table
-  max-width: 1200px
+  max-width: 1300px
 
 .el-form .el-form-item
   margin-right: 16px
