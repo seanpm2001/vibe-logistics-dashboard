@@ -16,5 +16,5 @@ export function calTableEnum(type, startMonth, endMonth, endDay) {
   if (type === 'plan') // plan table 删除endDay后多余的day
     for (let day = endDay + 1; day <= monthDaysEnum[endMonth]; day++)
       delete temp[endMonth][day];
-  return temp;
+  return JSON.parse(JSON.stringify(temp));
 }
