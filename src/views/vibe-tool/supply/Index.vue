@@ -186,16 +186,28 @@ function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth
     for (let day = start; day <= end; day++) {
       let minInventory = 0;
       const saleAmount = averSaleInventory;
-      minInventory += saleAmount;
-      for(let i=1; i <= 14; i++) { // 计算 Min. Inventory = minInventoryPercent/100 * 时间点前后两周的总Sales Forecast，若时间点前后不足两周按已有的时间计算
-        const preSale = _tableData[month][day-i]?.sales || 0;
-        const nextSale = _tableData[month][day+i]?.sales || 0;
-        minInventory = minInventory + preSale + nextSale;
-      }
       // set sales
       _tableData[month][day]['sales'] = averSaleInventory;
 
       // set minInventory
+      minInventory += saleAmount;
+      let thatDay = day;
+      let thatMonth = month;
+      const windowLength = 28;
+      for(let i=0; i < windowLength; i++) { // 计算 Min. Inventory = minInventoryPercent/100 * 时间点后4周的总Sales Forecast
+        thatDay += 1;
+        if (thatDay > monthDaysEnum[thatMonth]) {
+          thatDay = 1;
+          thatMonth = month % 12 + 1;
+        }
+        const thatDaySale = _tableData[thatMonth][thatDay]?.sales || 0;
+        minInventory = minInventory + thatDaySale;
+        if (thatDaySale === 0) {
+          minInventory *= windowLength / (i + 1);
+          break;
+        }
+      }
+
       minInventory *= (minInventoryPercent || 50)/100;
       _tableData[month][day]['minInventory'] = Math.ceil(minInventory);
 
