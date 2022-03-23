@@ -3,6 +3,7 @@
     <el-row class="header" justify="space-between" :gutter="3">
       <span> Package <span v-if="taskPackage?.id"> [Database]</span>: </span>
       <svg-icon
+        v-if="!notPackagePermission"
         class="icon close-icon"
         icon-name="close"
         @click="handleDeletePackage"
@@ -11,6 +12,7 @@
     <el-row justify="space-between" :gutter="3">
       <el-form-item label="*Tracking Number">
         <el-input
+          :disabled="notPackagePermission"
           v-model="taskPackage.trackingNumber"
           placeholder="Tracking Number"
         />
@@ -35,7 +37,7 @@
         <el-form-item label="Unit Serial">
           <el-select
             v-model="item.serial"
-            :disabled="isDialogPattern('view')"
+            :disabled="notPackagePermission"
             style="width: 260px"
             placeholder="Please select"
             filterable
@@ -53,7 +55,7 @@
       </el-row>
     </template>
 
-    <div class="f-row controls" v-if="!isDialogPattern('view')">
+    <div class="f-row controls" v-if="!notPackagePermission">
       <el-button
         :disabled="!taskId"
         v-if="taskPackage?.id"
@@ -116,6 +118,8 @@ const props = defineProps({
 const taskItem = inject('taskItem');
 
 const store = useStore();
+const role = store.getters.role;
+const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role));
 
 const taskProducts = Object.assign({}, taskItem.value.units);
 const taskPackage = ref(props.packageItem);

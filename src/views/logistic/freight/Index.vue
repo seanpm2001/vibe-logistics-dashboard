@@ -139,7 +139,7 @@
         class-name="small-padding fixed-width"
       >
         <template v-slot="{ row }">
-          <el-button type="primary" size="small" @click="handleDetailRow(row, 'edit')">
+          <el-button v-permission="['ADMIN','VIBE_MANAGER']" type="primary" size="small" @click="handleDetailRow(row, 'edit')">
             Edit
           </el-button>
           <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
@@ -153,7 +153,7 @@
             title="Are you sure to delete this?"
           >
             <template #reference>
-              <el-button v-if="row.status != 'deleted'" size="small" type="danger">
+              <el-button v-permission="['ADMIN','VIBE_MANAGER']" v-if="row.status != 'deleted'" size="small" type="danger">
                 Delete
               </el-button>
             </template>

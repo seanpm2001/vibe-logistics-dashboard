@@ -40,15 +40,15 @@
         </el-select>
       </el-row>
       <div v-if="!showAssignedOrder">
-        <el-button type="primary" @click="showAssignDialog('assignSelected')">
+        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="showAssignDialog('assignSelected')">
           Assign Selected
         </el-button>
-        <el-button type="primary" @click="showAssignDialog('combineAndAssign')">
+        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="showAssignDialog('combineAndAssign')">
           Combine & Assign Selected
         </el-button>
       </div>
       <div v-else>
-        <el-button type="primary" @click="unassignSelected()">
+        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="unassignSelected()">
           Unassign Selected
         </el-button>
       </div>
@@ -178,6 +178,7 @@
             Assign & Add 1st WH Task
           </el-button>
           <el-button
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             v-if="showAssignedOrder"
             type="success"
             size="small"
@@ -186,6 +187,7 @@
             Add WH Task
           </el-button>
           <el-button
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             v-if="showAssignedOrder"
             type="danger"
             size="small"
@@ -240,7 +242,8 @@
   </div>
 </template>
 
-<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>
+import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';
 import OrderDescription from './components/OrderDescription.vue';
 import {
@@ -262,6 +265,7 @@ const router = useRouter();
 const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const { proxy } = getCurrentInstance();
+const role = store.getters.role;
 
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
@@ -305,6 +309,8 @@ const specifySerailArr = ref([{
 
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
+
+const taskPermissionArr = ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'];
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
@@ -428,6 +434,10 @@ const addWarehouseTask = (_orderId, _isAfterAssign) => {
 };
 
 const editWarehouseTask = (_orderId, _taskItem) => {
+  if (!taskPermissionArr.includes(role)) {
+    ElMessage.error('You don\'t have permission', 3);
+    return;
+  }
   findAssignedOrderAPI(_orderId).then((_data) => {
     taskOrderItem.value = formatAssignedOrderItem(_data);
     findTaskAPI(_taskItem.id).then(_data => {

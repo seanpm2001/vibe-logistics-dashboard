@@ -20,38 +20,38 @@
       >
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="Type">
-            <el-select v-model="taskItem.taskType" :disabled="isDialogPattern('view')" placeholder="Please select">
+            <el-select v-model="taskItem.taskType" :disabled="notCommonPermission" placeholder="Please select">
               <el-option v-for="(item, key) in taskTypeEnum" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item v-if="isReturnOrRepalce" label="Return/Replace reason">
             <el-select
-              v-model="taskItem.reason" :disabled="isDialogPattern('view')" placeholder="Please select"
+              v-model="taskItem.reason" :disabled="notCommonPermission" placeholder="Please select"
               filterable allow-create default-first-option
             >
               <el-option v-for="(item, key) in taskReasonEnum" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
           <el-form-item label="Source Warehouse">
-            <el-select v-model="taskItem.sourceId" :disabled="isDialogPattern('view')" placeholder="Please select">
+            <el-select v-model="taskItem.sourceId" :disabled="notCommonPermission" placeholder="Please select">
               <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
           <el-form-item label="Target Warehouse">
-            <el-select v-model="taskItem.targetId" :disabled="isDialogPattern('view')" placeholder="Please select">
+            <el-select v-model="taskItem.targetId" :disabled="notCommonPermission" placeholder="Please select">
               <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
             </el-select>
           </el-form-item>
         </el-row>
         <el-row justify="space-between" :gutter="3">
           <el-form-item label="New Address">
-            <el-input v-model="taskItem.newAddress" placeholder="New Address"/>
+            <el-input :disabled="notCommonPermission" v-model="taskItem.newAddress" placeholder="New Address"/>
           </el-form-item>
           <el-form-item label="Note">
-            <el-input v-model="taskItem.note" placeholder="Note"/>
+            <el-input :disabled="notCommonPermission" v-model="taskItem.note" placeholder="Note"/>
           </el-form-item>
           <el-form-item label="On hold">
-            <el-switch v-model="isOnHold" :disabled="isDialogPattern('view')" @click="onHoldTask">
+            <el-switch :disabled="notCommonPermission" v-model="isOnHold" @click="onHoldTask">
               On hold:
             </el-switch>
           </el-form-item>
@@ -59,7 +59,7 @@
         
         <el-card>
           Product: 
-          <el-form-item label="Specify Serial">
+          <el-form-item v-if="!notCommonPermission" label="Specify Serial">
             <el-checkbox-group v-model="checkedSpecifySerial" :max="1">
               <el-checkbox :key="true" :label="true">true</el-checkbox>
               <el-checkbox :key="false" :label="false">false</el-checkbox>
@@ -71,17 +71,17 @@
               <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
               <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
                 <el-select
-                  v-model="item.sku" :disabled="isDialogPattern('view')" placeholder="Please select"
+                  v-model="item.sku" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
                   <el-option v-for="(item, key) in unitList" :key="key" :label="key" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
-                <el-input v-model="item.quantity" placeholder="Quantity" />
+                <el-input :disabled="notCommonPermission" v-model="item.quantity" placeholder="Quantity" />
               </el-form-item>
               <el-form-item label="Condition">
-                <el-select v-model="item.condition" placeholder="Please select" clearable>
+                <el-select :disabled="notCommonPermission" v-model="item.condition" placeholder="Please select" clearable>
                   <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
                 </el-select>
               </el-form-item>
@@ -90,7 +90,7 @@
               </el-form-item>
               <el-form-item v-show="checkedSpecifySerial[0]" label="Serials">
                 <el-select
-                  v-model="item.serialNote" :disabled="isDialogPattern('view')" placeholder="Please select"
+                  v-model="item.serialNote" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option multiple style="width: 260px"
                 >
                   <el-option
@@ -106,7 +106,7 @@
         </el-card>
         
 
-        <template v-if="!isDialogPattern('view')">
+        <template v-if="!notCommonPermission">
           <el-button v-if="taskItem.id" type="primary" @click="handleWarehouseTask('update')">
             Update Warehouse Task
           </el-button>
@@ -173,6 +173,8 @@ const taskOrderItem = inject('taskOrderItem');
 
 const store = useStore();
 const { proxy } = getCurrentInstance();
+const role = store.getters.role;
+const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role));
 
 const unitList = computed(() => {
   const taskProducts = taskItem.value.units;

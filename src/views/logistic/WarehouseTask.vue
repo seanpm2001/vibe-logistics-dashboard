@@ -93,7 +93,7 @@
         class-name="small-padding fixed-width"
       >
         <template v-slot="{ row }">
-          <el-button type="primary" size="small" @click="handleDetailRow(row, 'edit')">
+          <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']" type="primary" size="small" @click="handleDetailRow(row, 'edit')">
             Edit
           </el-button>
           <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
@@ -107,7 +107,7 @@
             title="Are you sure to delete this?"
           >
             <template #reference>
-              <el-button v-if="row.status != 'deleted'" size="small" type="danger">
+              <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" v-if="row.status != 'deleted'" size="small" type="danger">
                 Delete
               </el-button>
             </template>
@@ -165,7 +165,7 @@ const packageList = ref([]);
 
 const total = ref(0);
 const listLoading = ref(true);
-const dialogStatus = ref('');
+const dialogStatus = ref('view');
 const downloadLoading = ref(false);
 const disableNewShipment = ref(true);
 const dialogTaskVisible = ref(false);
@@ -241,7 +241,7 @@ const handleDetailRow = (_row, _type) => {
   const orderId = _row.orderId;
   findAssignedOrderAPI(orderId).then((_data) => {
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    dialogStatus.value = 'update';
+    _type === 'edit' && (dialogStatus.value = 'update');
     dialogTaskVisible.value = true;
   });
 };
