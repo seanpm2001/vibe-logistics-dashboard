@@ -8,7 +8,7 @@ export const user = {
     isLogined: false,
     token: getToken(),
     username: null,
-    avatar: '/@/assets/img/common/avatar.gif',
+    avatar: '/@img/common/avatar.gif',
     email: null,
     role: null,
   },
@@ -37,9 +37,9 @@ export const user = {
     login({ commit }, userInfo) {
       const { email, password } = userInfo;
       return new Promise((resolve, reject) => {
-        loginAPI({ email, password }).then(_data => {
-          commit('SET_TOKEN', _data.access_token);
-          setToken(_data.access_token);
+        loginAPI({ email, password }).then(data => {
+          commit('SET_TOKEN', data.accessToken);
+          setToken(data.accessToken);
           commit('SET_LOGINED', true);
           resolve();
         }).catch(error => {

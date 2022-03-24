@@ -77,8 +77,8 @@
 
 <script setup>
 
-import buddha1 from '/@/assets/img/css-show/buddha1.jpeg';
-import buddha2 from '/@/assets/img/css-show/buddha2.jpeg';
+import buddha1 from '/@img/css-show/buddha1.jpeg';
+import buddha2 from '/@img/css-show/buddha2.jpeg';
 import '/@/assets/js/vanilla-tilt.min';
 onMounted(() => {
   const card3 = document.querySelectorAll('.card3');

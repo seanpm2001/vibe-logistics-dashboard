@@ -60,12 +60,12 @@
         </el-form-item>
       </el-row>
       <el-card>
-        <el-form-item label="*Next Stage as a:">
-          <el-select v-model="nextStage" placeholder="Please select" clearable>
-            <el-option v-for="(item, key) in { UNIT: 'Unit', BUNDLE: 'Bundle' }" :key="item" :label="item" :value="key" />
-          </el-select>
-        </el-form-item>
-        <el-row>
+        <el-row justify="space-between">
+          <el-form-item label="*Next Stage as a:">
+            <el-select v-model="nextStage" placeholder="Please select" clearable>
+              <el-option v-for="(item, key) in { UNIT: 'Unit', BUNDLE: 'Bundle' }" :key="item" :label="item" :value="key" />
+            </el-select>
+          </el-form-item>
           <el-form-item v-if="nextStage === 'BUNDLE'" label="New Stylus">
             <el-input v-model="bundleItem.stylus" placeholder="Serial" />
           </el-form-item>

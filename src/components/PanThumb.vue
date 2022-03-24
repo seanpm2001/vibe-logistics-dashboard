@@ -6,11 +6,12 @@
       </div>
     </div>
     <!-- eslint-disable-next-line -->
-    <div :style="{backgroundImage: `url(${image})`}" class="pan-thumb"></div>
+    <div :style="{backgroundImage: `url(${avatarUrl})`}" class="pan-thumb"></div>
   </div>
 </template>
 
 <script setup>
+import avatarUrl from '/@img/common/avatar.gif';
 // eslint-disable-next-line no-undef
 const props = defineProps({
   image: {

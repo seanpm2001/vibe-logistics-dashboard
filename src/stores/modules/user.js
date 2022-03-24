@@ -9,7 +9,7 @@
 //     isLogined: false,
 //     token: getToken(),
 //     name: '',
-//     avatar: '/@/assets/img/common/avatar.gif',
+//     avatar: '/@img/common/avatar.gif',
 //     introduction: '',
 //     roles: []
 //   },

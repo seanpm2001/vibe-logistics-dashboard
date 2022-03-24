@@ -24,8 +24,9 @@ export default (({command}) => {
     plugins: createVitePlugins(isBuild),
     resolve: {
       alias: [
-        { find: '/~', replacement: pathResolve('node_modules') },
-        { find: '/@', replacement: pathResolve('src'), }
+        { find: '/@', replacement: pathResolve('src'), },
+        { find: '/@img', replacement: pathResolve('src/assets/img') },
+        { find: '/@css', replacement: pathResolve('src/assets/css') },
       ]
     },
     css: {

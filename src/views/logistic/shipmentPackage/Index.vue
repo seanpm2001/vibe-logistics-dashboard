@@ -57,10 +57,23 @@
         <template v-slot="{ row }">
           <template v-for="item in row.units" :key="item">
             <span class="link" @click="viewItemSerial(item.serial)">{{ item.serial }}</span>
-            <el-select style="width: 210px; margin-right: 10px;" :disabled="isDialogPattern('view')" v-model="item.status" placeholder="Please select">
+            <el-select
+              v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
+              v-model="item.status" 
+              style="width: 210px; margin-right: 10px;"
+              :disabled="isDialogPattern('view')"
+              placeholder="Please select"
+            >
               <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
             </el-select>
-            <el-button size="small" type="primary" @click="editHousingTask(item, row.task)">Warehousing</el-button>
+            <el-button
+              v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+              size="small"
+              type="primary"
+              @click="editHousingTask(item, row.task)"
+            >
+              Warehousing
+            </el-button>
             <br>
           </template>
         </template>
@@ -85,6 +98,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-permission="['ADMIN', 'VIBE_MANAGER']"
         fixed="right"
         label="Actions"
         align="center"

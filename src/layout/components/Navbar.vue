@@ -5,7 +5,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="`${avatarUrl}?imageView2/1/w/80/h/80`" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <template v-slot:dropdown>
@@ -35,13 +35,14 @@
 
 <script setup>
 import Breadcrumb from '/@/components/Breadcrumb.vue';
+import avatarUrl from '/@img/common/avatar.gif';
 
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
 const sidebar = store.getters['sidebar'];
-const avatar = store.getters['avatar'];
+// const avatar = store.getters['avatar'];
 const device = store.getters['device'];
 
 const toggleSideBar = () => {

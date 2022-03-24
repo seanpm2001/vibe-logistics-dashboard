@@ -24,7 +24,7 @@
           />
           <span @click="showPwd((signInPattern = true))">
             <svg-icon
-              :icon-name="passwordType === 'password' ? 'eye' : 'eye-open'"
+              :icon-name="passwordType === 'password' ? 'profile-eye' : 'profile-eye-open'"
               icon-class="eye"
             />
           </span>
@@ -75,13 +75,13 @@
         <div class="content">
           <button @click="toggleSignUp(true)">注册</button>
         </div>
-        <img src="/@/assets/img/profile/sign-in.svg" alt="sign-in.svg" />
+        <img :src="signInSrc" alt="sign-in.svg" />
       </div>
       <div class="desc-warp-item sign-in-desc">
         <div class="content">
           <button @click="toggleSignUp(false)">登录</button>
         </div>
-        <img src="/@/assets/img/profile/sign-up.svg" alt="sign-up.svg" />
+        <img :src="signUpSrc" alt="sign-up.svg" />
       </div>
     </div>
   </div>
@@ -92,6 +92,9 @@
 import Captcha from '/@/components/Captcha/Index.vue';
 import { ElMessage } from 'element-plus';
 import { validUsername } from '/@/utils/validate';
+
+import signInSrc from '/@img/profile/sign-in.svg';
+import signUpSrc from '/@img/profile/sign-up.svg';
 
 /* Begin Data */
 const store = useStore();

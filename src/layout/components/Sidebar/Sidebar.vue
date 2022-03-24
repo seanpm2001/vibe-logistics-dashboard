@@ -43,5 +43,5 @@ const isCollapse = computed (() => !sidebar.value.opened);
 </script>
 
 <style module lang="sass">
-@import "/@/assets/css/_variables.sass"
+@import "/@css/_variables.sass"
 </style>

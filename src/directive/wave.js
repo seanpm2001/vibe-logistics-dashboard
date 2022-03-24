@@ -1,4 +1,4 @@
-import '/@/assets/css/wave.sass';
+import '/@css/wave.sass';
 
 const context = '@@wavesContext';
 

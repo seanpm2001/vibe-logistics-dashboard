@@ -264,7 +264,7 @@ const beforeRemove = (file, fileList) => {
 </script>
 
 <style lang="sass" scoped>
-@import "/@/assets/css/_response.sass"
+@import "/@css/_response.sass"
 .viewPattern
   .upload-serial
     display: none
