@@ -3,7 +3,7 @@
  */
 
 import { ElMessage } from 'element-plus';
-import requester, { mockRequester } from '/@/utils/http';
+import requester, { mockRequester } from './http';
 import { jsonToUnderline } from '/@/utils/format';
 
 const handleReqElMsg = (fn, action, name, id) => {
@@ -25,7 +25,6 @@ const handleReqElMsg = (fn, action, name, id) => {
 
 /* 海运 Freight API */
 export async function queryFreightsAPI (params) {
-
   jsonToUnderline(params);
   const res = await requester.get('freights', {
     params,

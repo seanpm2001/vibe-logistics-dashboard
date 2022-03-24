@@ -10,7 +10,7 @@
     "build:beta": "yarn lint && vite build --mode development",
     "build:prod": "yarn lint && cross-env vite build --mode production",
     "build:mock": "yarn lint && cross-env USE_MOCK=true vite build --mode production",
-    "serve": "yarn build:mock && vite preview"
+    "serve": "yarn build:beta && vite preview"
   },
   "dependencies": {
     "@vue/shared": "^3.2.31",
