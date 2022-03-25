@@ -88,7 +88,7 @@
               <el-form-item label="Available">
                 <el-input disabled>999</el-input>
               </el-form-item>
-              <el-form-item v-show="checkedSpecifySerial[0]" label="Serials">
+              <el-form-item v-show="checkedSpecifySerial[0] || item.serialNote?.length" label="Serials">
                 <el-select
                   v-model="item.serialNote" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option multiple style="width: 260px"

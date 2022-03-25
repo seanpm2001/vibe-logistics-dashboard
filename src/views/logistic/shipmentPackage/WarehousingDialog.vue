@@ -75,6 +75,12 @@
         </el-row>
       </el-card>
     </el-form>
+
+    <template v-slot:footer>
+      <el-button @click="submitWarehousing">
+        Submit
+      </el-button>
+    </template>
   </el-dialog>
 </template>
 
@@ -114,6 +120,10 @@ const isDialogPattern = (type) => props.dialogStatus === type;
 
 const beforeCloseDialog = done => {
   done();
+};
+
+const submitWarehousing = () => {
+
 };
 </script>
 

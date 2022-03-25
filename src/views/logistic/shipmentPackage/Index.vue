@@ -14,6 +14,7 @@
         Filter Warehousing List
       </el-button>
       <el-button
+        v-permission="['ADMIN', 'VIBE_MANAGER']"
         style="float: right"
         v-wave
         type="danger"
@@ -50,27 +51,28 @@
       />
       <el-table-column label="Carrier" width="160px" align="center">
         <template v-slot="{ row }">
-          {{ warehouseEnum[row.task.carrier] }}
+          {{ row.task.carrier }}
         </template>
       </el-table-column>
       <el-table-column label="Units's Serials: Status" width="480px">
         <template v-slot="{ row }">
-          <template v-for="item in row.units" :key="item">
-            <span class="link" @click="viewItemSerial(item.serial)">{{ item.serial }}</span>
+          <template v-for="unit in row.units" :key="unit">
+            <span class="link" @click="viewItemSerial(unit.serial)">{{ unit.serial }}</span>
             <el-select
               v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
-              v-model="item.status" 
+              v-model="unit.status"
               style="width: 210px; margin-right: 10px;"
-              :disabled="isDialogPattern('view')"
               placeholder="Please select"
+              @change="handleUpdateUnitStatus(unit)"
             >
-              <el-option v-for="(item, key) in packageStatusEnum" :key="item" :label="item" :value="key" />
+              <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
             </el-select>
             <el-button
               v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+              v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
               size="small"
               type="primary"
-              @click="editHousingTask(item, row.task)"
+              @click="editHousingTask(unit, row.task)"
             >
               Warehousing
             </el-button>
@@ -80,14 +82,13 @@
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="200px">
         <template v-slot="{ row }">
-          <template v-for="item in row.task.units" :key="item.sku">
+          <template v-for="unit in row.task.units" :key="unit.sku">
             <div>
-              <svg-icon :icon-name="productIconMap[item.sku] || 'product-other'" />
-              <span class="mgl-5"
-                >{{ productMap[item.sku] || item.sku }}:<el-tag class="mgl-5" size="small">{{
-                  item.quantity
-                }}</el-tag></span
-              >
+              <svg-icon :icon-name="productIconMap[skuProdcutEnum[unit.sku]] || 'product-other'" />
+              <span class="mgl-5">
+                {{ productMap[skuProdcutEnum[unit.sku]] || unit.sku }}:
+                <el-tag class="mgl-5" size="small">{{ unit.quantity }}</el-tag>
+              </span>
             </div>
           </template>
         </template>
@@ -146,12 +147,13 @@
 import UnitDescription from '../components/UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
 import { parseTime } from '/@/utils/format';
-import { queryPackagesAPI, deletePackageAPI, findUnitAPI } from '/@/api/logistic';
+import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updateUnitAPI } from '/@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
   productMap,
   productIconMap,
+  skuProdcutEnum,
   carrierEnum,
 } from '/@/enums/logistic';
 
@@ -191,7 +193,18 @@ provide('warehousingItem', warehousingItem);
 provide('dialogHousingVisible', dialogHousingVisible);
 provide('unitItem', unitItem);
 /* End data */
-const isDialogPattern = (type) => dialogStatus.value === type;
+const ifMeetHousingCondtion = (taskType, unitStatus) => {
+  if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
+    const meetTaskArr = ['FULFILLMENT', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  } else if (unitStatus === 'DELIVERED_BUT_UNCHECKED') {
+    const meetTaskArr = ['RETURN', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  }
+  return false;
+};
 
 const fetchList = () => {
   listLoading.value = true;
@@ -241,10 +254,29 @@ const handleDelSelected = () => {
 };
 
 const viewItemSerial = (_unitSerial) => {
-  findUnitAPI(_unitSerial).then((_data) => {
-    unitItem.value = _data;
+  queryUnitsAPI({ serial: _unitSerial }).then((_data) => {
+    unitItem.value = _data[0];
     drawerUnitVisible.value = true;
   });
+};
+
+const handleUpdateUnitStatus = (unit) => {
+  ElMessageBox.confirm(
+    'Update it?',
+    'Warning',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          updateUnitAPI(unit.serial, unit);
+        } else {
+          fetchList();
+        }
+      },
+    }
+  );
 };
 
 function initGlobalData() {

@@ -251,7 +251,6 @@ import {
   queryAssignedOrdersAPI,
   assignOrdersAPI,
   unassignOrdersAPI,
-  findUnitAPI,
   findAssignedOrderAPI,
   findTaskAPI
 } from '/@/api/logistic';

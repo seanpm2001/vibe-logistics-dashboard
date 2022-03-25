@@ -73,14 +73,13 @@
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="240px">
         <template v-slot="{ row }">
-          <template v-for="(item, key) in row.content" :key="item">
+          <template v-for="(unit, idx) in row.units" :key="idx">
             <div>
-              <svg-icon :icon-name="productIconMap[key]" />
-              <span class="mgl-5"
-                >{{ productMap[key] }}:<el-tag class="mgl-5" size="small">{{
-                  item
-                }}</el-tag></span
-              >
+              <svg-icon :icon-name="productIconMap[skuProdcutEnum[unit.sku]] || 'product-other'" />
+              <span class="mgl-5">
+                {{ productMap[skuProdcutEnum[unit.sku]] || unit.sku }}:
+                <el-tag class="mgl-5" size="small">{{ unit.quantity }}</el-tag>
+              </span>
             </div>
           </template>
         </template>
@@ -146,6 +145,7 @@ import {
   taskTypeEnum,
   productMap,
   productIconMap,
+  skuProdcutEnum
 } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
 

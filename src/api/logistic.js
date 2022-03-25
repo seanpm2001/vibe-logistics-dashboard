@@ -205,29 +205,14 @@ export async function deletePackageAPI (packageId) {
 
 /* 单个商品 Unit API */
 export async function queryUnitsAPI (params) {
-
   jsonToUnderline(params);
-  const res = await requester.get('/units/search', params);
+  const res = await requester.get('/units/search', { params });
   return res.items;
 }
-export async function findUnitAPI (unitId) {
-  // const item = handleReqElMsg(
-  //   requester.get(`unit/${unitId}`), 'Find', 'Unit', unitId
-  // );
-  
-  let item = null;
-  await mockRequester.get(`/unit/${unitId}`)
-    .then(_data => {
-      item = _data.data.item;
-      ElMessage.success(`Find Unit (ID: ${unitId}) successfully.`, 3);
-    })
-    .catch(() => ElMessage.error(`Find Order (ID: ${unitId}) failed.`, 3));
-  return item;
-}
-export async function updateUnitAPI (unitId, updates) {
+export async function updateUnitAPI (unitSerial, updates) {
   jsonToUnderline(updates);
   const item = handleReqElMsg(
-    requester.put(`unit/${unitId}`, updates), 'Update', 'Unit', unitId
+    requester.put(`unit/${unitSerial}`, updates), 'Update', 'Unit', unitSerial
   );
   return item;
 }
