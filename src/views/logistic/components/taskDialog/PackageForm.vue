@@ -84,7 +84,8 @@
   </div>
 </template>
 
-<script setup>import { debounce } from '/@/utils';
+<script setup>
+import { debounce } from '/@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
   createPackageAPI,

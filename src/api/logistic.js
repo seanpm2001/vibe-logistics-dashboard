@@ -6,18 +6,18 @@ import { ElMessage } from 'element-plus';
 import requester, { mockRequester } from './http';
 import { jsonToUnderline } from '/@/utils/format';
 
-const handleReqElMsg = (fn, action, name, id) => {
+const handleReqElMsg = (fn, action, name, identifier) => {
   return new Promise((resolve, reject) => {
     let item = null;
-    const isCreation = action === 'create';
+    const isCreation = action === 'Create';
     fn
       .then(_data => {
         item = _data?.item;
         resolve(item);
-        ElMessage.success(`${action} ${name} (ID: ${isCreation ? _data.id : id}) successfully.`, 3);
+        ElMessage.success(`${action} ${name} (ID: ${isCreation ? _data.id : identifier}) successfully.`, 3);
       })
       .catch(err => {
-        ElMessage.error(`${action} ${name} ${isCreation ? '' : '(ID: ' + id +') '} failed.`, 3);
+        ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`, 3);
         reject(err);
       });
   });
@@ -34,7 +34,7 @@ export async function queryFreightsAPI (params) {
 export async function createFreightAPI (data) {
   jsonToUnderline(data);
   const item = handleReqElMsg(
-    requester.post('freights', data), 'create', 'Freight'
+    requester.post('freights', data), 'Create', 'Freight'
   );
   return item;
 }
@@ -107,11 +107,10 @@ export async function findAssignedOrderAPI (orderId) {
   );
   return item;
 }
-export async function assignOrdersAPI (targetId, orderArr) {
-
+export async function assignOrdersAPI (sourceId, orderArr) {
   const item = handleReqElMsg(
     requester.post('orders/assign', {
-      assigned_to: targetId,
+      assigned_to: sourceId,
       raw_orders: orderArr,
     }), 'Assign', 'Order', orderArr
   );
@@ -169,6 +168,7 @@ export async function deleteTaskAPI (taskId) {
   );
 }
 
+
 /* 批次 Shipment Package API */
 export async function queryPackagesAPI (params) {
 
@@ -200,6 +200,13 @@ export async function updatePackageAPI (packageId, updates) {
 export async function deletePackageAPI (packageId) {
   handleReqElMsg(
     requester.delete(`/warehouse/package/${packageId}`), 'Delete', 'Package', packageId
+  );
+}
+
+/* Warehousing API */
+export async function updatePackageUnitAPI(packageId, serial, updates) {
+  handleReqElMsg(
+    requester.put(`/warehouse/package/${packageId}/unit/${serial}`, updates), 'Update', 'Package Unit', serial
   );
 }
 

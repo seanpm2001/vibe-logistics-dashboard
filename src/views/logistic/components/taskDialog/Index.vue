@@ -62,7 +62,6 @@
           <el-form-item v-if="!notCommonPermission" label="Specify Serial">
             <el-checkbox-group v-model="checkedSpecifySerial" :max="1">
               <el-checkbox :key="true" :label="true">true</el-checkbox>
-              <el-checkbox :key="false" :label="false">false</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <template v-for="(item, index) in taskItem.units" :key="item.sku">
@@ -74,7 +73,7 @@
                   v-model="item.sku" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, key) in unitList" :key="key" :label="key" :value="key" />
+                  <el-option v-for="(item, key) in skuProdcutEnum" :key="key" :label="key" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
@@ -137,7 +136,8 @@
 
 </template>
 
-<script setup>import { ElMessage, ElTooltip } from 'element-plus';
+<script setup>
+import { ElMessage, ElTooltip } from 'element-plus';
 import { throttle, debounce } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';

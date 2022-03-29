@@ -106,16 +106,16 @@
         min-width="240px"
         class-name="small-padding fixed-width"
       >
-        <template v-slot="{ row, $index }">
+        <template v-slot="{ row }">
           <el-popconfirm
-            @confirm="deleteShipment(row, $index)"
+            @confirm="deletePackage(row.id)"
             confirm-button-text="OK"
             cancel-button-text="No, Thanks"
             icon-color="red"
             title="Are you sure to delete this?"
           >
             <template #reference>
-              <el-button size="small" type="danger"> Delete </el-button>
+              <el-button size="small" type="danger"> Delete</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -244,10 +244,17 @@ const handleSelectionChange = (_selectedArr) => {
   multipleSelection.value = _selectedArr.sort((pre, next) => next.id - pre.id);
 };
 
+const deletePackage = (packageId) => {
+
+  deletePackageAPI(packageId).then(() => {
+    fetchList();
+  });
+};
+
 const handleDelSelected = () => {
   multipleSelection.value.forEach((item) => {
-    const freightId = item.id;
-    deletePackageAPI(freightId);
+    const packageId = item.id;
+    deletePackageAPI(packageId);
   });
   multipleSelection.value = [];
   fetchList();

@@ -67,7 +67,7 @@
       <el-table-column label="Status" width="120px" align="center">
         <template v-slot="{ row }">
           <el-tag>
-            {{ packageStatusEnum[row.status] }}
+            {{calTaskStatus(row.taskType, row.packages)}}
           </el-tag>
         </template>
       </el-table-column>
@@ -204,6 +204,27 @@ provide('taskItem', taskItem);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 /* End Data */
+
+const calTaskStatus = (taskType, packages) => {
+  packages.forEach(item => {
+    item?.units.forEach(unit => {
+      console.log('unit: ', unit);
+
+    });
+  });
+  switch (taskType) {
+  case 'FULFILLMENT':
+  case 'REPLACE':
+
+    break;
+  case 'RETURN':
+    break;
+  case 'MOVE':
+    break;
+  case 'RETURN_TO_REPAIR':
+    break;
+  }
+};
 
 const fetchList = () => {
   listLoading.value = true;

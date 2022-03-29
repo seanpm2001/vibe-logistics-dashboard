@@ -62,7 +62,7 @@
       <el-card>
         <el-row justify="space-between">
           <el-form-item label="*Next Stage as a:">
-            <el-select v-model="nextStage" placeholder="Please select" clearable>
+            <el-select disabled v-model="nextStage" placeholder="Please select" clearable>
               <el-option v-for="(item, key) in { UNIT: 'Unit', BUNDLE: 'Bundle' }" :key="item" :label="item" :value="key" />
             </el-select>
           </el-form-item>
@@ -86,6 +86,7 @@
 
 <script setup>
 import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '/@/enums/logistic';
+import { updatePackageUnitAPI } from '/@/api/logistic';
 
 const props = defineProps({
   emptyWarehousingItem: {
@@ -123,7 +124,7 @@ const beforeCloseDialog = done => {
 };
 
 const submitWarehousing = () => {
-
+  
 };
 </script>
 

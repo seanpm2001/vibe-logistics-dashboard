@@ -361,29 +361,30 @@ const showAssignDialog = (_type, _orderId) => {
   dialogAssignVisible.value = true;
 };
 
-function assignSelectedOrders(_targetWHId, _selectedArr) {
+function assignSelectedOrders(_sourceWHId, _selectedArr) {
   if (!_selectedArr.length) {
     ElMessage.error('Please at least select an order!', 3);
     return;
   }
   multipleSelection.value.forEach((item) => {
-    assignOrdersAPI(_targetWHId, [item.id]);
+    assignOrdersAPI(_sourceWHId, [item.id]);
   });
 }
 
 const targetId = ref(null);
 const assignOrders = () => {
-  const targetWHId = targetId.value;
+  const sourceWHId = targetId.value;
   const selectedArr = multipleSelection.value;
-  if (!targetWHId) {
+  if (!sourceWHId) {
     ElMessage.error('Please select a target warehouse!', 3);
     return;
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
+  console.log('pattern: ', pattern);
   const orderArr = [];
   if (pattern === 'assignSelected') {
     // 单独处理assign多个，不展示warehouse task dialog
-    assignSelectedOrders(targetWHId, selectedArr);
+    assignSelectedOrders(sourceWHId, selectedArr);
     dialogAssignVisible.value = false;
     return;
   } else if (pattern === 'combineAndAssign') {
@@ -396,10 +397,10 @@ const assignOrders = () => {
     orderArr.push(assignOrderId.value);
   }
   // 调用assign orders API
-  assignOrdersAPI(targetWHId, orderArr)
+  assignOrdersAPI(sourceWHId, orderArr)
     .then((_data) => {
       dialogAssignVisible.value = false;
-      addWarehouseTask(_data.id, true); // (orderId, isAfterAssign)
+      addWarehouseTask(_data.id, true, sourceWHId); // (orderId, isAfterAssign)
     })
     .finally(() => {
       dialogAssignVisible.value = false;
@@ -421,12 +422,16 @@ const unassignSelected = () => {
   fetchList();
 };
 
-const addWarehouseTask = (_orderId, _isAfterAssign) => {
+const addWarehouseTask = (_orderId, _isAfterAssign, sourceWHId) => {
   findAssignedOrderAPI(_orderId).then((_data) => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = _orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    _isAfterAssign && (taskItem.value.type = 'FULFILLMENT');
+    if (_isAfterAssign) {
+      taskItem.value.taskType = 'FULFILLMENT';
+      taskItem.value.sourceId = sourceWHId;
+      taskItem.value.targetId = 18; // Default Customer
+    }
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
