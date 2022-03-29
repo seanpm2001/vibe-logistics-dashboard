@@ -214,7 +214,7 @@
       :close-on-click-modal="false"
     >
       <el-row align="middle">
-        Target Warehouse: &ensp;
+        Please select Warehouse: &ensp;
         <el-select v-model="targetId" placeholder="Please select">
           <el-option
             v-for="(item, key) in warehouseEnum"
@@ -386,6 +386,7 @@ const assignOrders = () => {
     // 单独处理assign多个，不展示warehouse task dialog
     assignSelectedOrders(sourceWHId, selectedArr);
     dialogAssignVisible.value = false;
+    fetchList();
     return;
   } else if (pattern === 'combineAndAssign') {
     // 批量assign
