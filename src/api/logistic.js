@@ -171,8 +171,6 @@ export async function deleteTaskAPI (taskId) {
 
 /* 批次 Shipment Package API */
 export async function queryPackagesAPI (params) {
-
-  jsonToUnderline(params);
   const res = await requester.get('/warehouse/packages', {
     params,
   });
@@ -204,9 +202,9 @@ export async function deletePackageAPI (packageId) {
 }
 
 /* Warehousing API */
-export async function updatePackageUnitAPI(packageId, serial, updates) {
+export async function updatePackageUnitAPI(packageId, unitId, updates) {
   handleReqElMsg(
-    requester.put(`/warehouse/package/${packageId}/unit/${serial}`, updates), 'Update', 'Package Unit', serial
+    requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
   );
 }
 

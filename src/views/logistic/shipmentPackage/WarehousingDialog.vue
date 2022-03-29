@@ -23,10 +23,15 @@
       </el-row>
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Package ID">
-          <el-tag>#{{warehousingItem.packageId}}</el-tag>
+          <el-tag>#{{unitItem.packageId}}</el-tag>
         </el-form-item>
         <el-form-item label="Package Status">
           <el-tag>computed value</el-tag>
+        </el-form-item>
+        <el-form-item label="Unit Condition">
+          <el-select v-model="unitItem.condition" placeholder="Please select" clearable>
+            <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
+          </el-select>
         </el-form-item>
       </el-row>
 
@@ -36,24 +41,19 @@
         <el-form-item label="Serial">
           <el-tag>#{{unitItem.serial}}</el-tag>
         </el-form-item>
-        <el-checkbox v-model="isShippingDamaged">
+        <el-checkbox v-model="unitItem.shipmentDamage">
           Shipping Damaged
         </el-checkbox>
-        <el-form-item label="Unit Condition">
-          <el-select v-model="unitItem.condition" placeholder="Please select" clearable>
-            <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="Package Box Condition">
-          <el-select v-model="warehousingItem.condition" placeholder="Please select" clearable>
+          <el-select v-model="unitItem.packageBoxCondition" placeholder="Please select" clearable>
             <el-option v-for="(item, key) in packageConditionEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
         <el-form-item label="Note(return reason)">
-          <el-input v-model="warehousingItem.note" placeholder="Note"/>
+          <el-input v-model="unitItem.shipmentDamageNote" placeholder="Note"/>
         </el-form-item>
         <el-form-item label="Accessory Consumption">
-          <el-select v-model="warehousingItem.condition" placeholder="Please select" clearable>
+          <el-select v-model="unitItem.accessories[0]" placeholder="Please select" clearable>
             <el-option v-for="(item, key) in {PACKAGE_BOX: 'Package Box'}" :key="item" :label="item" :value="key" />
           </el-select>
           <el-input-number  placeholder="0"/>
@@ -124,7 +124,11 @@ const beforeCloseDialog = done => {
 };
 
 const submitWarehousing = () => {
-  
+  const unit = unitItem.value;
+  updatePackageUnitAPI(unit.packageId, unit.id, unit).then(_data => {
+    console.log('_data: ', _data);
+    unitItem.value = _data;
+  });
 };
 </script>
 

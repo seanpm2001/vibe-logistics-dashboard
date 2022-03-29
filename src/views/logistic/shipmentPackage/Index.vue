@@ -146,8 +146,8 @@
 <script setup>import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from '../components/UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
-import { parseTime } from '/@/utils/format';
-import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updateUnitAPI } from '/@/api/logistic';
+import { parseTime, jsonToHump } from '/@/utils/format';
+import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '/@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
@@ -231,6 +231,7 @@ const editHousingTask = (_unit, _task) => {
     taskType: _task.taskType,
     packageId: _unit.packageId,
   });
+  jsonToHump(_unit); // TODO: bug, jsonToHump failed in query API
   unitItem.value = _unit;
   dialogHousingVisible.value = true;
 };
@@ -245,8 +246,8 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 const deletePackage = (packageId) => {
-
   deletePackageAPI(packageId).then(() => {
+    console.log('packageId: ', packageId);
     fetchList();
   });
 };
@@ -262,7 +263,6 @@ const handleDelSelected = () => {
 
 const viewItemSerial = (_unitSerial) => {
   queryUnitsAPI({ serial: _unitSerial }).then((_data) => {
-    unitItem.value = _data[0];
     drawerUnitVisible.value = true;
   });
 };
@@ -277,7 +277,7 @@ const handleUpdateUnitStatus = (unit) => {
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {
-          updateUnitAPI(unit.serial, unit);
+          updatePackageUnitAPI(unit.packageId, unit.id, unit);
         } else {
           fetchList();
         }

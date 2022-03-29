@@ -154,11 +154,11 @@ const handleShipment = (type) => {
 const removePackage = (idx, shipmentId) => {
   packageArr.value.splice(idx, 1);
 };
-const submitPackage = (shipment, taskId, packageIdx) => {
-  console.log('shipment, taskId, packageIdx: ', shipment, taskId, packageIdx);
+const submitPackage = (data, taskId, packageIdx) => {
+  packageArr.value[packageIdx] = data;
 };
-const updatePackage = (data, shipmentIdx) => {
-  console.log('shipmentIdx: ', shipmentIdx);
+const updatePackage = (data, packageIdx) => {
+  packageArr.value[packageIdx] = data;
 };
 
 </script>
