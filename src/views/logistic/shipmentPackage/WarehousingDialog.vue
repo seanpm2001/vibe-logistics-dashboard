@@ -8,28 +8,28 @@
   >
     <el-form
       ref="dataForm"
-      v-model="warehousingItem"
+      v-model="warehousingTaskInfo"
     >
       <el-form-item label="Target Warehouse">
-        <el-tag>#{{warehouseEnum[warehousingItem.targetId]}}</el-tag>
+        <el-tag>#{{warehouseEnum[warehousingTaskInfo.targetId]}}</el-tag>
       </el-form-item>
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Origin Warehouse Task">
-          <el-tag>#{{warehousingItem.taskId}}</el-tag>
+          <el-tag>#{{warehousingTaskInfo.taskId}}</el-tag>
         </el-form-item>
         <el-form-item label="Origin Warehouse Task Type">
-          <el-tag>#{{taskTypeEnum[warehousingItem.taskType]}}</el-tag>
+          <el-tag>#{{taskTypeEnum[warehousingTaskInfo.taskType]}}</el-tag>
         </el-form-item>
       </el-row>
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Package ID">
-          <el-tag>#{{unitItem.packageId}}</el-tag>
+          <el-tag>#{{warehousingItem.packageId}}</el-tag>
         </el-form-item>
         <el-form-item label="Package Status">
           <el-tag>computed value</el-tag>
         </el-form-item>
         <el-form-item label="Unit Condition">
-          <el-select v-model="unitItem.condition" placeholder="Please select" clearable>
+          <el-select v-model="warehousingItem.condition" placeholder="Please select" clearable>
             <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
@@ -39,21 +39,21 @@
 
       <el-row justify="space-between" :gutter="3">
         <el-form-item label="Serial">
-          <el-tag>#{{unitItem.serial}}</el-tag>
+          <el-tag>#{{warehousingItem.serial}}</el-tag>
         </el-form-item>
-        <el-checkbox v-model="unitItem.shipmentDamage">
+        <el-checkbox v-model="warehousingItem.shipmentDamage">
           Shipping Damaged
         </el-checkbox>
         <el-form-item label="Package Box Condition">
-          <el-select v-model="unitItem.packageBoxCondition" placeholder="Please select" clearable>
+          <el-select v-model="warehousingItem.packageBoxCondition" placeholder="Please select" clearable>
             <el-option v-for="(item, key) in packageConditionEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
         <el-form-item label="Note(return reason)">
-          <el-input v-model="unitItem.shipmentDamageNote" placeholder="Note"/>
+          <el-input v-model="warehousingItem.shipmentDamageNote" placeholder="Note"/>
         </el-form-item>
         <el-form-item label="Accessory Consumption">
-          <el-select v-model="unitItem.accessories[0]" placeholder="Please select" clearable>
+          <el-select v-model="warehousingItem.accessories[0]" placeholder="Please select" clearable>
             <el-option v-for="(item, key) in {PACKAGE_BOX: 'Package Box'}" :key="item" :label="item" :value="key" />
           </el-select>
           <el-input-number  placeholder="0"/>
@@ -89,10 +89,6 @@ import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '/@/enums/
 import { updatePackageUnitAPI } from '/@/api/logistic';
 
 const props = defineProps({
-  emptyWarehousingItem: {
-    type: Object,
-    required: true
-  },
   warehouseEnum: {
     type: Object,
     required: true
@@ -104,8 +100,8 @@ const props = defineProps({
 });
 
 /* Start Data */
+const warehousingTaskInfo = inject('warehousingTaskInfo');
 const warehousingItem = inject('warehousingItem');
-const unitItem = inject('unitItem');
 const dialogHousingVisible = inject('dialogHousingVisible');
 
 const isShippingDamaged = ref(null);
@@ -124,10 +120,9 @@ const beforeCloseDialog = done => {
 };
 
 const submitWarehousing = () => {
-  const unit = unitItem.value;
+  const unit = warehousingItem.value;
   updatePackageUnitAPI(unit.packageId, unit.id, unit).then(_data => {
-    console.log('_data: ', _data);
-    unitItem.value = _data;
+    warehousingItem.value = _data;
   });
 };
 </script>

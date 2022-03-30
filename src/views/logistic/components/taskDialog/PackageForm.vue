@@ -122,7 +122,7 @@ const store = useStore();
 const role = store.getters.role;
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role));
 
-const taskProducts = Object.assign({}, taskItem.value.units);
+const taskProducts = Object.assign({}, taskItem.value.products);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
 

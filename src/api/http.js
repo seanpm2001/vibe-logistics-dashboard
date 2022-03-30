@@ -60,12 +60,12 @@ requester.interceptors.response.use(
     // eslint-disable-next-line no-undef
     tryHideFullScreenLoading();
     const res = response.data;
-
     if (response.status === 401) {
       store.dispatch('user/resetToken').then(() => {
         location.reload();
       });
-      return Promise.reject(new Error(response.msg || 'Error'));
+      ElMessage.error('The token has expired. Please log in again', 3);
+      return Promise.reject(new Error('The token has expired. Please log in again'));
     }
     jsonToHump(res);
     return res;

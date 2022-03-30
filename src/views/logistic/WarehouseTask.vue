@@ -177,14 +177,23 @@ const taskItem = ref({
   orderId: null,
   sourceId: null,
   targetId: null,
-  type: null,
+  taskType: null,
   newAddress: null,
   note: null,
-  units: [{
+  products: [{
     sku: null,
     condition: null,
     quantity: null,
+    serialNote: null,
   }],
+  // shipment info
+  carrier: null,
+  deliveryCost: null,
+  liftgateCost: null,
+  limitedAccessCost: null,
+  residentialCost: null,
+  insideCost: null,
+  insureCostL: null,
 });
 
 const specifySerailArr = ref([{
@@ -208,7 +217,7 @@ provide('taskOrderItem', taskOrderItem);
 const calTaskStatus = (taskType, packages) => {
   packages.forEach(item => {
     item?.units.forEach(unit => {
-      console.log('unit: ', unit);
+      // console.log('unit: ', unit);
 
     });
   });

@@ -66,9 +66,9 @@ export const inventoryTaskTypeEnum = {
   MOVE: 'Move'
 };
 export const taskReasonEnum = {
-  ITEM_UPGRADE: 'Item Upgrade',
-  ITEM_DEGRADE: 'Item Degrade',
-  ITEM_DEMAGED: 'Item Damaged',
+  ITEM_UPGRADE: 'Unit Upgrade',
+  ITEM_DEGRADE: 'Unit Degrade',
+  ITEM_DEMAGED: 'Unit Damaged',
   HARDWARE_DEFECT: 'Hardware Defect',
   PACKAGE_LOST: 'Package Lost'
 };

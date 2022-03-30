@@ -215,7 +215,7 @@
     >
       <el-row align="middle">
         Please select Warehouse: &ensp;
-        <el-select v-model="targetId" placeholder="Please select">
+        <el-select v-model="sourceId" placeholder="Please select">
           <el-option
             v-for="(item, key) in warehouseEnum"
             :key="item"
@@ -286,7 +286,7 @@ const taskItem = ref({
   taskType: null,
   newAddress: null,
   note: null,
-  units: [{
+  products: [{
     sku: null,
     condition: null,
     quantity: null,
@@ -371,9 +371,9 @@ function assignSelectedOrders(_sourceWHId, _selectedArr) {
   });
 }
 
-const targetId = ref(null);
+const sourceId = ref(null);
 const assignOrders = () => {
-  const sourceWHId = targetId.value;
+  const sourceWHId = sourceId.value;
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
     ElMessage.error('Please select a target warehouse!', 3);

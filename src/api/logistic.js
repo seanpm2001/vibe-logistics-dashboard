@@ -14,7 +14,7 @@ const handleReqElMsg = (fn, action, name, identifier) => {
       .then(_data => {
         item = _data?.item;
         resolve(item);
-        ElMessage.success(`${action} ${name} (ID: ${isCreation ? _data.id : identifier}) successfully.`, 3);
+        ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`, 3);
       })
       .catch(err => {
         ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`, 3);

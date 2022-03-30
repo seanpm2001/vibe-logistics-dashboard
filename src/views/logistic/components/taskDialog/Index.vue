@@ -64,10 +64,10 @@
               <el-checkbox :key="true" :label="true">true</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <template v-for="(item, index) in taskItem.units" :key="item.sku">
+          <template v-for="(item, index) in taskItem.products" :key="item.sku">
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
-              <svg-icon class="icon" :style="taskItem.units.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
+              <svg-icon class="icon" :style="taskItem.products.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
               <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
                 <el-select
                   v-model="item.sku" :disabled="notCommonPermission" placeholder="Please select"
@@ -177,7 +177,7 @@ const role = store.getters.role;
 const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role));
 
 const unitList = computed(() => {
-  const taskProducts = taskItem.value.units;
+  const taskProducts = taskItem.value.products;
   return store.getters['unitList'].filter(item => {
     for (const i in taskProducts) {
       if (item.sku === taskProducts[i].sku) return true;
@@ -200,8 +200,6 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
-const isDialogPattern = type => props.dialogStatus === type;
-
 const handleWarehouseTask = _type => {
   if (_type === 'create') {
     createTaskAPI(taskItem.value).then(_data => {
@@ -216,18 +214,18 @@ const handleWarehouseTask = _type => {
 };
 
 const onSpecifySerialChange = (_idx, _type) => {
-  const serialArr = specifySerailArr.vallue;
+  const serialArr = specifySerailArr.value;
   _type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(_idx--, 1);
 };
 
 const onProductChange = (_idx, _type) => {
-  const units = taskItem.value.units;
+  const products = taskItem.value.products;
   _type === 'add'
-    ? units.push({sku: null, condition: null, quantity: null})
-    : units.splice(_idx--, 1);
+    ? products.push({sku: null, condition: null, quantity: null})
+    : products.splice(_idx--, 1);
 };
 
-const onHoldTask = () => {
+const onHoldTask = () => { // TODO: onHoldTask
   console.log('onHoldTask');
 };
 
@@ -246,8 +244,7 @@ const beforeCloseDialog = (done) => {
     return;
   }
 
-  const isChanged =
-    JSON.stringify(contrastData.value) !== JSON.stringify(taskItem.value);
+  const isChanged = JSON.stringify(contrastData.value) !== JSON.stringify(taskItem.value);
   if (!isChanged) {
     resetForm();
     done();

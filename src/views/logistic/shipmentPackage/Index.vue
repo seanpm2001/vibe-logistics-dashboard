@@ -54,19 +54,28 @@
           {{ row.task.carrier }}
         </template>
       </el-table-column>
-      <el-table-column label="Units's Serials: Status" width="480px">
+      <el-table-column label="Units's Serials: Status" width="560px">
         <template v-slot="{ row }">
           <template v-for="unit in row.units" :key="unit">
             <span class="link" @click="viewItemSerial(unit.serial)">{{ unit.serial }}</span>
+            <el-button
+              v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+              size="small"
+              type="primary"
+              @click="checkUnit(unit, row.task)"
+            >
+              Check
+            </el-button>
             <el-select
               v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
               v-model="unit.status"
-              style="width: 210px; margin-right: 10px;"
+              style="width: 210px; margin: 0 10px;"
               placeholder="Please select"
               @change="handleUpdateUnitStatus(unit)"
             >
               <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
             </el-select>
+            
             <el-button
               v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
               v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
@@ -137,7 +146,6 @@
     <HousingDialog
       ref="housingDialog"
       :warehouseEnum="warehouseEnum"
-      :emptyWarehousingItem="emptyWarehousingItem"
       :dialogStatus="dialogStatus"
     />
   </div>
@@ -172,26 +180,27 @@ const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
 const unitItem = ref({});
+const warehousingItem = ref({});
 
 const listLoading = ref(true);
 const drawerUnitVisible = ref(false);
 const dialogStatus = ref('');
 const multipleSelection = ref([]);
 
-const warehousingItem = ref({
+const warehousingTaskInfo = ref({
   id: null,
   targetId: null,
   packageId: null,
   taskId: null,
   taskType: null,
 });
-const emptyWarehousingItem = JSON.parse(JSON.stringify(warehousingItem))._value;
 
 const dialogHousingVisible = ref(false);
 
-provide('warehousingItem', warehousingItem);
+provide('warehousingTaskInfo', warehousingTaskInfo);
 provide('dialogHousingVisible', dialogHousingVisible);
 provide('unitItem', unitItem);
+provide('warehousingItem', warehousingItem);
 /* End data */
 const ifMeetHousingCondtion = (taskType, unitStatus) => {
   if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
@@ -224,15 +233,20 @@ const handleCloseDrawer = (done) => {
   done();
 };
 
+const checkUnit = (_unit, _task) => {
+  console.log('_unit, _task: ', _unit, _task);
+
+};
+
 const editHousingTask = (_unit, _task) => {
-  warehousingItem.value = Object.assign({}, {
+  warehousingTaskInfo.value = Object.assign({}, {
     taskId: _task.id,
     targetId: _task.targetId,
     taskType: _task.taskType,
     packageId: _unit.packageId,
   });
   jsonToHump(_unit); // TODO: bug, jsonToHump failed in query API
-  unitItem.value = _unit;
+  warehousingItem.value = _unit;
   dialogHousingVisible.value = true;
 };
 
@@ -263,6 +277,7 @@ const handleDelSelected = () => {
 
 const viewItemSerial = (_unitSerial) => {
   queryUnitsAPI({ serial: _unitSerial }).then((_data) => {
+    unitItem.value = _data[0];
     drawerUnitVisible.value = true;
   });
 };
