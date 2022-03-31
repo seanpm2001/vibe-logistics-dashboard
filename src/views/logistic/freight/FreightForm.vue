@@ -211,7 +211,7 @@ const createFreight = () => {
 };
 
 const updateFreight = () => {
-  proxy.$parent.validate((valid) => {
+  proxy.$refs.dataForm.validate((valid) => {
     if (valid) {
       const updates = freightItem.value;
       updateFreightAPI(updates.id, updates).then(_data => {

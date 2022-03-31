@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item v-if="isReturnOrRepalce" label="Return/Replace reason">
             <el-select
-              v-model="taskItem.reason" :disabled="notCommonPermission" placeholder="Please select"
+              v-model="taskItem.returnReason" :disabled="notCommonPermission" placeholder="Please select"
               filterable allow-create default-first-option
             >
               <el-option v-for="(item, key) in taskReasonEnum" :key="item" :label="item" :value="key" />

@@ -56,6 +56,11 @@
       </el-table-column>
       <el-table-column label="Units's Serials: Status" width="560px">
         <template v-slot="{ row }">
+          <!-- TODO: 
+            v-for="unit in row.task.shipmentUnits"
+              serial + check
+            v-for="unit in row.units"
+              serial + status + warehousing -->
           <template v-for="unit in row.units" :key="unit">
             <span class="link" @click="viewItemSerial(unit.serial)">{{ unit.serial }}</span>
             <el-button
@@ -71,7 +76,7 @@
               v-model="unit.status"
               style="width: 210px; margin: 0 10px;"
               placeholder="Please select"
-              @change="handleUpdateUnitStatus(unit)"
+              @change="onUnitStatusChange(unit)"
             >
               <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
             </el-select>
@@ -148,12 +153,16 @@
       :warehouseEnum="warehouseEnum"
       :dialogStatus="dialogStatus"
     />
+
+    <CheckUnitDialog />
   </div>
 </template>
 
-<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>
+import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from '../components/UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
+import CheckUnitDialog from './CheckUnitDialog.vue';
 import { parseTime, jsonToHump } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '/@/api/logistic';
 import {
@@ -196,9 +205,11 @@ const warehousingTaskInfo = ref({
 });
 
 const dialogHousingVisible = ref(false);
+const dialogCheckUnitVisible = ref(false);
 
 provide('warehousingTaskInfo', warehousingTaskInfo);
 provide('dialogHousingVisible', dialogHousingVisible);
+provide('dialogCheckUnitVisible', dialogCheckUnitVisible);
 provide('unitItem', unitItem);
 provide('warehousingItem', warehousingItem);
 /* End data */
@@ -235,19 +246,26 @@ const handleCloseDrawer = (done) => {
 
 const checkUnit = (_unit, _task) => {
   console.log('_unit, _task: ', _unit, _task);
-
+  dialogCheckUnitVisible.value = true;
 };
 
 const editHousingTask = (_unit, _task) => {
-  warehousingTaskInfo.value = Object.assign({}, {
-    taskId: _task.id,
-    targetId: _task.targetId,
-    taskType: _task.taskType,
-    packageId: _unit.packageId,
+  // 更新unitItem
+  queryUnitsAPI({ serial: _unit.serial }).then((_data) => {
+    unitItem.value = _data[0] || unitItem.value;
+    // 更新task info related
+    warehousingTaskInfo.value = Object.assign({}, {
+      taskId: _task.id,
+      targetId: _task.targetId,
+      taskType: _task.taskType,
+      packageId: _unit.packageId,
+    });
+    jsonToHump(_unit); // TODO: bug, jsonToHump failed in query API
+    // 初始化 accessories for v-model="warehousingItem.accessories[0].quantity/productCode"
+    _unit.accessories[0] = Object.assign({ productCode: null, quantity: null }, _unit.accessories[0]);
+    warehousingItem.value = _unit;
+    dialogHousingVisible.value = true;
   });
-  jsonToHump(_unit); // TODO: bug, jsonToHump failed in query API
-  warehousingItem.value = _unit;
-  dialogHousingVisible.value = true;
 };
 
 const handleFilter = () => {
@@ -282,7 +300,7 @@ const viewItemSerial = (_unitSerial) => {
   });
 };
 
-const handleUpdateUnitStatus = (unit) => {
+const onUnitStatusChange = (unit) => {
   ElMessageBox.confirm(
     'Update it?',
     'Warning',

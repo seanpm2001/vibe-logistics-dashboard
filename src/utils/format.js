@@ -123,15 +123,18 @@ export function jsonToHump(obj) {
 // JSON对象的key值转换为下划线格式 顺便删除‘空字段’
 export function jsonToUnderline(obj) {
   if (obj instanceof Array) {
-    obj.forEach(function(v, i) {
-      jsonToUnderline(v);
+    obj.forEach(function(item, idx) {
+      jsonToUnderline(item);
+      // if (JSON.stringify(obj[idx]) === '{}')
+      //   obj.splice(idx, 1);
     });
   } else if (obj instanceof Object) {
     Object.keys(obj).forEach(function(key) {
-      if (!obj[key]) {
-        delete obj[key];
-        return;
-      }
+      // if (!obj[key]) {
+      //   delete obj[key];
+      //   return;
+      // }
+
       const newKey = hump2Underline(key);
       if (newKey !== key) {
         obj[newKey] = obj[key];

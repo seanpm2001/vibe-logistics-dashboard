@@ -29,7 +29,12 @@
           <el-tag>computed value</el-tag>
         </el-form-item>
         <el-form-item label="Unit Condition">
-          <el-select v-model="warehousingItem.condition" placeholder="Please select" clearable>
+          <el-select
+            v-model="unitItem.condition"
+            placeholder="Please select"
+            clearable
+            @change="onUnitConditionChange"
+          >
             <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
           </el-select>
         </el-form-item>
@@ -53,10 +58,10 @@
           <el-input v-model="warehousingItem.shipmentDamageNote" placeholder="Note"/>
         </el-form-item>
         <el-form-item label="Accessory Consumption">
-          <el-select v-model="warehousingItem.accessories[0]" placeholder="Please select" clearable>
-            <el-option v-for="(item, key) in {PACKAGE_BOX: 'Package Box'}" :key="item" :label="item" :value="key" />
+          <el-select v-model="warehousingItem.accessories[0].productCode" placeholder="Please select" clearable>
+            <el-option v-for="(item, key) in packageProductEnum" :key="item" :label="item" :value="key" />
           </el-select>
-          <el-input-number  placeholder="0"/>
+          <el-input-number placeholder="0" v-model="warehousingItem.accessories[0].quantity" />
         </el-form-item>
       </el-row>
       <el-card>
@@ -85,8 +90,9 @@
 </template>
 
 <script setup>
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '/@/enums/logistic';
-import { updatePackageUnitAPI } from '/@/api/logistic';
+import { updateUnitAPI, updatePackageUnitAPI } from '/@/api/logistic';
 
 const props = defineProps({
   warehouseEnum: {
@@ -102,6 +108,7 @@ const props = defineProps({
 /* Start Data */
 const warehousingTaskInfo = inject('warehousingTaskInfo');
 const warehousingItem = inject('warehousingItem');
+const unitItem = inject('unitItem');
 const dialogHousingVisible = inject('dialogHousingVisible');
 
 const isShippingDamaged = ref(null);
@@ -112,6 +119,12 @@ const bundleItem = ref({
   stylus: null,
 });
 
+const packageProductEnum = {
+  '55V1BPB': '55 V1 Package Box',
+  '55S1BPB': '55 S1 Package Box',
+  '75ProBPB': '75 Pro Package Box'
+};
+
 /* End Data */
 const isDialogPattern = (type) => props.dialogStatus === type;
 
@@ -119,10 +132,30 @@ const beforeCloseDialog = done => {
   done();
 };
 
+const onUnitConditionChange = () => {
+  const unit = unitItem.value;
+  ElMessageBox.confirm(
+    'Update it?',
+    'Warning',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          updateUnitAPI(unit.serial, unit);
+        } else {
+          fetchList();
+        }
+      },
+    }
+  );
+};
+
 const submitWarehousing = () => {
   const unit = warehousingItem.value;
   updatePackageUnitAPI(unit.packageId, unit.id, unit).then(_data => {
-    warehousingItem.value = _data;
+    warehousingItem.value = Object.assign(warehousingItem.value, _data);
   });
 };
 </script>

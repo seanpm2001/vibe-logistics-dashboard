@@ -149,6 +149,9 @@ export const productIconMap = {
   '75ProSP': '75 Stand Pallet',
   '55S1B': 'product-board',
   '55P1B': 'product-board',
+  '55V1BPB': '55 V1 Package Box',
+  '55S1BPB': '55 S1 Package Box',
+  '75ProBPB': '75 Pro Package Box'
 };
 
 export const skuProdcutEnum = {
