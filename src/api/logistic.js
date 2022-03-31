@@ -204,9 +204,10 @@ export async function deletePackageAPI (packageId) {
 /* Warehousing API */
 export async function updatePackageUnitAPI(packageId, unitId, updates) {
   jsonToUnderline(updates);
-  handleReqElMsg(
+  const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
   );
+  return item;
 }
 
 /* 单个商品 Unit API */

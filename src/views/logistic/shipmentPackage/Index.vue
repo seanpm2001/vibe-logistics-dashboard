@@ -150,6 +150,7 @@
       ref="housingDialog"
       :warehouseEnum="warehouseEnum"
       :dialogStatus="dialogStatus"
+      @findUnit="findUnit"
     />
 
     <CheckUnitDialog />
@@ -248,10 +249,15 @@ const checkUnit = (_unit, _task) => {
   dialogCheckUnitVisible.value = true;
 };
 
+const findUnit = (unitSerial) => {
+  return queryUnitsAPI({ serial: unitSerial }).then((_data) => {
+    unitItem.value = _data[0] || unitItem.value;
+  });
+};
+
 const editHousingTask = (_unit, _task) => {
   // 更新unitItem
-  queryUnitsAPI({ serial: _unit.serial }).then((_data) => {
-    unitItem.value = _data[0] || unitItem.value;
+  findUnit(_unit.serial).then(() => {
     // 更新task info related
     warehousingTaskInfo.value = Object.assign({}, {
       taskId: _task.id,
@@ -293,8 +299,7 @@ const handleDelSelected = () => {
 };
 
 const viewItemSerial = (_unitSerial) => {
-  queryUnitsAPI({ serial: _unitSerial }).then((_data) => {
-    unitItem.value = _data[0];
+  findUnit(_unitSerial).then(() => {
     drawerUnitVisible.value = true;
   });
 };

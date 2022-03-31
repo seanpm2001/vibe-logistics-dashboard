@@ -105,6 +105,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['findUnit']);
+
 /* Start Data */
 const warehousingTaskInfo = inject('warehousingTaskInfo');
 const warehousingItem = inject('warehousingItem');
@@ -145,7 +147,7 @@ const onUnitConditionChange = () => {
         if (action === 'confirm') {
           updateUnitAPI(unit.serial, unit);
         } else {
-          fetchList();
+          emit('findUnit', unit.serial);
         }
       },
     }
@@ -154,8 +156,8 @@ const onUnitConditionChange = () => {
 
 const submitWarehousing = () => {
   const unit = warehousingItem.value;
-  updatePackageUnitAPI(unit.packageId, unit.id, unit).then(_data => {
-    warehousingItem.value = Object.assign(warehousingItem.value, _data);
+  updatePackageUnitAPI(unit.packageId, unit.id, unit).then((_data) => {
+    warehousingItem.value = _data || warehousingItem.value;
   });
 };
 </script>

@@ -457,10 +457,6 @@ const handleSelectionChange = (_selectedArr) => {
   multipleSelection.value = _selectedArr.sort((pre, next) => next.orderId > pre.orderId);
 };
 
-const handlePagination = (_config) => {
-  fetchList();
-};
-
 const resetForm = () => {};
 
 // const beforeCloseDialog = done => {
