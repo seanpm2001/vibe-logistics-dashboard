@@ -208,7 +208,7 @@ const handleWarehouseTask = _type => {
     });
   } else {
     updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
-      taskItem.value = _data;
+      taskItem.value = _data || taskItem.value;
     });
   }
 };

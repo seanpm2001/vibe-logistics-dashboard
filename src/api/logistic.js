@@ -156,6 +156,7 @@ export async function findTaskAPI (taskId) {
   return item;
 }
 export async function updateTaskAPI (taskId, updates) {
+  delete updates['packages'];
   jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`/warehouse/task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
