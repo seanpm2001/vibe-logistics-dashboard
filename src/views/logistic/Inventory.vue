@@ -187,11 +187,9 @@
     </el-table>
 
     <Pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
-      v-model:page="listQuery.page"
-      v-model:limit="listQuery.limit"
-      @pagination="handlePagination"
+      @fetchList="fetchList"
     />
 
     <TaskDialog
@@ -246,6 +244,7 @@ const taskOrderItem = null;
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
+provide('listQuery', listQuery);
 /* End Data */
 
 const temp = ref({

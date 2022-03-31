@@ -139,9 +139,7 @@
     <Pagination
       v-show="total > 0"
       :total="total"
-      v-model:page="listQuery.page"
-      v-model:limit="listQuery.perPage"
-      @pagination="handlePagination"
+      @fetchList="fetchList"
     />
 
     <el-drawer v-model="drawerUnitVisible" title="Unit Info" size="50%" direction="ltr">
@@ -212,6 +210,7 @@ provide('dialogHousingVisible', dialogHousingVisible);
 provide('dialogCheckUnitVisible', dialogCheckUnitVisible);
 provide('unitItem', unitItem);
 provide('warehousingItem', warehousingItem);
+provide('listQuery', listQuery);
 /* End data */
 const ifMeetHousingCondtion = (taskType, unitStatus) => {
   if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
@@ -236,7 +235,7 @@ const fetchList = () => {
 };
 
 const handlePagination = (_config) => {
-  listQuery.value = Object.assign(listQuery.value, _config);
+  Object.assign(listQuery.value, _config);
   fetchList();
 };
 

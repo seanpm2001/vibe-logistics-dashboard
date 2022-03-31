@@ -202,11 +202,9 @@
     <Pagination
       v-show="total > 0"
       :total="total"
-      v-model:page="listQuery.page"
-      v-model:limit="listQuery.perPage"
-      @pagination="handlePagination"
+      @fetchList="fetchList"
     />
-
+    
     <el-dialog
       width="32%"
       title="Assign Warehouse"
@@ -312,12 +310,6 @@ const contrastData = ref(null);
 
 const taskPermissionArr = ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'];
 
-provide('dialogTaskVisible', dialogTaskVisible);
-provide('taskItem', taskItem);
-provide('specifySerailArr', specifySerailArr);
-provide('taskOrderItem', taskOrderItem);
-/* End data */
-
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
@@ -328,6 +320,13 @@ const listQuery = ref({
   search: null,
   orderFrom: null,
 });
+
+provide('dialogTaskVisible', dialogTaskVisible);
+provide('taskItem', taskItem);
+provide('specifySerailArr', specifySerailArr);
+provide('taskOrderItem', taskOrderItem);
+provide('listQuery', listQuery);
+/* End data */
 
 function fetchList() {
   listLoading.value = true;
@@ -459,8 +458,7 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 const handlePagination = (_config) => {
-  console.log('_config: ', _config);
-  listQuery.value = Object.assign(listQuery.value, _config);
+  fetchList();
 };
 
 const resetForm = () => {};
@@ -510,7 +508,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   store.commit('logistic/SET_LIST_QUERY', {
     query: listQuery.value,
-    perPage: listQuery.perPage,
     pageName: 'order',
   });
 });

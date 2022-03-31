@@ -118,9 +118,7 @@
     <Pagination
       v-show="total > 0"
       :total="total"
-      v-model:page="listQuery.page"
-      v-model:limit="listQuery.perPage"
-      @pagination="handlePagination"
+      @fetchList="fetchList"
     />
 
     <TaskDialog
@@ -213,6 +211,7 @@ provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
+provide('listQuery', listQuery);
 /* End Data */
 
 const calTaskStatus = (taskType, packages) => {
@@ -251,7 +250,7 @@ const handleFilter = () => {
 };
 
 const handlePagination = (_config) => {
-  listQuery.value = Object.assign(listQuery.value, _config);
+  Object.assign(listQuery.value, _config);
   fetchList();
 };
 
@@ -296,6 +295,7 @@ onMounted(() => {
   initGlobalData();
 
   listQuery.value = store.getters.listQuery['task'];
+  console.log('listQuery.value: ', listQuery.value);
   fetchList();
 });
 

@@ -165,9 +165,7 @@
     <Pagination
       v-show="total > 0"
       :total="total"
-      v-model:page="listQuery.page"
-      v-model:limit="listQuery.perPage"
-      @pagination="handlePagination"
+      @fetchList="fetchList"
     />
 
     <el-dialog
@@ -257,6 +255,7 @@ provide('freightItem', freightItem);
 provide('contrastData', contrastData);
 provide('batchArr', batchArr);
 provide('dialogStatus', dialogStatus);
+provide('listQuery', listQuery);
 /* end data */
 
 const isDialogPattern = (type) => dialogStatus.value === type;
@@ -286,7 +285,7 @@ const fetchList = () => {
 };
 
 const handlePagination = (_config) => {
-  listQuery.value = Object.assign(listQuery.value, _config);
+  Object.assign(listQuery.value, _config);
   fetchList();
 };
 

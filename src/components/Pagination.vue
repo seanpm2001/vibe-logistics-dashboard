@@ -2,14 +2,14 @@
   <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
       :background="background"
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
+      v-model:current-page="listQuery.page"
+      v-model:page-size="listQuery.perPage"
       :layout="layout"
       :page-sizes="pageSizes"
       :total="total"
       v-bind="$attrs"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+      @size-change="onQueryChange"
+      @current-change="onQueryChange"
     />
   </div>
 </template>
@@ -19,18 +19,12 @@ import { scrollTo } from '/@/utils/scroll-to';
 
 const { proxy } = getCurrentInstance();
 
+const listQuery = inject('listQuery');
+
 const props = defineProps({
   total: {
     required: true,
     type: Number,
-  },
-  page: {
-    type: Number,
-    default: 1,
-  },
-  perPage: {
-    type: Number,
-    default: 10,
   },
   pageSizes: {
     type: Array,
@@ -56,20 +50,10 @@ const props = defineProps({
   },
 });
 
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['pagination']);
+const emit = defineEmits(['fetchList']);
 
-const currentPage = computed((val) => props.page);
-const pageSize = computed((val) => props.perPage);
-
-const handleSizeChange = (val) => {
-  emit('pagination', { page: props.page, perPage: val });
-  if (props.autoScroll) {
-    scrollTo(0, 800);
-  }
-};
-const handleCurrentChange = (val) => {
-  emit('pagination', { page: val, perPage: props.pageSize });
+const onQueryChange = (val) => {
+  emit('fetchList');
   if (props.autoScroll) {
     scrollTo(0, 800);
   }
