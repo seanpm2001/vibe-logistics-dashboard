@@ -64,7 +64,7 @@
           {{ row.lastModified }}
         </template>
       </el-table-column>
-      <el-table-column label="Status" width="120px" align="center">
+      <el-table-column label="Status" width="280px" align="center">
         <template v-slot="{ row }">
           <el-tag>
             {{calTaskStatus(row.taskType, row.packages)}}
@@ -223,31 +223,40 @@ const calTaskStatus = (taskType, packages) => {
   });
   const setKey = Object.keys(statusSet);
   const setKeyLen = setKey.length;
+  console.log('statusSet: ', statusSet);
 
-  if (setLen === 1) {
-    const unitStatus = statuSet[setKey[0]];
+  if (setKeyLen === 1) {
+    const unitStatus = statusSet[setKey[0]];
     switch(unitStatus) {
     case 'DELIVERING':
+    case 'RETURNING':
       return 'Fulfilling';
     case 'COMPLETE_WITH_DELIVERED':
       return 'Complete with success';
-    
+    case 'COMPLETE_WITH_RETURNED':
+    case 'LOST':
+      return 'Complete with failure';
+    case 'DELIVERED_BUT_UNCHECKED':
+      if (taskType !== 'FULFILLMENT' || taskType !== 'REPLACE')
+        return 'Delivered but imcomplete';
+      break;
+    case 'RETURNED_BUT_UNCHECKED':
+      if (taskType !== 'RETURN')
+        return 'Failed but imcomplete';
+      break;
     }
   }
-  // Warehouse Task Type
-  switch (taskType) {
-  case 'FULFILLMENT':
-  case 'REPLACE':
-
-    break;
-  case 'RETURN':
-    break;
-  case 'MOVE':
-    break;
-  case 'RETURN_TO_REPAIR':
-    break;
+  let res = '';
+  if (statusSet['LOST'] || statusSet['RETURNED_BUT_UNCHECKED'] || statusSet['RETURNING']) {
+    res = res ? res + ' and Failed' : 'Failed';
   }
-  console.log('-------');
+  if (statusSet['DELIVERING'] || statusSet['RETURNING']) {
+    res = res ? res + ' and Incomplete' : 'Incomplete';
+  } 
+  if (statusSet['DELIVERED_BUT_UNCHECKED'] || statusSet['COMPLETE_WITH_DELIVERED'] || statusSet['COMPLETE_WITH_RETURNED'] || statusSet['RETURNED_BUT_UNCHECKED']) {
+    res = res ? res + ' and Complete' : 'Complete';
+  }
+  return res;
 };
 
 const fetchList = () => {
