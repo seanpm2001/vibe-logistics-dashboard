@@ -215,12 +215,26 @@ provide('listQuery', listQuery);
 /* End Data */
 
 const calTaskStatus = (taskType, packages) => {
+  const statusSet = {};
   packages.forEach(item => {
     item?.units.forEach(unit => {
-      // console.log('unit: ', unit);
-
+      statusSet[unit.status] = statusSet[unit.status] || 0 + 1;
     });
   });
+  const setKey = Object.keys(statusSet);
+  const setKeyLen = setKey.length;
+
+  if (setLen === 1) {
+    const unitStatus = statuSet[setKey[0]];
+    switch(unitStatus) {
+    case 'DELIVERING':
+      return 'Fulfilling';
+    case 'COMPLETE_WITH_DELIVERED':
+      return 'Complete with success';
+    
+    }
+  }
+  // Warehouse Task Type
   switch (taskType) {
   case 'FULFILLMENT':
   case 'REPLACE':
@@ -233,6 +247,7 @@ const calTaskStatus = (taskType, packages) => {
   case 'RETURN_TO_REPAIR':
     break;
   }
+  console.log('-------');
 };
 
 const fetchList = () => {
