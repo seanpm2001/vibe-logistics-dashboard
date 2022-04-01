@@ -64,7 +64,7 @@
           {{ row.lastModified }}
         </template>
       </el-table-column>
-      <el-table-column label="Status" width="280px" align="center">
+      <el-table-column label="Task Units Status" width="260px" align="center">
         <template v-slot="{ row }">
           <el-tag>
             {{calTaskStatus(row.taskType, row.packages)}}
@@ -248,13 +248,13 @@ const calTaskStatus = (taskType, packages) => {
   }
   let res = '';
   if (statusSet['LOST'] || statusSet['RETURNED_BUT_UNCHECKED'] || statusSet['RETURNING']) {
-    res = res ? res + ' and Failed' : 'Failed';
+    res = res ? res + ' | Failed' : 'Failed';
   }
   if (statusSet['DELIVERING'] || statusSet['RETURNING']) {
-    res = res ? res + ' and Incomplete' : 'Incomplete';
+    res = res ? res + ' | Incomplete' : 'Incomplete';
   } 
   if (statusSet['DELIVERED_BUT_UNCHECKED'] || statusSet['COMPLETE_WITH_DELIVERED'] || statusSet['COMPLETE_WITH_RETURNED'] || statusSet['RETURNED_BUT_UNCHECKED']) {
-    res = res ? res + ' and Complete' : 'Complete';
+    res = res ? res + ' | Complete' : 'Complete';
   }
   return res;
 };

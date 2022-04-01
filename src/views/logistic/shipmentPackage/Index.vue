@@ -149,7 +149,6 @@
     <HousingDialog
       ref="housingDialog"
       :warehouseEnum="warehouseEnum"
-      :dialogStatus="dialogStatus"
       @findUnit="findUnit"
     />
 
@@ -192,7 +191,6 @@ const warehousingItem = ref({});
 
 const listLoading = ref(true);
 const drawerUnitVisible = ref(false);
-const dialogStatus = ref('');
 const multipleSelection = ref([]);
 
 const warehousingTaskInfo = ref({
