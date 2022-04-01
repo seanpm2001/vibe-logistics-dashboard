@@ -60,21 +60,25 @@ requester.interceptors.response.use(
     // eslint-disable-next-line no-undef
     tryHideFullScreenLoading();
     const res = response.data;
-    
+    if (response.status === 401) {
+      ElMessage.error('The token has expired. Please log in again', 3);
+      store.dispatch('user/resetToken').then(() => {
+        location.reload();
+      });
+      // return Promise.reject(new Error('The token has expired. Please log in again'));
+    }
     jsonToHump(res);
     return res;
   },
   error => {
-    console.log(error); // for debug
+    // eslint-disable-next-line no-undef
     tryHideFullScreenLoading();
-    if (error === 'Error: Request failed with status code 401') {
-      store.dispatch('user/resetToken').then(() => {
-        location.reload();
-      });
-      return Promise.reject('The token has expired. Please log in again');
-    }
-
-    ElMessage.error(error.message, 5);
+    console.log('http err' + error); // for debug
+    ElMessage({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    });
     return Promise.reject(error);
   }
 );

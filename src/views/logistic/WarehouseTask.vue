@@ -171,7 +171,7 @@ const dialogTaskVisible = ref(false);
 const multipleSelection = ref([]);
 const shipmentArr = ref([]);
 const taskItem = ref({
-  id: 0,
+  id: null,
   orderId: null,
   sourceId: null,
   targetId: null,
@@ -189,7 +189,7 @@ const taskItem = ref({
   carrier: null,
   deliveryCost: null,
   liftgateCost: null,
-  limitedAccessCost: null,
+  limitedCost: null,
   residentialCost: null,
   insideCost: null,
   insureCostL: null,

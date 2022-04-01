@@ -130,10 +130,10 @@ export function jsonToUnderline(obj) {
     });
   } else if (obj instanceof Object) {
     Object.keys(obj).forEach(function(key) {
-      // if (!obj[key]) {
-      //   delete obj[key];
-      //   return;
-      // }
+      if (!obj[key] && key === 'id') {
+        delete obj[key];
+        return;
+      }
 
       const newKey = hump2Underline(key);
       if (newKey !== key) {

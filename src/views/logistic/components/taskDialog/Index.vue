@@ -117,7 +117,7 @@
         <el-card>
           <ShipmentForm
             ref="shipmentForm"
-            :taskId="taskItem?.id"
+            :taskId="taskItem?.id || 0"
             :orderId="taskItem?.orderId"
             :warehouseEnum="warehouseEnum"
             :dialogStatus="dialogStatus"
@@ -144,7 +144,7 @@ import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
-  unitConditionEnum, reversedConditionEnum
+  unitConditionEnum
 } from '/@/enums/logistic';
 
 const props = defineProps({

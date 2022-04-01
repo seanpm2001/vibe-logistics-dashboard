@@ -42,7 +42,6 @@
             placeholder="Please select"
             filterable
             allow-create
-            default-first-option
           >
             <el-option
               v-for="unit in unitList"
@@ -163,12 +162,11 @@ const xmlFileList = ref([]);
 
 const handleUnitChange = (idx, type) => {
   const unitArr = taskPackage.value.units;
-  type === 'add' ? unitArr.push({ serial: null }) : unitArr.splice(idx, 1);
+  type === 'add' ? unitArr.push({ serial: null, status: 'DELIVERING' }) : unitArr.splice(idx, 1);
 };
 
 const handleDeletePackage = () => {
   const packageId = taskPackage.value?.id;
-  console.log('packageId: ', packageId);
   if (packageId) {
     // 删除数据库中的package
     ElMessageBox.confirm(`Remove the package (ID:${packageId})?`, 'Warning', {

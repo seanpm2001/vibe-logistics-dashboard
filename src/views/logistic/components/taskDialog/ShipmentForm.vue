@@ -22,8 +22,8 @@
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Limited Cost">
-        <el-checkbox @change="handleCostChange('limitedAccessCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.limitedAccessCost" placeholder="Limited Cost"/>
+        <el-checkbox @change="handleCostChange('limitedCost')">
+          <el-input :disabled="notShipmentPermission" v-model="taskItem.limitedCost" placeholder="Limited Cost"/>
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Residential Cost">
@@ -110,10 +110,9 @@ const notShipmentPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOU
 
 const emptyPackage = {
   trackingNumber: null,
-  status: null,
   units: [{
     serial: null,
-    status: null,
+    status: 'DELIVERING',
   }],
 };
 /* End Data */
@@ -132,7 +131,6 @@ const disableNewPackage = computed(() => {
 
 const addPackage = () => {
   packageArr.value.push(Object.assign({}, emptyPackage));
-  console.log('packageArr.value: ', packageArr.value);
 };
 
 const handleCostChange = (key) => {

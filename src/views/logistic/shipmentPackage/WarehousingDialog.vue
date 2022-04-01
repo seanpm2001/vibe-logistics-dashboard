@@ -99,10 +99,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  dialogStatus: {
-    type: String,
-    required: true
-  },
 });
 
 const emit = defineEmits(['findUnit']);
@@ -128,7 +124,6 @@ const packageProductEnum = {
 };
 
 /* End Data */
-const isDialogPattern = (type) => props.dialogStatus === type;
 
 const beforeCloseDialog = done => {
   done();

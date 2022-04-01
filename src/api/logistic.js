@@ -168,6 +168,13 @@ export async function deleteTaskAPI (taskId) {
     requester.delete(`/warehouse/task/${taskId}`), 'Delete', 'Warehouse Task', taskId
   );
 }
+export async function createShipmentUnitsAPI (taskId, data) {
+  jsonToUnderline(data);
+  const item = handleReqElMsg(
+    requester.post(`/warehouse/task/${taskId}/units`, data), 'Create', 'Package'
+  );
+  return item;
+}
 
 
 /* 批次 Shipment Package API */

@@ -74,9 +74,9 @@ export const taskReasonEnum = {
 };
 export const unitConditionEnum = {
   GOOD: 'Good',
-  FIXED_CLASS_A: 'Fixed Class A',
-  FIXED_CLASS_B: 'Fixed Class B',
-  FIXED_CLASS_C: 'Fixed Class C',
+  FIXED_A: 'Fixed Class A',
+  FIXED_B: 'Fixed Class B',
+  FIXED_C: 'Fixed Class C',
   SCRAP: 'Scrap',
   DAMAGED: 'Damaged',
 };
@@ -85,14 +85,14 @@ export const packageConditionEnum = {
   MISSING: 'Missing',
   DAMAGED: 'Damaged',
 };
-export const reversedConditionEnum = {
-  'Good': 'GOOD',
-  'Fixed Class A': 'FIXED_CLASS_A',
-  'Fixed Class B': 'FIXED_CLASS_B',
-  'Fixed Class C': 'FIXED_CLASS_C',
-  'Scrap': 'SCRAP',
-  'Damaged': 'DAMAGED',
-};
+// export const reversedConditionEnum = {
+//   'Good': 'GOOD',
+//   'Fixed Class A': 'FIXED_A',
+//   'Fixed Class B': 'FIXED_B',
+//   'Fixed Class C': 'FIXED_C',
+//   'Scrap': 'SCRAP',
+//   'Damaged': 'DAMAGED',
+// };
 export const carrierEnum = {
   TRUCK: 'Truck',
   GLS: 'GLS',
