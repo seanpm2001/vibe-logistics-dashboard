@@ -96,12 +96,12 @@
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="200px">
         <template v-slot="{ row }">
-          <template v-for="unit in row.task.units" :key="unit.sku">
+          <template v-for="product in row.task.products" :key="product.sku">
             <div>
-              <svg-icon :icon-name="productIconMap[skuProdcutEnum[unit.sku]] || 'product-other'" />
+              <svg-icon :icon-name="productIconMap[skuProdcutEnum[product.sku]] || 'product-other'" />
               <span class="mgl-5">
-                {{ productMap[skuProdcutEnum[unit.sku]] || unit.sku }}:
-                <el-tag class="mgl-5" size="small">{{ unit.quantity }}</el-tag>
+                {{ productMap[skuProdcutEnum[product.sku]] || product.sku }}:
+                <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
               </span>
             </div>
           </template>
