@@ -220,7 +220,7 @@ provide('unitItem', unitItem);
 /* End data */
 const ifMeetHousingCondtion = (taskType, unitStatus) => {
   if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
-    const meetTaskArr = ['FULFILLMENT', 'MOVE', 'RETURN_TO_REPAIR'];
+    const meetTaskArr = ['FULFILLMENT', 'REPLACE', 'MOVE', 'RETURN_TO_REPAIR'];
     if (meetTaskArr.includes(taskType))
       return true;
   } else if (unitStatus === 'DELIVERED_BUT_UNCHECKED') {
