@@ -24,7 +24,8 @@
       <template #label>If Check</template>
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
-        @click="checkUnit(true)" type="primary" size="small"
+        :disabled="unitItem.checked"
+        @click="checkUnit()" type="primary" size="small"
       >
         Check
       </el-button>
@@ -82,7 +83,7 @@ const checkUnit = isChecked => {
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {
-          unitItem.checked = true;
+          unitItem.value.checked = true;
           updateSerial();
         }
       },
