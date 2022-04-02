@@ -27,7 +27,7 @@
         :disabled="unitItem.checked"
         @click="checkUnit()" type="primary" size="small"
       >
-        Check
+        Check it
       </el-button>
     </el-descriptions-item>
     <el-descriptions-item>

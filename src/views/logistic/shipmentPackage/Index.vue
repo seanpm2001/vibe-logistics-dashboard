@@ -68,7 +68,7 @@
               :disabled="unit.checked"
               size="small"
               type="primary"
-              @click="checkUnit(unit)"
+              @click="viewUnitDescription(unit, row.task.products)"
             >
               Check
             </el-button>
@@ -299,7 +299,6 @@ const handleDelSelected = () => {
 };
 
 const viewUnitDescription = (unit, products) => {
-  
   products.forEach(product => {
     serialScopeArr.value = [].concat(product.serialNote);
   });
@@ -307,9 +306,9 @@ const viewUnitDescription = (unit, products) => {
   drawerUnitVisible.value = true;
 };
 
-function confirmBox(_text, confirmFn, cancelFn = () => {}) {
+const onUnitStatusChange = (unit) => {
   ElMessageBox.confirm(
-    _text,
+    'Update it?',
     'Warning',
     {
       confirmButtonText: 'OK',
@@ -317,31 +316,12 @@ function confirmBox(_text, confirmFn, cancelFn = () => {}) {
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {
-          confirmFn();
+          updatePackageUnitAPI(unit.packageId, unit.id, unit);
         } else {
-          cancelFn();
+          fetchList();
         }
       },
     }
-  );
-}
-
-const checkUnit = (_unit) => {
-  confirmBox(
-    'Check it?',
-    () => {
-      _unit.checked = true;
-      updatePackageUnitAPI(_unit.packageId, _unit.id, _unit)
-        .then(() => fetchList());
-    }
-  );
-};
-
-const onUnitStatusChange = (unit) => {
-  confirmBox(
-    'Update it?',
-    () => updatePackageUnitAPI(unit.packageId, unit.id, unit),
-    () => fetchList()
   );
 };
 
