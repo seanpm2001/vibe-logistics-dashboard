@@ -54,20 +54,20 @@
           {{ row.task.carrier }}
         </template>
       </el-table-column>
+      <el-table-column label="Task Type" width="120px" align="center">
+        <template v-slot="{ row }">
+          {{ taskTypeEnum[row.task.taskType] }}
+        </template>
+      </el-table-column>
       <el-table-column label="Units's Serials: Status" width="560px">
         <template v-slot="{ row }">
-          <!-- TODO: 
-            v-for="unit in row.task.shipmentUnits"
-              serial + check
-            v-for="unit in row.units"
-              serial + status + warehousing -->
           <template v-for="unit in row.units" :key="unit">
-            <span class="link" @click="viewItemSerial(unit.serial)">{{ unit.serial }}</span>
+            <span class="link" @click="viewUnitDescription(unit, row.task.products)">{{ unit.serial }}</span>
             <el-button
               v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
               size="small"
               type="primary"
-              @click="checkUnit(unit, row.task)"
+              @click="checkUnit(unit)"
             >
               Check
             </el-button>
@@ -142,8 +142,11 @@
       @fetchList="fetchList"
     />
 
-    <el-drawer v-model="drawerUnitVisible" title="Unit Info" size="50%" direction="ltr">
-      <UnitDescription />
+    <el-drawer v-model="drawerUnitVisible" title="Unit Info" size="60%" direction="ltr">
+      <UnitDescription 
+        :serialScopeArr="serialScopeArr"
+        @fetchList="fetchList"
+      />
     </el-drawer>
 
     <HousingDialog
@@ -151,16 +154,13 @@
       :warehouseEnum="warehouseEnum"
       @findUnit="findUnit"
     />
-
-    <CheckUnitDialog />
   </div>
 </template>
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import UnitDescription from '../components/UnitDescription.vue';
+import UnitDescription from './UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
-import CheckUnitDialog from './CheckUnitDialog.vue';
 import { parseTime, jsonToHump } from '/@/utils/format';
 import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '/@/api/logistic';
 import {
@@ -186,7 +186,6 @@ const listQuery = ref({
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
-const unitItem = ref({});
 const warehousingItem = ref({});
 
 const listLoading = ref(true);
@@ -204,12 +203,17 @@ const warehousingTaskInfo = ref({
 const dialogHousingVisible = ref(false);
 const dialogCheckUnitVisible = ref(false);
 
+// Warehousing Dialog
 provide('warehousingTaskInfo', warehousingTaskInfo);
 provide('dialogHousingVisible', dialogHousingVisible);
 provide('dialogCheckUnitVisible', dialogCheckUnitVisible);
-provide('unitItem', unitItem);
 provide('warehousingItem', warehousingItem);
 provide('listQuery', listQuery);
+
+// Unit Description
+const unitItem = ref({});
+const serialScopeArr = ref([]);
+provide('unitItem', unitItem);
 /* End data */
 const ifMeetHousingCondtion = (taskType, unitStatus) => {
   if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
@@ -240,11 +244,6 @@ const handlePagination = (_config) => {
 
 const handleCloseDrawer = (done) => {
   done();
-};
-
-const checkUnit = (_unit, _task) => {
-  console.log('_unit, _task: ', _unit, _task);
-  dialogCheckUnitVisible.value = true;
 };
 
 const findUnit = (unitSerial) => {
@@ -296,15 +295,18 @@ const handleDelSelected = () => {
   fetchList();
 };
 
-const viewItemSerial = (_unitSerial) => {
-  findUnit(_unitSerial).then(() => {
-    drawerUnitVisible.value = true;
+const viewUnitDescription = (unit, products) => {
+  
+  products.forEach(product => {
+    serialScopeArr.value = [].concat(product.serialNote);
   });
+  unitItem.value = unit;
+  drawerUnitVisible.value = true;
 };
 
-const onUnitStatusChange = (unit) => {
+function confirmBox(_text, confirmFn, cancelFn = () => {}) {
   ElMessageBox.confirm(
-    'Update it?',
+    _text,
     'Warning',
     {
       confirmButtonText: 'OK',
@@ -312,12 +314,31 @@ const onUnitStatusChange = (unit) => {
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {
-          updatePackageUnitAPI(unit.packageId, unit.id, unit);
+          confirmFn();
         } else {
-          fetchList();
+          cancelFn();
         }
       },
     }
+  );
+}
+
+const checkUnit = (_unit) => {
+  confirmBox(
+    'Check it?',
+    () => {
+      _unit.checked = true;
+      updatePackageUnitAPI(_unit.packageId, _unit.id, _unit)
+        .then(() => fetchList());
+    }
+  );
+};
+
+const onUnitStatusChange = (unit) => {
+  confirmBox(
+    'Update it?',
+    () => updatePackageUnitAPI(unit.packageId, unit.id, unit),
+    () => fetchList()
   );
 };
 

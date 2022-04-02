@@ -52,7 +52,7 @@
           {{ warehouseEnum[row.targetId] }}
         </template>
       </el-table-column>
-      <el-table-column label="WT Type" width="110px" align="center">
+      <el-table-column label="Task Type" width="110px" align="center">
         <template v-slot="{ row }">
           <el-tag>
             {{ taskTypeEnum[row.taskType] }}

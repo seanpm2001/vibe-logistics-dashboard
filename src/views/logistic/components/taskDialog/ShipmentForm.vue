@@ -67,6 +67,7 @@
     
     <el-button
       v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+      v-if="!!taskItem.carrier"
       :disabled="disableNewPackage"
       type="primary"
       icon="el-icon-circle-plus"
