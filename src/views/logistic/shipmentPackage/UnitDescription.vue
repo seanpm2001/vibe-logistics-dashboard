@@ -5,19 +5,17 @@
   >
     <el-descriptions-item>
       <template #label>Serial</template>
-      <el-row>
-        <el-select
-          v-model="unitItem.serial" filterable class="mgr-5"
-        >
-          <el-option v-for="serial in serialScopeArr" :label="serial" :value="serial" :key="serial" />
-        </el-select>
-        <el-button
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
-          @click="updateSerial" type="danger" size="small"
-        >
-          Update
-        </el-button>
-      </el-row>
+      <el-select
+        v-model="unitItem.serial" filterable class="mgr-5"
+      >
+        <el-option v-for="serial in serialScopeArr" :label="serial" :value="serial" :key="serial" />
+      </el-select>
+      <el-button
+        v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+        @click="updateSerial" type="danger"
+      >
+        Update
+      </el-button>
 
     </el-descriptions-item>
     <el-descriptions-item>
@@ -25,7 +23,7 @@
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
         :disabled="unitItem.checked"
-        @click="checkUnit()" type="primary" size="small"
+        @click="checkUnit()" :type="unitItem.checked ? 'success' : 'primary'"
       >
         Check it
       </el-button>

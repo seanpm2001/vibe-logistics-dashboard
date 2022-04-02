@@ -62,38 +62,38 @@
       <el-table-column label="Units's Serials: Status" width="560px">
         <template v-slot="{ row }">
           <template v-for="unit in row.units" :key="unit">
-            <span class="link" @click="viewUnitDescription(unit, row.task.products)">{{ unit.serial }}</span>
-            <el-button
-              v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
-              :disabled="unit.checked"
-              size="small"
-              type="primary"
-              @click="viewUnitDescription(unit, row.task.products)"
-            >
-              Check
-            </el-button>
-            <el-select
-              v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
-              :disabled="!unit.checked"
-              v-model="unit.status"
-              style="width: 210px; margin: 0 10px;"
-              placeholder="Please select"
-              @change="onUnitStatusChange(unit)"
-            >
-              <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
-            </el-select>
-            
-            <el-button
-              v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
-              v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
-              :disabled="!unit.checked"
-              size="small"
-              type="primary"
-              @click="editHousingTask(unit, row.task)"
-            >
-              Warehousing
-            </el-button>
-            <br>
+            <el-row justify="start" align="middle">
+              <span class="link" @click="viewUnitDescription(unit, row.task.products)">{{ unit.serial }}</span>
+              <el-button
+                :disabled="unit.checked"
+                size="small"
+                :type="unit.checked ? 'success' : 'primary'"
+                @click="viewUnitDescription(unit, row.task.products)"
+              >
+                Check
+              </el-button>
+              <el-select
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
+                :disabled="!unit.checked"
+                v-model="unit.status"
+                style="width: 210px; margin: 0 10px;"
+                placeholder="Please select"
+                @change="onUnitStatusChange(unit)"
+              >
+                <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
+              </el-select>
+              
+              <el-button
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
+                v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
+                :disabled="!unit.checked"
+                size="small"
+                type="primary"
+                @click="editHousingTask(unit, row.task)"
+              >
+                Warehousing
+              </el-button>
+            </el-row>
           </template>
         </template>
       </el-table-column>
@@ -374,16 +374,6 @@ onBeforeUnmount(() => {
 
 :deep(.el-dialog)
   width: 80%
-
-.el-row
-  justify-content: space-between
-  margin-right: 2rem
-  margin-left: 2rem
-  .el-form-item
-    width: 42%
-
-.el-form-item__content div
-  width: 100%
 
 .link
   margin-right: 15px
