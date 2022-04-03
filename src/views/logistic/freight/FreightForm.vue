@@ -198,7 +198,7 @@ const formatDate = arr => {
 };
 
 const createFreight = () => {
-  proxy.$parent.validate((valid) => {
+  proxy.$refs.dataForm.validate((valid) => {
     if (valid) {
       const data = formatDate(freightItem.value);
       createFreightAPI(data).then(_data => {
