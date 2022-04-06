@@ -28,30 +28,32 @@
   
   <el-row class="table">
     <template v-for="(monthItem, month) in planTableData" :key="month">
-      <el-row class='month-row mgr-5 no-warp'>
-        <div class="day-col f-col no-warp">
-          <p class="header">{{monthAbbrEnum[month]}}</p>
-          <p class="header">Sales</p>
-          <p class="header">Inventory</p>
-          <p class="header" style="line-height: 18px">Min. Inventory</p>
-          <p class="header">ETA US</p>
-          <p class="header">ETD CN</p>
-          <p class="header">Production</p>
-          <p class="header">Material</p>
-        </div>
-        <template v-for="(item, day) in monthItem" :key="item">
-          <div class="f-col" >
-            <p class="header">{{day}}</p>
-            <p class="grey">{{item?.sales}}</p>
-            <p class="light-grey">{{item?.inventory}}</p>
-            <p class="grey">{{item?.minInventory}}</p>
-            <p class="light-grey">{{item?.eta}}</p>
-            <p class="grey">{{item?.etd}}</p>
-            <p class="light-grey">{{item?.production}}</p>
-            <p class="grey"></p>
+      <template v-if="ifShowThisMonth(monthItem)">
+        <el-row class='month-row mgr-5 no-warp'>
+          <div class="day-col f-col no-warp">
+            <p class="header">{{monthAbbrEnum[month]}}</p>
+            <p class="header">Sales</p>
+            <p class="header">Inventory</p>
+            <p class="header" style="line-height: 18px">Min. Inventory</p>
+            <p class="header">ETA US</p>
+            <p class="header">ETD CN</p>
+            <p class="header">Production</p>
+            <p class="header">Material</p>
           </div>
-        </template>
-      </el-row>
+          <template v-for="(item, day) in monthItem" :key="item">
+            <div class="f-col" >
+              <p class="header">{{day}}</p>
+              <p class="grey">{{item?.sales}}</p>
+              <p class="light-grey">{{item?.inventory}}</p>
+              <p class="grey">{{item?.minInventory}}</p>
+              <p class="light-grey">{{item?.eta}}</p>
+              <p class="grey">{{item?.etd}}</p>
+              <p class="light-grey">{{item?.production}}</p>
+              <p class="grey"></p>
+            </div>
+          </template>
+        </el-row>
+      </template>
     </template>
   </el-row>
 </template>
@@ -80,6 +82,13 @@ const timeDimension = ref('day');
 
 
 /* End Data */
+const ifShowThisMonth = monthItem => {
+  for (const day in monthItem) {
+    if (JSON.stringify(monthItem[day]) !== '{}')
+      return true;
+  }
+  return false;
+};
 </script>
 
 <style lang="sass" scoped>
