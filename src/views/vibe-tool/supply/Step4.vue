@@ -42,7 +42,7 @@
       </template>
     </el-table-column>
     <el-table-column fixed="right" label="Operations" width="120px">
-      <template  v-slot="{ $index }">
+      <template v-slot="{ $index }">
         <el-button type="danger" size="small" @click.prevent="deleteRow($index)">
           Remove
         </el-button>

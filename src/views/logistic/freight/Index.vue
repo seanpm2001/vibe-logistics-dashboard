@@ -190,9 +190,16 @@
   </div>
 </template>
 
-<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>
+import { storeToRefs } from 'pinia';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import FreightForm from './FreightForm.vue';
 import { parseTime } from '/@/utils/format';
+import { useLogisticStore } from '/@/stores/logistic';
+
+const logisticStore = useLogisticStore();
+const { warehouseEnum } = storeToRefs(logisticStore);
+
 import {
   queryFreightsAPI,
   findFreightAPI,
@@ -214,7 +221,7 @@ import {
 /* start data */
 const { proxy } = getCurrentInstance();
 const store = useStore();
-const warehouseEnum = computed(() => store.getters.warehouseEnum);
+// const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const freightItem = ref({
   id: 0,
@@ -400,6 +407,8 @@ const beforeCloseDialog = (done) => {
 
   const isChanged =
     JSON.stringify(contrastData.value) !== JSON.stringify(freightItem.value);
+  console.log('isChanged: ', isChanged);
+  
   if (!isChanged) {
     resetForm();
     done();
@@ -421,7 +430,7 @@ const beforeCloseDialog = (done) => {
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch('logistic/setWarehouseEnum');
+    logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {

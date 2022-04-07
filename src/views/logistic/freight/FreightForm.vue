@@ -136,7 +136,6 @@
 </template>
 
 <script setup>
-
 import { ElMessage, ElTooltip } from 'element-plus';
 import BatchForm from './BatchForm.vue';
 import {
@@ -146,7 +145,6 @@ import {
 import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/enums/logistic';
 import { parseTime } from '/@/utils/format';
 
-// eslint-disable-next-line no-undef
 const props = defineProps({
   emptyFreightForm: {
     type: Object,
@@ -158,7 +156,6 @@ const props = defineProps({
   },
 });
 
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['fetchList']);
 
 /* Start data */
@@ -216,7 +213,7 @@ const updateFreight = () => {
       const updates = freightItem.value;
       updateFreightAPI(updates.id, updates).then(_data => {
         freightItem.value = _data;
-        contrastData.value = null;
+        contrastData.value = _data;
       });
     }
   });

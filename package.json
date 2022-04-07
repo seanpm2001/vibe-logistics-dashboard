@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rimraf .yarn node_modules dist",
+    "clean": "rimraf node_modules dist",
     "lint": "vue-cli-service lint",
-    "dev": "yarn lint && vite",
-    "dev:mock": "yarn lint && cross-env USE_MOCK=true vite",
-    "build:beta": "yarn lint && vite build --mode development",
-    "build:prod": "yarn lint && cross-env vite build --mode production",
-    "build:mock": "yarn lint && cross-env USE_MOCK=true vite build --mode production",
-    "serve": "yarn build:beta && vite preview"
+    "dev": "pnpm lint && vite",
+    "dev:mock": "pnpm lint && cross-env USE_MOCK=true vite",
+    "build:beta": "pnpm lint && vite build --mode development",
+    "build:prod": "pnpm lint && cross-env vite build --mode production",
+    "build:mock": "pnpm lint && cross-env USE_MOCK=true vite build --mode production",
+    "serve": "pnpm build:beta && vite preview"
   },
   "dependencies": {
     "@vue/shared": "^3.2.31",
