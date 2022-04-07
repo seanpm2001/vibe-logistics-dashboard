@@ -37,7 +37,7 @@ jobs:
     - name: Install dependencies and deploy staging
       if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'deployment' && github.event.deployment.environment == 'staging')
       run: |
-        npm i pnpm -g
+        pnpm clean
         pnpm i
         pnpm build:beta
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
