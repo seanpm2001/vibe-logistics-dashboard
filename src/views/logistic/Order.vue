@@ -117,7 +117,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Units" width="255px" align="center">
+      <el-table-column label="Products" width="255px" align="center">
         <template v-slot="{ row }">
           <div class="product-row">
             <template v-if="showAssignedOrder">
@@ -440,7 +440,7 @@ const addWarehouseTask = (_orderId, _isAfterAssign, sourceWHId) => {
 };
 
 const editWarehouseTask = (_orderId, _taskItem) => {
-  if (!taskPermissionArr.includes(role)) {
+  if (!taskPermissionArr.includes(role.value)) {
     ElMessage.error('You don\'t have permission', 3);
     return;
   }

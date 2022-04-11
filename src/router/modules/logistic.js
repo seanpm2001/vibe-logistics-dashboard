@@ -1,4 +1,4 @@
-import Layout from '/@/layout/Layout.vue';
+import Layout from '/@/layout/Index.vue';
 
 export const logisticRouter = [
   {

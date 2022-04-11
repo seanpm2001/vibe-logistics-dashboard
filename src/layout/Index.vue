@@ -1,20 +1,20 @@
 <template>
   <div :class="classObj" class="app-wrapper">
     <div class="sidebar-container">
-      <sidebarComponent />
+      <SidebarComponent />
     </div>
     <div :class="{ hasTagsView: needTagsView }" class="main-container">
       <div :class="{'fixed-header': fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
+        <Navbar />
+        <TagsView v-if="needTagsView" />
       </div>
-      <app-main />
+      <AppMain />
     </div>
   </div>
 </template>
 
 <script setup>
-import { AppMain, Navbar, SidebarComponent, TagsView } from './components/index';
+import { AppMain, Navbar, SidebarComponent, TagsView } from './components';
 import { useAppStore, useSettingStore } from '/@/stores';
 
 const { sidebar, device} = storeToRefs(useAppStore());

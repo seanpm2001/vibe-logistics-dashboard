@@ -4,7 +4,7 @@ import { logisticRouter } from './modules/logistic';
 import { vibeToolRouter } from './modules/vibe-tool';
 // import store from '../store';
 /* Layout */
-import Layout from '/@/layout/Layout.vue';
+import Layout from '/@/layout/Index.vue';
 
 
 /**
