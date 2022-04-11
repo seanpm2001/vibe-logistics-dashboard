@@ -45,7 +45,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard/index',
-        component: () => import('/@/views/dashboard/Dashboard.vue'),
+        component: () => import('/@/views/dashboard/Index.vue'),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'sidebar-dashboard', affix: true }
       }
@@ -86,20 +86,6 @@ export const constantRoutes = [
   //   component: () => import('/@/views/login/Auth-Redirect.vue'),
   //   hidden: true
   // },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('/@/views/profile/Profile.vue'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'sidebar-user', noCache: true }
-      }
-    ]
-  }
 ];
 
 /**
@@ -118,17 +104,6 @@ export const asyncRoutes = [
       icon: 'sidebar-permission',
     },
     children: [
-      {
-        path: 'directive',
-        component: () => import('/@/views/permission/Directive.vue'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Change Role',
-          icon: 'sidebar-role-change',
-          roles: ['admin', 'manager', 'editor', 'visitor']
-          // if do not set roles, means: this page does not require permission
-        }
-      },
       {
         path: 'role',
         component: () => import('/@/views/permission/Role.vue'),

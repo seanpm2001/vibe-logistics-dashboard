@@ -174,11 +174,12 @@ import {
   skuProdcutEnum,
   carrierEnum,
 } from '/@/enums/logistic';
+import { useLogisticStore } from '/@/stores';
 
 /* Start data */
-const store = useStore();
+const logisticStore = useLogisticStore();
+const { warehouseEnum } = storeToRefs(logisticStore);
 const { proxy } = getCurrentInstance();
-const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const listQuery = ref({
   page: 1,
@@ -328,17 +329,17 @@ const onUnitStatusChange = (unit) => {
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch('logistic/setWarehouseEnum');
+    logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery['package'];
+  listQuery.value = logisticStore.listQuery['package'];
   fetchList();
 });
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
+  logisticStore.setListQuery({
     query: listQuery.value,
     perPage: listQuery.perPage,
     pageName: 'package',

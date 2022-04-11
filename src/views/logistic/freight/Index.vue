@@ -191,11 +191,10 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import FreightForm from './FreightForm.vue';
 import { parseTime } from '/@/utils/format';
-import { useLogisticStore } from '/@/stores/logistic';
+import { useLogisticStore } from '/@/stores';
 
 const logisticStore = useLogisticStore();
 const { warehouseEnum } = storeToRefs(logisticStore);
@@ -220,8 +219,6 @@ import {
 
 /* start data */
 const { proxy } = getCurrentInstance();
-const store = useStore();
-// const warehouseEnum = computed(() => store.getters.warehouseEnum);
 
 const freightItem = ref({
   id: 0,
@@ -429,19 +426,19 @@ const beforeCloseDialog = (done) => {
 
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
-    // init warehouseEnum:{}
     logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery['freight'];
+  listQuery.value = logisticStore.listQuery['freight'];
+
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
+  logisticStore.setListQuery({
     query: listQuery.value,
     perPage: listQuery.perPage,
     pageName: 'freight',

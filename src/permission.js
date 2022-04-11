@@ -1,5 +1,5 @@
 import router from './router/index';
-import store from './store/index';
+import { useUserStore, usePermissionStore } from './stores';
 import { ElMessage } from 'element-plus';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
@@ -26,20 +26,19 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' });
       NProgress.done(); // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
+      const userStore = useUserStore();
+      const hasRole = !!userStore.role;
       // determine whether the user has obtained his permission role through getInfo
-      const hasRoles = store.getters.role && store.getters.role.length > 0;
-      
-      if (hasRoles) {
+      if (hasRole) {
         next();
       } else {
         try {
           // get user info
           // note: role has GUEST, VIBE_OPERATOR, VIBE_MANAGER, WAREHOUSE, ADMIN
-          const { role } = await store.dispatch('user/getInfo');
-
+          const { role } = await userStore.getInfo();
           // generate accessible routes map based on role
 
-          const accessRoutes = await store.dispatch('permission/generateRoutes', role);
+          const accessRoutes = await usePermissionStore().generateRoutes(role);
 
           // dynamically add accessible routes
           accessRoutes.forEach(item => {
@@ -51,7 +50,7 @@ router.beforeEach(async(to, from, next) => {
         } catch (error) {
           console.log('error: ', error);
           // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken');
+          await userStore.resetToken();
           ElMessage({
             message: error.message,
             type: 'error',

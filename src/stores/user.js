@@ -1,130 +1,77 @@
-// import { loginAPI, logoutAPI, getInfoAPI } from '/@/api/logistic';
-// import { getToken, setToken, removeToken } from '/@/utils/auth';
-// import router, { resetRouter } from '/@/router';
+import { loginAPI, logoutAPI, getInfoAPI } from '/@/api/logistic';
+import { getToken, setToken, removeToken } from '/@/utils/auth';
+import router, { resetRouter } from '/@/router';
+import { useTagStore } from './tag';
 
-// export const user = {
-//   id: 'user',
-//   namespaced: true,
-//   state: {
-//     isLogined: false,
-//     token: getToken(),
-//     name: '',
-//     avatar: '/@img/common/avatar.gif',
-//     introduction: '',
-//     roles: []
-//   },
-//   mutations: {
-//     SET_LOGINED: (state, isLogined) => {
-//       state.isLogined = isLogined;
-//     },
-//     SET_TOKEN: (state, token) => {
-//       state.token = token;
-//     },
-//     SET_INTRODUCTION: (state, introduction) => {
-//       state.introduction = introduction;
-//     },
-//     SET_NAME: (state, name) => {
-//       state.name = name;
-//     },
-//     SET_AVATAR: (state, avatar) => {
-//       state.avatar = avatar;
-//     },
-//     SET_ROLES: (state, roles) => {
-//       state.roles = roles;
-//     }
-//   },
-//   actions: {
-//     // user login
-//     login({ commit }, userInfo) {
-//       const { email, password } = userInfo;
-//       return new Promise((resolve, reject) => {
-//         loginAPI({ email, password }).then(_data => {
-//           commit('SET_TOKEN', _data.access_token);
-//           setToken(_data.access_token);
-//           commit('SET_LOGINED', true);
-//           resolve();
-//         }).catch(error => {
-//           reject(error);
-//         });
-//       });
-//     },
+export const useUserStore = defineStore({
+  id: 'user',
+  state: () => ({
+    token: getToken(),
+    username: null,
+    avatar: '/@img/common/avatar.gif',
+    email: null,
+    role: null,
+  }),
+  actions: {
+    // user login
+    login(userInfo) {
+      return new Promise((resolve, reject) => {
+        loginAPI(userInfo).then(data => {
+          this.token = data.accessToken;
+          setToken(data.accessToken);
+          resolve();
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
 
-//     // get user info
-//     getInfo({ commit, state }) {
-//       return new Promise((resolve, reject) => {
-//         getInfoAPI(state.token).then(response => {
-//           const { data } = response;
+    // get user info
+    getInfo() {
+      return new Promise((resolve, reject) => {
+        getInfoAPI().then(data => {
+          if (!data)
+            reject('Verification failed, please Login again.');
 
-//           if (!data) {
-//             reject('Verification failed, please Login again.');
-//           }
+          const { role, username, email } = data;
 
-//           const { roles, name, avatar, introduction } = data;
+          this.role = role;
+          this.username = username;
+          this.email = email;
+          resolve(data);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
 
-//           // roles must be a non-empty array
-//           if (!roles || roles.length <= 0) {
-//             reject('getInfo: roles must be a non-null array!');
-//           }
+    // user logout
+    logout() {
+      return new Promise((resolve, reject) => {
+        // logoutAPI(this.token).then(() => {
+        this.token = null;
+        this.role = null;
+        removeToken();
+        resetRouter();
+        // reset visited views and cached views
+        useTagStore().delAllViews(null, { root: true });
 
-//           commit('SET_ROLES', roles);
-//           commit('SET_NAME', name);
-//           commit('SET_AVATAR', avatar);
-//           commit('SET_INTRODUCTION', introduction);
-//           resolve(data);
-//         }).catch(error => {
-//           reject(error);
-//         });
-//       });
-//     },
+        resolve();
+        router.go(0);
+        // }).catch(error => {
+        //   reject(error);
+        // });
+      });
+    },
 
-//     // user logout
-//     logout({ commit, state, dispatch }) {
-//       return new Promise((resolve, reject) => {
-//         logoutAPI(state.token).then(() => {
-//           commit('SET_TOKEN', '');
-//           commit('SET_ROLES', []);
-//           removeToken();
-//           resetRouter();
-//           commit('SET_LOGINED', false);
-//           // reset visited views and cached views
-//           dispatch('tagsView/delAllViews', null, { root: true });
-
-//           resolve();
-//           router.go(0);
-//         }).catch(error => {
-//           reject(error);
-//         });
-//       });
-//     },
-
-//     // remove token
-//     resetToken({ commit }) {
-//       return new Promise(resolve => {
-//         commit('SET_TOKEN', '');
-//         commit('SET_ROLES', []);
-//         removeToken();
-//         resolve();
-//       });
-//     },
-
-//     // dynamically modify permissions
-//     async changeRoles({ commit, dispatch }, role) {
-//       const token = role + '-token';
-//       commit('SET_TOKEN', token);
-//       setToken(token);
-//       const { roles } = await dispatch('getInfo');
-
-//       resetRouter();
-//       // generate accessible routes map based on roles
-
-//       const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true });
-//       // dynamically add accessible routes
-//       accessRoutes.forEach(item => {
-//         router.addRoute(item);
-//       });
-
-//       // reset visited views and cached views
-//       dispatch('tagsView/delOthersViews', router.currentRoute.value, { root: true});
-//     }
-//   }
-// };
+    // remove token
+    resetToken() {
+      return new Promise(resolve => {
+        this.token = null;
+        this.role = null;
+        removeToken();
+        resolve();
+      });
+    },
+  }
+});

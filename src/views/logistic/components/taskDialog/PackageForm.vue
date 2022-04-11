@@ -93,6 +93,7 @@ import {
   queryUnitsAPI,
 } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/enums/logistic';
+import { useUserStore, useLogisticStore } from '/@/stores';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -117,16 +118,16 @@ const props = defineProps({
 /* Start Data */
 const taskItem = inject('taskItem');
 
-const store = useStore();
-const role = store.getters.role;
-const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role));
+const logisticStore = useLogisticStore();
+const { role } = storeToRefs(useUserStore());
+const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
 const taskProducts = Object.assign({}, taskItem.value.products);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
 
 const unitList = computed(() => {
-  return store.getters['unitList'].filter(item => {
+  return logisticStore.unitList.filter(item => {
     for (const i in taskProducts) {
       if (item.sku === taskProducts[i].sku) return true;
     }
@@ -222,7 +223,7 @@ const handlePackage = (_type) => {
 function initGlobalData() {
   if (unitList.value.length === 0)
     // init unitList:[]
-    store.dispatch('logistic/setUnitList');
+    logisticStore.setUnitList();
 }
 
 onMounted(() => {

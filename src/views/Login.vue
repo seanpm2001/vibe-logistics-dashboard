@@ -92,13 +92,14 @@
 import Captcha from '/@/components/Captcha/Index.vue';
 import { ElMessage } from 'element-plus';
 import { validUsername } from '/@/utils/validate';
+import { useUserStore } from '/@/stores';
 
 import signInSrc from '/@img/profile/sign-in.svg';
 import signUpSrc from '/@img/profile/sign-up.svg';
 
 /* Begin Data */
-const store = useStore();
-console.log('store: ', store);
+const store = useUserStore();
+
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -184,25 +185,6 @@ const showPwd = (signInPattern) => {
   });
 };
 
-// const handleLogin = () => {
-//   proxy.$refs.loginForm.validate(valid => {
-//     if (valid) {
-//       this.loading = true;
-//       this.$store.dispatch('user/login', this.loginForm)
-//         .then(() => {
-//           this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
-//           this.loading = false;
-//         })
-//         .catch(() => {
-//           this.loading = false;
-//         });
-//     } else {
-//       console.log('error submit!!');
-//       return false;
-//     }
-//   });
-// };
-
 const getOtherQuery = (query) => {
   return Object.keys(query).reduce((acc, cur) => {
     if (cur !== 'redirect') {
@@ -218,7 +200,7 @@ const submitLogin = async (signInPattern) => {
     proxy.$refs.inForm.validate((valid) => {
       if (valid) {
         btnLoading.value = true;
-        store.dispatch('user/login', signInForm)
+        store.login(signInForm)
           .then(() => {
             router.push({ path: redirect.value || '/', query: otherQuery.value });
           })

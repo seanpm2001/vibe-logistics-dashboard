@@ -19,9 +19,9 @@ export const app = createApp(App);
 app.component('svg-icon', SvgIcon);
 
 app
+  .use(createPinia())
   .use(store)
   .use(router)
-  .use(createPinia())
   .use(vPermission)
   .use(vWave)
   .mount('#app');

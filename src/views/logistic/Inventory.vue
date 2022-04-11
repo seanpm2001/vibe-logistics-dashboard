@@ -200,16 +200,18 @@
   </div>
 </template>
 
-<script setup>import { ElMessage } from 'element-plus';
+<script setup>
+import { ElMessage } from 'element-plus';
 import { parseTime } from '/@/utils/format';
 import TaskDialog from './components/taskDialog/Index.vue';
 import { listInventoriesAPI } from '/@/api/logistic';
+import { useLogisticStore } from '/@/stores';
 
 /* Start Data */
-const store = useStore();
 const { proxy } = getCurrentInstance();
 
-const warehouseEnum = computed(() => store.getters.warehouseEnum);
+const logisticStore = useLogisticStore();
+const { warehouseEnum } = storeToRefs(logisticStore);
 
 const listQuery = ref({
   page: 1,
@@ -370,18 +372,18 @@ const getSortClass = key => {
 
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
-    store.dispatch('logistic/setWarehouseEnum');
+    logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery['inventory'];
+  listQuery.value = logisticStore.listQuery['inventory'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
+  logisticStore.setListQuery({
     query: listQuery.value,
     perPage: listQuery.perPage,
     pageName: 'inventory'

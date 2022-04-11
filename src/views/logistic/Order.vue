@@ -255,14 +255,15 @@ import {
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
 import { packageStatusEnum, productMap, productIconMap } from '/@/enums/logistic';
+import { useUserStore, useLogisticStore } from '/@/stores';
 
 /* Start data */
-const store = useStore();
 const router = useRouter();
-const warehouseEnum = computed(() => store.getters.warehouseEnum);
+const { role } = storeToRefs(useUserStore());
+const logisticStore = useLogisticStore();
+const { warehouseEnum } = storeToRefs(logisticStore);
 
 const { proxy } = getCurrentInstance();
-const role = store.getters.role;
 
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
@@ -491,18 +492,18 @@ const resetForm = () => {};
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch('logistic/setWarehouseEnum');
+    logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery['order'];
+  listQuery.value = logisticStore.listQuery['order'];
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
+  logisticStore.setListQuery({
     query: listQuery.value,
     pageName: 'order',
   });

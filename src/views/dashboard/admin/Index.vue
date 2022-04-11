@@ -19,17 +19,13 @@
 </template>
 
 <script setup>
-
-import { useStore }  from 'vuex';
 import PanThumb from '/@/components/PanThumb.vue';
 import GithubCorner from '/@/components/GithubCorner.vue';
+import { useUserStore } from '/@/stores';
 
-const store = useStore();
+const userStore = useUserStore();
+const { name, avatar, role } = storeToRefs(userStore);
 const emptyGif = ref('https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3');
-    
-const name = computed(() => store.getters['name']);
-const avatar = computed(() => store.getters['avatar']);
-const role = computed(() => store.getters['role']);
 </script>
 
 <style lang="sass" scoped>

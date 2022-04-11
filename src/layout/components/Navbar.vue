@@ -10,9 +10,6 @@
         </div>
         <template v-slot:dropdown>
           <el-dropdown-menu>
-            <router-link to="/profile/index">
-              <el-dropdown-item>Profile</el-dropdown-item>
-            </router-link>
             <router-link to="/">
               <el-dropdown-item>Dashboard</el-dropdown-item>
             </router-link>
@@ -36,21 +33,14 @@
 <script setup>
 import Breadcrumb from '/@/components/Breadcrumb.vue';
 import avatarUrl from '/@img/common/avatar.gif';
+import { useUserStore } from '/@/stores';
 
-const store = useStore();
+const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 
-const sidebar = store.getters['sidebar'];
-// const avatar = store.getters['avatar'];
-const device = store.getters['device'];
-
-const toggleSideBar = () => {
-  store.dispatch('app/toggleSideBar');
-};
-
 const logout = async () => {
-  await store.dispatch('user/logout');
+  await userStore.logout();
   router.push(`/login?redirect=${route.fullPath}`);
 };
 

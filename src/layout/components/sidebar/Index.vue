@@ -21,12 +21,12 @@
 <script setup>
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
+import { useAppStore, usePermissionStore } from '/@/stores';
 
 const route = useRoute();
-const store = useStore();
-const permissionRroutes = computed(() => store.getters['permissionRroutes']);
+const { sidebar } = storeToRefs(useAppStore());
+const { routes: permissionRroutes } = storeToRefs(usePermissionStore());
 
-const sidebar = computed(() => store.getters['sidebar']);
 
 const activeMenu = computed(() => {
   const { meta, path } = route;
@@ -37,7 +37,7 @@ const activeMenu = computed(() => {
   return path;
 });
 
-const showLogo = computed (() => store.state.setting.sidebarLogo);
+const showLogo = false;
 const isCollapse = computed (() => !sidebar.value.opened);
 
 </script>

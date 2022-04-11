@@ -16,8 +16,8 @@ export function createVitePlugins(isBuild) {
     }),
     AutoImport({ // 自动按需引入依赖
       // resolvers: [ElementPlusResolver()],
-      imports: ['vue', 'vue-router', 'vuex'],
-      // imports: ['vue', 'vue-router', 'pinia'], // TODO: use pinia instead of vuex
+      // imports: ['vue', 'vue-router', 'vuex'],
+      imports: ['vue', 'vue-router', 'pinia'], // TODO: use pinia instead of vuex
       dts: 'src/auto-imports.d.ts',
     }),
     Components({

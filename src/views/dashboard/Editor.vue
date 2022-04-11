@@ -3,7 +3,7 @@
     <div class="f-row">
       <pan-thumb :image="avatar">
         Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
+        <span class="pan-info-roles">{{ role }}</span>
       </pan-thumb>
       <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
       <div class="info-container">
@@ -18,17 +18,13 @@
 </template>
 
 <script setup>
-
-import { useStore }  from 'vuex';
 import PanThumb from '/@/components/PanThumb.vue';
 import GithubCorner from '/@/components/GithubCorner.vue';
+import { useUserStore } from '/@/stores';
 
-const store = useStore();
+const userStore = useUserStore();
+const { name, avatar, role } = storeToRefs(userStore);
 const emptyGif = ref('https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3');
-    
-const name = computed(() => store.getters['name']);
-const avatar = computed(() => store.getters['avatar']);
-const roles = computed(() => store.getters['roles']);
 </script>
 
 <style lang="sass" scoped>

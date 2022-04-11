@@ -83,6 +83,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, getTaskPackagesAPI } from '/@/api/logistic';
 import { carrierEnum } from '/@/enums/logistic';
+import { useUserStore } from '/@/stores';
 
 const props = defineProps({
   taskId: {
@@ -105,9 +106,8 @@ const emit = defineEmits(['fetchList']);
 const taskItem = inject('taskItem');
 const packageArr = inject('packageArr');
 
-const store = useStore();
-const role = store.getters.role;
-const notShipmentPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role));
+const { role } = storeToRefs(useUserStore());
+const notShipmentPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
 const emptyPackage = {
   trackingNumber: null,

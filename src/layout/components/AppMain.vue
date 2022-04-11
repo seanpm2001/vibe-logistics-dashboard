@@ -11,12 +11,10 @@
 </template>
 
 <script setup>
-
-
-const store = useStore();
+import { useTagStore } from '/@/stores';
+const { cachedViews } = storeToRefs(useTagStore());
 const route = useRoute();
 
-const cachedViews = computed(() => store.state.tagsView.cachedViews);
 const key = computed(() => route.path);
 </script>
 

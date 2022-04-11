@@ -146,6 +146,7 @@ import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
   unitConditionEnum
 } from '/@/enums/logistic';
+import { useUserStore, useLogisticStore } from '/@/stores';
 
 const props = defineProps({
   emptyTaskItem: {
@@ -171,14 +172,14 @@ const taskItem = inject('taskItem');
 const specifySerailArr = inject('specifySerailArr');
 const taskOrderItem = inject('taskOrderItem');
 
-const store = useStore();
 const { proxy } = getCurrentInstance();
-const role = store.getters.role;
-const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role));
+const logisticStore = useLogisticStore();
+const { role } = storeToRefs(useUserStore());
+const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value));
 
 const unitList = computed(() => {
   const taskProducts = taskItem.value.products;
-  return store.getters['unitList'].filter(item => {
+  return logisticStore.unitList.filter(item => {
     for (const i in taskProducts) {
       if (item.sku === taskProducts[i].sku) return true;
     }
@@ -265,7 +266,7 @@ const beforeCloseDialog = (done) => {
 
 function initGlobalData() {
   if (unitList.value.length === 0) // init unitList:[]
-    store.dispatch('logistic/setUnitList');
+    logisticStore.setUnitList();
 }
 
 onMounted(() => {

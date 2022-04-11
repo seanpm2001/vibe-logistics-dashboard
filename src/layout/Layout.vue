@@ -1,6 +1,5 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <div class="sidebar-container">
       <sidebarComponent />
     </div>
@@ -16,25 +15,16 @@
 
 <script setup>
 import { AppMain, Navbar, SidebarComponent, TagsView } from './components/index';
-// import ResizeMixin from './mixin/ResizeHandler';
+import { useAppStore, useSettingStore } from '/@/stores';
 
-const store = useStore();
-const state = store.state;
-
-const handleClickOutside = () => {
-  store.dispatch('app/closeSideBar', { withoutAnimation: false });
-};
-
-const sidebar = state.app.sidebar;
-const device = state.app.device;
-const needTagsView = state.setting.tagsView;
-const fixedHeader = state.setting.fixedHeader;
+const { sidebar, device} = storeToRefs(useAppStore());
+const { tagsView: needTagsView, fixedHeader: fixedHeader } = storeToRefs(useSettingStore());
 
 const classObj = computed(() => {
   return {
-    hideSidebar: !sidebar.opened,
-    openSidebar: sidebar.opened,
-    withoutAnimation: sidebar.withoutAnimation,
+    hideSidebar: !sidebar.value.opened,
+    openSidebar: sidebar.value.opened,
+    withoutAnimation: sidebar.value.withoutAnimation,
     mobile: device === 'mobile'
   };
 });

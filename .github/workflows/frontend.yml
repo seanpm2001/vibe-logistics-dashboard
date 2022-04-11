@@ -47,7 +47,8 @@ jobs:
     - name: Install dependencies and deploy production
       if: github.event_name == 'deployment' && github.event.deployment.environment == 'production' && github.ref == 'refs/heads/master'
       run: |
-        pnpm
+        npm i pnpm -g
+        pnpm i
         pnpm build:prod
         aws s3 sync --delete dist/ s3://logistics.vibe.dev/
         aws cloudfront create-invalidation \

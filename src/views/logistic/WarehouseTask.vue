@@ -146,10 +146,11 @@ import {
   skuProdcutEnum
 } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
+import { useLogisticStore } from '/@/stores';
 
 /* Start Data */
-const store = useStore();
-const warehouseEnum = computed(() => store.getters.warehouseEnum);
+const logisticStore = useLogisticStore();
+const { warehouseEnum } = storeToRefs(logisticStore);
 
 const listQuery = ref({
   page: 1,
@@ -312,19 +313,19 @@ const init = () => {
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
-    store.dispatch('logistic/setWarehouseEnum');
+    logisticStore.setWarehouseEnum();
 }
 
 onMounted(() => {
   initGlobalData();
 
-  listQuery.value = store.getters.listQuery['task'];
+  listQuery.value = logisticStore.listQuery['task'];
   console.log('listQuery.value: ', listQuery.value);
   fetchList();
 });
 
 onBeforeUnmount(() => {
-  store.commit('logistic/SET_LIST_QUERY', {
+  logisticStore.setListQuery({
     query: listQuery.value,
     perPage: listQuery.perPage,
     pageName: 'task',

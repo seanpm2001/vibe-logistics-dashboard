@@ -15,14 +15,25 @@ export const useLogisticStore = defineStore({
       inventory: {},
     }
   }),
-
-  getters: {
-  },
   actions: {
+    setListQuery (payload) {
+      const { query, pageName } = payload;
+      this.listQuery[pageName] = query;
+    },
+
+    setUnitList () {
+      return new Promise(resolve => {
+        queryUnitsAPI({ search: '' })
+          .then(data => {
+            this.unitList = data;
+          })
+          .finally(() => resolve());
+      });
+    },
+
     setWarehouseEnum () {
       listWarehousesAPI()
         .then(_data => {
-          console.log('_data: ', _data);
           const options = {};
           _data.forEach(item => {
             options[item.id] = item.name;

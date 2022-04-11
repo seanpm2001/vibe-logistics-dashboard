@@ -3,7 +3,7 @@
  */
 
 import { ElMessage } from 'element-plus';
-import requester, { mockRequester } from './http';
+import requester from './http';
 import { jsonToUnderline } from '/@/utils/format';
 
 const handleReqElMsg = (fn, action, name, identifier) => {
@@ -253,8 +253,8 @@ export async function loginAPI(formInfo) {
   return res;
 }
 
-export async function getInfoAPI(token) {
-  const res = await requester.get('/me', token);
+export async function getInfoAPI() {
+  const res = await requester.get('/me');
   return res;
 }
 

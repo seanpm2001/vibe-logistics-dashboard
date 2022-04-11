@@ -1,5 +1,10 @@
-import { createPinia } from 'pinia';
+const pinia = createPinia();
 
-const store = createPinia();
+export default pinia;
 
-export { store };
+export { useAppStore } from './app';
+export { useLogisticStore } from './logistic';
+export { usePermissionStore } from './permission';
+export { useSettingStore } from './setting';
+export { useTagStore } from './tag';
+export { useUserStore } from './user';

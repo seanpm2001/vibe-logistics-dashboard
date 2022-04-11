@@ -4,7 +4,7 @@ This website generates front page of new logistics system.
 Please don't delete or modify `./index.html` if you don't know what to do.
 ## Version for
 **npm > ^7.0.0 | ^8.0.0**
-**yarn**
+**pnpm**
 
 NVM is recommended, install nvm by yourself.
 
@@ -13,31 +13,32 @@ NVM is recommended, install nvm by yourself.
 ```
 nvm install v16.11.0
 nvm use v16.11.0
+npm i pnpm -g
 ```
 
 ## Project setup
 ```
-yarn
+pnpm
 ```
 
 ### Compiles and hot-reloads for development
 ```
-// 没对接API的情况下请使用 yarn dev:mock
-yarn dev 
-yarn dev:mock // API use mockjs
-yarn serve // preview prod env
+// 没对接API的情况下请使用 pnpm dev:mock
+pnpm dev 
+pnpm dev:mock // API use mockjs
+pnpm serve // preview prod env
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build:beta
-yarn build:prod
-yarn build:mock // API use mockjs
+pnpm build:beta
+pnpm build:prod
+pnpm build:mock // API use mockjs
 ```
 
 ### Lints and fixes files
 ```
-yarn lint
+pnpm lint
 ```
 
 _____

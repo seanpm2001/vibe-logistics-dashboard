@@ -14,11 +14,10 @@
 </template>
 
 <script setup>
+import { useUserStore } from '/@/stores';
 
-const store = useStore();
 const { proxy } = getCurrentInstance();
-
-const role = computed(() => store.getters['role']);
+const { role } = storeToRefs(useUserStore());
 
 const switchRoles = val => {
   store.dispatch('user/changeRoles', val).then(() => {

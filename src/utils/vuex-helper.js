@@ -1,9 +1,5 @@
-// 
-// import { mapState, mapGetters, createNamespacedHelpers, useStore } from 'vuex';
-
 // function useMapper(mapper, mapFn) {
 //   // 拿到store独享
-//   const store = useStore();
 
 //   // 获取到对应的对象的functions: {name: function, age: function}
 //   const storeStateFns = mapFn(mapper);
