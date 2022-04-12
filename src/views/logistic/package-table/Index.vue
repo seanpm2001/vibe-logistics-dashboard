@@ -39,7 +39,7 @@
       <el-table-column label="Package ID" width="120px" align="center">
         <template v-slot="{ row }">
           <el-tag>
-            #<span class="link-type">{{ row.id }}-S1P2</span>
+            #<span class="link-type">{{ row.id }}</span>
           </el-tag>
         </template>
       </el-table-column>

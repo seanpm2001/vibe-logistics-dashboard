@@ -5,7 +5,7 @@ export const cssShowRouter = [
   {
     path: '/starry-sky',
     components: {
-      default: () => import('/@/views/cssShow/Starry-sky.vue'),
+      default: () => import('/@/views/css-show/Starry-sky.vue'),
       backBtn: BackBtn
     },
     name: 'StarrySky',
@@ -14,7 +14,7 @@ export const cssShowRouter = [
   {
     path: '/iphone2',
     components: {
-      default: () => import('/@/views/cssShow/Iphone2.vue'),
+      default: () => import('/@/views/css-show/Iphone2.vue'),
       backBtn: BackBtn
     },
     name: 'Iphone2',
@@ -32,55 +32,55 @@ export const cssShowRouter = [
     children: [
       {
         path: 'eye-ball',
-        component: () => import('/@/views/cssShow/Eye.vue'),
+        component: () => import('/@/views/css-show/Eye.vue'),
         name: 'EyeBall',
         meta: { title: 'Eye Ball', icon: 'sidebar-css-style' }
       },
       {
         path: 'hover-card',
-        component: () => import('/@/views/cssShow/Hover-card.vue'),
+        component: () => import('/@/views/css-show/Hover-card.vue'),
         name: 'HoverCard',
         meta: { title: 'Hover Card', icon: 'sidebar-css-style' }
       },
       {
         path: 'hover-style',
-        component: () => import('/@/views/cssShow/Hover-style.vue'),
+        component: () => import('/@/views/css-show/Hover-style.vue'),
         name: 'HoverStyle',
         meta: { title: 'Hover Style', icon: 'sidebar-css-style' }
       },
       {
         path: 'glxy',
-        component: () => import('/@/views/cssShow/Glxy.vue'),
+        component: () => import('/@/views/css-show/Glxy.vue'),
         name: 'Glxy',
         meta: { title: 'Glxy', icon: 'sidebar-css-style' }
       },
       {
         path: 'parallax-scroll',
-        component: () => import('/@/views/cssShow/Parallax-scroll.vue'),
+        component: () => import('/@/views/css-show/Parallax-scroll.vue'),
         name: 'ParallaxScroll',
         meta: { title: 'Parallax Scroll', icon: 'sidebar-css-style' },
       },
       {
         path: 'parallax',
-        component: () => import('/@/views/cssShow/Parallax.vue'),
+        component: () => import('/@/views/css-show/Parallax.vue'),
         name: 'Parallax',
         meta: { title: 'Parallax', icon: 'sidebar-css-style' }
       },
       {
         path: 'streamer',
-        component: () => import('/@/views/cssShow/Streamer.vue'),
+        component: () => import('/@/views/css-show/Streamer.vue'),
         name: 'Streamer',
         meta: { title: 'Streamer', icon: 'sidebar-css-style' }
       },
       {
         path: 'iphone1',
-        component: () => import('/@/views/cssShow/Iphone1.vue'),
+        component: () => import('/@/views/css-show/Iphone1.vue'),
         name: 'Iphone1',
         meta: { title: 'Iphone1', icon: 'sidebar-css-style' }
       },
       {
         path: 'countdown',
-        component: () => import('/@/views/cssShow/Countdown.vue'),
+        component: () => import('/@/views/css-show/Countdown.vue'),
         name: 'Countdown',
         meta: { title: 'Countdown', icon: 'sidebar-css-style' }
       },

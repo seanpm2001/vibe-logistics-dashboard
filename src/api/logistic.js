@@ -84,9 +84,7 @@ export async function deleteBatchAPI (batchId) {
 
 /* 订单 Order API */
 export async function queryOrdersAPI (params) {
-
   jsonToUnderline(params);
-
   const res = await requester.get('orders/raw', {
     params,
   });
@@ -101,7 +99,6 @@ export async function queryAssignedOrdersAPI (params) {
   return res;
 }
 export async function findAssignedOrderAPI (orderId) {
-
   const item = handleReqElMsg(
     requester.get(`orders/assigned/${orderId}`), 'Find', 'Assigned Order', orderId
   );
@@ -126,7 +123,6 @@ export async function unassignOrdersAPI (orderId) {
 
 /* 仓库 Warehouse API */
 export async function listWarehousesAPI (params) {
-
   const { items } = await requester.get('warehouses', {
     params,
   });
@@ -135,7 +131,6 @@ export async function listWarehousesAPI (params) {
 
 /* 仓库 Warehouse Tasks API */
 export async function queryTasksAPI (params) {
-
   jsonToUnderline(params);
   const res = await requester.get('/warehouse/tasks', {
     params,

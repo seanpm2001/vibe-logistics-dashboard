@@ -9,31 +9,37 @@ export const logisticRouter = [
     children: [
       {
         path: 'order',
-        component: () => import('/@/views/logistic/Order.vue'),
+        component: () => import('/@/views/logistic/OrderTable.vue'),
         name: 'Order',
         meta: { title: 'Order', icon: 'sidebar-order' }
       },
       {
         path: 'task',
-        component: () => import('/@/views/logistic/WarehouseTask.vue'),
-        name: 'task',
+        component: () => import('/@/views/logistic/TaskTable.vue'),
+        name: 'Task',
         meta: { title: 'WH Task', icon: 'sidebar-task' }
       },
       {
+        path: 'pending-task',
+        component: () => import('/@/views/logistic/PendingTask.vue'),
+        name: 'PendingTask',
+        meta: { title: 'Pending Task', icon: 'sidebar-task' }
+      },
+      {
         path: 'package',
-        component: () => import('/@/views/logistic/shipmentPackage/Index.vue'),
+        component: () => import('/@/views/logistic/package-table/Index.vue'),
         name: 'ShipmentPackage',
         meta: { title: 'Package', icon: 'sidebar-package' }
       },
       {
         path: 'freight',
-        component: () => import('/@/views/logistic/freight/Index.vue'),
+        component: () => import('/@/views/logistic/freight-table/Index.vue'),
         name: 'Freight',
         meta: { title: 'Freight', icon: 'sidebar-freight' }
       },
       {
         path: 'inventory',
-        component: () => import('/@/views/logistic/Inventory.vue'),
+        component: () => import('/@/views/logistic/InventoryTable.vue'),
         name: 'Inventory',
         meta: { title: 'Inventory', icon: 'sidebar-warehouse' }
       },

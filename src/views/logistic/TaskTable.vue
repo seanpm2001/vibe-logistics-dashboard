@@ -29,9 +29,9 @@
       <el-table-column label="ID" width="120px" align="center">
         <template v-slot="{ row }">
           <el-tag>
-            #<span class="link-type" @click="handleDetailRow(row, 'view')"
-              >{{ row.id }}-S1</span
-            >
+            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{
+              row.id
+            }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -67,7 +67,7 @@
       <el-table-column label="Task Units Status" width="260px" align="center">
         <template v-slot="{ row }">
           <el-tag>
-            {{calTaskStatus(row.taskType, row.packages)}}
+            {{ calTaskStatus(row.taskType, row.packages) }}
           </el-tag>
         </template>
       </el-table-column>
@@ -75,7 +75,11 @@
         <template v-slot="{ row }">
           <template v-for="product in row.products" :key="product.sku">
             <div>
-              <svg-icon :icon-name="productIconMap[skuProdcutEnum[product.sku]] || 'product-other'" />
+              <svg-icon
+                :icon-name="
+                  productIconMap[skuProdcutEnum[product.sku]] || 'product-other'
+                "
+              />
               <span class="mgl-5">
                 {{ productMap[skuProdcutEnum[product.sku]] || product.sku }}:
                 <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
@@ -92,7 +96,12 @@
         class-name="small-padding fixed-width"
       >
         <template v-slot="{ row }">
-          <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']" type="primary" size="small" @click="handleDetailRow(row, 'edit')">
+          <el-button
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
+            type="primary"
+            size="small"
+            @click="handleDetailRow(row, 'edit')"
+          >
             Edit
           </el-button>
           <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
@@ -106,7 +115,12 @@
             title="Are you sure to delete this?"
           >
             <template #reference>
-              <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" v-if="row.status != 'deleted'" size="small" type="danger">
+              <el-button
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+                v-if="row.status != 'deleted'"
+                size="small"
+                type="danger"
+              >
                 Delete
               </el-button>
             </template>
@@ -115,11 +129,7 @@
       </el-table-column>
     </el-table>
 
-    <Pagination
-      v-show="total > 0"
-      :total="total"
-      @fetchList="fetchList"
-    />
+    <Pagination v-show="total > 0" :total="total" @fetchList="fetchList" />
 
     <TaskDialog
       :emptyTaskItem="emptyTaskItem"
@@ -129,7 +139,8 @@
   </div>
 </template>
 
-<script setup>import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup>
+import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';
 import {
   listWarehousesAPI,
@@ -143,7 +154,7 @@ import {
   taskTypeEnum,
   productMap,
   productIconMap,
-  skuProdcutEnum
+  skuProdcutEnum,
 } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
 import { useLogisticStore } from '/@/stores';
@@ -180,12 +191,14 @@ const taskItem = ref({
   returnReason: null,
   newAddress: null,
   note: null,
-  products: [{
-    sku: null,
-    condition: null,
-    quantity: null,
-    serialNote: null,
-  }],
+  products: [
+    {
+      sku: null,
+      condition: null,
+      quantity: null,
+      serialNote: null,
+    },
+  ],
   // shipment info
   carrier: null,
   deliveryCost: null,
@@ -196,9 +209,11 @@ const taskItem = ref({
   insureCostL: null,
 });
 
-const specifySerailArr = ref([{
-  serial: null,
-}]);
+const specifySerailArr = ref([
+  {
+    serial: null,
+  },
+]);
 
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
@@ -217,18 +232,17 @@ provide('listQuery', listQuery);
 
 const calTaskStatus = (taskType, packages) => {
   const statusSet = {};
-  packages.forEach(item => {
-    item?.units.forEach(unit => {
+  packages.forEach((item) => {
+    item?.units.forEach((unit) => {
       statusSet[unit.status] = statusSet[unit.status] || 0 + 1;
     });
   });
   const setKey = Object.keys(statusSet);
   const setKeyLen = setKey.length;
-  console.log('statusSet: ', statusSet);
 
   if (setKeyLen === 1) {
     const unitStatus = statusSet[setKey[0]];
-    switch(unitStatus) {
+    switch (unitStatus) {
     case 'DELIVERING':
     case 'RETURNING':
       return 'Fulfilling';
@@ -242,19 +256,27 @@ const calTaskStatus = (taskType, packages) => {
         return 'Delivered but imcomplete';
       break;
     case 'RETURNED_BUT_UNCHECKED':
-      if (taskType !== 'RETURN')
-        return 'Failed but imcomplete';
+      if (taskType !== 'RETURN') return 'Failed but imcomplete';
       break;
     }
   }
   let res = '';
-  if (statusSet['LOST'] || statusSet['RETURNED_BUT_UNCHECKED'] || statusSet['RETURNING']) {
+  if (
+    statusSet['LOST'] ||
+    statusSet['RETURNED_BUT_UNCHECKED'] ||
+    statusSet['RETURNING']
+  ) {
     res = res ? res + ' | Failed' : 'Failed';
   }
   if (statusSet['DELIVERING'] || statusSet['RETURNING']) {
     res = res ? res + ' | Incomplete' : 'Incomplete';
-  } 
-  if (statusSet['DELIVERED_BUT_UNCHECKED'] || statusSet['COMPLETE_WITH_DELIVERED'] || statusSet['COMPLETE_WITH_RETURNED'] || statusSet['RETURNED_BUT_UNCHECKED']) {
+  }
+  if (
+    statusSet['DELIVERED_BUT_UNCHECKED'] ||
+    statusSet['COMPLETE_WITH_DELIVERED'] ||
+    statusSet['COMPLETE_WITH_RETURNED'] ||
+    statusSet['RETURNED_BUT_UNCHECKED']
+  ) {
     res = res ? res + ' | Complete' : 'Complete';
   }
   return res;
