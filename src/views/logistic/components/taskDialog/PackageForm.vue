@@ -41,7 +41,8 @@
             style="width: 260px"
             placeholder="Please select"
             filterable
-            allow-create
+            remote
+            :remote-method="query => debounce(remoteMethod(query), 500)"
           >
             <el-option
               v-for="unit in unitList"
@@ -93,7 +94,7 @@ import {
   queryUnitsAPI,
 } from '/@/api/logistic';
 import { packageStatusEnum } from '/@/enums/logistic';
-import { useUserStore, useLogisticStore } from '/@/stores';
+import { useUserStore } from '/@/stores';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -118,7 +119,6 @@ const props = defineProps({
 /* Start Data */
 const taskItem = inject('taskItem');
 
-const logisticStore = useLogisticStore();
 const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
@@ -126,13 +126,6 @@ const taskProducts = Object.assign({}, taskItem.value.products);
 const taskPackage = ref(props.packageItem);
 const previewExcelArr = [].concat(taskPackage.value?.items);
 
-const unitList = computed(() => {
-  return logisticStore.unitList.filter(item => {
-    for (const i in taskProducts) {
-      if (item.sku === taskProducts[i].sku) return true;
-    }
-  });
-});
 const quantityNum = computed(() => {
   let sum=0;
   for (const i in taskProducts) {
@@ -140,22 +133,25 @@ const quantityNum = computed(() => {
   }
   return sum;
 });
-// const filterUnitArr = (filterObj) => {
-//   console.log("quantityNum: ", quantityNum.value);
-//   console.log("unitList", unitList.value);
-//   unitList.value = unitList.value.filter((item) => {
-//     for (let i in taskProducts) {
-//       if (item.sku === taskProducts[i].sku) return true;
-//     }
-//   });
-//   // console.log("filterUnitList", filterUnitList);
-// };
 /* End Data */
 
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
 
-const isDialogPattern = (type) => props.dialogStatus === type;
+const unitList = shallowRef(null);
+const remoteMethod = query => {
+  const taskProducts = taskItem.value.products;
+  if (query) {
+    queryUnitsAPI({ serial: query }).then(data => {
+      unitList.value = data.filter(item => {
+        for (const i in taskProducts) {
+          if (item.sku === taskProducts[i].sku) return true;
+        }
+      });
+    });
+  } else {
+    unitList.value = [];
+  }
+};
 
 const dialogExcelVisible = ref(false);
 
@@ -220,15 +216,6 @@ const handlePackage = (_type) => {
 //     emit('editPackage', taskPackage.value?.id);
 //   }
 // };
-function initGlobalData() {
-  if (unitList.value.length === 0)
-    // init unitList:[]
-    logisticStore.setUnitList();
-}
-
-onMounted(() => {
-  initGlobalData();
-});
 </script>
 
 <style lang="sass" scoped>

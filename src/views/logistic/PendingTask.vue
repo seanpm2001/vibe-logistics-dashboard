@@ -3,11 +3,11 @@
     <div class="statistics">
       <el-date-picker v-model="dateFilter" type="date" :shortcuts="shortcuts" placeholder="Please pick a date" />
       <span> before 11.30 am</span>
-      <el-descriptions border>
+      <el-descriptions :column="2" border>
         <template v-for="(item, key) in skuQTY" :key="key">
           <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
-          <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
-          <el-descriptions-item label="Ful QTY">0</el-descriptions-item>
+          <el-descriptions-item label="Req QTY">{{ item }}</el-descriptions-item>
+          <!-- <el-descriptions-item label="Fulfilled QTY">0</el-descriptions-item> -->
         </template>
       </el-descriptions>
     </div>
@@ -56,14 +56,28 @@
                   <el-row>
                     <div class="cell w-260">
                       <template v-for="unit in item.units" :key="unit.serial">
-                        <el-input v-model="unit.serial" placeholder="Serial" />
+                        <el-select
+                          v-model="unit.serial"
+                          placeholder="Please select"
+                          filterable
+                          remote
+                          :remote-method="query => debounce(remoteMethod(query, task.products, item, unit), 500)"
+                        >
+                          <el-option
+                            v-for="unit in unitList"
+                            :key="unit.serial"
+                            :label="unit.serial + ' : ' + unit.sku"
+                            :value="unit.serial"
+                          />
+                        </el-select>
                       </template>
                     </div>
                     <div class="cell w-260">
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
                     <div class="cell w-260">
-                      <el-button class="mgr-5" type="primary">Submit</el-button>
+                      <el-button v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item)">Update</el-button>
+                      <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item)">Submit</el-button>
                       <el-popconfirm
                           v-if="item?.id"
                           @confirm="handleDeletePackage(item?.id)"
@@ -76,13 +90,13 @@
                             <el-button type="danger">Delete</el-button>
                           </template>
                       </el-popconfirm>
-                      <el-button v-else type="danger" @click="onPackagesChange(task.packages, 'remove', idx)">Remove</el-button>
+                      <el-button v-else type="danger" @click="onPackagesChange(null, task.packages, 'remove', idx)">Remove</el-button>
                     </div>
                   </el-row>
                 </template>
               </div>
             </div>
-            <el-button @click="onPackagesChange(task.packages, 'add')">Add Package</el-button>
+            <el-button @click="onPackagesChange(task.id, task.packages, 'add')">Add Package</el-button>
           </div>
         </el-card>
       </template>
@@ -92,8 +106,13 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { queryTasksAPI, deletePackageAPI } from '/@/api/logistic';
+import { debounce } from '/@/utils';
+import { queryTasksAPI, queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
 import { carrierEnum } from '/@/enums/logistic';
+import { useUserStore, useLogisticStore } from '/@/stores';
+
+// const { role } = storeToRefs(useUserStore());
+const logisticStore = useLogisticStore();
 
 const dateFilter = ref('null');
 const listQuery = ref({
@@ -119,23 +138,61 @@ const shortcuts = [
 const skuQTY = computed(() => { // SKU Quantity Statistics
   const temp = {};
   dataList.value?.forEach(task => {
+    let totalQty = 0;
+    let totalUnitQty = 0;
     task.products.forEach(product => {
       const sku = product.sku;
-      temp[sku] = temp[sku] || {};
-      temp[sku]['req'] = product.quantity;
+      temp[sku] = (temp[sku] || 0) + product.quantity;
+      totalQty += product.quantity || 0;
     });
-    // task.packages.forEach(product => {
-    //   const sku = product.sku;
-    //   temp[sku] = temp[sku] || {};
-    //   temp[sku]['ful'] = product.quantity;
-    // });
+    task.packages.forEach(item => {
+      const units = item.units;
+      totalUnitQty += item.units.length || 0;
+    });
+    if (totalUnitQty < totalQty) {
+      task.packages.forEach(item => {
+        item.units.push({ serial: null });
+      });
+    }
   });
   return temp;
 });
 
-const onPackagesChange = (packages, type, idx) => {
+const unitList = shallowRef(null);
+const remoteMethod = (query, taskProducts, packageItem, unit) => {
+  if (query) {
+    queryUnitsAPI({ serial: query }).then(data => {
+      if (query && data.length === 1) { // 只有一个符合，直接submit
+        const packageId = packageItem.id;
+        unit.serial = query;
+        handleSubmitPackage(packageItem).finally(() => fetchList());
+        return;
+      }
+
+      unitList.value = data.filter(item => {
+        for (const i in taskProducts) {
+          if (item.sku === taskProducts[i].sku) return true;
+        }
+      });
+    });
+  } else {
+    unitList.value = [];
+  }
+};
+
+const handleSubmitPackage = packageItem => {
+  return new Promise((resolve) => {
+    const packageId = packageItem.id;
+    if (packageId)
+      updatePackageAPI(packageId, packageItem).then(() => resolve());
+    else
+      createPackageAPI(packageItem.taskId, packageItem).then(() => resolve());
+  });
+};
+
+const onPackagesChange = (taskId, packages, type, idx) => {
   type === 'add'
-    ? packages.push({id: null, trackingNumber: null, units: [{serial: null}]})
+    ? packages.push({id: null, taskId, trackingNumber: null, units: [{serial: null}]})
     : packages.splice(idx, 1);
 };
 
@@ -159,6 +216,7 @@ const handleDeletePackage = (packageId) => {
 onMounted(() => {
   fetchList();
 });
+
 </script>
 
 <style lang="sass" scoped>
@@ -168,7 +226,7 @@ onMounted(() => {
 
 .statistics
   .el-descriptions
-    width: 380px
+    width: 300px
 
 .package-operation
   .w-260

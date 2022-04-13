@@ -27,7 +27,7 @@
           <el-form-item v-if="isReturnOrRepalce" label="Return/Replace reason">
             <el-select
               v-model="taskItem.returnReason" :disabled="notCommonPermission" placeholder="Please select"
-              filterable allow-create default-first-option
+              filterable default-first-option
             >
               <el-option v-for="(item, key) in taskReasonEnum" :key="item" :label="item" :value="key" />
             </el-select>
@@ -64,33 +64,34 @@
               <el-checkbox :key="true" :label="true">true</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <template v-for="(item, index) in taskItem.products" :key="item.sku">
+          <template v-for="(product, index) in taskItem.products" :key="product.sku">
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
               <svg-icon class="icon" :style="taskItem.products.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
               <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
                 <el-select
-                  v-model="item.sku" :disabled="notCommonPermission" placeholder="Please select"
+                  v-model="product.sku" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
                   <el-option v-for="(item, key) in skuProdcutEnum" :key="key" :label="key" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
-                <el-input :disabled="notCommonPermission" v-model="item.quantity" placeholder="Quantity" />
+                <el-input :disabled="notCommonPermission" v-model="product.quantity" placeholder="Quantity" />
               </el-form-item>
               <el-form-item label="Condition">
-                <el-select :disabled="notCommonPermission" v-model="item.condition" placeholder="Please select" clearable>
-                  <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
+                <el-select :disabled="notCommonPermission" v-model="product.condition" placeholder="Please select" clearable>
+                  <el-option v-for="(condition, key) in unitConditionEnum" :key="condition" :label="condition" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Available">
                 <el-input disabled>999</el-input>
               </el-form-item>
-              <el-form-item v-show="checkedSpecifySerial[0] || item.serialNote?.length" label="Serials">
+              <el-form-item v-show="checkedSpecifySerial[0] || product.serialNote?.length" label="Serials">
                 <el-select
-                  v-model="item.serialNote" :disabled="notCommonPermission" placeholder="Please select"
-                  filterable allow-create default-first-option multiple style="width: 260px"
+                  v-model="product.serialNote" :disabled="notCommonPermission" placeholder="Please select"
+                  filterable style="width: 260px"
+                  multiple :multiple-limit="product.quantity" remote :remote-method="query => debounce(remoteMethod(query), 500)"
                 >
                   <el-option
                     v-for="unit in unitList"
@@ -103,7 +104,6 @@
             </el-row>
           </template>
         </el-card>
-        
 
         <template v-if="!notCommonPermission">
           <el-button v-if="taskItem.id" type="primary" @click="handleWarehouseTask('update')">
@@ -138,15 +138,15 @@
 
 <script setup>
 import { ElMessage, ElTooltip } from 'element-plus';
-import { throttle, debounce } from '/@/utils';
+import { debounce } from '/@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI } from '/@/api/logistic';
+import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
   unitConditionEnum
 } from '/@/enums/logistic';
-import { useUserStore, useLogisticStore } from '/@/stores';
+import { useUserStore } from '/@/stores';
 
 const props = defineProps({
   emptyTaskItem: {
@@ -173,18 +173,25 @@ const specifySerailArr = inject('specifySerailArr');
 const taskOrderItem = inject('taskOrderItem');
 
 const { proxy } = getCurrentInstance();
-const logisticStore = useLogisticStore();
 const { role } = storeToRefs(useUserStore());
 const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value));
 
-const unitList = computed(() => {
+const unitList = shallowRef(null);
+
+const remoteMethod = query => {
   const taskProducts = taskItem.value.products;
-  return logisticStore.unitList.filter(item => {
-    for (const i in taskProducts) {
-      if (item.sku === taskProducts[i].sku) return true;
-    }
-  });
-});
+  if (query) {
+    queryUnitsAPI({ serial: query }).then(data => {
+      unitList.value = data.filter(item => {
+        for (const i in taskProducts) {
+          if (item.sku === taskProducts[i].sku) return true;
+        }
+      });
+    });
+  } else {
+    unitList.value = [];
+  }
+};
 
 const packageArr = ref([]);
 const isOnHold = ref(false);
@@ -264,14 +271,6 @@ const beforeCloseDialog = (done) => {
     });
 };
 
-function initGlobalData() {
-  if (unitList.value.length === 0) // init unitList:[]
-    logisticStore.setUnitList();
-}
-
-onMounted(() => {
-  initGlobalData();
-});
 </script>
 
 <style lang="sass" scoped>

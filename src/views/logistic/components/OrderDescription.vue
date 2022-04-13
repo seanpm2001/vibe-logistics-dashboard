@@ -72,8 +72,6 @@ const props = defineProps({
     required: true
   },
 });
-
-console.log(props.orderItem);
 </script>
 
 <style lang="sass" scoped>
