@@ -111,7 +111,7 @@
                 </template>
               </div>
             </div>
-            <el-button @click="onPackagesChange(task.id, task.packages, 'add')">Add Package</el-button>
+            <el-button @click="onPackagesChange(task, task.packages, 'add')">Add Package</el-button>
           </div>
         </el-card>
       </template>
@@ -240,9 +240,13 @@ const handleSubmitPackage = (packageItem, task) => {
       });
 };
 
-const onPackagesChange = (taskId, packages, type, idx) => {
+const onPackagesChange = (task, packages, type, idx) => {
+  if (!checkAddAble(task)) {
+    ElMessage.error('Exceed quantity limit', 3);
+    return;
+  }
   type === 'add'
-    ? packages.push({id: null, taskId, trackingNumber: null, units: [{serial: null}]})
+    ? packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]})
     : packages.splice(idx, 1);
 };
 
