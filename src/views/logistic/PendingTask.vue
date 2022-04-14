@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <div class="statistics">
-      <el-date-picker v-model="dateFilter" type="date" :shortcuts="shortcuts" value-format="YYYY-MM-DD" placeholder="Please pick a date" />
+      <el-date-picker
+        v-model="dateFilter" :shortcuts="shortcuts"
+        type="date" value-format="YYYY-MM-DD" placeholder="Please pick a date"
+      />
       <span> before 11.30 am</span>
       <el-descriptions :column="2" border>
         <template v-for="(item, key) in skuQTY" :key="key">
@@ -120,7 +123,7 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { debounce } from '/@/utils';
+import { debounce, parseTime } from '/@/utils';
 import { queryTasksAPI, queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
 import { carrierEnum } from '/@/enums/logistic';
 import { useUserStore, useLogisticStore } from '/@/stores';
@@ -172,7 +175,8 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
     task.products.forEach(product => {
       const sku = product.sku;
       temp[sku] = (temp[sku] || 0) + product.quantity;
-    });  });
+    });
+  });
   return temp;
 });
 
@@ -269,9 +273,7 @@ const onPackagesChange = (task, packages, type, idx) => {
     : packages.splice(idx, 1);
 };
 
-const formatDate = date => {
-  return date.replace('T', ' ').replace(/\.\d+/, '');
-};
+const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
 
 const handleDeletePackage = (packageId) => {
   packageId && deletePackageAPI(packageId).then(() => {
@@ -279,7 +281,12 @@ const handleDeletePackage = (packageId) => {
   });
 };
 
+function initDateFilter () {
+  dateFilter.value = parseTime(new Date(), '{y}-{m}-{d}');
+}
+
 onMounted(() => {
+  initDateFilter();
   fetchList();
 });
 
