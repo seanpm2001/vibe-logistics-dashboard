@@ -23,7 +23,7 @@
           </el-descriptions>
           <div class="package-operation">
             <el-row>
-              <div class="label w-380">Meta Data</div>
+              <div class="meta-data label w-380">Meta Data</div>
               <div class="label w-260">serials(by shipping package)</div>
               <div class="label w-260">Tracking Number</div>
               <div class="label w-260">Operation</div>
@@ -55,23 +55,36 @@
                 <template v-for="(item, idx) in task.packages" :key="item.trackingNumber">
                   <el-row>
                     <div class="cell w-260">
-                      <template v-for="unit in item.units" :key="unit.serial">
-                        <el-select
-                          v-model="unit.serial"
-                          ref="unitSelect"
-                          placeholder="Please select"
-                          filterable
-                          remote
-                          :remote-method="(query) => debounce(remoteMethod(query, task.products, item, unit), 500)"
-                          @blur="handleInputBlur"
-                        >
-                          <el-option
-                            v-for="unit in unitList"
-                            :key="unit.serial"
-                            :label="unit.serial"
-                            :value="unit.serial"
+                      <template v-for="(unit, index) in item.units" :key="unit.serial">
+                        <div class="f-row col-center">
+                          <svg-icon
+                            class="icon"
+                            icon-name="add"
+                            @click="handleUnitChange(item.units, index, 'add')"
                           />
-                        </el-select>
+                          <svg-icon
+                            class="icon"
+                            :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
+                            icon-name="minus"
+                            @click="handleUnitChange(item.units, index, 'minus')"
+                          />
+                          <el-select
+                            v-model="unit.serial"
+                            ref="unitSelect"
+                            placeholder="Please select"
+                            filterable
+                            remote
+                            :remote-method="(query) => debounce(remoteMethod(query, task.products, item, unit), 500)"
+                            @blur="handleInputBlur"
+                          >
+                            <el-option
+                              v-for="unit in unitList"
+                              :key="unit.serial"
+                              :label="unit.serial"
+                              :value="unit.serial"
+                            />
+                          </el-select>
+                        </div>
                       </template>
                     </div>
                     <div class="cell w-260">
@@ -141,25 +154,18 @@ const shortcuts = [
 const skuQTY = computed(() => { // SKU Quantity Statistics
   const temp = {};
   dataList.value?.forEach(task => {
-    let totalQty = 0;
-    let totalUnitQty = 0;
     task.products.forEach(product => {
       const sku = product.sku;
       temp[sku] = (temp[sku] || 0) + product.quantity;
-      totalQty += product.quantity || 0;
-    });
-    task.packages.forEach(item => {
-      const units = item.units;
-      totalUnitQty += item.units.length || 0;
-    });
-    if (totalUnitQty < totalQty) {
-      task.packages.forEach(item => {
-        item.units.push({ serial: null });
-      });
-    }
-  });
+    });  });
   return temp;
 });
+
+const handleUnitChange = (unitArr, idx, type) => {
+  type === 'add'
+    ? unitArr.push({ serial: null, status: 'DELIVERING' })
+    : unitArr.splice(idx, 1);
+};
 
 const unitList = shallowRef(null);
 const remoteMethod = (query, taskProducts, packageItem, unit) => {
@@ -174,9 +180,8 @@ const remoteMethod = (query, taskProducts, packageItem, unit) => {
       }
 
       unitList.value = data.filter(item => {
-        for (const i in taskProducts) {
+        for (const i in taskProducts)
           if (item.sku === taskProducts[i].sku) return true;
-        }
       });
     });
   } else {
@@ -184,19 +189,35 @@ const remoteMethod = (query, taskProducts, packageItem, unit) => {
   }
 };
 
+let curUnitInput = null;
 const handleInputBlur = el => {
-  setTimeout(() => {
-    const next = el.target.parentNode.parentNode.parentNode.nextElementSibling;
-    next && next?.querySelector('input').click();
-  }, 500);
+  curUnitInput = el.target.parentNode.parentNode.parentNode.parentNode;
+  unitList.value = [];
+  clickNextUnitInput();
 };
 
+function clickNextUnitInput () {
+  setTimeout(() => {
+    const nextUnitInput = curUnitInput.nextElementSibling;
+    nextUnitInput && nextUnitInput?.querySelector('input').click();
+  }, 1000);
+}
 const handleSubmitPackage = packageItem => {
   const packageId = packageItem.id;
   if (packageId)
-    updatePackageAPI(packageId, packageItem).finally(() => fetchList());
+    updatePackageAPI(packageId, packageItem)
+      .then(data => Object.assign(packageItem, data))
+      .finally(() => {
+        handleUnitChange(packageItem.units, null, 'add');
+        // clickNextUnitInput();
+      });
   else
-    createPackageAPI(packageItem.taskId, packageItem).finally(() => fetchList());
+    createPackageAPI(packageItem.taskId, packageItem)
+      .then(data => Object.assign(packageItem, data))
+      .finally(() => {
+        handleUnitChange(packageItem.units, null, 'add');
+        // clickNextUnitInput();
+      });
 };
 
 const onPackagesChange = (taskId, packages, type, idx) => {
@@ -249,4 +270,8 @@ onMounted(() => {
     padding: 16px
     min-height: calc(74px - 32px)
     border: 1px solid rgb(235, 238, 245)
+  .label
+    background-color: rgb(250, 250, 250)
+  .meta-data
+    background-color: rgb(250, 250, 250)
 </style>
