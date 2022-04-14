@@ -306,6 +306,10 @@ onMounted(() => {
     width: 200px
   .w-380
     width: 380px
+    @media (max-width: 1420px)
+      width: 220px
+    @media (max-width: 1281px)
+      width: 200px
   .el-input
     max-width: 200px
   .label, .cell
