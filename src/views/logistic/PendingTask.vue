@@ -58,15 +58,17 @@
                       <template v-for="unit in item.units" :key="unit.serial">
                         <el-select
                           v-model="unit.serial"
+                          ref="unitSelect"
                           placeholder="Please select"
                           filterable
                           remote
-                          :remote-method="query => debounce(remoteMethod(query, task.products, item, unit), 500)"
+                          :remote-method="(query) => debounce(remoteMethod(query, task.products, item, unit), 500)"
+                          @blur="handleInputBlur"
                         >
                           <el-option
                             v-for="unit in unitList"
                             :key="unit.serial"
-                            :label="unit.serial + ' : ' + unit.sku"
+                            :label="unit.serial"
                             :value="unit.serial"
                           />
                         </el-select>
@@ -113,6 +115,7 @@ import { useUserStore, useLogisticStore } from '/@/stores';
 
 // const { role } = storeToRefs(useUserStore());
 const logisticStore = useLogisticStore();
+const { proxy } = getCurrentInstance();
 
 const dateFilter = ref('null');
 const listQuery = ref({
@@ -161,33 +164,48 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
 const unitList = shallowRef(null);
 const remoteMethod = (query, taskProducts, packageItem, unit) => {
   if (query) {
-    queryUnitsAPI({ serial: query }).then(data => {
-      if (query && data.length === 1) { // 只有一个符合，直接submit
-        const packageId = packageItem.id;
-        unit.serial = query;
-        handleSubmitPackage(packageItem).finally(() => fetchList());
-        return;
-      }
+    query = query.replace(';', '');
+    // queryUnitsAPI({ serial: query }).then(data => {
+    //   if (query && data.length === 1) { // 只有一个符合，直接submit
+    //     const packageId = packageItem.id;
+    //     unit.serial = query;
+    //     handleSubmitPackage(packageItem);
+    //     return;
+    //   }
 
-      unitList.value = data.filter(item => {
-        for (const i in taskProducts) {
-          if (item.sku === taskProducts[i].sku) return true;
-        }
-      });
-    });
+    //   unitList.value = data.filter(item => {
+    //     for (const i in taskProducts) {
+    //       if (item.sku === taskProducts[i].sku) return true;
+    //     }
+    //   });
+    // });
   } else {
     unitList.value = [];
   }
 };
 
-const handleSubmitPackage = packageItem => {
-  return new Promise((resolve) => {
-    const packageId = packageItem.id;
-    if (packageId)
-      updatePackageAPI(packageId, packageItem).then(() => resolve());
-    else
-      createPackageAPI(packageItem.taskId, packageItem).then(() => resolve());
+
+const keyCoke = 13;
+const keyboardEvent = document.createEvent('KeyboardEvent');
+const initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? 'initKeyboardEvent' : 'initKeyEvent';
+keyboardEvent[initMethod]('keydown', true, true, window, false, false, false, false, keyCoke, 0);
+const handleInputBlur = el => {
+  proxy.$nextTick(() => {
+    const next = el.target.parentNode.parentNode.parentNode.nextSibling;
+    if (next) {
+      next?.querySelector('input').focus();
+      next?.querySelector('input').click();
+      document.dispatchEvent(keyboardEvent);
+    }
   });
+};
+
+const handleSubmitPackage = packageItem => {
+  const packageId = packageItem.id;
+  if (packageId)
+    updatePackageAPI(packageId, packageItem).finally(() => fetchList());
+  else
+    createPackageAPI(packageItem.taskId, packageItem).finally(() => fetchList());
 };
 
 const onPackagesChange = (taskId, packages, type, idx) => {

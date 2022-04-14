@@ -77,7 +77,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
-                <el-input :disabled="notCommonPermission" v-model="product.quantity" placeholder="Quantity" />
+                <el-input-number :min="1" :disabled="notCommonPermission" v-model="product.quantity" placeholder="Quantity" />
               </el-form-item>
               <el-form-item label="Condition">
                 <el-select :disabled="notCommonPermission" v-model="product.condition" placeholder="Please select" clearable>
@@ -217,6 +217,7 @@ const handleWarehouseTask = _type => {
   } else {
     updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
       taskItem.value = _data || taskItem.value;
+      emit('fetchList');
     });
   }
 };
