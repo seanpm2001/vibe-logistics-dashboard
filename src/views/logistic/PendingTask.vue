@@ -165,20 +165,20 @@ const unitList = shallowRef(null);
 const remoteMethod = (query, taskProducts, packageItem, unit) => {
   if (query) {
     query = query.replace(';', '');
-    // queryUnitsAPI({ serial: query }).then(data => {
-    //   if (query && data.length === 1) { // 只有一个符合，直接submit
-    //     const packageId = packageItem.id;
-    //     unit.serial = query;
-    //     handleSubmitPackage(packageItem);
-    //     return;
-    //   }
+    queryUnitsAPI({ serial: query }).then(data => {
+      if (query && data.length === 1) { // 只有一个符合，直接submit
+        const packageId = packageItem.id;
+        unit.serial = query;
+        handleSubmitPackage(packageItem);
+        return;
+      }
 
-    //   unitList.value = data.filter(item => {
-    //     for (const i in taskProducts) {
-    //       if (item.sku === taskProducts[i].sku) return true;
-    //     }
-    //   });
-    // });
+      unitList.value = data.filter(item => {
+        for (const i in taskProducts) {
+          if (item.sku === taskProducts[i].sku) return true;
+        }
+      });
+    });
   } else {
     unitList.value = [];
   }
