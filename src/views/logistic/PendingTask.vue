@@ -13,8 +13,8 @@
     </div>
     <el-divider />
     <div class="task-list">
-      <template v-for="task in dataList" :key="task.id">
-        <el-card ref="taskArr">
+      <template v-for="(task, taskIdx) in dataList" :key="task.id">
+        <el-card>
           <el-descriptions :column="4" direction="vertical" border>
             <el-descriptions-item width="300px" label="Create Date">{{ formatDate(task.createdAt) }}</el-descriptions-item>
             <el-descriptions-item label="Task ID">{{ task.id }}</el-descriptions-item>
@@ -51,10 +51,10 @@
                   </el-row>
                 </template>
               </div>
-              <div class="f-col">
-                <template v-for="(item, idx) in task.packages" :key="item.trackingNumber">
-                  <el-row>
-                    <div class="cell w-260">
+              <div ref="taskPackageArr" class="f-col">
+                <template v-for="(item, packageIdx) in task.packages" :key="item.trackingNumber">
+                  <el-row class="package-row">
+                    <div class="serial-cell cell w-260">
                       <template v-for="(unit, index) in item.units" :key="unit.serial">
                         <div class="f-row col-center">
                           <svg-icon
@@ -74,8 +74,7 @@
                             filterable
                             remote
                             :remote-method="(query) => debounce(remoteMethod(query, task, item, unit), 500)"
-                            @focus="handleInputFocus"
-                            @blur="handleInputBlur"
+                            @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                           >
                             <el-option
                               v-for="unit in unitList"
@@ -105,7 +104,7 @@
                             <el-button type="danger">Delete</el-button>
                           </template>
                       </el-popconfirm>
-                      <el-button v-else type="danger" @click="onPackagesChange(null, task.packages, 'remove', idx)">Remove</el-button>
+                      <el-button v-else type="danger" @click="onPackagesChange(null, task.packages, 'remove', packageIdx)">Remove</el-button>
                     </div>
                   </el-row>
                 </template>
@@ -222,26 +221,22 @@ const remoteMethod = (query, task, packageItem, unit) => {
   }
 };
 
-let nextUnitInput = null;
-const handleInputFocus = el => {
-  nextUnitInput = el.target.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
-};
-const handleInputBlur = el => {
-  // setTimeout(() => {
-  //   nextUnitInput && nextUnitInput?.querySelector('input').click();
-  // }, 1000);
-  proxy.$nextTick(() => {
-    console.log('proxy: ', proxy.$refs);
-  });
-  unitList.value = [];
+let focusStorage = null;
+const handleInputFocus = (el, taskIdx, packageIdx) => {
+  focusStorage = { taskIdx, packageIdx };
 };
 
-// function clickNextUnitInput () {
-//   setTimeout(() => {
-//     const nextUnitInput = curUnitInput.nextElementSibling;
-//     nextUnitInput && nextUnitInput?.querySelector('input').click();
-//   }, 500);
-// }
+function clickNextUnitInput () {
+  const { taskIdx, packageIdx } = focusStorage;
+  proxy.$nextTick(() => {
+    const serialCell = proxy.$refs['taskPackageArr'][taskIdx].querySelectorAll('.package-row')[packageIdx].querySelector('.serial-cell');
+    setTimeout(() => {
+      const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');
+      lastUnitInput.click();
+    }, 500);
+  });
+}
+
 const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
   packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
@@ -252,15 +247,16 @@ const handleSubmitPackage = (packageItem, task) => {
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
         handleUnitChange(packageItem.units, null, 'add', task);
-        // clickNextUnitInput();
+        clickNextUnitInput();
       });
   else
     createPackageAPI(packageItem.taskId, packageItem)
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
         handleUnitChange(packageItem.units, null, 'add', task);
-        // clickNextUnitInput();
+        clickNextUnitInput();
       });
+  unitList.value = [];
 };
 
 const onPackagesChange = (task, packages, type, idx) => {
