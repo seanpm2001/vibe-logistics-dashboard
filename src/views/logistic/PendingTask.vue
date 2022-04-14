@@ -184,20 +184,11 @@ const remoteMethod = (query, taskProducts, packageItem, unit) => {
   }
 };
 
-
-const keyCoke = 13;
-const keyboardEvent = document.createEvent('KeyboardEvent');
-const initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? 'initKeyboardEvent' : 'initKeyEvent';
-keyboardEvent[initMethod]('keydown', true, true, window, false, false, false, false, keyCoke, 0);
 const handleInputBlur = el => {
-  proxy.$nextTick(() => {
-    const next = el.target.parentNode.parentNode.parentNode.nextSibling;
-    if (next) {
-      next?.querySelector('input').focus();
-      next?.querySelector('input').click();
-      document.dispatchEvent(keyboardEvent);
-    }
-  });
+  setTimeout(() => {
+    const next = el.target.parentNode.parentNode.parentNode.nextElementSibling;
+    next && next?.querySelector('input').click();
+  }, 500);
 };
 
 const handleSubmitPackage = packageItem => {
