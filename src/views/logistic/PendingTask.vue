@@ -60,13 +60,13 @@
                           <svg-icon
                             class="icon"
                             icon-name="add"
-                            @click="handleUnitChange(item.units, index, 'add')"
+                            @click="handleUnitChange(item.units, index, 'add', task)"
                           />
                           <svg-icon
                             class="icon"
                             :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
                             icon-name="minus"
-                            @click="handleUnitChange(item.units, index, 'minus')"
+                            @click="handleUnitChange(item.units, index, 'minus', task)"
                           />
                           <el-select
                             v-model="unit.serial"
@@ -74,7 +74,7 @@
                             placeholder="Please select"
                             filterable
                             remote
-                            :remote-method="(query) => debounce(remoteMethod(query, task.products, item, unit), 500)"
+                            :remote-method="(query) => debounce(remoteMethod(query, task, item, unit), 500)"
                             @blur="handleInputBlur"
                           >
                             <el-option
@@ -91,8 +91,8 @@
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
                     <div class="cell w-260">
-                      <el-button v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item)">Update</el-button>
-                      <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item)">Submit</el-button>
+                      <el-button v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Update</el-button>
+                      <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Submit</el-button>
                       <el-popconfirm
                           v-if="item?.id"
                           @confirm="handleDeletePackage(item?.id)"
@@ -161,24 +161,41 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   return temp;
 });
 
-const handleUnitChange = (unitArr, idx, type) => {
+function checkAddAble (task) {
+  let productQty = 0; // Lisa指定的总数
+  let unitQty = 0; // package中已有unit的总数
+  task.products.forEach(product => {
+    productQty += product.quantity || 0;
+  });
+  task.packages.forEach(packageItem => {
+    unitQty += packageItem.units?.length || 0;
+  });
+  return unitQty < productQty;
+}
+
+const handleUnitChange = (unitArr, idx, type, task) => {
+  if (!checkAddAble(task)) {
+    ElMessage.error('Exceed quantity limit', 3);
+    return;
+  }
   type === 'add'
     ? unitArr.push({ serial: null, status: 'DELIVERING' })
     : unitArr.splice(idx, 1);
 };
 
 const unitList = shallowRef(null);
-const remoteMethod = (query, taskProducts, packageItem, unit) => {
+const remoteMethod = (query, task, packageItem, unit) => {
   if (query) {
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
       if (query && data.length === 1) { // 只有一个符合，直接submit
         const packageId = packageItem.id;
         unit.serial = query;
-        handleSubmitPackage(packageItem);
+        handleSubmitPackage(packageItem, task);
         return;
       }
 
+      const taskProducts = task.products;
       unitList.value = data.filter(item => {
         for (const i in taskProducts)
           if (item.sku === taskProducts[i].sku) return true;
@@ -202,20 +219,23 @@ function clickNextUnitInput () {
     nextUnitInput && nextUnitInput?.querySelector('input').click();
   }, 1000);
 }
-const handleSubmitPackage = packageItem => {
+const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
+  packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
+    !unit.serial && arr.splice(idx, 1);
+  });
   if (packageId)
     updatePackageAPI(packageId, packageItem)
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
-        handleUnitChange(packageItem.units, null, 'add');
+        handleUnitChange(packageItem.units, null, 'add', task);
         // clickNextUnitInput();
       });
   else
     createPackageAPI(packageItem.taskId, packageItem)
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
-        handleUnitChange(packageItem.units, null, 'add');
+        handleUnitChange(packageItem.units, null, 'add', task);
         // clickNextUnitInput();
       });
 };
