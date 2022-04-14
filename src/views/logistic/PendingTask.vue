@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="statistics">
-      <el-date-picker v-model="dateFilter" type="date" :shortcuts="shortcuts" placeholder="Please pick a date" />
+      <el-date-picker v-model="dateFilter" type="date" :shortcuts="shortcuts" value-format="YYYY-MM-DD" placeholder="Please pick a date" />
       <span> before 11.30 am</span>
       <el-descriptions :column="2" border>
         <template v-for="(item, key) in skuQTY" :key="key">
@@ -14,7 +14,7 @@
     <el-divider />
     <div class="task-list">
       <template v-for="task in dataList" :key="task.id">
-        <el-card>
+        <el-card ref="taskArr">
           <el-descriptions :column="4" direction="vertical" border>
             <el-descriptions-item width="300px" label="Create Date">{{ formatDate(task.createdAt) }}</el-descriptions-item>
             <el-descriptions-item label="Task ID">{{ task.id }}</el-descriptions-item>
@@ -70,11 +70,11 @@
                           />
                           <el-select
                             v-model="unit.serial"
-                            ref="unitSelect"
                             placeholder="Please select"
                             filterable
                             remote
                             :remote-method="(query) => debounce(remoteMethod(query, task, item, unit), 500)"
+                            @focus="handleInputFocus"
                             @blur="handleInputBlur"
                           >
                             <el-option
@@ -130,11 +130,27 @@ import { useUserStore, useLogisticStore } from '/@/stores';
 const logisticStore = useLogisticStore();
 const { proxy } = getCurrentInstance();
 
-const dateFilter = ref('null');
+const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 10,
-  search: ''
+  end: ''
+});
+
+
+const fetchList = () => {
+  if (listQuery.value.end)
+    queryTasksAPI(listQuery.value).then((_data) => {
+      dataList.value = _data.items;
+      total.value = _data.total;
+    });
+};
+
+watchEffect(() => {
+  if (dateFilter.value) {
+    listQuery.value.end = dateFilter.value + 'T11:30:00';
+    fetchList();
+  }
 });
 
 const total = ref(0);
@@ -174,7 +190,7 @@ function checkAddAble (task) {
 }
 
 const handleUnitChange = (unitArr, idx, type, task) => {
-  if (!checkAddAble(task)) {
+  if (!checkAddAble(task) || type === 'remove') {
     ElMessage.error('Exceed quantity limit', 3);
     return;
   }
@@ -206,19 +222,26 @@ const remoteMethod = (query, task, packageItem, unit) => {
   }
 };
 
-let curUnitInput = null;
+let nextUnitInput = null;
+const handleInputFocus = el => {
+  nextUnitInput = el.target.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
+};
 const handleInputBlur = el => {
-  curUnitInput = el.target.parentNode.parentNode.parentNode.parentNode;
+  // setTimeout(() => {
+  //   nextUnitInput && nextUnitInput?.querySelector('input').click();
+  // }, 1000);
+  proxy.$nextTick(() => {
+    console.log('proxy: ', proxy.$refs);
+  });
   unitList.value = [];
-  clickNextUnitInput();
 };
 
-function clickNextUnitInput () {
-  setTimeout(() => {
-    const nextUnitInput = curUnitInput.nextElementSibling;
-    nextUnitInput && nextUnitInput?.querySelector('input').click();
-  }, 1000);
-}
+// function clickNextUnitInput () {
+//   setTimeout(() => {
+//     const nextUnitInput = curUnitInput.nextElementSibling;
+//     nextUnitInput && nextUnitInput?.querySelector('input').click();
+//   }, 500);
+// }
 const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
   packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
@@ -248,13 +271,6 @@ const onPackagesChange = (task, packages, type, idx) => {
   type === 'add'
     ? packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]})
     : packages.splice(idx, 1);
-};
-
-const fetchList = () => {
-  queryTasksAPI(listQuery.value).then((_data) => {
-    dataList.value = _data.items;
-    total.value = _data.total;
-  });
 };
 
 const formatDate = date => {

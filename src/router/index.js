@@ -111,7 +111,7 @@ export const asyncRoutes = [
         meta: {
           title: 'Manage Role',
           icon: 'sidebar-role',
-          roles: ['admin','manager']
+          roles: ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']
         }
       }
     ]

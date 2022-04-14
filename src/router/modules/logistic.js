@@ -23,7 +23,8 @@ export const logisticRouter = [
         path: 'pending-task',
         component: () => import('/@/views/logistic/PendingTask.vue'),
         name: 'PendingTask',
-        meta: { title: 'Pending Task', icon: 'sidebar-task' }
+        meta: { title: 'Pending Task', icon: 'sidebar-task' },
+        roles: ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']
       },
       {
         path: 'package',
