@@ -405,8 +405,8 @@ onMounted(() => {
   min-height: calc(100vh - 91px - 32px)
 
 .statistics
-  :deep(.el-descriptions)
-    width: 400px
+  .el-descriptions
+    width: 420px
 
 .package-operation
   .serial-cell, .serial-label
