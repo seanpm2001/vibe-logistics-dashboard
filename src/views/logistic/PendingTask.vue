@@ -6,11 +6,11 @@
         type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
       />
       <span> before 11.30 am</span>
-      <el-descriptions :column="2" border>
+      <el-descriptions :column="3" border>
         <template v-for="(item, key) in skuQTY" :key="key">
           <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
-          <el-descriptions-item label="Req QTY">{{ item }}</el-descriptions-item>
-          <!-- <el-descriptions-item label="Fulfilled QTY">0</el-descriptions-item> -->
+          <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
+          <el-descriptions-item label="Fulfilled QTY">{{ item.ful || 0 }}</el-descriptions-item>
         </template>
       </el-descriptions>
     </div>
@@ -191,7 +191,15 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   dataList.value?.forEach(task => {
     task.products.forEach(product => {
       const sku = product.sku;
-      temp[sku] = (temp[sku] || 0) + product.quantity;
+      temp[sku] = temp[sku] || {};
+      temp[sku]['req'] = (temp[sku]['req'] || 0) + product.quantity;
+    });
+    task.packages.forEach(packageItem => {
+      packageItem.units.forEach(unit => {
+        const sku = unit.item.sku;
+        temp[sku] = temp[sku] || {};
+        temp[sku]['ful'] = (temp[sku]['ful'] || 0) + 1;
+      });
     });
   });
   return temp;
@@ -364,7 +372,7 @@ onMounted(() => {
 
 .statistics
   .el-descriptions
-    width: 300px
+    width: 400px
 
 .package-operation
   .serial-cell, .serial-label
