@@ -27,9 +27,9 @@
           <div class="package-operation">
             <el-row>
               <div class="meta-data label w-380">Meta Data</div>
-              <div class="label w-260">serials(by shipping package)</div>
-              <div class="label w-260">Tracking Number</div>
-              <div class="label w-260">Operation</div>
+              <div class="serial-label label">serials(by shipping package)</div>
+              <div class="label w-200">Tracking Number</div>
+              <div class="label w-200">Operation</div>
             </el-row>
             <div class="f-row">
               <div class="meta-data cell w-380">
@@ -57,16 +57,16 @@
               <div ref="taskPackageArr" class="f-col">
                 <template v-for="(item, packageIdx) in task.packages" :key="item.trackingNumber">
                   <el-row class="package-row">
-                    <div class="serial-cell cell w-260">
+                    <div class="serial-cell cell">
                       <template v-for="(unit, index) in item.units" :key="unit.serial">
                         <div class="f-row col-center">
                           <svg-icon
-                            class="icon"
+                            class="icon mgr-5"
                             icon-name="add"
                             @click="handleUnitChange(item.units, index, 'add', task)"
                           />
                           <svg-icon
-                            class="icon"
+                            class="icon mgr-5"
                             :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
                             icon-name="minus"
                             @click="handleUnitChange(item.units, index, 'remove', task)"
@@ -89,10 +89,10 @@
                         </div>
                       </template>
                     </div>
-                    <div class="cell w-260">
+                    <div class="cell w-200">
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
-                    <div class="cell w-260">
+                    <div class="cell w-200">
                       <el-button v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Update</el-button>
                       <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Submit</el-button>
                       <el-popconfirm
@@ -113,7 +113,7 @@
                 </template>
               </div>
             </div>
-            <el-button @click="onPackagesChange(task, task.packages, 'add')">Add Package</el-button>
+            <el-button :disabled="disableNewPackage(task.packages)" @click="onPackagesChange(task, task.packages, 'add')">Add Package</el-button>
           </div>
         </el-card>
       </template>
@@ -179,6 +179,12 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   });
   return temp;
 });
+
+const disableNewPackage = packages => {
+  if (packages.length === 0 || packages[packages.length - 1]?.id)
+    return false;
+  return true;
+};
 
 function checkAddAble (task) {
   let productQty = 0; // Lisa指定的总数
@@ -281,10 +287,18 @@ const handleSubmitPackage = (packageItem, task) => {
   unitList.value = [];
 };
 
+function removeEmptyUnit (packageItem) {
+  packageItem && packageItem.units.forEach((unit, idx, arr) => {
+    if (!unit.serial)
+      arr.splice(idx--, 1);
+  });
+}
+
 const onPackagesChange = (task, packages, type, idx) => {
   if (type === 'remove')
     packages.splice(idx, 1);
   else {
+    removeEmptyUnit(packages[packages.length - 1]);
     if (!checkAddAble(task)) {
       ElMessage.error('Exceed quantity limit', 3);
       return;
@@ -322,13 +336,13 @@ onMounted(() => {
     width: 300px
 
 .package-operation
-  .w-260
+  .serial-cell, .serial-label
+    width: 220px
+  .w-200
     width: 200px
   .w-380
     width: 380px
     @media (max-width: 1420px)
-      width: 220px
-    @media (max-width: 1281px)
       width: 200px
   .el-input
     max-width: 200px
