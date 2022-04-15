@@ -410,5 +410,5 @@ onMounted(() => {
   .meta-data
     background-color: rgb(250, 250, 250)
 :deep(.error-border-tip)
-  border-color: red !important
+  border: 2px solid red !important
 </style>
