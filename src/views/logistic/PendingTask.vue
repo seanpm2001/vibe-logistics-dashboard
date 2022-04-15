@@ -69,7 +69,7 @@
                             class="icon"
                             :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
                             icon-name="minus"
-                            @click="handleUnitChange(item.units, index, 'minus', task)"
+                            @click="handleUnitChange(item.units, index, 'remove', task)"
                           />
                           <el-select
                             v-model="unit.serial"
@@ -193,13 +193,15 @@ function checkAddAble (task) {
 }
 
 const handleUnitChange = (unitArr, idx, type, task) => {
-  if (!checkAddAble(task) && type === 'add') {
-    ElMessage.error('Exceed quantity limit', 3);
-    return;
+  if (type === 'remove')
+    unitArr.splice(idx, 1);
+  else {
+    if (!checkAddAble(task)) {
+      ElMessage.error('Exceed quantity limit', 3);
+      return;
+    }
+    unitArr.push({ serial: null, status: 'DELIVERING' });
   }
-  type === 'add'
-    ? unitArr.push({ serial: null, status: 'DELIVERING' })
-    : unitArr.splice(idx, 1);
 };
 
 function checkIfRepeated (packageItem, query) {
@@ -276,13 +278,15 @@ const handleSubmitPackage = (packageItem, task) => {
 };
 
 const onPackagesChange = (task, packages, type, idx) => {
-  if (!checkAddAble(task)) {
-    ElMessage.error('Exceed quantity limit', 3);
-    return;
+  if (type === 'remove')
+    packages.splice(idx, 1);
+  else {
+    if (!checkAddAble(task)) {
+      ElMessage.error('Exceed quantity limit', 3);
+      return;
+    }
+    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]})
   }
-  type === 'add'
-    ? packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]})
-    : packages.splice(idx, 1);
 };
 
 const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
