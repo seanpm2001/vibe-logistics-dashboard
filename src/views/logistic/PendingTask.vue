@@ -217,6 +217,10 @@ const remoteMethod = (query, task, packageItem, unit) => {
   if (query) {
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
+      if (data.length === 0) {
+        ElMessage.error('Serial can\'t be found.', 3);
+        return;
+      }
       if (checkIfRepeated(packageItem, query)) {
         ElMessage.error('Repeated Serial.', 3);
         return;
@@ -285,7 +289,7 @@ const onPackagesChange = (task, packages, type, idx) => {
       ElMessage.error('Exceed quantity limit', 3);
       return;
     }
-    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]})
+    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]});
   }
 };
 
