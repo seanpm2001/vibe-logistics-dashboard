@@ -405,7 +405,7 @@ onMounted(() => {
   min-height: calc(100vh - 91px - 32px)
 
 .statistics
-  .el-descriptions
+  :deep(.el-descriptions)
     width: 400px
 
 .package-operation
