@@ -55,7 +55,7 @@
                 </template>
               </div>
               <div ref="taskPackageArr" class="f-col">
-                <template v-for="(item, packageIdx) in task.packages" :key="item.trackingNumber">
+                <template v-for="(item, packageIdx) in task.packages" :key="item.id">
                   <el-row class="package-row">
                     <div class="serial-cell cell">
                       <template v-for="(unit, index) in item.units" :key="unit.serial">
@@ -93,8 +93,18 @@
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
                     <div class="cell w-200">
-                      <el-button v-if="item.id" :disabled="diableUpdatePackage(item, packageIdx, taskIdx)" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Update</el-button>
-                      <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Submit</el-button>
+                      <el-button
+                        v-if="item.id" :disabled="diableUpdatePackage(item, packageIdx, taskIdx)"
+                        class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                      >
+                        Update
+                      </el-button>
+                      <el-button
+                        v-else :disabled="!item.trackingNumber"
+                        class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                      >
+                        Submit
+                      </el-button>
                       <el-popconfirm
                           v-if="item?.id"
                           @confirm="handleDeletePackage(item?.id)"
@@ -286,6 +296,11 @@ const handleSubmitPackage = (packageItem, task) => {
   packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
     !unit.serial && arr.splice(idx, 1);
   });
+  if (packageItem.units.length === 0) {
+    ElMessage.error('Empty Serials!', 3);
+    packageItem.units.push({ serial: null }); // 填充1个unit给被清空的units双向绑定数据
+    return;
+  }
   if (packageId)
     updatePackageAPI(packageId, packageItem)
       .then(data => Object.assign(packageItem, data))
