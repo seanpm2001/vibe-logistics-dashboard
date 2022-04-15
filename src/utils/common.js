@@ -2,7 +2,7 @@
  * @param {string} url
  * @returns {Object}
  */
- export function getQueryObject(url) {
+export function getQueryObject(url) {
   url = url === null ? window.location.href : url;
   const search = url.substring(url.lastIndexOf('?') + 1);
   const obj = {};

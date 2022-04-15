@@ -193,7 +193,7 @@ function checkAddAble (task) {
 }
 
 const handleUnitChange = (unitArr, idx, type, task) => {
-  if (!checkAddAble(task) || type === 'remove') {
+  if (!checkAddAble(task) && type === 'add') {
     ElMessage.error('Exceed quantity limit', 3);
     return;
   }
@@ -202,11 +202,23 @@ const handleUnitChange = (unitArr, idx, type, task) => {
     : unitArr.splice(idx, 1);
 };
 
+function checkIfRepeated (packageItem, query) {
+  let repeated = false;
+  packageItem.units.forEach(unit => {
+    unit.serial === query && (repeated = true);
+  });
+  return repeated;
+}
+
 const unitList = shallowRef(null);
 const remoteMethod = (query, task, packageItem, unit) => {
   if (query) {
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
+      if (checkIfRepeated(packageItem, query)) {
+        ElMessage.error('Repeated Serial.', 3);
+        return;
+      }
       if (query && data.length === 1) { // 只有一个符合，直接submit
         const packageId = packageItem.id;
         unit.serial = query;
