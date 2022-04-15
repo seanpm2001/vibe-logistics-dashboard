@@ -39,11 +39,17 @@
               <div class="meta-data cell w-380">
                 <template v-for="product in task.products" :key="product.sku">
                   <el-row align="middle">
-                    sku: <el-tag size="small">{{product.sku}}</el-tag>
+                    sku: <el-tag size="small">{{ product.sku }}</el-tag>
                     <el-divider direction="vertical" />
-                    req: <el-tag size="small">{{product.quantity}} </el-tag>
+                    req: <el-tag size="small">{{ product.quantity }} </el-tag>
                     <el-divider direction="vertical" />
-                    ful: <el-tag size="small">0</el-tag>
+                    ful: 
+                    <el-tag
+                      size="small"
+                      :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
+                    >
+                      {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
+                    </el-tag>
                     <el-divider v-if="product.serialNote.length" direction="vertical" />
                     <el-tooltip v-if="product.serialNote.length" effect="light">
                       <el-button size="small">Specify Serial:</el-button>
@@ -210,6 +216,19 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   });
   return temp;
 });
+
+const calTaskFulQTy = (packageArr) => {
+  const temp = {};
+  packageArr.forEach(packageItem => {
+    packageItem.units.forEach(unit => {
+      const sku = unit.item?.sku;
+      if (sku) {
+        temp[sku] = (temp[sku] || 0) + 1;
+      }
+    });
+  });
+  return temp;
+};
 
 function compareIfEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
