@@ -142,12 +142,16 @@ const listQuery = ref({
 
 const contrastTask = ref(null);
 const fetchList = () => {
-  if (listQuery.value.end)
-    queryTasksAPI(listQuery.value).then((data) => {
+  if (listQuery.value.end) {
+    const params = new URLSearchParams(listQuery.value);
+    params.append('task_type', 'FULFILLMENT');
+    params.append('task_type', 'REPLACE');
+    queryTasksAPI(params).then((data) => {
       dataList.value = data.items;
       total.value = data.total;
       contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
     });
+  }
 };
 
 watchEffect(() => {
@@ -164,11 +168,11 @@ const dataList = ref(null);
 const shortcuts = [
   {
     text: 'Today',
-    value: () => ['2022-01-01', new Date()],
+    value: () => ['2022-04-01', new Date()],
   },
   {
     text: 'Tomorrow',
-    value: () => ['2022-01-01', new Date().getTime() + 86400 * 1000],
+    value: () => ['2022-04-01', new Date().getTime() + 86400 * 1000],
   },
 ];
 
@@ -191,7 +195,6 @@ const diableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
     return true;
   return false;
 };
-// const enableUpdatePackageFn = () => diableUpdatePackage.value = false;
 
 const disableNewPackage = packages => {
   if (packages.length === 0 || packages[packages.length - 1]?.id)
@@ -329,7 +332,7 @@ const handleDeletePackage = (packageId) => {
 };
 
 function initDateFilter () {
-  dateFilter.value = ['2022-01-01', parseTime(new Date(), '{y}-{m}-{d}')];
+  dateFilter.value = ['2022-04-01', parseTime(new Date(), '{y}-{m}-{d}')];
 }
 
 onMounted(() => {
