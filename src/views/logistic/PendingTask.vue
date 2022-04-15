@@ -10,7 +10,11 @@
         <template v-for="(item, key) in skuQTY" :key="key">
           <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
           <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
-          <el-descriptions-item label="Fulfilled QTY">{{ item.ful || 0 }}</el-descriptions-item>
+          <el-descriptions-item
+            label="Fulfilled QTY" :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+          >
+            {{ item.ful || 0 }}
+          </el-descriptions-item>
         </template>
       </el-descriptions>
     </div>
@@ -89,13 +93,13 @@
                         </div>
                       </template>
                     </div>
-                    <div :class="'cell w-200' + (item.trackingNumber ? '' : ' empty-bg-tip')">
+                    <div :class="'cell w-200' + (item.trackingNumber ? '' : ' error-border-tip')">
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
                     <div class="cell w-200">
                       <el-button
-                        v-if="item.id" :disabled="diableUpdatePackage(item, packageIdx, taskIdx)"
-                        class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                        v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                        :disabled="diableUpdatePackage(item, packageIdx, taskIdx)"
                       >
                         Update
                       </el-button>
@@ -196,9 +200,11 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
     });
     task.packages.forEach(packageItem => {
       packageItem.units.forEach(unit => {
-        const sku = unit.item.sku;
-        temp[sku] = temp[sku] || {};
-        temp[sku]['ful'] = (temp[sku]['ful'] || 0) + 1;
+        const sku = unit.item?.sku;
+        if (sku) {
+          temp[sku] = temp[sku] || {};
+          temp[sku]['ful'] = (temp[sku]['ful'] || 0) + 1;
+        }
       });
     });
   });
@@ -209,7 +215,7 @@ function compareIfEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 const diableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
-  if (compareIfEqual(packageItem, contrastTask.value[taskIdx].packages[packageIdx]))
+  if (!packageItem.trackingNumber || compareIfEqual(packageItem, contrastTask.value[taskIdx].packages[packageIdx]))
     return true;
   return false;
 };
@@ -299,6 +305,14 @@ function clickNextUnitInput () {
   });
 }
 
+function removeUnitItem (packageItem) {
+  const temp = JSON.parse(JSON.stringify(packageItem));
+  temp.units.forEach((unit, idx, arr) => {
+    delete arr[idx]['item'];
+  });
+  return temp;
+}
+
 const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
   packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
@@ -309,15 +323,16 @@ const handleSubmitPackage = (packageItem, task) => {
     packageItem.units.push({ serial: null }); // 填充1个unit给被清空的units双向绑定数据
     return;
   }
+  const packageData = removeUnitItem(packageItem);
   if (packageId)
-    updatePackageAPI(packageId, packageItem)
+    updatePackageAPI(packageId, packageData)
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
         handleUnitChange(packageItem.units, null, 'add', task);
         clickNextUnitInput();
       });
   else
-    createPackageAPI(packageItem.taskId, packageItem)
+    createPackageAPI(packageItem.taskId, packageData)
       .then(data => Object.assign(packageItem, data))
       .finally(() => {
         handleUnitChange(packageItem.units, null, 'add', task);
@@ -394,6 +409,6 @@ onMounted(() => {
     background-color: rgb(250, 250, 250)
   .meta-data
     background-color: rgb(250, 250, 250)
-.empty-bg-tip
+:deep(.error-border-tip)
   border-color: red !important
 </style>
