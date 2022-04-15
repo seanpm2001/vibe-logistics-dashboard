@@ -3,7 +3,7 @@
     <div class="statistics">
       <el-date-picker
         v-model="dateFilter" :shortcuts="shortcuts"
-        type="date" value-format="YYYY-MM-DD" placeholder="Please pick a date"
+        type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
       />
       <span> before 11.30 am</span>
       <el-descriptions :column="2" border>
@@ -42,7 +42,7 @@
                     ful: <el-tag size="small">0</el-tag>
                     <el-divider v-if="product.serialNote.length" direction="vertical" />
                     <el-tooltip v-if="product.serialNote.length" effect="light">
-                      <el-button size="small">Serial Note:</el-button>
+                      <el-button size="small">Specify Serial:</el-button>
                       <template #content>
                         <el-tag size="small">
                           <template v-for="serial in product.serialNote" :key="serial">
@@ -89,11 +89,11 @@
                         </div>
                       </template>
                     </div>
-                    <div class="cell w-200">
+                    <div :class="'cell w-200' + (item.trackingNumber ? '' : ' empty-bg-tip')">
                       <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
                     </div>
                     <div class="cell w-200">
-                      <el-button v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Update</el-button>
+                      <el-button v-if="item.id" :disabled="diableUpdatePackage(item, packageIdx, taskIdx)" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Update</el-button>
                       <el-button v-else class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)">Submit</el-button>
                       <el-popconfirm
                           v-if="item?.id"
@@ -136,21 +136,24 @@ const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 10,
-  end: ''
+  start: null,
+  end: null
 });
 
-
+const contrastTask = ref(null);
 const fetchList = () => {
   if (listQuery.value.end)
-    queryTasksAPI(listQuery.value).then((_data) => {
-      dataList.value = _data.items;
-      total.value = _data.total;
+    queryTasksAPI(listQuery.value).then((data) => {
+      dataList.value = data.items;
+      total.value = data.total;
+      contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
     });
 };
 
 watchEffect(() => {
   if (dateFilter.value) {
-    listQuery.value.end = dateFilter.value + 'T11:30:00';
+    listQuery.value.start = dateFilter.value[0] + 'T11:30:00';
+    listQuery.value.end = dateFilter.value[1] + 'T11:30:00';
     fetchList();
   }
 });
@@ -161,11 +164,11 @@ const dataList = ref(null);
 const shortcuts = [
   {
     text: 'Today',
-    value: new Date(),
+    value: () => ['2022-01-01', new Date()],
   },
   {
     text: 'Tomorrow',
-    value: () => new Date(new Date().getTime() + 86400 * 1000),
+    value: () => ['2022-01-01', new Date().getTime() + 86400 * 1000],
   },
 ];
 
@@ -179,6 +182,16 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   });
   return temp;
 });
+
+function compareIfEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+const diableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
+  if (compareIfEqual(packageItem, contrastTask.value[taskIdx].packages[packageIdx]))
+    return true;
+  return false;
+};
+// const enableUpdatePackageFn = () => diableUpdatePackage.value = false;
 
 const disableNewPackage = packages => {
   if (packages.length === 0 || packages[packages.length - 1]?.id)
@@ -316,7 +329,7 @@ const handleDeletePackage = (packageId) => {
 };
 
 function initDateFilter () {
-  dateFilter.value = parseTime(new Date(), '{y}-{m}-{d}');
+  dateFilter.value = ['2022-01-01', parseTime(new Date(), '{y}-{m}-{d}')];
 }
 
 onMounted(() => {
@@ -355,4 +368,6 @@ onMounted(() => {
     background-color: rgb(250, 250, 250)
   .meta-data
     background-color: rgb(250, 250, 250)
+.empty-bg-tip
+  border-color: red !important
 </style>
