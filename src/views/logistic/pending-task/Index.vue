@@ -31,15 +31,12 @@
 
 <script setup>
 import TaskCards from './TaskCards.vue';
-import { debounce, parseTime } from '/@/utils';
-import { queryTasksAPI, queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
-import { useUserStore, useLogisticStore } from '/@/stores';
+import { parseTime } from '/@/utils';
+import { queryTasksAPI } from '/@/api/logistic';
+// import { useUserStore } from '/@/stores';
 
 /* Start Data */
 // const { role } = storeToRefs(useUserStore());
-const logisticStore = useLogisticStore();
-const { proxy } = getCurrentInstance();
-
 const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,

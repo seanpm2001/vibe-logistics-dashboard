@@ -120,10 +120,14 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
+import { debounce } from '/@/utils';
 import { carrierEnum } from '/@/enums/logistic';
+import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
 /* Start Data */
+const { proxy } = getCurrentInstance();
+
 const dataList = inject('dataList');
 const contrastTask = inject('contrastTask');
 
