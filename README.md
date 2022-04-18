@@ -77,7 +77,10 @@ _____
 #### File name
 * js: `keba-case` (In addition to some special cases)
 * vue: `upper-camel-case`
-* directory: `camel-case`
+* directory:
+  * component folder with `Index.vue` : `upper-camel-case`
+  * other `camel-case`
+
 
 #### Import order
 1. node-modules `dependency`

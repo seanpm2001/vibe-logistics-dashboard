@@ -126,7 +126,8 @@ onMounted(() => {
   .el-descriptions
     width: 420px
 </style>
+
 <style lang="sass">
-:deep(.error-border-tip)
+.error-border-tip
   border: 2px solid red !important
 </style>

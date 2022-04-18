@@ -59,7 +59,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'refactor',
-        component: () => import('/@/views/dashboard/UiRefactor.vue'),
+        component: () => import('/@/views/Dashboard/UiRefactor.vue'),
         name: 'UiRefactor',
         meta: { title: 'Ui Refactor', icon: 'sidebar-dashboard', affix: true }
       }
