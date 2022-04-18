@@ -21,20 +21,20 @@ export const logisticRouter = [
       },
       {
         path: 'pending-task',
-        component: () => import('/@/views/logistic/pending-task/Index.vue'),
+        component: () => import('/@/views/logistic/PendingTask/Index.vue'),
         name: 'PendingTask',
         meta: { title: 'Pending Task', icon: 'sidebar-task' },
         roles: ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']
       },
       {
         path: 'package',
-        component: () => import('/@/views/logistic/package-table/Index.vue'),
+        component: () => import('/@/views/logistic/PackageTable/Index.vue'),
         name: 'ShipmentPackage',
         meta: { title: 'Package', icon: 'sidebar-package' }
       },
       {
         path: 'freight',
-        component: () => import('/@/views/logistic/freight-table/Index.vue'),
+        component: () => import('/@/views/logistic/FreightTable/Index.vue'),
         name: 'Freight',
         meta: { title: 'Freight', icon: 'sidebar-freight' }
       },

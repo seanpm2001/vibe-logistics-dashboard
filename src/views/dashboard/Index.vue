@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import AdminDashboard from './admin/Index.vue';
+import AdminDashboard from './Admin/Index.vue';
 import EditorDashboard from './Editor.vue';
 import { useUserStore } from '/@/stores';
 

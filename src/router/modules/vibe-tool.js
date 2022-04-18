@@ -6,7 +6,7 @@ export const vibeToolRouter = [
   },
   {
     path: '/supply',
-    component: () => import('/@/views/vibe-tool/supply/Index.vue'),
+    component: () => import('/@/views/vibe-tool/Supply/Index.vue'),
     hidden: true
   },
   {
