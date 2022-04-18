@@ -1,0 +1,135 @@
+<template>
+  <div class="page">
+    <div class="statistics">
+      <el-date-picker
+        v-model="dateFilter" :shortcuts="shortcuts"
+        type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
+      />
+      <span> before 11.30 am</span>
+      <el-descriptions :column="3" border>
+        <template v-for="(item, key) in skuQTY" :key="key">
+          <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
+          <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
+          <el-descriptions-item
+            label="Fulfilled QTY" :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+          >
+            {{ item.ful || 0 }}
+          </el-descriptions-item>
+        </template>
+      </el-descriptions>
+    </div>
+    <el-divider />
+    <TaskCards @fetchList="fetchList" />
+
+    <Pagination
+      v-show="total > 0"
+      :total="total"
+      @fetchList="fetchList"
+    />
+  </div>
+</template>
+
+<script setup>
+import TaskCards from './TaskCards.vue';
+import { debounce, parseTime } from '/@/utils';
+import { queryTasksAPI, queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
+import { useUserStore, useLogisticStore } from '/@/stores';
+
+/* Start Data */
+// const { role } = storeToRefs(useUserStore());
+const logisticStore = useLogisticStore();
+const { proxy } = getCurrentInstance();
+
+const dateFilter = ref(null);
+const listQuery = ref({
+  page: 1,
+  perPage: 10,
+  start: null,
+  end: null
+});
+
+watchEffect(() => {
+  if (dateFilter.value) {
+    listQuery.value.start = dateFilter.value[0] + 'T11:30:00';
+    listQuery.value.end = dateFilter.value[1] + 'T11:30:00';
+    fetchList();
+  }
+});
+
+const total = ref(0);
+const dataList = ref(null);
+const contrastTask = ref(null);
+
+const shortcuts = [
+  {
+    text: 'Today',
+    value: () => ['2022-04-01', new Date()],
+  },
+  {
+    text: 'Tomorrow',
+    value: () => ['2022-04-01', new Date().getTime() + 86400 * 1000],
+  },
+];
+
+provide('listQuery', listQuery);
+provide('dataList', dataList);
+provide('contrastTask', contrastTask);
+/* End Data */
+
+const skuQTY = computed(() => { // SKU Quantity Statistics
+  const temp = {};
+  dataList.value?.forEach(task => {
+    task.products.forEach(product => {
+      const sku = product.sku;
+      temp[sku] = temp[sku] || {};
+      temp[sku]['req'] = (temp[sku]['req'] || 0) + product.quantity;
+    });
+    task.packages.forEach(packageItem => {
+      packageItem.units.forEach(unit => {
+        const sku = unit.item?.sku;
+        if (sku) {
+          temp[sku] = temp[sku] || {};
+          temp[sku]['ful'] = (temp[sku]['ful'] || 0) + 1;
+        }
+      });
+    });
+  });
+  return temp;
+});
+
+const fetchList = () => {
+  if (listQuery.value.end) {
+    const params = new URLSearchParams(listQuery.value);
+    params.append('task_type', 'FULFILLMENT');
+    params.append('task_type', 'REPLACE');
+    queryTasksAPI(params).then((data) => {
+      dataList.value = data.items;
+      total.value = data.total;
+      contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
+    });
+  }
+};
+
+function initDateFilter () {
+  dateFilter.value = ['2022-04-01', parseTime(new Date(), '{y}-{m}-{d}')];
+}
+
+onMounted(() => {
+  initDateFilter();
+  fetchList();
+});
+</script>
+
+<style lang="sass" scoped>
+.page
+  padding: 16px
+  min-height: calc(100vh - 91px - 32px)
+
+.statistics
+  .el-descriptions
+    width: 420px
+</style>
+<style lang="sass">
+:deep(.error-border-tip)
+  border: 2px solid red !important
+</style>
