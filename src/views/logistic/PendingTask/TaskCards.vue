@@ -25,7 +25,7 @@
         </el-row>
         <div class="f-row">
           <div class="meta-data cell w-380">
-            <template v-for="product in task.products" :key="product.sku">
+            <template v-for="(product, idx) in task.products" :key="product.sku">
               product name:
               <el-tag size="small">{{ codeNameEnum[product.productCode] || product.productCode }}</el-tag>
               <el-row style="margin-left: 16px" align="middle">
@@ -52,6 +52,7 @@
                   </template>
                 </el-tooltip>
               </el-row>
+              <el-divider v-if="idx !== (task.products.length - 1)" />
             </template>
           </div>
           <div ref="taskPackageArr" class="f-col">
