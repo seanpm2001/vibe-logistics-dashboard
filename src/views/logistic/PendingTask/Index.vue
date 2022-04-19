@@ -86,6 +86,7 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
   dataList.value?.forEach(task => {
     task.products.forEach(product => {
       const code = product.productCode;
+      if (code.includes('EPP')) return; // 不需要追踪code为EPP相关的product
       temp[code] = temp[code] || {};
       temp[code]['req'] = (temp[code]['req'] || 0) + product.quantity;
     });

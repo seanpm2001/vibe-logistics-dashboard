@@ -218,7 +218,8 @@ provide('taskItem', taskItem);
 
 function removeEmptyTask () {
   taskItem.value.products.forEach((product, idx, arr) => {
-    if (!product.productCode)
+    const code = product.productCode;
+    if (!code || code.includes('EPP')) // 不需要追踪code为EPP的product
       arr.splice(idx--, 1);
   });
 }
