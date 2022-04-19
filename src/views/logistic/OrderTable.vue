@@ -117,7 +117,23 @@
       <el-table-column label="Warehouse Task" width="240px" align="center">
         <template v-slot="{ row }">
           <template v-for="(item, index) in row.tasks" :key="item.id">
-            <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item.id)">Task {{index+1}}</el-tag>
+            <div class="mgb-5">
+              <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item.id)">
+                Task {{index+1}}
+              </el-tag>
+              <el-popconfirm
+                  v-if="item?.id"
+                  @confirm="deleteTaskAPI(item.id).then(() => fetchList())"
+                  confirm-button-text="OK"
+                  cancel-button-text="No, Thanks"
+                  icon-color="red"
+                  title="Are you sure to delete this?"
+                >
+                  <template #reference>
+                    <svg-icon class="cursor-pointer" icon-name="close" />
+                  </template>
+              </el-popconfirm>
+            </div>
           </template>
         </template>
       </el-table-column>
@@ -219,7 +235,8 @@ import {
   unassignOrdersAPI,
   findAssignedOrderAPI,
   findTaskAPI,
-  createTaskAPI
+  createTaskAPI,
+  deleteTaskAPI
 } from '/@/api/logistic';
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
@@ -424,8 +441,8 @@ const unassignSelected = () => {
 };
 
 const addWarehouseTask = (_orderId, sourceWHId) => {
+  taskItem.value = Object.assign({}, emptyTaskItem);
   findAssignedOrderAPI(_orderId).then((_data) => {
-    taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = _orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
     dialogStatus.value = 'create';
@@ -453,35 +470,6 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 const resetForm = () => {};
-
-// const beforeCloseDialog = done => {
-//   if (dialogStatus.value !== 'edit') {
-//     resetForm();
-//     done();
-//     return;
-//   }
-
-//   const isChanged = JSON.stringify(contrastData) !== JSON.stringify(freightItem.value);
-//   if (!isChanged) {
-//     resetForm();
-//     done();
-//   }
-//   isChanged && ElMessageBox.confirm(
-//     `Unsaved changes, are you sure to leave?`,
-//     'Warning',
-//     {
-//       confirmButtonText: 'OK',
-//       cancelButtonText: 'Cancel',
-//       type: 'warning',
-//       callback: (action) => {
-//         if (action === "confirm") {
-//           resetForm();
-//           done();
-//         }
-//       },
-//     }
-//   );
-// };
 
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')

@@ -229,12 +229,12 @@ const handleWarehouseTask = _type => {
   if (_type === 'create') {
     createTaskAPI(taskItem.value).then(_data => {
       taskItem.value = _data;
-      emit('fetchList');
+      fetchList();
     });
   } else {
     updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
       taskItem.value = _data || taskItem.value;
-      emit('fetchList');
+      fetchList();
     });
   }
 };
