@@ -25,37 +25,33 @@
         </el-row>
         <div class="f-row">
           <div class="meta-data cell w-380">
-            <template v-for="orderProduct in orderEnum[task.orderId]?.items" :key="orderProduct.productCode" >
-              product name: 
-              <el-tag size="small">
-                {{ skuNameEnum[orderProduct.productCode] || orderProduct.productCode }}
-              </el-tag>
-              <template v-for="product in task.products" :key="product.sku">
-                <el-row style="margin-left: 16px" align="middle">
-                  sku: <el-tag size="small">{{ product.sku }}</el-tag>
-                  <el-divider direction="vertical" />
-                  req: <el-tag size="small">{{ product.quantity }} </el-tag>
-                  <el-divider direction="vertical" />
-                  ful: 
-                  <el-tag
-                    size="small"
-                    :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
-                  >
-                    {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
-                  </el-tag>
-                  <el-divider v-if="product.serialNote.length" direction="vertical" />
-                  <el-tooltip v-if="product.serialNote.length" effect="light">
-                    <el-button size="small">Specify Serial:</el-button>
-                    <template #content>
-                      <el-tag size="small">
-                        <template v-for="serial in product.serialNote" :key="serial">
-                          {{ serial }};
-                        </template>
-                      </el-tag>
-                    </template>
-                  </el-tooltip>
-                </el-row>
-              </template>
+            <template v-for="product in task.products" :key="product.sku">
+              product name:
+              <el-tag size="small">{{ codeNameEnum[product.productCode] || product.productCode }}</el-tag>
+              <el-row style="margin-left: 16px" align="middle">
+                sku: <el-tag size="small">{{ product.sku }}</el-tag>
+                <el-divider direction="vertical" />
+                req: <el-tag size="small">{{ product.quantity }} </el-tag>
+                <el-divider direction="vertical" />
+                ful: 
+                <el-tag
+                  size="small"
+                  :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
+                >
+                  {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
+                </el-tag>
+                <el-divider v-if="product.serialNote?.length" direction="vertical" />
+                <el-tooltip v-if="product.serialNote?.length" effect="light">
+                  <el-button size="small">Specify Serial:</el-button>
+                  <template #content>
+                    <el-tag size="small">
+                      <template v-for="serial in product.serialNote" :key="serial">
+                        {{ serial }};
+                      </template>
+                    </el-tag>
+                  </template>
+                </el-tooltip>
+              </el-row>
             </template>
           </div>
           <div ref="taskPackageArr" class="f-col">
@@ -137,7 +133,7 @@
 import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
 import { debounce } from '/@/utils';
-import { carrierEnum, skuNameEnum } from '/@/enums/logistic';
+import { carrierEnum, codeNameEnum } from '/@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
@@ -146,7 +142,6 @@ const { proxy } = getCurrentInstance();
 
 const dataList = inject('dataList');
 const orderEnum = inject('orderEnum');
-console.log('orderEnum: ', orderEnum);
 const contrastTask = inject('contrastTask');
 
 
@@ -174,8 +169,8 @@ const diableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
   return false;
 };
 
-const disableNewPackage = packages => {
-  if (packages.length === 0 || packages[packages.length - 1]?.id)
+const disableNewPackage = packageArr => {
+  if (packageArr.length === 0 || packageArr[packageArr.length - 1]?.id)
     return false;
   return true;
 };

@@ -99,11 +99,11 @@
       </el-table-column>
       <el-table-column class-name="product-column" label="Content" width="200px">
         <template v-slot="{ row }">
-          <template v-for="product in row.task.products" :key="product.sku">
+          <template v-for="product in row.task.products" :key="product.productCode">
             <div>
-              <svg-icon :icon-name="skuIconEnum[skuCodeEnum[product.sku]] || 'product-other'" />
+              <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
               <span class="mgl-5">
-                {{ skuNameEnum[skuCodeEnum[product.sku]] || product.sku }}:
+                {{ codeNameEnum[product.productCode] || product.productCode }}:
                 <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
               </span>
             </div>
@@ -169,8 +169,8 @@ import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI
 import {
   packageStatusEnum,
   taskTypeEnum,
-  skuNameEnum,
-  skuIconEnum,
+  codeNameEnum,
+  codeIconEnum,
   skuCodeEnum,
   carrierEnum,
 } from '/@/enums/logistic';

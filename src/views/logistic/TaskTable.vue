@@ -77,11 +77,11 @@
             <div>
               <svg-icon
                 :icon-name="
-                  skuIconEnum[skuCodeEnum[product.sku]] || 'product-other'
+                  codeIconEnum[product.productCode] || 'product-other'
                 "
               />
               <span class="mgl-5">
-                {{ skuNameEnum[skuCodeEnum[product.sku]] || product.sku }}:
+                {{ codeNameEnum[product.productCode] || product.productCode }}:
                 <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
               </span>
             </div>
@@ -152,8 +152,8 @@ import {
 import {
   packageStatusEnum,
   taskTypeEnum,
-  skuNameEnum,
-  skuIconEnum,
+  codeNameEnum,
+  codeIconEnum,
   skuCodeEnum,
 } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
@@ -192,6 +192,7 @@ const taskItem = ref({
   newAddress: null,
   note: null,
   products: [{
+    id: null,
     productCode: null,
     sku: null,
     condition: null,

@@ -11,8 +11,8 @@
         <el-button class="mgl-5" type="primary"  @click="fetchList">Search</el-button>
       </div>
       <el-descriptions :column="3" border>
-        <template v-for="(item, key) in skuQTY" :key="key">
-          <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
+        <template v-for="(item, key) in codeQTY" :key="key">
+          <el-descriptions-item label="Product Name">{{ codeNameEnum[key] || '' }}</el-descriptions-item>
           <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
           <el-descriptions-item
             label="Fulfilled QTY" :class-name="item.req === item.ful ? '' : 'error-border-tip'"
@@ -37,6 +37,7 @@
 import TaskCards from './TaskCards.vue';
 import { parseTime, formatAssignedOrderItem } from '/@/utils';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '/@/api/logistic';
+import { skuCodeEnum, codeNameEnum } from '/@/enums/logistic';
 // import { useUserStore } from '/@/stores';
 
 /* Start Data */
@@ -80,20 +81,20 @@ provide('orderEnum', orderEnum);
 provide('contrastTask', contrastTask);
 /* End Data */
 
-const skuQTY = computed(() => { // SKU Quantity Statistics
+const codeQTY = computed(() => { // SKU Quantity Statistics
   const temp = {};
   dataList.value?.forEach(task => {
     task.products.forEach(product => {
-      const sku = product.sku;
-      temp[sku] = temp[sku] || {};
-      temp[sku]['req'] = (temp[sku]['req'] || 0) + product.quantity;
+      const code = product.productCode;
+      temp[code] = temp[code] || {};
+      temp[code]['req'] = (temp[code]['req'] || 0) + product.quantity;
     });
     task.packages.forEach(packageItem => {
       packageItem.units.forEach(unit => {
-        const sku = unit.item?.sku;
-        if (sku) {
-          temp[sku] = temp[sku] || {};
-          temp[sku]['ful'] = (temp[sku]['ful'] || 0) + 1;
+        const code = skuCodeEnum[unit.item?.sku];
+        if (code) {
+          temp[code] = temp[code] || {};
+          temp[code]['ful'] = (temp[code]['ful'] || 0) + 1;
         }
       });
     });
@@ -143,7 +144,7 @@ onMounted(() => {
 
 .statistics
   .el-descriptions
-    width: 420px
+    width: 480px
 </style>
 
 <style lang="sass">

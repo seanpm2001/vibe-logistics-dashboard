@@ -121,9 +121,9 @@
         <template v-slot="{ row }">
           <template v-for="(item, key) in row.content" :key="item">
             <div>
-              <svg-icon :icon-name="skuIconEnum[key]" />
+              <svg-icon :icon-name="codeIconEnum[key]" />
               <span class="mgl-5"
-                >{{ skuNameEnum[key] }}:<el-tag class="mgl-5" size="small">{{
+                >{{ codeNameEnum[key] }}:<el-tag class="mgl-5" size="small">{{
                   item
                 }}</el-tag></span
               >
@@ -208,8 +208,8 @@ import {
 import {
   freightStatusEnum,
   forwarderEnum,
-  skuNameEnum,
-  skuIconEnum,
+  codeNameEnum,
+  codeIconEnum,
 } from '/@/enums/logistic';
 
 // onRenderTriggered(e => {

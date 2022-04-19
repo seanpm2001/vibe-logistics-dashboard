@@ -18,9 +18,9 @@
       <template #label>Products</template>
       <template v-for="product in orderItem.items" :key="product.sku">
         <div>
-          <svg-icon :icon-name="skuIconEnum[product.productCode] || 'product-other'" />
+          <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
           <span class="mgl-5">
-            {{ skuNameEnum[product.productCode] || product.productCode }}:
+            {{ codeNameEnum[product.productCode] || product.productCode }}:
             <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
           </span>
         </div>
@@ -48,7 +48,7 @@
 import OrderShipmentInfo from './OrderShipmentInfo.vue';
 import { ElMessageBox } from 'element-plus';
 import { packageStatusEnum } from '/@/enums/logistic';
-import { skuNameEnum, skuIconEnum, skuCodeEnum } from '/@/enums/logistic';
+import { codeNameEnum, codeIconEnum, skuCodeEnum } from '/@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

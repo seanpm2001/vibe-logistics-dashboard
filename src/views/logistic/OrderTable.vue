@@ -90,8 +90,8 @@
             <template v-if="showAssignedOrder">
               <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="skuIconEnum[item.productCode] || 'product-other'" />
-                  <span class="mgl-5">{{ skuNameEnum[item.productCode] || item.productCode }}:
+                  <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
+                  <span class="mgl-5">{{ codeNameEnum[item.productCode] || item.productCode }}:
                     <el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag>
                   </span>
                 </div>
@@ -100,9 +100,9 @@
             <template v-else>
               <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="skuIconEnum[item.productCode] || 'product-other'" />
+                  <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
                   <span class="mgl-5"
-                    >{{ skuNameEnum[item.productCode] || item.productCode }}:<el-tag
+                    >{{ codeNameEnum[item.productCode] || item.productCode }}:<el-tag
                       class="mgl-5"
                       size="small"
                       >{{ item.quantity }}</el-tag
@@ -223,7 +223,7 @@ import {
 } from '/@/api/logistic';
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
-import { packageStatusEnum, skuNameEnum, skuIconEnum } from '/@/enums/logistic';
+import { packageStatusEnum, codeNameEnum, codeIconEnum } from '/@/enums/logistic';
 import { useUserStore, useLogisticStore } from '/@/stores';
 
 /* Start data */
@@ -256,6 +256,7 @@ const taskItem = ref({
   newAddress: null,
   note: null,
   products: [{
+    id: null,
     productCode: null,
     sku: null,
     condition: null,
@@ -332,8 +333,9 @@ const showAssignDialog = (_type, _orderId) => {
   dialogAssignVisible.value = true;
 };
 
-async function submitInitTaskItem (products, sourceWHId) {
+async function submitInitTaskItem (products, sourceWHId, orderId) {
   taskItem.value = emptyTaskItem;
+  taskItem.value.orderId = orderId;
   taskItem.value.taskType = 'FULFILLMENT';
   taskItem.value.sourceId = sourceWHId;
   taskItem.value.targetId = 18; // Default Customer
@@ -360,8 +362,8 @@ function assignSelectedOrders(_sourceWHId, _selectedArr) {
     return;
   }
   multipleSelection.value.forEach((item) => {
-    assignOrdersAPI(_sourceWHId, [item.id]).then(() => {
-      submitInitTaskItem(item.items, _sourceWHId); // 传递products {productCode: '', quantity: 0}
+    assignOrdersAPI(_sourceWHId, [item.id]).then(data => {
+      submitInitTaskItem(item.items, _sourceWHId, data.id); // 传递products {productCode: '', quantity: 0}
     });
   });
 }
@@ -395,11 +397,10 @@ const assignOrders = () => {
 
   // 调用batch assign orders API
   assignOrdersAPI(sourceWHId, orderArr)
-    .then((data) => {
+    .then(async (data) => {
       dialogAssignVisible.value = false;
       const products = formatAssignedOrderItem(data)?.items;
-      const taskId = submitInitTaskItem(products, sourceWHId);
-      console.log('taskId: ', taskId);
+      const taskId = await submitInitTaskItem(products, sourceWHId, data.id);
       taskId && editWarehouseTask(data.id, taskId);
     })
     .finally(() => {

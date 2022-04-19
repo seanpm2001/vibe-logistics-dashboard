@@ -100,7 +100,7 @@ export const carrierEnum = {
   UPS: 'UPS',
   AIR: 'AIR',
 };
-export const skuNameEnum = {
+export const codeNameEnum = {
   '55V1B': '55 V1 Board',
   '55V1WS': '55 V1 White Stand',
   '55V1RS': '55 V1 Red Stand',
@@ -125,7 +125,7 @@ export const skuNameEnum = {
   '55S1B': '55 S1 Board',
   '55P1B': '55 P1 Board1',
 };
-export const skuIconEnum = {
+export const codeIconEnum = {
   '55V1B': 'product-board',
   '55V1WS': 'product-stand',
   '55V1RS': 'product-stand',

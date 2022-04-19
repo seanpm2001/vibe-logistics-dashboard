@@ -73,7 +73,7 @@
                   v-model="product.productCode" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, key) in taskOrderItem.items" :key="key" :label="skuNameEnum[item.productCode]" :value="item.productCode" />
+                  <el-option v-for="(item, key) in taskOrderItem.items" :key="key" :label="codeNameEnum[item.productCode]" :value="item.productCode" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Sku">
@@ -152,7 +152,7 @@ import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '/@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuCodeEnum,
-  unitConditionEnum, skuNameEnum
+  unitConditionEnum, codeNameEnum
 } from '/@/enums/logistic';
 import { useUserStore } from '/@/stores';
 
@@ -216,7 +216,15 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
+function removeEmptyTask () {
+  taskItem.value.products.forEach((product, idx, arr) => {
+    if (!product.productCode)
+      arr.splice(idx--, 1);
+  });
+}
+
 const handleWarehouseTask = _type => {
+  removeEmptyTask();
   if (_type === 'create') {
     createTaskAPI(taskItem.value).then(_data => {
       taskItem.value = _data;
