@@ -77,11 +77,11 @@
             <div>
               <svg-icon
                 :icon-name="
-                  productIconMap[skuProdcutEnum[product.sku]] || 'product-other'
+                  skuIconEnum[skuCodeEnum[product.sku]] || 'product-other'
                 "
               />
               <span class="mgl-5">
-                {{ productMap[skuProdcutEnum[product.sku]] || product.sku }}:
+                {{ skuNameEnum[skuCodeEnum[product.sku]] || product.sku }}:
                 <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
               </span>
             </div>
@@ -152,9 +152,9 @@ import {
 import {
   packageStatusEnum,
   taskTypeEnum,
-  productMap,
-  productIconMap,
-  skuProdcutEnum,
+  skuNameEnum,
+  skuIconEnum,
+  skuCodeEnum,
 } from '/@/enums/logistic';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
 import { useLogisticStore } from '/@/stores';
@@ -191,14 +191,13 @@ const taskItem = ref({
   returnReason: null,
   newAddress: null,
   note: null,
-  products: [
-    {
-      sku: null,
-      condition: null,
-      quantity: null,
-      serialNote: null,
-    },
-  ],
+  products: [{
+    productCode: null,
+    sku: null,
+    condition: null,
+    quantity: null,
+    serialNote: null,
+  }],
   // shipment info
   carrier: null,
   deliveryCost: null,
@@ -324,11 +323,9 @@ const handleDetailRow = (_row, _type) => {
 };
 
 const init = () => {
-  listWarehousesAPI().then((_data) => {
+  listWarehousesAPI().then((data) => {
     fetchList(); // fetch list
-    _data.forEach((item) => {
-      warehouseEnum.value[item.id] = item.name;
-    });
+    data.forEach((item) => warehouseEnum.value[item.id] = item.name);
   });
 };
 

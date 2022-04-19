@@ -1,9 +1,10 @@
 import axios from 'axios';
-import pinia, { useUserStore } from '../stores';
+import cloneDeep from 'lodash/cloneDeep';
+import { useUserStore } from '../stores';
 import { ElMessage, ElLoading } from 'element-plus';
 import 'element-plus/theme-chalk/src/loading.scss';
 import { getToken } from '/@/utils/auth';
-import { jsonToHump } from '/@/utils/format';
+import { jsonToHump, jsonToUnderline } from '/@/utils/format';
 
 
 /* start 将同一时刻的请求合并。*/
@@ -36,7 +37,7 @@ const requester = axios.create({
 requester.interceptors.request.use(
   config => {
     const { method, url } = config;
-    // do something before request is sent
+    jsonToUnderLineParamsAndData(config);
     const { token } = useUserStore();
     if (token)
       config.headers['Authorization'] = 'Bearer ' + getToken();
@@ -86,3 +87,12 @@ requester.interceptors.response.use(
 );
 
 export default requester;
+
+function jsonToUnderLineParamsAndData(config) {
+  const params = config.params;
+  const data = config.data;
+  jsonToUnderline(params);
+  jsonToUnderline(data);
+  config.params = params;
+  config.data = data;
+}

@@ -68,12 +68,20 @@
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
               <svg-icon class="icon" :style="taskItem.products.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
-              <el-form-item label="Sku" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
+              <el-form-item label="Product Name" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
+                <el-select
+                  v-model="product.productCode" :disabled="notCommonPermission" placeholder="Please select"
+                  filterable allow-create default-first-option
+                >
+                  <el-option v-for="(item, key) in taskOrderItem.items" :key="key" :label="skuNameEnum[item.productCode]" :value="item.productCode" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Sku">
                 <el-select
                   v-model="product.sku" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, key) in skuProdcutEnum" :key="key" :label="key" :value="key" />
+                  <el-option v-for="(item, key) in skuCodeEnum" :key="key" :label="key" :value="key" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
@@ -143,8 +151,8 @@ import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '/@/api/logistic';
 import {
-  taskTypeEnum, taskReasonEnum, taskStatusEnum, skuProdcutEnum,
-  unitConditionEnum
+  taskTypeEnum, taskReasonEnum, taskStatusEnum, skuCodeEnum,
+  unitConditionEnum, skuNameEnum
 } from '/@/enums/logistic';
 import { useUserStore } from '/@/stores';
 

@@ -3,9 +3,18 @@
     <el-card>
       <el-descriptions :column="4" direction="vertical" border>
         <el-descriptions-item width="300px" label="Create Date">{{ formatDate(task.createdAt) }}</el-descriptions-item>
+        <el-descriptions-item label="Order ID">
+          {{ orderEnum[task.orderId]?.id }}
+          <template v-for="order in orderEnum[task.orderId]?.rawOrders" :key="order.id">
+            <el-tag size="small">{{order?.id}}</el-tag>
+          </template>
+        </el-descriptions-item>
         <el-descriptions-item label="Task ID">{{ task.id }}</el-descriptions-item>
         <el-descriptions-item label="TaskType">{{ task.taskType }}</el-descriptions-item>
         <el-descriptions-item label="Carrier">{{ carrierEnum[task.carrier] }}</el-descriptions-item>
+        <el-descriptions-item label="Shipment Info">
+          <OrderShipmentInfo :orderItem="orderEnum[task.orderId]" />
+        </el-descriptions-item>
       </el-descriptions>
       <div class="package-operation">
         <el-row>
@@ -16,31 +25,37 @@
         </el-row>
         <div class="f-row">
           <div class="meta-data cell w-380">
-            <template v-for="product in task.products" :key="product.sku">
-              <el-row align="middle">
-                sku: <el-tag size="small">{{ product.sku }}</el-tag>
-                <el-divider direction="vertical" />
-                req: <el-tag size="small">{{ product.quantity }} </el-tag>
-                <el-divider direction="vertical" />
-                ful: 
-                <el-tag
-                  size="small"
-                  :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
-                >
-                  {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
-                </el-tag>
-                <el-divider v-if="product.serialNote.length" direction="vertical" />
-                <el-tooltip v-if="product.serialNote.length" effect="light">
-                  <el-button size="small">Specify Serial:</el-button>
-                  <template #content>
-                    <el-tag size="small">
-                      <template v-for="serial in product.serialNote" :key="serial">
-                        {{ serial }};
-                      </template>
-                    </el-tag>
-                  </template>
-                </el-tooltip>
-              </el-row>
+            <template v-for="orderProduct in orderEnum[task.orderId]?.items" :key="orderProduct.productCode" >
+              product name: 
+              <el-tag size="small">
+                {{ skuNameEnum[orderProduct.productCode] || orderProduct.productCode }}
+              </el-tag>
+              <template v-for="product in task.products" :key="product.sku">
+                <el-row style="margin-left: 16px" align="middle">
+                  sku: <el-tag size="small">{{ product.sku }}</el-tag>
+                  <el-divider direction="vertical" />
+                  req: <el-tag size="small">{{ product.quantity }} </el-tag>
+                  <el-divider direction="vertical" />
+                  ful: 
+                  <el-tag
+                    size="small"
+                    :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
+                  >
+                    {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
+                  </el-tag>
+                  <el-divider v-if="product.serialNote.length" direction="vertical" />
+                  <el-tooltip v-if="product.serialNote.length" effect="light">
+                    <el-button size="small">Specify Serial:</el-button>
+                    <template #content>
+                      <el-tag size="small">
+                        <template v-for="serial in product.serialNote" :key="serial">
+                          {{ serial }};
+                        </template>
+                      </el-tag>
+                    </template>
+                  </el-tooltip>
+                </el-row>
+              </template>
             </template>
           </div>
           <div ref="taskPackageArr" class="f-col">
@@ -119,9 +134,10 @@
 </template>
 
 <script setup>
+import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
 import { debounce } from '/@/utils';
-import { carrierEnum } from '/@/enums/logistic';
+import { carrierEnum, skuNameEnum } from '/@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
@@ -129,6 +145,8 @@ const emit = defineEmits(['fetchList']);
 const { proxy } = getCurrentInstance();
 
 const dataList = inject('dataList');
+const orderEnum = inject('orderEnum');
+console.log('orderEnum: ', orderEnum);
 const contrastTask = inject('contrastTask');
 
 
@@ -313,7 +331,7 @@ const handleDeletePackage = (packageId) => {
   .w-200
     width: 200px
   .w-380
-    width: 380px
+    width: 400px
     @media (max-width: 1420px)
       width: 200px
   .el-input

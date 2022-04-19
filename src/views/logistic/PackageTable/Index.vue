@@ -101,9 +101,9 @@
         <template v-slot="{ row }">
           <template v-for="product in row.task.products" :key="product.sku">
             <div>
-              <svg-icon :icon-name="productIconMap[skuProdcutEnum[product.sku]] || 'product-other'" />
+              <svg-icon :icon-name="skuIconEnum[skuCodeEnum[product.sku]] || 'product-other'" />
               <span class="mgl-5">
-                {{ productMap[skuProdcutEnum[product.sku]] || product.sku }}:
+                {{ skuNameEnum[skuCodeEnum[product.sku]] || product.sku }}:
                 <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
               </span>
             </div>
@@ -169,9 +169,9 @@ import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI
 import {
   packageStatusEnum,
   taskTypeEnum,
-  productMap,
-  productIconMap,
-  skuProdcutEnum,
+  skuNameEnum,
+  skuIconEnum,
+  skuCodeEnum,
   carrierEnum,
 } from '/@/enums/logistic';
 import { useLogisticStore } from '/@/stores';

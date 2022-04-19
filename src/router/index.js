@@ -128,9 +128,7 @@ const router = createRouter(routeConfig);
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  asyncRoutes.forEach(item => {
-    router.removeRoute(item.name);
-  });
+  asyncRoutes.forEach(item => router.removeRoute(item.name));
 }
 
 

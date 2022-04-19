@@ -81,40 +81,7 @@
       </el-table-column>
       <el-table-column label="Shipment Info" min-width="280px" align="center">
         <template v-slot="{ row }">
-          <div class="shipment-info" align="left">
-            <el-tag size="small" v-if="row.shippingName">
-              ATTN: {{ row.shippingName }}
-            </el-tag>
-            <el-tag size="small" v-if="row.shippingCompany">{{
-              row.shippingCompany
-            }}</el-tag>
-            <el-tag size="small" v-if="row.shippingAddress1">{{
-              row.shippingAddress1
-            }}</el-tag>
-            <el-tag size="small" v-if="row.shippingAddress2">{{
-              row.shippingAddress2
-            }}</el-tag>
-            <el-tag
-              size="small"
-              v-if="
-                row.shippingCity ||
-                row.shippingState ||
-                row.shippingZip ||
-                row.shippingCountry
-              "
-            >
-              {{ row.shippingCity }}, {{ row.shippingState }}, {{ row.shippingZip }},
-              {{ row.shippingCountry }}
-            </el-tag>
-            <p style="visibility: hidden">placeholder</p>
-            <el-tag size="small" v-if="row.shippingPhone">
-              TEL: {{ row.shippingPhone }}
-            </el-tag>
-            <br />
-            <a :href="'mailto:' + row.email" class="link" target="_blank">{{
-              row.email
-            }}</a>
-          </div>
+          <OrderShipmentInfo :orderItem="row" />
         </template>
       </el-table-column>
       <el-table-column label="Products" width="255px" align="center">
@@ -123,8 +90,8 @@
             <template v-if="showAssignedOrder">
               <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="productIconMap[item.productCode] || 'product-other'" />
-                  <span class="mgl-5">{{ productMap[item.productCode] || item.productCode }}:
+                  <svg-icon :icon-name="skuIconEnum[item.productCode] || 'product-other'" />
+                  <span class="mgl-5">{{ skuNameEnum[item.productCode] || item.productCode }}:
                     <el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag>
                   </span>
                 </div>
@@ -133,9 +100,9 @@
             <template v-else>
               <template v-for="item in row.items" :key="item.productCode">
                 <div align="left">
-                  <svg-icon :icon-name="productIconMap[item.productCode] || 'product-other'" />
+                  <svg-icon :icon-name="skuIconEnum[item.productCode] || 'product-other'" />
                   <span class="mgl-5"
-                    >{{ productMap[item.productCode] || item.productCode }}:<el-tag
+                    >{{ skuNameEnum[item.productCode] || item.productCode }}:<el-tag
                       class="mgl-5"
                       size="small"
                       >{{ item.quantity }}</el-tag
@@ -150,7 +117,7 @@
       <el-table-column label="Warehouse Task" width="240px" align="center">
         <template v-slot="{ row }">
           <template v-for="(item, index) in row.tasks" :key="item.id">
-            <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item)">Task {{index+1}}</el-tag>
+            <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item.id)">Task {{index+1}}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -244,17 +211,19 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';
 import OrderDescription from './components/OrderDescription.vue';
+import OrderShipmentInfo from './components/OrderShipmentInfo.vue';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
   assignOrdersAPI,
   unassignOrdersAPI,
   findAssignedOrderAPI,
-  findTaskAPI
+  findTaskAPI,
+  createTaskAPI
 } from '/@/api/logistic';
 import { parseTime } from '/@/utils/format';
 import { formatAssignedOrderItem } from '/@/utils/logistic';
-import { packageStatusEnum, productMap, productIconMap } from '/@/enums/logistic';
+import { packageStatusEnum, skuNameEnum, skuIconEnum } from '/@/enums/logistic';
 import { useUserStore, useLogisticStore } from '/@/stores';
 
 /* Start data */
@@ -287,6 +256,7 @@ const taskItem = ref({
   newAddress: null,
   note: null,
   products: [{
+    productCode: null,
     sku: null,
     condition: null,
     quantity: null,
@@ -362,13 +332,37 @@ const showAssignDialog = (_type, _orderId) => {
   dialogAssignVisible.value = true;
 };
 
+async function submitInitTaskItem (products, sourceWHId) {
+  taskItem.value = emptyTaskItem;
+  taskItem.value.taskType = 'FULFILLMENT';
+  taskItem.value.sourceId = sourceWHId;
+  taskItem.value.targetId = 18; // Default Customer
+  products.forEach((product, idx) => {
+    taskItem.value.products[idx] = {
+      productCode: product.productCode,
+      sku: null,
+      condition: 'GOOD',
+      quantity: product.quantity,
+      serialNote: null,
+    };
+  });
+  let taskId = null;
+  await createTaskAPI(taskItem.value).then(_data => {
+    taskItem.value = emptyTaskItem;
+    taskId = _data.id;
+  });
+  return taskId;
+}
+
 function assignSelectedOrders(_sourceWHId, _selectedArr) {
   if (!_selectedArr.length) {
     ElMessage.error('Please at least select an order!', 3);
     return;
   }
   multipleSelection.value.forEach((item) => {
-    assignOrdersAPI(_sourceWHId, [item.id]);
+    assignOrdersAPI(_sourceWHId, [item.id]).then(() => {
+      submitInitTaskItem(item.items, _sourceWHId); // 传递products {productCode: '', quantity: 0}
+    });
   });
 }
 
@@ -381,16 +375,16 @@ const assignOrders = () => {
     return;
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
-  console.log('pattern: ', pattern);
   const orderArr = [];
+  
   if (pattern === 'assignSelected') {
-    // 单独处理assign多个，不展示warehouse task dialog
+    // 单独处理批量assign，不展示warehouse task dialog
     assignSelectedOrders(sourceWHId, selectedArr);
     dialogAssignVisible.value = false;
     fetchList();
     return;
   } else if (pattern === 'combineAndAssign') {
-    // 批量assign
+    // 合并order并assign
     multipleSelection.value.forEach((item) => {
       orderArr.push(item.id);
     });
@@ -398,11 +392,15 @@ const assignOrders = () => {
     // assign单个
     orderArr.push(assignOrderId.value);
   }
-  // 调用assign orders API
+
+  // 调用batch assign orders API
   assignOrdersAPI(sourceWHId, orderArr)
-    .then((_data) => {
+    .then((data) => {
       dialogAssignVisible.value = false;
-      addWarehouseTask(_data.id, true, sourceWHId); // (orderId, isAfterAssign)
+      const products = formatAssignedOrderItem(data)?.items;
+      const taskId = submitInitTaskItem(products, sourceWHId);
+      console.log('taskId: ', taskId);
+      taskId && editWarehouseTask(data.id, taskId);
     })
     .finally(() => {
       dialogAssignVisible.value = false;
@@ -424,29 +422,24 @@ const unassignSelected = () => {
   fetchList();
 };
 
-const addWarehouseTask = (_orderId, _isAfterAssign, sourceWHId) => {
+const addWarehouseTask = (_orderId, sourceWHId) => {
   findAssignedOrderAPI(_orderId).then((_data) => {
     taskItem.value = Object.assign({}, emptyTaskItem);
     taskItem.value.orderId = _orderId;
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    if (_isAfterAssign) {
-      taskItem.value.taskType = 'FULFILLMENT';
-      taskItem.value.sourceId = sourceWHId;
-      taskItem.value.targetId = 18; // Default Customer
-    }
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
 };
 
-const editWarehouseTask = (_orderId, _taskItem) => {
+const editWarehouseTask = (_orderId, taskId) => {
   if (!taskPermissionArr.includes(role.value)) {
     ElMessage.error('You don\'t have permission', 3);
     return;
   }
   findAssignedOrderAPI(_orderId).then((_data) => {
     taskOrderItem.value = formatAssignedOrderItem(_data);
-    findTaskAPI(_taskItem.id).then(_data => {
+    findTaskAPI(taskId).then(_data => {
       taskItem.value = _data;
       dialogStatus.value = 'update';
       dialogTaskVisible.value = true;
@@ -529,10 +522,7 @@ onBeforeUnmount(() => {
 .order-info
   .el-tag
     cursor: pointer
-.shipment-info
-  .el-tag
-    margin-right: 50%
-
+    
 .el-form-item__content div
   width: 100%
 

@@ -130,7 +130,7 @@ export function jsonToUnderline(obj) {
     });
   } else if (obj instanceof Object) {
     Object.keys(obj).forEach(function(key) {
-      if (!obj[key] && key === 'id') {
+      if (!obj[key]) {
         delete obj[key];
         return;
       }

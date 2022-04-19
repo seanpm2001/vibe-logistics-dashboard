@@ -2,17 +2,23 @@ import { defineStore } from 'pinia';
 import { queryUnitsAPI, listWarehousesAPI } from '/@/api/logistic';
 import { fixedWarehouseEnum } from '/@/enums/logistic';
 
+const emptyListQuery = {
+  page: 1,
+  perPage: 10,
+  search: '',
+};
+
 export const useLogisticStore = defineStore({
   id: 'logistic',
   state: () => ({
     unitList: [],
     warehouseEnum: {},
     listQuery: {
-      order: {},
-      task: {},
-      package: {},
-      freight: {},
-      inventory: {},
+      order: emptyListQuery,
+      task: emptyListQuery,
+      package: emptyListQuery,
+      freight: emptyListQuery,
+      inventory: emptyListQuery,
     }
   }),
   actions: {
@@ -33,11 +39,9 @@ export const useLogisticStore = defineStore({
 
     setWarehouseEnum () {
       listWarehousesAPI()
-        .then(_data => {
+        .then(data => {
           const options = {};
-          _data.forEach(item => {
-            options[item.id] = item.name;
-          });
+          data.forEach(item => options[item.id] = item.name);
           this.warehouseEnum = options;
         })
         .catch(() => this.warehouseEnum = options);

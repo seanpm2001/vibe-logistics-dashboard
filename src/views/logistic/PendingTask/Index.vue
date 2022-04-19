@@ -1,11 +1,15 @@
 <template>
   <div class="page">
     <div class="statistics">
-      <el-date-picker
-        v-model="dateFilter" :shortcuts="shortcuts"
-        type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
-      />
-      <span> before 11.30 am</span>
+      <div class="f-row col-center">
+        <el-date-picker
+          v-model="dateFilter" :shortcuts="shortcuts"
+          type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
+        />
+        <span class="mgl-5 mgr-5"> before 11.30 am</span>
+        <el-input v-model="listQuery.search" style="width: 200px;"  placeholder="Search: (order info)" />
+        <el-button class="mgl-5" type="primary"  @click="fetchList">Search</el-button>
+      </div>
       <el-descriptions :column="3" border>
         <template v-for="(item, key) in skuQTY" :key="key">
           <el-descriptions-item label="SKU">{{ key }}</el-descriptions-item>
@@ -31,8 +35,8 @@
 
 <script setup>
 import TaskCards from './TaskCards.vue';
-import { parseTime } from '/@/utils';
-import { queryTasksAPI } from '/@/api/logistic';
+import { parseTime, formatAssignedOrderItem } from '/@/utils';
+import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '/@/api/logistic';
 // import { useUserStore } from '/@/stores';
 
 /* Start Data */
@@ -42,7 +46,8 @@ const listQuery = ref({
   page: 1,
   perPage: 10,
   start: null,
-  end: null
+  end: null,
+  search: '',
 });
 
 watchEffect(() => {
@@ -55,6 +60,7 @@ watchEffect(() => {
 
 const total = ref(0);
 const dataList = ref(null);
+const orderEnum = ref({});
 const contrastTask = ref(null);
 
 const shortcuts = [
@@ -70,6 +76,7 @@ const shortcuts = [
 
 provide('listQuery', listQuery);
 provide('dataList', dataList);
+provide('orderEnum', orderEnum);
 provide('contrastTask', contrastTask);
 /* End Data */
 
@@ -94,15 +101,27 @@ const skuQTY = computed(() => { // SKU Quantity Statistics
   return temp;
 });
 
+function getOrderIdArr (taskList) {
+  const temp = [];
+  taskList.forEach(task => temp.push(task.orderId));
+  return temp;
+}
+
 const fetchList = () => {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
     params.append('task_type', 'FULFILLMENT');
     params.append('task_type', 'REPLACE');
-    queryTasksAPI(params).then((data) => {
+    queryTasksAPI(params).then(data => {
       dataList.value = data.items;
       total.value = data.total;
       contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
+      const orderIdArr = getOrderIdArr(dataList.value);
+      queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+        data.forEach(order => {
+          orderEnum.value[order.id] = formatAssignedOrderItem(order);
+        });
+      });
     });
   }
 };

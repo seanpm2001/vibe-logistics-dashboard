@@ -139,7 +139,7 @@
 import { ElMessage, ElTooltip } from 'element-plus';
 import BatchForm from './BatchForm.vue';
 import {
-  queryFreightsAPI, createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
+  createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
 } from '/@/api/logistic';
 import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/enums/logistic';

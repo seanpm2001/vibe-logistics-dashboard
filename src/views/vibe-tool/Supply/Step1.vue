@@ -15,7 +15,7 @@
     </el-form-item>
     <el-form-item label="SKU:">
       <el-select v-model="step1.sku" placeholder="Please select">
-        <el-option v-for="(item, key) in skuProdcutEnum" :key="key" :label="key" :value="key" />
+        <el-option v-for="(item, key) in skuCodeEnum" :key="key" :label="key" :value="key" />
       </el-select>
     </el-form-item>
   </el-row>  
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { skuProdcutEnum, fixedWarehouseEnum } from '/@/enums/logistic';
+import { skuCodeEnum, fixedWarehouseEnum } from '/@/enums/logistic';
 /* Start Data */
 const step1 = inject('step1');
 /* End Data */

@@ -4,7 +4,6 @@
 
 import { ElMessage } from 'element-plus';
 import requester from './http';
-import { jsonToUnderline } from '/@/utils/format';
 
 const handleReqElMsg = (fn, action, name, identifier) => {
   return new Promise((resolve, reject) => {
@@ -25,14 +24,12 @@ const handleReqElMsg = (fn, action, name, identifier) => {
 
 /* 海运 Freight API */
 export async function queryFreightsAPI (params) {
-  jsonToUnderline(params);
   const res = await requester.get('freights', {
     params,
   });
   return res;
 }
 export async function createFreightAPI (data) {
-  jsonToUnderline(data);
   const item = handleReqElMsg(
     requester.post('freights', data), 'Create', 'Freight'
   );
@@ -45,7 +42,6 @@ export async function findFreightAPI (freightId) {
   return item;
 }
 export async function updateFreightAPI (freightId, updates) {
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`freight/${freightId}`, updates), 'Update', 'Freight', freightId
   );
@@ -63,14 +59,12 @@ export async function listBatchesAPI (freightId) {
   return items;
 }
 export async function createBatchAPI (freightId, data) {
-  jsonToUnderline(data);
   const item = handleReqElMsg(
     requester.post(`freight/${freightId}/batches`, data), 'Create', 'Sub-Batch'
   );
   return item;
 }
 export async function updateBatchAPI (batchId, updates) {
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`batch/${batchId}`, updates), 'Update', 'Sub-Batch', batchId
   );
@@ -84,19 +78,21 @@ export async function deleteBatchAPI (batchId) {
 
 /* 订单 Order API */
 export async function queryOrdersAPI (params) {
-  jsonToUnderline(params);
   const res = await requester.get('orders/raw', {
     params,
   });
   return res;
 }
 export async function queryAssignedOrdersAPI (params) {
-
-  jsonToUnderline(params);
   const res = await requester.get('orders/assigned', {
     params,
   });
   return res;
+}
+export async function queryAssignedBatchOrdersAPI (orderIdArr) {
+  const orderIdStr = orderIdArr.join(',');
+  const res = await requester.get('/orders/assigned/batch/' + orderIdStr);
+  return res.items;
 }
 export async function findAssignedOrderAPI (orderId) {
   const item = handleReqElMsg(
@@ -114,7 +110,6 @@ export async function assignOrdersAPI (sourceId, orderArr) {
   return item;
 }
 export async function unassignOrdersAPI (orderId) {
-
   handleReqElMsg(
     requester.delete(`orders/assign/${orderId}`), 'Unassign', 'Order', orderId
   );
@@ -131,14 +126,12 @@ export async function listWarehousesAPI (params) {
 
 /* 仓库 Warehouse Tasks API */
 export async function queryTasksAPI (params) {
-  jsonToUnderline(params);
   const res = await requester.get('/warehouse/tasks', {
     params,
   });
   return res;
 }
 export async function createTaskAPI (data) {
-  jsonToUnderline(data);
   const item = handleReqElMsg(
     requester.post('/warehouse/tasks', data), 'Create', 'Warehouse task'
   );
@@ -152,7 +145,6 @@ export async function findTaskAPI (taskId) {
 }
 export async function updateTaskAPI (taskId, updates) {
   delete updates['packages'];
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`/warehouse/task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
   );
@@ -164,7 +156,6 @@ export async function deleteTaskAPI (taskId) {
   );
 }
 export async function createShipmentUnitsAPI (taskId, data) {
-  jsonToUnderline(data);
   const item = handleReqElMsg(
     requester.post(`/warehouse/task/${taskId}/units`, data), 'Create', 'Package'
   );
@@ -180,7 +171,6 @@ export async function queryPackagesAPI (params) {
   return res;
 }
 export async function createPackageAPI (taskId, data) {
-  jsonToUnderline(data);
   const item = handleReqElMsg(
     requester.post(`/warehouse/task/${taskId}/packages`, data), 'Create', 'Package'
   );
@@ -192,7 +182,6 @@ export async function getTaskPackagesAPI (taskId) {
   return res.items;
 }
 export async function updatePackageAPI (packageId, updates) {
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}`, updates), 'Update', 'Package', packageId
   );
@@ -206,7 +195,6 @@ export async function deletePackageAPI (packageId) {
 
 /* Warehousing API */
 export async function updatePackageUnitAPI(packageId, unitId, updates) {
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
   );
@@ -215,12 +203,10 @@ export async function updatePackageUnitAPI(packageId, unitId, updates) {
 
 /* 单个商品 Unit API */
 export async function queryUnitsAPI (params) {
-  jsonToUnderline(params);
   const res = await requester.get('/units/search', { params });
   return res.items;
 }
 export async function updateUnitAPI (unitSerial, updates) {
-  jsonToUnderline(updates);
   const item = handleReqElMsg(
     requester.put(`unit/${unitSerial}`, updates), 'Update', 'Unit', unitSerial
   );

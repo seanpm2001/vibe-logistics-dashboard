@@ -121,9 +121,9 @@
         <template v-slot="{ row }">
           <template v-for="(item, key) in row.content" :key="item">
             <div>
-              <svg-icon :icon-name="productIconMap[key]" />
+              <svg-icon :icon-name="skuIconEnum[key]" />
               <span class="mgl-5"
-                >{{ productMap[key] }}:<el-tag class="mgl-5" size="small">{{
+                >{{ skuNameEnum[key] }}:<el-tag class="mgl-5" size="small">{{
                   item
                 }}</el-tag></span
               >
@@ -208,8 +208,8 @@ import {
 import {
   freightStatusEnum,
   forwarderEnum,
-  productMap,
-  productIconMap,
+  skuNameEnum,
+  skuIconEnum,
 } from '/@/enums/logistic';
 
 // onRenderTriggered(e => {
@@ -433,7 +433,6 @@ onMounted(() => {
   initGlobalData();
 
   listQuery.value = logisticStore.listQuery['freight'];
-
   fetchList();
 });
 
