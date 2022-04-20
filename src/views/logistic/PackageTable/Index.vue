@@ -232,13 +232,17 @@ const ifMeetHousingCondtion = (taskType, unitStatus) => {
   return false;
 };
 
-const fetchList = () => {
+function queryPackage() {
   listLoading.value = true;
   queryPackagesAPI(listQuery.value).then((_data) => {
     dataList.value = _data.items;
     total.value = _data.total;
     listLoading.value = false;
   });
+}
+
+const fetchList = () => {
+  setTimeout(() => queryPackage(), 200);
 };
 
 const handlePagination = (_config) => {

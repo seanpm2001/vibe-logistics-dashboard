@@ -109,7 +109,7 @@ function getOrderIdArr (taskList) {
   return temp;
 }
 
-const fetchList = () => {
+function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
     params.append('task_type', 'FULFILLMENT');
@@ -126,6 +126,10 @@ const fetchList = () => {
       });
     });
   }
+}
+
+const fetchList = () => {
+  setTimeout(() => queryTask(), 200);
 };
 
 function initDateFilter () {

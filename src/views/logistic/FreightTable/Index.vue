@@ -280,13 +280,17 @@ const statusTypeDict = {
   Cancelled: 'danger',
 };
 
-const fetchList = () => {
+function queryFreight() {
   listLoading.value = true;
   queryFreightsAPI(listQuery.value).then((_data) => {
     dataList.value = _data.items;
     total.value = _data.total;
     listLoading.value = false;
   });
+}
+
+const fetchList = () => {
+  setTimeout(() => queryFreight(), 200);
 };
 
 const handlePagination = (_config) => {

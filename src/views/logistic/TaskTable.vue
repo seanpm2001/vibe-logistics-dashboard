@@ -282,13 +282,17 @@ const calTaskStatus = (taskType, packages) => {
   return res;
 };
 
-const fetchList = () => {
+function queryTask() {
   listLoading.value = true;
   queryTasksAPI(listQuery.value).then((_data) => {
     dataList.value = _data.items;
     total.value = _data.total;
     listLoading.value = false;
   });
+}
+
+const fetchList = () => {
+  setTimeout(() => queryTask(), 200);
 };
 
 const handleFilter = () => {

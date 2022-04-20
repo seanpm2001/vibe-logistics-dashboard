@@ -76,7 +76,7 @@
               <br />
             </template>
           </div>
-          <p>{{ row.createdAt }}</p>
+          <p>{{ formatDate(row.createdAt) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="Shipment Info" min-width="280px" align="center">
@@ -317,7 +317,9 @@ provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 /* End data */
 
-function fetchList() {
+const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
+
+function queryOrders () {
   listLoading.value = true;
   (showAssignedOrder.value
     ? queryAssignedOrdersAPI(listQuery.value)
@@ -332,6 +334,10 @@ function fetchList() {
     total.value = _data.total;
     listLoading.value = false;
   });
+}
+
+function fetchList() {
+  setTimeout(() => queryOrders(), 200);
 }
 
 const handleFilter = () => {
@@ -432,8 +438,7 @@ const unassignOrders = (order) => {
     return;
   }
   unassignOrdersAPI(order.id).then((data) => {
-    // fetchList(); // unassign完以后马上去调query的接口这条assigned_order的数据还在，再刷新没了
-    setTimeout(() => location.reload(), 800);// 先用reload替代
+    fetchList();
   });
 };
 
@@ -455,7 +460,7 @@ const addWarehouseTask = (_orderId, sourceWHId) => {
   });
 };
 
-const editWarehouseTask = (_orderId, taskId) => {
+const editWarehouseTask = (orderId, taskId) => {
   if (!taskPermissionArr.includes(role.value)) {
     ElMessage.error('You don\'t have permission', 5);
     return;

@@ -266,7 +266,7 @@ const addWarehouseMoveTask = () => {
   dialogTaskVisible.value = true;
 };
 
-const fetchList = () => {
+function queryInventory() {
   listLoading.value = true;
   listInventoriesAPI(listQuery.value).then(_data => {
     dataList.value = _data.items;
@@ -277,6 +277,10 @@ const fetchList = () => {
       listLoading.value = false;
     }, 1.5 * 1000);
   });
+}
+
+const fetchList = () => {
+  setTimeout(() => queryInventory(), 200);
 };
 
 const handlePagination = config => {
