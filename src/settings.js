@@ -1,41 +1,40 @@
-export default {
-  title: 'Vibe Logistics System',
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the settings right-panel
-   */
-  showSettings: true,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether need tagsView
-   */
-  theme: '#1890ff',
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether need tagsView
-   */
-  tagsView: true,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether fix the header
-   */
-  fixedHeader: false,
-
+const setting = {
+  /*page layout related*/
+  //sideBar or navbar show title
+  title: 'Logistic system',
   /**
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false,
-
+  sidebarLogo: true,
+ 
   /**
-   * @type {string | array} 'production' | ['production', 'development']
+   * @type {boolean} true | false
+   * @description Whether show the settings right-panel
+   */
+  showLeftMenu: true,
+  /**
+   * @type {boolean} true | false
+   * @description Whether show TagsView
+   */
+  showTagsView: true,
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the top Navbar
+   */
+  showTopNavbar: true,
+  /**
+   * @type {boolean} true | false
+   * @description Whether  open prod mock
+   */
+  openProdMock: true,
+  /**
+   * @type {string | array} 'dev' | ['prod','test','dev'] according to the .env file props of VITE_APP_ENV
    * @description Need show err logs component.
    * The default is only used in the production env
-   * If you want to also use it in dev, you can pass ['production', 'development']
+   * If you want to also use it in dev, you can pass ['dev', 'test']
    */
-  errorLog: 'production'
+  errorLog: ['prod'],
 };
+
+export default setting;

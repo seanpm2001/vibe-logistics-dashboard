@@ -22,17 +22,22 @@ export const useLogisticStore = defineStore({
     }
   }),
   actions: {
+    M_unitList(data) {
+      this.$patch((state => state.unitList = data));
+    },
+    M_warehouseEnum(data) {
+      this.$patch((state => state.warehouseEnum = data));
+    },
+
     setListQuery (payload) {
       const { query, pageName } = payload;
-      this.listQuery[pageName] = query;
+      this.$patch(state => state.listQuery[pageName] = query);
     },
 
     setUnitList () {
       return new Promise(resolve => {
         queryUnitsAPI({ search: '' })
-          .then(data => {
-            this.unitList = data;
-          })
+          .then(data => M_unitList(data))
           .finally(() => resolve());
       });
     },
@@ -42,9 +47,9 @@ export const useLogisticStore = defineStore({
         .then(data => {
           const options = {};
           data.forEach(item => options[item.id] = item.name);
-          this.warehouseEnum = options;
+          M_warehouseEnum(options);
         })
-        .catch(() => this.warehouseEnum = options);
+        .catch(() => this.warehouseEnum = fixedWarehouseEnum);
     }
   }
 });
