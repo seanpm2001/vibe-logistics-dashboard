@@ -56,7 +56,7 @@ export default (({command}) => {
     },
     // 打包配置
     build: {
-      // target: 'modules',
+      target: 'modules',
       outDir: 'dist', //指定输出路径
       minify: 'terser', // 混淆器，terser构建后文件体积更小
       chunkSizeWarningLimit: 5000, // 消除打包大小超过警告
@@ -92,7 +92,9 @@ export default (({command}) => {
       proxy, // 反向代理配置
     },
     define: {
-      'process.env': process.env
+      'process.env': process.env,
+      'process.platform': null,
+      'process.version': null,
     }
   });
 });
