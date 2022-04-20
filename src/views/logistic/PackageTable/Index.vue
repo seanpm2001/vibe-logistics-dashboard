@@ -174,7 +174,7 @@ import {
   skuCodeEnum,
   carrierEnum,
 } from '@/enums/logistic';
-import { useLogisticStore } from '@/stores';
+import { useLogisticStore } from '@/store';
 
 /* Start data */
 const logisticStore = useLogisticStore();

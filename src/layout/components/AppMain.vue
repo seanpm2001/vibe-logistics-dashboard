@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { useTagStore } from '@/stores';
+import { useTagStore } from '@/store';
 const { cachedViews } = storeToRefs(useTagStore());
 const route = useRoute();
 

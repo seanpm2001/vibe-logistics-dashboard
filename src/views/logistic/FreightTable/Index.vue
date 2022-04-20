@@ -194,7 +194,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 import FreightForm from './FreightForm.vue';
 import { parseTime } from '@/utils/format';
-import { useLogisticStore } from '@/stores';
+import { useLogisticStore } from '@/store';
 
 const logisticStore = useLogisticStore();
 const { warehouseEnum } = storeToRefs(logisticStore);

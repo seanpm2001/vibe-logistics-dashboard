@@ -1,4 +1,4 @@
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 function checkPermission(el, binding) {
   const { value } = binding;

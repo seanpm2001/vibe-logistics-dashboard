@@ -205,7 +205,7 @@ import { ElMessage } from 'element-plus';
 import { parseTime } from '@/utils/format';
 import TaskDialog from './components/taskDialog/Index.vue';
 import { listInventoriesAPI } from '@/api/logistic';
-import { useLogisticStore } from '@/stores';
+import { useLogisticStore } from '@/store';
 
 /* Start Data */
 const { proxy } = getCurrentInstance();

@@ -92,7 +92,7 @@
 import Captcha from '@/components/Captcha/Index.vue';
 import { ElMessage } from 'element-plus';
 import { validUsername } from '@/utils/validate';
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 import signInSrc from '@img/profile/sign-in.svg';
 import signUpSrc from '@img/profile/sign-up.svg';

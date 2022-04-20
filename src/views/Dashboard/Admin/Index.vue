@@ -21,7 +21,7 @@
 <script setup>
 import PanThumb from '@/components/PanThumb.vue';
 import GithubCorner from '@/components/GithubCorner.vue';
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 const userStore = useUserStore();
 const { name, avatar, role } = storeToRefs(userStore);

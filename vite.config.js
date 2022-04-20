@@ -56,16 +56,27 @@ export default (({command}) => {
     },
     // 打包配置
     build: {
-      target: 'modules',
+      // target: 'modules',
       outDir: 'dist', //指定输出路径
-      assetsDir: 'assets', // 指定生成静态资源的存放路径
       minify: 'terser', // 混淆器，terser构建后文件体积更小
+      chunkSizeWarningLimit: 5000, // 消除打包大小超过警告
       terserOptions: {
+        //detail to look https://terser.org/docs/api-reference#compress-options
         compress: {
           keep_infinity: true,
           drop_console: VITE_DROP_CONSOLE,
+          drop_debugger: true
         },
       },
+      //build assets Separate
+      assetsDir: 'static/assets',
+      rollupOptions: {
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+        }
+      }
     },
     port: VITE_PORT,
     open: true,

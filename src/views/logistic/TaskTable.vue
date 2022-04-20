@@ -157,7 +157,7 @@ import {
   skuCodeEnum,
 } from '@/enums/logistic';
 import { formatAssignedOrderItem } from '@/utils/logistic';
-import { useLogisticStore } from '@/stores';
+import { useLogisticStore } from '@/store';
 
 /* Start Data */
 const logisticStore = useLogisticStore();

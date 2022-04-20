@@ -241,7 +241,7 @@ import {
 import { parseTime } from '@/utils/format';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
-import { useUserStore, useLogisticStore } from '@/stores';
+import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start data */
 const router = useRouter();

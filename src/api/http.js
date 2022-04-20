@@ -1,6 +1,5 @@
 import axios from 'axios';
-import cloneDeep from 'lodash/cloneDeep';
-import { useUserStore } from '../stores';
+import { useUserStore } from '../store';
 import { ElMessage, ElLoading } from 'element-plus';
 import 'element-plus/theme-chalk/src/loading.scss';
 import { getToken } from '@/utils/auth';

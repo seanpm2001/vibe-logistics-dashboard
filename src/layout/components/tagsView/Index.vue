@@ -35,7 +35,7 @@
 <script setup>
 import ScrollPane from './ScrollPane.vue';
 import { resolve } from '@/utils/path';
-import { useTagStore, usePermissionStore } from '@/stores';
+import { useTagStore, usePermissionStore } from '@/store';
 
 const { proxy } = getCurrentInstance();
 

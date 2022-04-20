@@ -94,7 +94,7 @@ import {
   queryUnitsAPI,
 } from '@/api/logistic';
 import { packageStatusEnum } from '@/enums/logistic';
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

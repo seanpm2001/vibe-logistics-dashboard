@@ -21,7 +21,7 @@
 <script setup>
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
-import { useAppStore, usePermissionStore } from '@/stores';
+import { useAppStore, usePermissionStore } from '@/store';
 
 const route = useRoute();
 const { sidebar } = storeToRefs(useAppStore());

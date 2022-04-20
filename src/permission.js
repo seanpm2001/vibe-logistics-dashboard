@@ -1,5 +1,5 @@
 import router from './router/index';
-import { useUserStore, usePermissionStore } from './stores';
+import { useUserStore, usePermissionStore } from './store';
 import { ElMessage } from 'element-plus';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style

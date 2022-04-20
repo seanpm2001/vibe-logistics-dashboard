@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 const { proxy } = getCurrentInstance();
 const { role } = storeToRefs(useUserStore());

@@ -154,7 +154,7 @@ import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuCodeEnum,
   unitConditionEnum, codeNameEnum
 } from '@/enums/logistic';
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 const props = defineProps({
   emptyTaskItem: {

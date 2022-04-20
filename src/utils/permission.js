@@ -1,4 +1,4 @@
-import useUserStore from '@/stores';
+import useUserStore from '@/store';
 
 /**
  * @param {Array} value

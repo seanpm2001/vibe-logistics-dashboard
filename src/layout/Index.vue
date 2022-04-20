@@ -15,7 +15,7 @@
 
 <script setup>
 import { AppMain, Navbar, SidebarComponent, TagsView } from './components';
-import { useAppStore, useSettingStore } from '@/stores';
+import { useAppStore, useSettingStore } from '@/store';
 
 const { sidebar, device} = storeToRefs(useAppStore());
 const { tagsView: needTagsView, fixedHeader: fixedHeader } = storeToRefs(useSettingStore());

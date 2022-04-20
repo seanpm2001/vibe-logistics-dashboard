@@ -7,7 +7,7 @@
 <script setup>
 import AdminDashboard from './Admin/Index.vue';
 import EditorDashboard from './Editor.vue';
-import { useUserStore } from '@/stores';
+import { useUserStore } from '@/store';
 
 const userStore = useUserStore();
 console.log('userStore: ', userStore);
