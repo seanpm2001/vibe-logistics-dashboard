@@ -6,5 +6,5 @@ export { useAppStore } from './app';
 export { useLogisticStore } from './logistic';
 export { usePermissionStore } from './permission';
 export { useSettingStore } from './setting';
-export { useTagStore } from './tag';
+export { useTagsViewStore } from './tagsView';
 export { useUserStore } from './user';

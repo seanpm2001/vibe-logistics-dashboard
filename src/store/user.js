@@ -1,25 +1,41 @@
-import { loginAPI, logoutAPI, getInfoAPI } from '@/api/logistic';
-import { getToken, setToken, removeToken } from '@/utils/auth';
-import router, { resetRouter } from '@/router';
-import { useTagStore } from './tag';
+import { loginAPI, getInfoAPI } from '@/api/logistic';
+import { setToken, removeToken } from '@/utils/auth';
+import router, { asyncRoutes } from '@/router';
+import { useTagsViewStore, usePermissionStore } from './index';
+
+const resetRouter = () => {
+  const asyncRouterNameArr = asyncRoutes.map((mItem) => mItem.name);
+  asyncRouterNameArr.forEach((name) => {
+    if (router.hasRoute(name)) {
+      router.removeRoute(name);
+    }
+  });
+};
 
 export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
-    token: getToken(),
     username: null,
     avatar: '@img/common/avatar.gif',
     email: null,
     role: null,
   }),
   actions: {
+    M_username(username) {
+      this.$patch((state) => state.username = username);
+    },
+    M_role(role) {
+      this.$patch((state) => state.role = role);
+    },
+    M_email(email) {
+      this.$patch((state) => state.email = email);
+    },
     // user login
     login(userInfo) {
       return new Promise((resolve, reject) => {
         loginAPI(userInfo).then(data => {
-          this.token = data.accessToken;
           setToken(data.accessToken);
-          resolve();
+          resolve(null);
         }).catch(error => {
           reject(error);
         });
@@ -35,9 +51,9 @@ export const useUserStore = defineStore({
 
           const { role, username, email } = data;
 
-          this.role = role;
-          this.username = username;
-          this.email = email;
+          this.M_username(username);
+          this.M_role(role);
+          this.M_email(email);
           resolve(data);
         }).catch(error => {
           reject(error);
@@ -48,30 +64,22 @@ export const useUserStore = defineStore({
     // user logout
     logout() {
       return new Promise((resolve, reject) => {
-        // logoutAPI(this.token).then(() => {
-        this.token = null;
-        this.role = null;
-        removeToken();
-        resetRouter();
-        // reset visited views and cached views
-        useTagStore().delAllViews(null, { root: true });
-
-        resolve();
-        router.go(0);
-        // }).catch(error => {
-        //   reject(error);
-        // });
+        this.resetState();
       });
     },
 
-    // remove token
-    resetToken() {
-      return new Promise(resolve => {
-        this.token = null;
-        this.role = null;
-        removeToken();
-        resolve();
+    resetState() {
+      return new Promise((resolve) => {
+        this.M_username(null);
+        this.M_role(null);
+        removeToken(); // must remove  token  first
+        resetRouter(); // reset the router
+        const permissionStore = usePermissionStore();
+        permissionStore.M_isGetUserInfo(false);
+        const tagsViewStore = useTagsViewStore();
+        tagsViewStore.delAllViews();
+        resolve(null);
       });
-    },
+    }
   }
 });

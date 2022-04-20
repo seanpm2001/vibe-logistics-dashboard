@@ -118,18 +118,10 @@ export const asyncRoutes = [
   },
 ];
 
-const routeConfig = {
-  history: createWebHashHistory(process.env.BASE_URL),
+const router = createRouter({
+  history: createWebHashHistory(),
   scrollBehavior: () => ({ top: 0 }),
   routes: constantRoutes
-};
-
-const router = createRouter(routeConfig);
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
-  asyncRoutes.forEach(item => router.removeRoute(item.name));
-}
-
+});
 
 export default router;

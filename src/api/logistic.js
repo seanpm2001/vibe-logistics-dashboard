@@ -239,8 +239,8 @@ export async function getInfoAPI() {
   return res;
 }
 
-export async function logoutAPI() {
-  await mockRequester.post('/user/logout')
-    .then(() => ElMessage.success('Log out successfully.', 3))
-    .catch(() => ElMessage.error('Log out failed, please contact developer.', 3));
-}
+// export async function logoutAPI() {
+//   await mockRequester.post('/user/logout')
+//     .then(() => ElMessage.success('Log out successfully.', 3))
+//     .catch(() => ElMessage.error('Log out failed, please contact developer.', 3));
+// }

@@ -37,9 +37,7 @@ requester.interceptors.request.use(
   config => {
     const { method, url } = config;
     jsonToUnderLineParamsAndData(config);
-    const { token } = useUserStore();
-    if (token)
-      config.headers['Authorization'] = 'Bearer ' + getToken();
+    config.headers['Authorization'] = 'Bearer ' + getToken();
     if (method === 'get' && !url.includes('/'))
       return config; // query API 不触发全屏loading
     showFullScreenLoading();
