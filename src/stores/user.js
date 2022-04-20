@@ -1,6 +1,6 @@
-import { loginAPI, logoutAPI, getInfoAPI } from '/@/api/logistic';
-import { getToken, setToken, removeToken } from '/@/utils/auth';
-import router, { resetRouter } from '/@/router';
+import { loginAPI, logoutAPI, getInfoAPI } from '@/api/logistic';
+import { getToken, setToken, removeToken } from '@/utils/auth';
+import router, { resetRouter } from '@/router';
 import { useTagStore } from './tag';
 
 export const useUserStore = defineStore({
@@ -8,7 +8,7 @@ export const useUserStore = defineStore({
   state: () => ({
     token: getToken(),
     username: null,
-    avatar: '/@img/common/avatar.gif',
+    avatar: '@img/common/avatar.gif',
     email: null,
     role: null,
   }),

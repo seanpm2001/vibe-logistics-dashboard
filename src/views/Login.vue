@@ -89,13 +89,13 @@
 
 <script setup>
 // 局部组件（导入）
-import Captcha from '/@/components/Captcha/Index.vue';
+import Captcha from '@/components/Captcha/Index.vue';
 import { ElMessage } from 'element-plus';
-import { validUsername } from '/@/utils/validate';
-import { useUserStore } from '/@/stores';
+import { validUsername } from '@/utils/validate';
+import { useUserStore } from '@/stores';
 
-import signInSrc from '/@img/profile/sign-in.svg';
-import signUpSrc from '/@img/profile/sign-up.svg';
+import signInSrc from '@img/profile/sign-in.svg';
+import signUpSrc from '@img/profile/sign-up.svg';
 
 /* Begin Data */
 const store = useUserStore();

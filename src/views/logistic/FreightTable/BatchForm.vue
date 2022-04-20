@@ -81,8 +81,8 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { file2Xcel } from '/@/utils/excel';
-import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '/@/api/logistic';
+import { file2Xcel } from '@/utils/excel';
+import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -264,7 +264,7 @@ const beforeRemove = (file, fileList) => {
 </script>
 
 <style lang="sass" scoped>
-@import "/@css/_response.sass"
+@import "@css/_response.sass"
 .viewPattern
   .upload-serial
     display: none

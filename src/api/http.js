@@ -3,8 +3,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import { useUserStore } from '../stores';
 import { ElMessage, ElLoading } from 'element-plus';
 import 'element-plus/theme-chalk/src/loading.scss';
-import { getToken } from '/@/utils/auth';
-import { jsonToHump, jsonToUnderline } from '/@/utils/format';
+import { getToken } from '@/utils/auth';
+import { jsonToHump, jsonToUnderline } from '@/utils/format';
 
 
 /* start 将同一时刻的请求合并。*/

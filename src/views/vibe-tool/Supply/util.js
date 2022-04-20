@@ -1,4 +1,4 @@
-import { monthDaysEnum, yearEnum } from '/@/enums/supply';
+import { monthDaysEnum, yearEnum } from '@/enums/supply';
 
 export function checkRequiredData (step2Item) {
   let isValid = true;

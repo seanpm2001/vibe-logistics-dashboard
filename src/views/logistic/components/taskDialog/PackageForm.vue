@@ -85,16 +85,16 @@
 </template>
 
 <script setup>
-import { debounce } from '/@/utils';
+import { debounce } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
   createPackageAPI,
   deletePackageAPI,
   updatePackageAPI,
   queryUnitsAPI,
-} from '/@/api/logistic';
-import { packageStatusEnum } from '/@/enums/logistic';
-import { useUserStore } from '/@/stores';
+} from '@/api/logistic';
+import { packageStatusEnum } from '@/enums/logistic';
+import { useUserStore } from '@/stores';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

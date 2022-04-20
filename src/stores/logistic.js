@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { queryUnitsAPI, listWarehousesAPI } from '/@/api/logistic';
-import { fixedWarehouseEnum } from '/@/enums/logistic';
+import { queryUnitsAPI, listWarehousesAPI } from '@/api/logistic';
+import { fixedWarehouseEnum } from '@/enums/logistic';
 
 const emptyListQuery = {
   page: 1,

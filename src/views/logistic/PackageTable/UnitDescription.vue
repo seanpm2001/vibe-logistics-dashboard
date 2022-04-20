@@ -51,8 +51,8 @@
 
 <script setup>
 import { ElMessageBox } from 'element-plus';
-import { updatePackageUnitAPI } from '/@/api/logistic';
-import { packageStatusEnum, packageConditionEnum } from '/@/enums/logistic';
+import { updatePackageUnitAPI } from '@/api/logistic';
+import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 
 const props = defineProps({
   serialScopeArr: {

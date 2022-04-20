@@ -4,7 +4,7 @@ import { logisticRouter } from './modules/logistic';
 import { vibeToolRouter } from './modules/vibe-tool';
 // import store from '../store';
 /* Layout */
-import Layout from '/@/layout/Index.vue';
+import Layout from '@/layout/Index.vue';
 
 
 /**
@@ -45,7 +45,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard/index',
-        component: () => import('/@/views/Dashboard/Index.vue'),
+        component: () => import('@/views/Dashboard/Index.vue'),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'sidebar-dashboard', affix: true }
       }
@@ -59,7 +59,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'refactor',
-        component: () => import('/@/views/Dashboard/UiRefactor.vue'),
+        component: () => import('@/views/Dashboard/UiRefactor.vue'),
         name: 'UiRefactor',
         meta: { title: 'Ui Refactor', icon: 'sidebar-dashboard', affix: true }
       }
@@ -72,18 +72,18 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path*',
-        component: () => import('/@/views/Redirect.vue'),
+        component: () => import('@/views/Redirect.vue'),
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('/@/views/Login.vue'),
+    component: () => import('@/views/Login.vue'),
     hidden: true
   },
   // {
   //   path: '/auth-redirect',
-  //   component: () => import('/@/views/login/Auth-Redirect.vue'),
+  //   component: () => import('@/views/login/Auth-Redirect.vue'),
   //   hidden: true
   // },
 ];
@@ -106,7 +106,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'role',
-        component: () => import('/@/views/permission/Role.vue'),
+        component: () => import('@/views/permission/Role.vue'),
         name: 'RolePermission',
         meta: {
           title: 'Manage Role',

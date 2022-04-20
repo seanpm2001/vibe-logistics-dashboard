@@ -44,7 +44,7 @@ onUnmounted(() => {
   overflow-x: hidden
   user-select: none
 .background
-  background-image: url("/@img/css-show/mountain.jpg")
+  background-image: url("@img/css-show/mountain.jpg")
   background-size: cover
   background-position: 50% 50%
   height: 200vh

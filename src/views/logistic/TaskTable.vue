@@ -148,16 +148,16 @@ import {
   findTaskAPI,
   deleteTaskAPI,
   findAssignedOrderAPI,
-} from '/@/api/logistic';
+} from '@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
   codeNameEnum,
   codeIconEnum,
   skuCodeEnum,
-} from '/@/enums/logistic';
-import { formatAssignedOrderItem } from '/@/utils/logistic';
-import { useLogisticStore } from '/@/stores';
+} from '@/enums/logistic';
+import { formatAssignedOrderItem } from '@/utils/logistic';
+import { useLogisticStore } from '@/stores';
 
 /* Start Data */
 const logisticStore = useLogisticStore();

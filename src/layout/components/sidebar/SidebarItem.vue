@@ -25,8 +25,8 @@
 
 <script setup>
 
-import { resolve } from '/@/utils/path';
-import { isExternal } from '/@/utils/validate';
+import { resolve } from '@/utils/path';
+import { isExternal } from '@/utils/validate';
 import Item from './Item.vue';
 import AppLink from './Link.vue';
 // import FixiOSBug from './FixiOSBug';

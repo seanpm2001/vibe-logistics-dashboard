@@ -164,8 +164,8 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from './UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
-import { parseTime, jsonToHump } from '/@/utils/format';
-import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '/@/api/logistic';
+import { parseTime, jsonToHump } from '@/utils/format';
+import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
@@ -173,8 +173,8 @@ import {
   codeIconEnum,
   skuCodeEnum,
   carrierEnum,
-} from '/@/enums/logistic';
-import { useLogisticStore } from '/@/stores';
+} from '@/enums/logistic';
+import { useLogisticStore } from '@/stores';
 
 /* Start data */
 const logisticStore = useLogisticStore();

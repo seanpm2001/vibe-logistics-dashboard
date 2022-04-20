@@ -193,8 +193,8 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import FreightForm from './FreightForm.vue';
-import { parseTime } from '/@/utils/format';
-import { useLogisticStore } from '/@/stores';
+import { parseTime } from '@/utils/format';
+import { useLogisticStore } from '@/stores';
 
 const logisticStore = useLogisticStore();
 const { warehouseEnum } = storeToRefs(logisticStore);
@@ -204,13 +204,13 @@ import {
   findFreightAPI,
   deleteFreightAPI,
   listBatchesAPI,
-} from '/@/api/logistic';
+} from '@/api/logistic';
 import {
   freightStatusEnum,
   forwarderEnum,
   codeNameEnum,
   codeIconEnum,
-} from '/@/enums/logistic';
+} from '@/enums/logistic';
 
 // onRenderTriggered(e => {
 //   console.log('e: ', e);
@@ -369,7 +369,7 @@ const handleDetailRow = (_row, _type) => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import('/@/utils/excel').then((excel) => {
+  import('@/utils/excel').then((excel) => {
     const tHeader = ['title', 'type', 'status'];
     const filterVal = ['title', 'type', 'status'];
     const data = formatJson(filterVal);

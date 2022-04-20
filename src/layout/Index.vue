@@ -15,7 +15,7 @@
 
 <script setup>
 import { AppMain, Navbar, SidebarComponent, TagsView } from './components';
-import { useAppStore, useSettingStore } from '/@/stores';
+import { useAppStore, useSettingStore } from '@/stores';
 
 const { sidebar, device} = storeToRefs(useAppStore());
 const { tagsView: needTagsView, fixedHeader: fixedHeader } = storeToRefs(useSettingStore());
@@ -32,9 +32,9 @@ const classObj = computed(() => {
 </script>
 
 <style lang="sass">
-@import "/@css/_mixin.sass"
-@import "/@css/_variables.sass"
-@import '/@css/sidebar.sass'
+@import "@css/_mixin.sass"
+@import "@css/_variables.sass"
+@import '@css/sidebar.sass'
 .app-wrapper
   @include clearfix
   position: relative

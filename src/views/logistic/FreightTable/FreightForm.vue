@@ -141,9 +141,9 @@ import BatchForm from './BatchForm.vue';
 import {
   createFreightAPI, findFreightAPI, updateFreightAPI, deleteFreightAPI,
   listWarehousesAPI, listBatchesAPI, deleteBatchAPI
-} from '/@/api/logistic';
-import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '/@/enums/logistic';
-import { parseTime } from '/@/utils/format';
+} from '@/api/logistic';
+import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum} from '@/enums/logistic';
+import { parseTime } from '@/utils/format';
 
 const props = defineProps({
   emptyFreightForm: {

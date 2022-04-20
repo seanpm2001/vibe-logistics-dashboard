@@ -81,9 +81,9 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
-import { updateTaskAPI, getTaskPackagesAPI } from '/@/api/logistic';
-import { carrierEnum } from '/@/enums/logistic';
-import { useUserStore } from '/@/stores';
+import { updateTaskAPI, getTaskPackagesAPI } from '@/api/logistic';
+import { carrierEnum } from '@/enums/logistic';
+import { useUserStore } from '@/stores';
 
 const props = defineProps({
   taskId: {

@@ -47,8 +47,8 @@
 <script setup>
 import OrderShipmentInfo from './OrderShipmentInfo.vue';
 import { ElMessageBox } from 'element-plus';
-import { packageStatusEnum } from '/@/enums/logistic';
-import { codeNameEnum, codeIconEnum, skuCodeEnum } from '/@/enums/logistic';
+import { packageStatusEnum } from '@/enums/logistic';
+import { codeNameEnum, codeIconEnum, skuCodeEnum } from '@/enums/logistic';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

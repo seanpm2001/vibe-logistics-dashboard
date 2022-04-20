@@ -2,7 +2,7 @@
   <div class="streamer-container">
     <div ref='sec' class="sec" @click="toggleBgColor">
       <video autoplay muted loop>
-        <source src="/@/assets/video/run.mp4">
+        <source src="@/assets/video/run.mp4">
       </video>
       <h2>Run</h2>
     </div>

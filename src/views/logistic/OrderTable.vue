@@ -237,11 +237,11 @@ import {
   findTaskAPI,
   createTaskAPI,
   deleteTaskAPI
-} from '/@/api/logistic';
-import { parseTime } from '/@/utils/format';
-import { formatAssignedOrderItem } from '/@/utils/logistic';
-import { packageStatusEnum, codeNameEnum, codeIconEnum } from '/@/enums/logistic';
-import { useUserStore, useLogisticStore } from '/@/stores';
+} from '@/api/logistic';
+import { parseTime } from '@/utils/format';
+import { formatAssignedOrderItem } from '@/utils/logistic';
+import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { useUserStore, useLogisticStore } from '@/stores';
 
 /* Start data */
 const router = useRouter();

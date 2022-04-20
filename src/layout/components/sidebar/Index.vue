@@ -21,7 +21,7 @@
 <script setup>
 import Logo from './Logo.vue';
 import SidebarItem from './SidebarItem.vue';
-import { useAppStore, usePermissionStore } from '/@/stores';
+import { useAppStore, usePermissionStore } from '@/stores';
 
 const route = useRoute();
 const { sidebar } = storeToRefs(useAppStore());
@@ -43,5 +43,5 @@ const isCollapse = computed (() => !sidebar.value.opened);
 </script>
 
 <style module lang="sass">
-@import "/@css/_variables.sass"
+@import "@css/_variables.sass"
 </style>

@@ -5,9 +5,6 @@ import { createVitePlugins } from './vite-config/plugin';
 import proxy from './vite-config/proxy';
 import { resolve } from 'path';
 
-function pathResolve(dir) {
-  return resolve(__dirname, '.', dir);
-}
 export default (({command}) => {
   const isBuild = command === 'build';
   // 加载不同生产环境下的配置
@@ -24,13 +21,34 @@ export default (({command}) => {
     plugins: createVitePlugins(isBuild),
     resolve: {
       alias: [
-        { find: '/@', replacement: pathResolve('src'), },
-        { find: '/@img', replacement: pathResolve('src/assets/img') },
-        { find: '/@css', replacement: pathResolve('src/assets/css') },
+        { find: '@', replacement: resolve(__dirname, 'src'), },
+        { find: '@img', replacement: resolve(__dirname, 'src/assets/img') },
+        { find: '@css', replacement: resolve(__dirname, 'src/assets/css') },
       ]
     },
     css: {
-      preprocessorOptions: { scss: { charset: false } }
+      postcss: {
+        //remove build charset warning
+        plugins: [
+          {
+            postcssPlugin: 'internal:charset-removal',
+            AtRule: {
+              charset: (atRule) => {
+                if (atRule.name === 'charset') {
+                  atRule.remove();
+                }
+              }
+            }
+          }
+        ]
+      },
+      // preprocessorOptions: {
+      //   //define global scss variable
+      //   scss: {
+      //     // eslint-disable-next-line quotes
+      //     additionalData: `@import "@css/_response.sass";`
+      //   }
+      // }
     },
     // 强制预构建插件包
     optimizeDeps: {

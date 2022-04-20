@@ -50,7 +50,7 @@
 
 <script setup>
 import { ElMessage } from'element-plus';
-import { timeUnitEnum, monthDaysEnum, monthAbbrEnum } from '/@/enums/supply';
+import { timeUnitEnum, monthDaysEnum, monthAbbrEnum } from '@/enums/supply';
 import { checkRequiredData, calTableEnum } from './util';
 import Step1 from './Step1.vue';
 import Step2 from './Step2.vue';

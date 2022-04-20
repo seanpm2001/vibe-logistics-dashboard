@@ -66,23 +66,23 @@
   height: 128px
 
 .one
-  background: transparent url(/@img/css-show/1.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/1.png) 0 0 no-repeat
 
 .two
-  background: transparent url(/@img/css-show/2.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/2.png) 0 0 no-repeat
 
 .three
-  background: transparent url(/@img/css-show/3.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/3.png) 0 0 no-repeat
 
 .four
-  background: transparent url(/@img/css-show/4.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/4.png) 0 0 no-repeat
 
 .five
-  background: transparent url(/@img/css-show/5.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/5.png) 0 0 no-repeat
 
 
 .six
-  background: transparent url(/@img/css-show/6.png) 0 0 no-repeat
+  background: transparent url(@img/css-show/6.png) 0 0 no-repeat
 
 .icon span
   padding-top: 20px

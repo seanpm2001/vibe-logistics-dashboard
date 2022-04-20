@@ -91,8 +91,8 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '/@/enums/logistic';
-import { updateUnitAPI, updatePackageUnitAPI } from '/@/api/logistic';
+import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '@/enums/logistic';
+import { updateUnitAPI, updatePackageUnitAPI } from '@/api/logistic';
 
 const props = defineProps({
   warehouseEnum: {

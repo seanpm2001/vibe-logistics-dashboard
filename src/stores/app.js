@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from '/@/utils/auth';
+import { getCookie, setCookie } from '@/utils/auth';
 
 export const useAppStore = defineStore({
   id: 'app',

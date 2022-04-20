@@ -12,7 +12,7 @@
 <script>
 
 
-import { compile } from '/@/utils/path-to-regexp.min';
+import { compile } from '@/utils/path-to-regexp.min';
 import { ElBreadcrumb, ElBreadcrumbItem } from 'element-plus';
 
 export default defineComponent({

@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { calCostFn } from '/@/enums/easy-quote';
+import { calCostFn } from '@/enums/easy-quote';
 /* Start 单独拎出来的数据 */
 const prUPSNum = ref(0);
 const ups55BoardNum = ref(0);

@@ -33,8 +33,8 @@
 
 <script setup>
 // import onMounted  from "vue"
-// import "/@/assets/js/jarallax"
-// import "/@/assets/js/jarallax-element"
+// import "@/assets/js/jarallax"
+// import "@/assets/js/jarallax-element"
 
 // onMounted(() => 
 //   // eslint-disable-next-line no-undef

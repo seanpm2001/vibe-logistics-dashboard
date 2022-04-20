@@ -202,10 +202,10 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { parseTime } from '/@/utils/format';
+import { parseTime } from '@/utils/format';
 import TaskDialog from './components/taskDialog/Index.vue';
-import { listInventoriesAPI } from '/@/api/logistic';
-import { useLogisticStore } from '/@/stores';
+import { listInventoriesAPI } from '@/api/logistic';
+import { useLogisticStore } from '@/stores';
 
 /* Start Data */
 const { proxy } = getCurrentInstance();
@@ -346,7 +346,7 @@ const handleDelete = (row, index) => {
 
 const handleDownload = () => {
   downloadLoading.value = true;
-  import('/@/utils/excel').then(excel => {
+  import('@/utils/excel').then(excel => {
     const tHeader = ['timestamp', 'title', 'type', 'content', 'status'];
     const filterVal = ['timestamp', 'title', 'type', 'content', 'status'];
     const data = formatJson(filterVal);

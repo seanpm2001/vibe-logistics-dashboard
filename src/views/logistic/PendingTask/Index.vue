@@ -35,10 +35,10 @@
 
 <script setup>
 import TaskCards from './TaskCards.vue';
-import { parseTime, formatAssignedOrderItem } from '/@/utils';
-import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '/@/api/logistic';
-import { skuCodeEnum, codeNameEnum } from '/@/enums/logistic';
-// import { useUserStore } from '/@/stores';
+import { parseTime, formatAssignedOrderItem } from '@/utils';
+import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
+import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
+// import { useUserStore } from '@/stores';
 
 /* Start Data */
 // const { role } = storeToRefs(useUserStore());

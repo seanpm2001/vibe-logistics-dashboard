@@ -133,9 +133,9 @@
 <script setup>
 import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
-import { debounce } from '/@/utils';
-import { carrierEnum, codeNameEnum } from '/@/enums/logistic';
-import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '/@/api/logistic';
+import { debounce } from '@/utils';
+import { carrierEnum, codeNameEnum } from '@/enums/logistic';
+import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
 /* Start Data */

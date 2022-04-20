@@ -31,9 +31,9 @@
 </template>
 
 <script setup>
-import Breadcrumb from '/@/components/Breadcrumb.vue';
-import avatarUrl from '/@img/common/avatar.gif';
-import { useUserStore } from '/@/stores';
+import Breadcrumb from '@/components/Breadcrumb.vue';
+import avatarUrl from '@img/common/avatar.gif';
+import { useUserStore } from '@/stores';
 
 const userStore = useUserStore();
 const route = useRoute();

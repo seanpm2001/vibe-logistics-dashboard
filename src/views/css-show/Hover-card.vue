@@ -77,9 +77,9 @@
 
 <script setup>
 
-import buddha1 from '/@img/css-show/buddha1.jpeg';
-import buddha2 from '/@img/css-show/buddha2.jpeg';
-import '/@/assets/js/vanilla-tilt.min';
+import buddha1 from '@img/css-show/buddha1.jpeg';
+import buddha2 from '@img/css-show/buddha2.jpeg';
+import '@/assets/js/vanilla-tilt.min';
 onMounted(() => {
   const card3 = document.querySelectorAll('.card3');
   // eslint-disable-next-line no-undef
