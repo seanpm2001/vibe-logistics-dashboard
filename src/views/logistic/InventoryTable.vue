@@ -290,7 +290,7 @@ const handleFilter = () => {
 };
 
 const handleModifyStatus = (row, status) => {
-  ElMessage.success('操作Success', 3);
+  ElMessage.success('操作Success', 5);
   row.status = status;
 };
 

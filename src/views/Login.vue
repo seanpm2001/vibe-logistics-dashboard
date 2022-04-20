@@ -212,7 +212,7 @@ const submitLogin = async (signInPattern) => {
       }
     });
   } else {
-    ElMessage.error('Please drag the slider to verify or reflush the page.', 3);
+    ElMessage.error('Please drag the slider to verify or reflush the page.', 5);
   }
 };
 

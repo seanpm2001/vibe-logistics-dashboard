@@ -174,7 +174,7 @@
             v-if="showAssignedOrder"
             type="danger"
             size="small"
-            @click="unassignOrders(row.id)"
+            @click="unassignOrders(row)"
           >
             unAssign
           </el-button>
@@ -375,7 +375,7 @@ async function submitInitTaskItem (products, sourceWHId, orderId) {
 
 function assignSelectedOrders(_sourceWHId, _selectedArr) {
   if (!_selectedArr.length) {
-    ElMessage.error('Please at least select an order!', 3);
+    ElMessage.error('Please at least select an order!', 5);
     return;
   }
   multipleSelection.value.forEach((item) => {
@@ -390,7 +390,7 @@ const assignOrders = () => {
   const sourceWHId = sourceId.value;
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
-    ElMessage.error('Please select a target warehouse!', 3);
+    ElMessage.error('Please select a target warehouse!', 5);
     return;
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
@@ -426,9 +426,14 @@ const assignOrders = () => {
     });
 };
 
-const unassignOrders = (_orderId) => {
-  unassignOrdersAPI(_orderId).then((_data) => {
-    console.log('data: ', _data);
+const unassignOrders = (order) => {
+  if (order.tasks.length > 0) {
+    ElMessage.error('Please remove all tasks before unassign!', 5);
+    return;
+  }
+  unassignOrdersAPI(order.id).then((data) => {
+    // fetchList(); // unassign完以后马上去调query的接口这条assigned_order的数据还在，再刷新没了
+    setTimeout(() => location.reload(), 800);// 先用reload替代
   });
 };
 
@@ -452,21 +457,21 @@ const addWarehouseTask = (_orderId, sourceWHId) => {
 
 const editWarehouseTask = (_orderId, taskId) => {
   if (!taskPermissionArr.includes(role.value)) {
-    ElMessage.error('You don\'t have permission', 3);
+    ElMessage.error('You don\'t have permission', 5);
     return;
   }
-  findAssignedOrderAPI(_orderId).then((_data) => {
-    taskOrderItem.value = formatAssignedOrderItem(_data);
-    findTaskAPI(taskId).then(_data => {
-      taskItem.value = _data;
+  findAssignedOrderAPI(orderId).then((data) => {
+    taskOrderItem.value = formatAssignedOrderItem(data);
+    findTaskAPI(taskId).then(data => {
+      taskItem.value = data;
       dialogStatus.value = 'update';
       dialogTaskVisible.value = true;
     });
   });
 };
 
-const handleSelectionChange = (_selectedArr) => {
-  multipleSelection.value = _selectedArr.sort((pre, next) => next.orderId > pre.orderId);
+const handleSelectionChange = (selectedArr) => {
+  multipleSelection.value = selectedArr.sort((pre, next) => next.orderId > pre.orderId);
 };
 
 const resetForm = () => {};

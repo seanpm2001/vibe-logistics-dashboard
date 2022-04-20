@@ -13,10 +13,10 @@ const handleReqElMsg = (fn, action, name, identifier) => {
       .then(_data => {
         item = _data?.item;
         resolve(item);
-        ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`, 3);
+        ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`, 5);
       })
       .catch(err => {
-        ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`, 3);
+        ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`, 5);
         reject(err);
       });
   });
@@ -111,7 +111,7 @@ export async function assignOrdersAPI (sourceId, orderArr) {
 }
 export async function unassignOrdersAPI (orderId) {
   handleReqElMsg(
-    requester.delete(`orders/assign/${orderId}`), 'Unassign', 'Order', orderId
+    requester.delete(`orders/assigned/${orderId}`), 'Unassign', 'Order', orderId
   );
 }
 
@@ -228,7 +228,7 @@ export async function loginAPI(formInfo) {
   await requester.post('/login', formInfo)
     .then(_data => {
       res = _data;
-      ElMessage.success('Welcome to Vibe Logisitc System.', 3);
+      ElMessage.success('Welcome to Vibe Logisitc System.', 5);
     })
     .catch(() => ElMessage.error('Wrong username or password.', 3));
   return res;
