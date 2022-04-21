@@ -43,10 +43,9 @@ export default (({command}) => {
         ]
       },
       // preprocessorOptions: {
-      //   //define global scss variable
-      //   scss: {
+      //   scss: { //define global scss variable
       //     // eslint-disable-next-line quotes
-      //     additionalData: `@import "@css/_response.sass";`
+      //     additionalData: `@use "@css/_variables.scss" as *;`
       //   }
       // }
     },

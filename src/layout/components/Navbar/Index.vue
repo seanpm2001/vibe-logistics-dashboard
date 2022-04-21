@@ -1,12 +1,19 @@
 <template>
   <div class="navbar">
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <div class="f-row col-center">
+      <Hamburger
+        :is-active="opened"
+        class="hamburger-container"
+        @toggleClick="toggleSideBar"
+      />
+      <Breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    </div>
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <ScreenFull />
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
         <div class="avatar-wrapper">
           <img :src="`${avatarUrl}?imageView2/1/w/80/h/80`" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
         </div>
         <template v-slot:dropdown>
           <el-dropdown-menu>
@@ -31,11 +38,20 @@
 </template>
 
 <script setup>
-import Breadcrumb from '@/components/Breadcrumb.vue';
+import Hamburger from './Hamburger.vue';
 import avatarUrl from '@img/common/avatar.gif';
-import { useUserStore } from '@/store';
+import { useUserStore, useAppStore } from '@/store';
 
+const appStore = useAppStore();
 const userStore = useUserStore();
+
+const opened = computed(() => {
+  return appStore.sidebar.opened;
+});
+const toggleSideBar = () => {
+  appStore.M_toggleSideBar();
+};
+
 const route = useRoute();
 const router = useRouter();
 
@@ -46,43 +62,41 @@ const logout = async () => {
 
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .navbar
-  height: 50px
   overflow: hidden
   position: relative
+  display: flex
+  justify-content: space-between
+  height: 50px
   background: #fff
   box-shadow: 0 1px 4px rgba(0,21,41,.08)
-
-  .breadcrumb-container
-    float: left
-
   .errLog-container
     display: inline-block
     vertical-align: top
-
+  .hamburger-container
+    cursor: pointer
   .right-menu
-    float: right
+    display: flex
     height: 100%
     line-height: 50px
     &:focus
       outline: none
-
     .right-menu-item
       display: inline-block
-      padding: 0 8px
       height: 100%
+      margin-left: 16px
+      padding: 0 8px
       font-size: 18px
       color: #5a5e66
       vertical-align: text-bottom
       &.hover-effect
-        cursor: pointet
+        cursor: pointer
         transition: background .3s
         &:hover 
           background: rgba(0, 0, 0, .025)
 
     .avatar-container
-      margin-right: 30px
       .avatar-wrapper
         margin-top: 5px
         position: relative

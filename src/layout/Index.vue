@@ -50,8 +50,12 @@ const classObj = computed(() => {
   left: 0
   z-index: 1001
   overflow: hidden
+
+.el-menu
   .svg-icon
     margin-right: 16px
+  &.el-menu--collapse .svg-icon
+    margin-right: 0
 
 .closeSidebar
   .sidebar-container
