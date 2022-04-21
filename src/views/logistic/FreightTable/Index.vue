@@ -26,12 +26,12 @@
           disabled
           v-wave
           type="primary"
-          icon="el-icon-search"
+          :icon="Search"
           @click="handleFilter"
         >
           Search
         </el-button>
-        <el-button type="primary" icon="el-icon-edit" @click="showCreateDialog">
+        <el-button type="primary" :icon="Edit" @click="showCreateDialog">
           Add
         </el-button>
         <el-button
@@ -39,7 +39,7 @@
           v-wave
           :loading="downloadLoading"
           type="primary"
-          icon="el-icon-download"
+          :icon="Download"
           @click="handleDownload"
         >
           Export
@@ -192,6 +192,7 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { Download, Edit, Search } from '@element-plus/icons-vue';
 import FreightForm from './FreightForm.vue';
 import { parseTime } from '@/utils/format';
 import { useLogisticStore } from '@/store';

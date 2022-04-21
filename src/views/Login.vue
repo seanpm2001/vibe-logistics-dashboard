@@ -33,7 +33,7 @@
         <el-button
           :loading="btnLoading"
           class="submit-btn"
-          @click="submitLogin((signInPattern = true))"
+          @click="handleLogin((signInPattern = true))"
           >立即登录</el-button
         >
       </el-form>
@@ -65,7 +65,7 @@
         <el-button
           :loading="btnLoading"
           class="submit-btn"
-          @click="submitLogin((signInPattern = false))"
+          @click="handleLogin((signInPattern = false))"
           >立即注册</el-button
         >
       </el-form>
@@ -98,18 +98,13 @@ import signInSrc from '@img/profile/sign-in.svg';
 import signUpSrc from '@img/profile/sign-up.svg';
 
 /* Begin Data */
-const store = useUserStore();
+const userStore = useUserStore();
 
-const route = useRoute();
-const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const validated = ref(false);
 const capsTooltip = ref(false);
 const passwordType = ref('password');
-const btnLoading = ref(false);
-const redirect = ref('/');
-const otherQuery = ref('');
 
 const signInForm = reactive({
   email: 'admin@vibe.us',
@@ -120,6 +115,10 @@ const signUpForm = reactive({
   email: '',
   password: '',
 });
+const state = reactive({
+  otherQuery: {},
+  redirect: undefined
+})
 
 const validateUsername = (rule, value, callback) => {
   if (!validUsername(value)) {
@@ -185,45 +184,59 @@ const showPwd = (signInPattern) => {
   });
 };
 
+/* listen router change  */
+const route = useRoute();
 const getOtherQuery = (query) => {
   return Object.keys(query).reduce((acc, cur) => {
     if (cur !== 'redirect') {
-      acc[cur] = query[cur];
+      acc[cur] = query[cur]
     }
-    return acc;
-  }, {});
-};
+    return acc
+  }, {})
+}
 
-const submitLogin = async (signInPattern) => {
-  // ToDo 逻辑尚未完善
+watch(
+  () => route.query,
+  (query) => {
+    if (query) {
+      state.redirect = query.redirect
+      state.otherQuery = getOtherQuery(query)
+    }
+  },
+  { immediate: true }
+)
+
+
+/*
+ *  login relative
+ * */
+const btnLoading = ref(false);
+const handleLogin = async (signInPattern) => {
   if (validated.value) {
     proxy.$refs.inForm.validate((valid) => {
       if (valid) {
-        btnLoading.value = true;
-        store.login(signInForm)
-          .then(() => {
-            router.push({ path: redirect.value || '/', query: otherQuery.value });
-          })
-          .catch((err) => {
-            console.log('login err: ', err);
-          }).finally(() => btnLoading.value = false);
+        loginReq();
       } else {
         return false;
       }
     });
   } else {
-    ElMessage.error('Please drag the slider to verify or reflush the page.', 5);
+    ElMessage.error('Please drag the slider to verify or reflush the page.');
   }
 };
 
-/* watch */
-watchEffect(() => {
-  const query = route.query;
-  if (query) {
-    redirect.value = query.redirect;
-    otherQuery.value = getOtherQuery(query);
-  }
-});
+const router = useRouter();
+function loginReq () {
+  btnLoading.value = true;
+  userStore
+    .login(signInForm)
+    .then(() => {
+      router.push({ path: state.redirect || '/', query: state.otherQuery });
+    })
+    .catch((err) => {
+      console.log('login err: ', err);
+    }).finally(() => btnLoading.value = false);
+}
 </script>
 
 <style lang="sass">

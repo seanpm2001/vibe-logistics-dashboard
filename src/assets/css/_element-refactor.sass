@@ -8,6 +8,7 @@
 // dialog__header && drawer__header
 .app-main .el-dialog__header, .app-main .el-drawer__header
   background-image: linear-gradient(-303deg,#00a4bd,#00afb2 56%,#00bda5)
+  margin-right: 0
   margin-bottom: 0
   padding-bottom: 20px
   span
@@ -24,8 +25,12 @@
     color: #fff
     -webkit-font-smoothing: antialiased
     -moz-osx-font-smoothing: grayscale
+
+.app-main
   .el-drawer__close-btn
     position: relative
+  .el-dialog__headerbtn
+    top: 24px
   .el-drawer__close-btn, .el-dialog__headerbtn
     height: 1em
     color: #fff

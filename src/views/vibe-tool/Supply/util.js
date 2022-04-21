@@ -4,7 +4,7 @@ export function checkRequiredData (step2Item) {
   let isValid = true;
   if (!step2Item.dateRange?.length || !step2Item.amount) {
     isValid = false;
-    ElMessage.error('Please fill out step2\'s data!', 5);
+    ElMessage.error('Please fill out step2\'s data!');
   }
   return isValid;
 }

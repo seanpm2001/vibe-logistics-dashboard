@@ -193,7 +193,7 @@ const handleUnitChange = (unitArr, idx, type, task) => {
     unitArr.splice(idx, 1);
   else {
     if (!checkAddAble(task)) {
-      ElMessage.error('Exceed quantity limit', 5);
+      ElMessage.error('Exceed quantity limit');
       return;
     }
     unitArr.push({ serial: null, status: 'DELIVERING' });
@@ -214,11 +214,11 @@ const remoteMethod = (query, task, packageItem, unit) => {
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
       if (data.length === 0) {
-        ElMessage.error('Serial can\'t be found.', 5);
+        ElMessage.error('Serial can\'t be found.');
         return;
       }
       if (checkIfRepeated(packageItem, query)) {
-        ElMessage.error('Repeated Serial.', 5);
+        ElMessage.error('Repeated Serial.');
         return;
       }
       if (query && data.length === 1) { // 只有一个符合，直接submit
@@ -269,7 +269,7 @@ const handleSubmitPackage = (packageItem, task) => {
     !unit.serial && arr.splice(idx, 1);
   });
   if (packageItem.units.length === 0) {
-    ElMessage.error('Empty Serials!', 5);
+    ElMessage.error('Empty Serials!');
     packageItem.units.push({ serial: null }); // 填充1个unit给被清空的units双向绑定数据
     return;
   }
@@ -304,7 +304,7 @@ const onPackagesChange = (task, packages, type, idx) => {
   else {
     removeEmptyUnit(packages[packages.length - 1]);
     if (!checkAddAble(task)) {
-      ElMessage.error('Exceed quantity limit', 5);
+      ElMessage.error('Exceed quantity limit');
       return;
     }
     packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]});

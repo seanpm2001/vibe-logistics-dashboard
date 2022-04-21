@@ -294,7 +294,7 @@ const handleFilter = () => {
 };
 
 const handleModifyStatus = (row, status) => {
-  ElMessage.success('操作Success', 5);
+  ElMessage.success('操作Success');
   row.status = status;
 };
 
@@ -333,7 +333,7 @@ const updateData = () => {
       //   const index = dataList.value.findIndex(v => v.id === temp.value.id)
       //   dataList.value.splice(index, 1, temp.value)
       //   dialogFormVisible.value = false
-      //   ElMessage.success('Update Successfully', 3)
+      //   ElMessage.success('Update Successfully')
       // })
     }
   });

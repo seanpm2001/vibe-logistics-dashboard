@@ -61,7 +61,7 @@ requester.interceptors.response.use(
     tryHideFullScreenLoading();
     const res = response.data;
     if (response.status === 401) {
-      ElMessage.error('The token has expired. Please log in again', 5);
+      ElMessage.error('The token has expired. Please log in again');
       useUserStore().resetToken().then(() => {
         location.reload();
       });

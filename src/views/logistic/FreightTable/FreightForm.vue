@@ -226,7 +226,7 @@ const removeBatch = (idx, batchId) => {
 
 const handleAddBatch = () => {
   if (!freightItem.value.id) {
-    ElMessage.error('You need to "Submit Freight Section" before "Add Sub-Batch"', 5);
+    ElMessage.error('You need to "Submit Freight Section" before "Add Sub-Batch"');
     return;
   }
   batchArr.value.push({costs: {}, sourceId: '', items: []});

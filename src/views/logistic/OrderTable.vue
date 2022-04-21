@@ -381,7 +381,7 @@ async function submitInitTaskItem (products, sourceWHId, orderId) {
 
 function assignSelectedOrders(_sourceWHId, _selectedArr) {
   if (!_selectedArr.length) {
-    ElMessage.error('Please at least select an order!', 5);
+    ElMessage.error('Please at least select an order!');
     return;
   }
   multipleSelection.value.forEach((item) => {
@@ -396,7 +396,7 @@ const assignOrders = () => {
   const sourceWHId = sourceId.value;
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
-    ElMessage.error('Please select a target warehouse!', 5);
+    ElMessage.error('Please select a target warehouse!');
     return;
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
@@ -434,7 +434,7 @@ const assignOrders = () => {
 
 const unassignOrders = (order) => {
   if (order.tasks.length > 0) {
-    ElMessage.error('Please remove all tasks before unassign!', 5);
+    ElMessage.error('Please remove all tasks before unassign!');
     return;
   }
   unassignOrdersAPI(order.id).then((data) => {
@@ -462,7 +462,7 @@ const addWarehouseTask = (_orderId, sourceWHId) => {
 
 const editWarehouseTask = (orderId, taskId) => {
   if (!taskPermissionArr.includes(role.value)) {
-    ElMessage.error('You don\'t have permission', 5);
+    ElMessage.error('You don\'t have permission');
     return;
   }
   findAssignedOrderAPI(orderId).then((data) => {

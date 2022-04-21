@@ -13,10 +13,10 @@ const handleReqElMsg = (fn, action, name, identifier) => {
       .then(_data => {
         item = _data?.item;
         resolve(item);
-        ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`, 5);
+        ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`);
       })
       .catch(err => {
-        ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`, 5);
+        ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`);
         reject(err);
       });
   });
@@ -228,9 +228,10 @@ export async function loginAPI(formInfo) {
   await requester.post('/login', formInfo)
     .then(_data => {
       res = _data;
-      ElMessage.success('Welcome to Vibe Logisitc System.', 5);
+      ElMessage.success('Welcome to Vibe Logisitc System.');
     })
-    .catch(() => ElMessage.error('Wrong username or password.', 3));
+    .catch(() => ElMessage.error('Wrong username or password.'));
+  console.log('res: ', res);
   return res;
 }
 
@@ -241,6 +242,6 @@ export async function getInfoAPI() {
 
 // export async function logoutAPI() {
 //   await mockRequester.post('/user/logout')
-//     .then(() => ElMessage.success('Log out successfully.', 3))
-//     .catch(() => ElMessage.error('Log out failed, please contact developer.', 3));
+//     .then(() => ElMessage.success('Log out successfully.'))
+//     .catch(() => ElMessage.error('Log out failed, please contact developer.'));
 // }

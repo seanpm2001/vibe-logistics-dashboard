@@ -78,6 +78,7 @@ export const useUserStore = defineStore({
         permissionStore.M_isGetUserInfo(false);
         const tagsViewStore = useTagsViewStore();
         tagsViewStore.delAllViews();
+        router.go(0);
         resolve(null);
       });
     }
