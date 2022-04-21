@@ -159,7 +159,9 @@ const xmlFileList = ref([]);
 
 const handleUnitChange = (idx, type) => {
   const unitArr = taskPackage.value.units;
-  type === 'add' ? unitArr.push({ serial: null, status: 'DELIVERING' }) : unitArr.splice(idx, 1);
+  type === 'add'
+    ? unitArr.push({ serial: null, status: 'DELIVERING' })
+    : unitArr.splice(idx--, 1);
 };
 
 const handleDeletePackage = () => {

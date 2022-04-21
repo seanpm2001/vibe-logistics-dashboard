@@ -110,6 +110,12 @@ export const codeNameEnum = {
   '55V1PC': '55 V1 Power Cord',
   '55BP': '55 Board Pallet',
   '55SP': '55 Stand Pallet',
+  'EPP1_249': 'Extend Protection Plan 1 year',
+  'EPP1_350': 'Extend Protection Plan 1 year',
+  'EPP2_499': 'Extend Protection Plan 2 year',
+  'EPP2_625': 'Extend Protection Plan 2 year',
+  'EPP3_699': 'Extend Protection Plan 3 year',
+  'EPP3_850': 'Extend Protection Plan 3 year',
   '75ProB': '75 Board',
   '75ProUB': '75 Unboxed Board',
   '75ProS': '75 Stand',
@@ -122,8 +128,16 @@ export const codeNameEnum = {
   '75ProSHB': '75 Stand Hanging Bar',
   '75ProBP': '75 Board Pallet',
   '75ProSP': '75 Stand Pallet',
+  '55S1RS': '55 S1 Red Stand',
+  '55S1GS': '55 S1 Green Stand',
+  '55S1WS': '55 S1 White Stand',
+  '55S1BS': '55 S1 Blue Stand',
   '55S1B': '55 S1 Board',
-  '55P1B': '55 P1 Board1',
+  'CAM01A': 'C1 Camera',
+  '55P1B': '55 P1 Board',
+  '55V1BPB': '55 V1 Package Box',
+  '55S1BPB': '55 S1 Package Box',
+  '75ProBPB': '75 Pro Package Box'
 };
 export const codeIconEnum = {
   '55V1B': 'product-board',
@@ -198,93 +212,121 @@ export const skuCodeEnum = {
   'ST02HHB': '75ProSHB',
   'N75HPL': '75ProBP',
   'ST02HPL': '75ProSP',
-  'S55T501US': '55S1B',
-  'P55H301US': '55P1B',
-  'V55SPEAKER': 'V55SPEAKER',
-  'V55AccPEBag': 'V55AccPEBag',
-  'V55MB2OCFFC': 'V55MB2OCFFC',
-  'V55TOUCH2A8Cable': 'V55TOUCH2A8Cable',
-  'V55MB2Speakers': 'V55MB2Speakers',
-  'V55MB2Touch': 'V55MB2Touch',
-  'V55WifiCable': 'V55WifiCable',
-  'V55MB2WifiCable': 'V55MB2WifiCable',
-  'V55MB2PBCable': 'V55MB2PBCable',
-  'V55MB2KEYCable': 'V55MB2KEYCable',
-  'V55TouchModule': 'V55TouchModule',
-  'V55Bezel_Top': 'V55Bezel_Top',
-  'V55Bezel_LR': 'V55Bezel_LR',
-  'V55Bezel_Bottom': 'V55Bezel_Bottom',
-  'V55KeyBoard': 'V55KeyBoard',
-  'V55BackCover': 'V55BackCover',
-  'V55Plastic_R': 'V55Plastic_R',
-  'V55Plastic_L': 'V55Plastic_L',
-  'V55Bezel_Filter': 'V55Bezel_Filter',
-  'V55BackLabel': 'V55BackLabel',
-  'V55Carton_Bottom': 'V55Carton_Bottom',
-  'V55Carton': 'V55Carton',
-  'EPS_TL': 'EPS_TL',
-  'EPS_TR': 'EPS_TR',
-  'EPS_BL': 'EPS_BL',
-  'EPS_BR': 'EPS_BR',
-  'V55PanelPEBag': 'V55PanelPEBag',
-  'V55MB': 'V55MB',
-  'V55PowerBoard': 'V55PowerBoard',
-  'V55TouchA8': 'V55TouchA8',
-  'V55TouchPCB': 'V55TouchPCB',
-  'V55WifiBT': 'V55WifiBT',
-  'V55DBac': 'V55DBac',
-  'V55WifiAntenna': 'V55WifiAntenna',
-  'V55AGGlass': 'V55AGGlass',
-  'V55Front Bezel_Top': 'V55Front Bezel_Top',
-  'V55FrontBezel_LR': 'V55FrontBezel_LR',
-  'V55FrontBezel_Bottom': 'V55FrontBezel_Bottom',
-  'V55LogicBoard': 'V55LogicBoard',
-  'V55 TconCable': 'V55TconCable',
-  'N75MB': 'N75MB',
-  'N75DB': 'N75DB',
-  'N75PB': 'N75PB',
-  'N75KEYIR': 'N75KEYIR',
-  'N75TOUCH': 'N75TOUCH',
-  'N75TCON': 'N75TCON',
-  'N75SPEAKER': 'N75SPEAKER',
-  'N75TOUCHMODULE': 'N75TOUCHMODULE',
-  'N75WMOUNT-A': 'N75WMOUNT-A',
-  'N75WMOUNT-B': 'N75WMOUNT-B',
-  'N75BEZEL-TOP': 'N75BEZEL-TOP',
-  'N75BEZEL-Bottom': 'N75BEZEL-Bottom',
-  'N75BEZEL-LR': 'N75BEZEL-LR',
-  'N75CORNER-BL': 'N75CORNER-BL',
-  'N75CORNER-BR': 'N75CORNER-BR',
-  'N75CORNER-TL': 'N75CORNER-TL',
-  'N75CORNER-TR': 'N75CORNER-TR',
-  'N75OPSCover': 'N75OPSCover',
-  'N75TOUCHCover': 'N75TOUCHCover',
-  'N75BACKCOVER': 'N75BACKCOVER',
-  'N75COSTFFC': 'N75COSTFFC',
-  'N75ACCABLE': 'N75ACCABLE',
-  'N75AC2PBCable': 'N75AC2PBCable',
-  'N75INTERHDMI': 'N75INTERHDMI',
-  'N75MB2SPEAKERCABLE': 'N75MB2SPEAKERCABLE',
-  'N75PB2MBPowerSupplyCable': 'N75PB2MBPowerSupplyCable',
-  'N75MB2KEYCable': 'N75MB2KEYCable',
-  'N75PB2MBAMPCCable': 'N75PB2MBAMPCCable',
-  'N75MB2TCONFFC': 'N75MB2TCONFFC',
-  'N75MB2TOUCHCable': 'N75MB2TOUCHCable',
-  'N75MB2PORTSCable': 'N75MB2PORTSCable',
-  'N75TOUCHUSBCable': 'N75TOUCHUSBCable',
-  'N75HDMICable': 'N75HDMICable',
-  'N75AccessoryBox': 'N75AccessoryBox',
-  'N75CartonTop': 'N75CartonTop',
-  'N75CartonBottom': 'N75CartonBottom',
-  'N75EPE_TL': 'N75EPE_TL',
-  'N75EPE_TR': 'N75EPE_TR',
-  'N75EPE_TM': 'N75EPE_TM',
-  'N75EPE_Bottom': 'N75EPE_Bottom',
-  'N75EPE_EPE': 'N75EPE_EPE',
-  'N75FoilBag': 'N75FoilBag',
-  'N75PEBag': 'N75PEBag',
-  'N75CartonLocks': 'N75CartonLocks',
-  'N75Desiccant_silica_gel ': 'N75Desiccant_silica_gel '
+  '55ST01R': '55S1RS',
+  '55ST01G': '55S1GS',
+  '55ST01W': '55S1WS',
+  '55ST01B': '55S1BS',
+  'S55T01AUS': '55S1B',
+  'CAM01A': 'CAM01A',
+  'P55H301US': '55P1B'
+};
+export const codeSkuArrEnum = {
+  '55V1B': [
+    'V55N205AU',
+    'V55N205EU',
+    'V55N203EU',
+    'V55N201EU',
+    'V55N205W',
+    'V55N203W',
+    'V55N201W/WOS'
+  ],
+  '55V1WS': [
+    '55WSTAND301',
+    '55WSTAND201',
+    '55WSTAND101'
+  ],
+  '55V1RS': [
+    '55RSTAND301',
+    '55RSTAND201',
+    '55RSTAND101'
+  ],
+  '55V1ESt': [
+    'VTS001'
+  ],
+  '55V1ASt': [
+    'VTS002'
+  ],
+  '55V1UB': [
+    'V55N205AUR',
+    'V55N205EUR',
+    'V55N203EUR',
+    'V55N205WR',
+    'V55N203WR'
+  ],
+  '55V1PC': [
+    'V55NEWPC',
+    'V55NEUPC',
+    'V55NWPC'
+  ],
+  '55BP': [
+    'V55PL'
+  ],
+  '55SP': [
+    '55STAND301PL',
+    '55STAND201PL',
+    '55STAND101PL'
+  ],
+  '75ProB': [
+    'N75H301US'
+  ],
+  '75ProUB': [
+    'N75H301USR'
+  ],
+  '75ProS': [
+    'ST02H'
+  ],
+  '75ProESt': [
+    'VTS003'
+  ],
+  '75ProASt': [
+    'VTS004'
+  ],
+  '75ProUS': [
+    'ST02HR'
+  ],
+  '75ProOPS': [
+    'WB5W810W'
+  ],
+  '75ProPC': [
+    'N75HDEPC',
+    'N75HUKPC',
+    'N75HUSPC'
+  ],
+  '75ProRm': [
+    'N75HDERM',
+    'N75HUKRM',
+    'N75HUSRM'
+  ],
+  '75ProSHB': [
+    'ST02HHB'
+  ],
+  '75ProBP': [
+    'N75HPL'
+  ],
+  '75ProSP': [
+    'ST02HPL'
+  ],
+  '55S1RS': [
+    '55ST01R'
+  ],
+  '55S1GS': [
+    '55ST01G'
+  ],
+  '55S1WS': [
+    '55ST01W'
+  ],
+  '55S1BS': [
+    '55ST01B'
+  ],
+  '55S1B': [
+    'S55T01AUS'
+  ],
+  'CAM01A': [
+    'CAM01A'
+  ],
+  '55P1B': [
+    'P55H301US'
+  ]
 };
 // API 获取失败的情况下，调用默认写死的warehouseEnum
 export const fixedWarehouseEnum = {

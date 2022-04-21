@@ -118,7 +118,7 @@ const signUpForm = reactive({
 const state = reactive({
   otherQuery: {},
   redirect: undefined
-})
+});
 
 const validateUsername = (rule, value, callback) => {
   if (!validUsername(value)) {
@@ -189,22 +189,22 @@ const route = useRoute();
 const getOtherQuery = (query) => {
   return Object.keys(query).reduce((acc, cur) => {
     if (cur !== 'redirect') {
-      acc[cur] = query[cur]
+      acc[cur] = query[cur];
     }
-    return acc
-  }, {})
-}
+    return acc;
+  }, {});
+};
 
 watch(
   () => route.query,
   (query) => {
     if (query) {
-      state.redirect = query.redirect
-      state.otherQuery = getOtherQuery(query)
+      state.redirect = query.redirect;
+      state.otherQuery = getOtherQuery(query);
     }
   },
   { immediate: true }
-)
+);
 
 
 /*

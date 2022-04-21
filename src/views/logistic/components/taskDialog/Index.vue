@@ -68,7 +68,7 @@
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
               <svg-icon class="icon" :style="taskItem.products.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
-              <el-form-item label="Product Name" :rules="{ required: true, message: 'Product sku is required', trigger: 'change' }">
+              <el-form-item label="Product Name">
                 <el-select
                   v-model="product.productCode" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
@@ -81,7 +81,7 @@
                   v-model="product.sku" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
                 >
-                  <el-option v-for="(item, key) in skuCodeEnum" :key="key" :label="key" :value="key" />
+                  <el-option v-for="sku in codeSkuArrEnum[product.productCode]" :key="sku" :label="sku" :value="sku" />
                 </el-select>
               </el-form-item>
               <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
@@ -152,7 +152,7 @@ import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '@/api/logistic';
 import {
   taskTypeEnum, taskReasonEnum, taskStatusEnum, skuCodeEnum,
-  unitConditionEnum, codeNameEnum
+  unitConditionEnum, codeNameEnum, codeSkuArrEnum
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 

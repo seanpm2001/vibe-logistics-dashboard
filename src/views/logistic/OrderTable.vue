@@ -488,8 +488,7 @@ const handleSelectionChange = (selectedArr) => {
 const resetForm = () => {};
 
 function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}')
-    // init warehouseEnum:{}
+  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
     logisticStore.setWarehouseEnum();
 }
 

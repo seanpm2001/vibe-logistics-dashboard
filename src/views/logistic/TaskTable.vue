@@ -327,13 +327,6 @@ const handleDetailRow = (_row, _type) => {
   });
 };
 
-const init = () => {
-  listWarehousesAPI().then((data) => {
-    fetchList(); // fetch list
-    data.forEach((item) => warehouseEnum.value[item.id] = item.name);
-  });
-};
-
 function initGlobalData() {
   if (JSON.stringify(warehouseEnum.value) === '{}')
     // init warehouseEnum:{}
