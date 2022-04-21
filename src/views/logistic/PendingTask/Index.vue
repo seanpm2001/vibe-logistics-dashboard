@@ -150,7 +150,7 @@ onMounted(() => {
 
 .statistics
   .el-descriptions
-    width: 520px
+    width: 540px
 </style>
 
 <style lang="sass">
