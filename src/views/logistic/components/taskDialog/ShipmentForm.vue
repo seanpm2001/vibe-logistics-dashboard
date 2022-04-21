@@ -81,7 +81,7 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
-import { updateTaskAPI, getTaskPackagesAPI } from '@/api/logistic';
+import { updateTaskAPI, listTaskPackagesAPI } from '@/api/logistic';
 import { carrierEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
@@ -119,7 +119,7 @@ const emptyPackage = {
 /* End Data */
 watchEffect(() => {
   const taskId = props.taskId;
-  taskId && getTaskPackagesAPI(taskId).then(_data => {
+  taskId && listTaskPackagesAPI(taskId).then(_data => {
     packageArr.value = _data;
   });
 });

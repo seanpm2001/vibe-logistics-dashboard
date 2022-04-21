@@ -7,7 +7,7 @@
           placeholder="Order Info"
           style="width: 120px"
         />
-        <el-button @click="handleFilter" v-wave type="primary" icon="el-icon-search">
+        <el-button @click="handleFilter" v-wave type="primary" :icon="Search">
           Search
         </el-button>
         <el-select
@@ -48,7 +48,12 @@
         </el-button>
       </div>
       <div v-else>
-        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="unassignSelected()">
+        <el-button
+          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+          type="primary"
+          :icon="Delete"
+          @click="unassignSelected()"
+        >
           Unassign Selected
         </el-button>
       </div>
@@ -224,6 +229,7 @@
 </template>
 
 <script setup>
+import { Search, Delete } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';
 import OrderDescription from './components/OrderDescription.vue';

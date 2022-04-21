@@ -49,7 +49,7 @@
         style="float: right"
         v-wave
         type="danger"
-        icon="el-icon-delete"
+        :icon="Delete"
         @click="handleDelSelected"
       >
         Delete Selected Item
@@ -191,8 +191,8 @@
 </template>
 
 <script setup>
+import { Delete, Download, Edit, Search } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Download, Edit, Search } from '@element-plus/icons-vue';
 import FreightForm from './FreightForm.vue';
 import { parseTime } from '@/utils/format';
 import { useLogisticStore } from '@/store';

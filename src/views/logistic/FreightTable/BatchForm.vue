@@ -36,7 +36,7 @@
             :on-exceed="handleExceed"
             :file-list="xmlFileList"
           >
-            <el-icon class="el-icon-upload"></el-icon>
+            <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
             <div class="el-upload__text">
               Drag xls/xlsx files here or <em>click to upload</em>
             </div>
@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import { UploadFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api/logistic';

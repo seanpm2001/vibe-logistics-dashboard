@@ -6,11 +6,10 @@
         placeholder="Package Info"
         style="width: 120px"
       />
-      <el-button v-wave @click="handleFilter" type="primary" icon="el-icon-search">
+      <el-button v-wave @click="handleFilter" type="primary" :icon="Search">
         Search
       </el-button>
-      <el-button disabled v-wave @click="handleFilter" type="primary">
-        <svg-icon icon-name="filter" class="el-icon"></svg-icon>
+      <el-button disabled v-wave @click="handleFilter" type="primary" :icon="Filter">
         Filter Warehousing List
       </el-button>
       <el-button
@@ -18,7 +17,7 @@
         style="float: right"
         v-wave
         type="danger"
-        icon="el-icon-delete"
+        :icon="Delete"
         @click="handleDelSelected"
       >
         Delete Selected Item
@@ -161,6 +160,7 @@
 </template>
 
 <script setup>
+import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from './UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';

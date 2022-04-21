@@ -3,10 +3,10 @@
     <el-row justify="space-between" class="filter-container">
       <el-row>
         <el-input v-model="listQuery.search" placeholder="Search" style="width: 200px;" @keyup.enter="handleFilter" />
-        <el-button v-wave type="primary" icon="el-icon-search" @click="handleFilter">
+        <el-button v-wave type="primary" :icon="Search" @click="handleFilter">
           Search
         </el-button>
-        <el-button v-wave :loading="downloadLoading" type="primary" icon="el-icon-download" @click="handleDownload">
+        <el-button v-wave :loading="downloadLoading" type="primary" :icon="Download" @click="handleDownload">
           Export
         </el-button>
       </el-row>
@@ -201,6 +201,7 @@
 </template>
 
 <script setup>
+import { Search } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { parseTime } from '@/utils/format';
 import TaskDialog from './components/taskDialog/Index.vue';

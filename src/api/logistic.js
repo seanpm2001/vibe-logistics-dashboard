@@ -36,9 +36,7 @@ export async function createFreightAPI (data) {
   return item;
 }
 export async function findFreightAPI (freightId) {
-  const item = handleReqElMsg(
-    requester.get(`freight/${freightId}`), 'Find', 'Freight', freightId
-  );
+  const { item } = await requester.get(`freight/${freightId}`);
   return item;
 }
 export async function updateFreightAPI (freightId, updates) {
@@ -91,13 +89,11 @@ export async function queryAssignedOrdersAPI (params) {
 }
 export async function queryAssignedBatchOrdersAPI (orderIdArr) {
   const orderIdStr = orderIdArr.join(',');
-  const res = await requester.get('/orders/assigned/batch/' + orderIdStr);
-  return res.items;
+  const { items } = await requester.get('/orders/assigned/batch/' + orderIdStr);
+  return items;
 }
 export async function findAssignedOrderAPI (orderId) {
-  const item = handleReqElMsg(
-    requester.get(`orders/assigned/${orderId}`), 'Find', 'Assigned Order', orderId
-  );
+  const { item } = await requester.get(`orders/assigned/${orderId}`);
   return item;
 }
 export async function assignOrdersAPI (sourceId, orderArr) {
@@ -138,9 +134,7 @@ export async function createTaskAPI (data) {
   return item;
 }
 export async function findTaskAPI (taskId) {
-  const item = handleReqElMsg(
-    requester.get(`/warehouse/task/${taskId}`), 'Find', 'Warehouse Task', taskId
-  );
+  const { item } = await requester.get(`/warehouse/task/${taskId}`);
   return item;
 }
 export async function updateTaskAPI (taskId, updates) {
@@ -176,10 +170,9 @@ export async function createPackageAPI (taskId, data) {
   );
   return item;
 }
-export async function getTaskPackagesAPI (taskId) {
-
-  const res = await requester.get(`/warehouse/task/${taskId}/packages`);
-  return res.items;
+export async function listTaskPackagesAPI (taskId) {
+  const { items } = await requester.get(`/warehouse/task/${taskId}/packages`);
+  return items;
 }
 export async function updatePackageAPI (packageId, updates) {
   const item = handleReqElMsg(

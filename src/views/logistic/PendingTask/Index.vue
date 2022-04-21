@@ -8,7 +8,7 @@
         />
         <span class="mgl-5 mgr-5"> before 11.30 am</span>
         <el-input v-model="listQuery.search" style="width: 200px;"  placeholder="Search: (order info)" />
-        <el-button class="mgl-5" type="primary"  @click="fetchList">Search</el-button>
+        <el-button class="mgl-5" type="primary" :icon="Search"  @click="fetchList">Search</el-button>
       </div>
       <el-descriptions :column="3" border>
         <template v-for="(item, key) in codeQTY" :key="key">
@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+import { Search } from '@element-plus/icons-vue';
 import TaskCards from './TaskCards.vue';
 import { parseTime, formatAssignedOrderItem } from '@/utils';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';

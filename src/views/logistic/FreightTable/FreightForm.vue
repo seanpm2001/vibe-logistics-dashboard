@@ -60,7 +60,7 @@
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.pickup" type="date" placeholder="Please pick a date" />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row justify="space-between" >
       <el-form-item label="ETD Origin Port" prop="etdOp">
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etdOp" type="date" placeholder="Please pick a date" />
       </el-form-item>
@@ -68,7 +68,7 @@
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.atdOp" type="date" placeholder="Please pick a date" />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row justify="space-between">
       <el-form-item label="ETA Destination Port" prop="etaDp">
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etaDp" type="date" placeholder="Please pick a date" />
       </el-form-item>
@@ -76,7 +76,7 @@
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.ataDp" type="date" placeholder="Please pick a date" />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row justify="space-between">
       <el-form-item label="ETA Warehouse" prop="etaWh">
         <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etaWh" type="date" placeholder="Please pick a date" />
       </el-form-item>
@@ -255,5 +255,6 @@ defineExpose({
 </script>
 
 <style lang="sass" scoped>
-
+:deep(.el-input--prefix .el-input__inner)
+  padding-left: calc(5px + 14px + 12px) !important
 </style>
