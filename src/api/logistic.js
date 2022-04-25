@@ -224,7 +224,6 @@ export async function loginAPI(formInfo) {
       ElMessage.success('Welcome to Vibe Logisitc System.');
     })
     .catch(() => ElMessage.error('Wrong username or password.'));
-  console.log('res: ', res);
   return res;
 }
 

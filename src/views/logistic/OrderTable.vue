@@ -199,8 +199,8 @@
       v-model="dialogAssignVisible"
       :close-on-click-modal="false"
     >
-      <el-row align="middle">
-        Please select Warehouse: &ensp;
+      <el-row class="mgb-5" align="middle">
+        Please select Warehouse:  &ensp;*
         <el-select v-model="sourceId" placeholder="Please select">
           <el-option
             v-for="(item, key) in warehouseEnum"
@@ -208,6 +208,12 @@
             :label="item"
             :value="Number(key)"
           />
+        </el-select>
+      </el-row>
+      <el-row align="middle">
+        Please select Carrier: &ensp;
+        <el-select v-model="carrier" placeholder="Please select">
+          <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-row>
       <template v-slot:footer>
@@ -246,7 +252,7 @@ import {
 } from '@/api/logistic';
 import { parseTime } from '@/utils/format';
 import { formatAssignedOrderItem } from '@/utils/logistic';
-import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { packageStatusEnum, codeNameEnum, codeIconEnum, carrierEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start data */
@@ -362,12 +368,13 @@ const showAssignDialog = (_type, _orderId) => {
   dialogAssignVisible.value = true;
 };
 
-async function submitInitTaskItem (products, sourceWHId, orderId) {
+async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   taskItem.value = emptyTaskItem;
   taskItem.value.orderId = orderId;
   taskItem.value.taskType = 'FULFILLMENT';
   taskItem.value.sourceId = sourceWHId;
   taskItem.value.targetId = 18; // Default Customer
+  taskItem.value.carrier = carrier;
   products.forEach((product, idx) => {
     taskItem.value.products[idx] = {
       productCode: product.productCode,
@@ -385,21 +392,23 @@ async function submitInitTaskItem (products, sourceWHId, orderId) {
   return taskId;
 }
 
-function assignSelectedOrders(_sourceWHId, _selectedArr) {
-  if (!_selectedArr.length) {
+function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
+  if (!selectedArr.length) {
     ElMessage.error('Please at least select an order!');
     return;
   }
   multipleSelection.value.forEach((item) => {
-    assignOrdersAPI(_sourceWHId, [item.id]).then(data => {
-      submitInitTaskItem(item.items, _sourceWHId, data.id); // 传递products {productCode: '', quantity: 0}
+    assignOrdersAPI(sourceWHId, [item.id]).then(data => {
+      submitInitTaskItem(item.items, sourceWHId, carrier, data.id); // 传递products {productCode: '', quantity: 0}
     });
   });
 }
 
 const sourceId = ref(null);
+const carrier = ref(null);
 const assignOrders = () => {
   const sourceWHId = sourceId.value;
+  const carrier = carrier.value;
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
     ElMessage.error('Please select a target warehouse!');
@@ -410,7 +419,7 @@ const assignOrders = () => {
   
   if (pattern === 'assignSelected') {
     // 单独处理批量assign，不展示warehouse task dialog
-    assignSelectedOrders(sourceWHId, selectedArr);
+    assignSelectedOrders(sourceWHId, carrier, selectedArr);
     dialogAssignVisible.value = false;
     fetchList();
     return;
@@ -429,7 +438,7 @@ const assignOrders = () => {
     .then(async (data) => {
       dialogAssignVisible.value = false;
       const products = formatAssignedOrderItem(data)?.items;
-      const taskId = await submitInitTaskItem(products, sourceWHId, data.id);
+      const taskId = await submitInitTaskItem(products, sourceWHId, carrier, data.id);
       taskId && editWarehouseTask(data.id, taskId);
     })
     .finally(() => {
