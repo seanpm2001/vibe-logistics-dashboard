@@ -214,6 +214,7 @@ const updateFreight = () => {
       updateFreightAPI(updates.id, updates).then(_data => {
         freightItem.value = _data;
         contrastData.value = _data;
+        emit('fetchList');
       });
     }
   });

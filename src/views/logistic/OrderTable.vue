@@ -263,7 +263,7 @@ import {
 } from '@/api/logistic';
 import { parseTime } from '@/utils/format';
 import { formatAssignedOrderItem } from '@/utils/logistic';
-import { packageStatusEnum, codeNameEnum, codeIconEnum, carrierEnum } from '@/enums/logistic';
+import { packageStatusEnum, codeNameEnum, codeIconEnum, carrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start data */
@@ -278,7 +278,7 @@ const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
 const drawerOrderVisible = ref(false);
 
-const showAssignedOrder = ref(true);
+const showAssignedOrder = ref(false);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
@@ -386,10 +386,18 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   taskItem.value.sourceId = sourceWHId;
   taskItem.value.targetId = 18; // Default Customer
   taskItem.value.carrier = carrier;
+
+  // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
   products.forEach((product, idx) => {
+    const productCode = product.productCode;
+    let sku = null;
+    if (codeSkuArrEnum[productCode].length === 1)
+      sku = codeSkuArrEnum[productCode][0] || null;
+    console.log('sku: ', sku);
+
     taskItem.value.products[idx] = {
-      productCode: product.productCode,
-      sku: null,
+      productCode: productCode,
+      sku: sku,
       condition: 'GOOD',
       quantity: product.quantity,
       serialNote: null,

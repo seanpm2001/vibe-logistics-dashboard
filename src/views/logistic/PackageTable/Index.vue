@@ -64,7 +64,7 @@
             <el-row justify="start" align="middle">
               <span class="link" @click="viewUnitDescription(unit, row.task.products)">{{ unit.serial }}</span>
               <el-button
-                :disabled="unit.checked"
+                :disabled="unit.checked || !ifMeetHousingCondtion(row.task.taskType, unit.status)"
                 size="small"
                 :type="unit.checked ? 'success' : 'primary'"
                 @click="viewUnitDescription(unit, row.task.products)"
@@ -73,7 +73,6 @@
               </el-button>
               <el-select
                 v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
-                :disabled="!unit.checked"
                 v-model="unit.status"
                 style="width: 210px; margin: 0 10px;"
                 placeholder="Please select"
