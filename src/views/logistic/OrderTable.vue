@@ -40,16 +40,27 @@
         </el-select>
       </el-row>
       <div v-if="!showAssignedOrder">
-        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="showAssignDialog('assignSelected')">
+        <el-button 
+          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+          :disabled="!multipleSelection?.length"
+          type="primary"
+          @click="showAssignDialog('assignSelected')"
+        >
           Assign Selected
         </el-button>
-        <el-button v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']" type="primary" @click="showAssignDialog('combineAndAssign')">
+        <el-button
+          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+          :disabled="!multipleSelection?.length"
+          type="primary"
+          @click="showAssignDialog('combineAndAssign')"
+        >
           Combine & Assign Selected
         </el-button>
       </div>
       <div v-else>
         <el-button
           v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+          :disabled="!multipleSelection?.length"
           type="primary"
           :icon="Delete"
           @click="unassignSelected()"
@@ -212,7 +223,7 @@
       </el-row>
       <el-row align="middle">
         Please select Carrier: &ensp;
-        <el-select v-model="carrier" placeholder="Please select">
+        <el-select v-model="taskCarrier" placeholder="Please select">
           <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
         </el-select>
       </el-row>
@@ -405,10 +416,10 @@ function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
 }
 
 const sourceId = ref(null);
-const carrier = ref(null);
+const taskCarrier = ref(null);
 const assignOrders = () => {
   const sourceWHId = sourceId.value;
-  const carrier = carrier.value;
+  const carrier = taskCarrier.value;
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
     ElMessage.error('Please select a target warehouse!');
