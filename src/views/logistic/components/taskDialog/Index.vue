@@ -68,7 +68,7 @@
             <el-row align="middle" class="add-minus-row">
               <svg-icon class="icon" icon-name="add" @click="onProductChange(index, 'add')" />
               <svg-icon class="icon" :style="taskItem.products.length <=1 ? 'visibility: hidden;':''" icon-name="minus" @click="onProductChange(index, 'minus')" />
-              <el-form-item label="Product Name">
+              <el-form-item label="*Product Name">
                 <el-select
                   v-model="product.productCode" :disabled="notCommonPermission" placeholder="Please select"
                   filterable allow-create default-first-option
@@ -84,7 +84,7 @@
                   <el-option v-for="sku in codeSkuArrEnum[product.productCode]" :key="sku" :label="sku" :value="sku" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="Quantity" :rules="{ required: true, message: 'Product quantity is required', trigger: 'change' }">
+              <el-form-item label="*Quantity">
                 <el-input-number :min="1" :disabled="notCommonPermission" v-model="product.quantity" placeholder="Quantity" />
               </el-form-item>
               <el-form-item label="Condition">

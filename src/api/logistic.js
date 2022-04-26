@@ -188,6 +188,7 @@ export async function deletePackageAPI (packageId) {
 
 /* Warehousing API */
 export async function updatePackageUnitAPI(packageId, unitId, updates) {
+  delete updates['item'];
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
   );

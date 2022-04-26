@@ -6,7 +6,7 @@
       </span> 
     </el-row>
     <el-row justify="space-between" :gutter="3">
-      <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Carrier">
+      <el-form-item label="*Carrier">
         <el-select :disabled="notShipmentPermission" v-model="taskItem.carrier" placeholder="Please select">
           <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
         </el-select>

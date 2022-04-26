@@ -1,18 +1,17 @@
 <template>
   <el-form
     ref="dataForm"
-    :rules="rules"
     :model="freightItem"
     label-position="left"
     label-width="180px"
   >
     <el-row justify="space-between" :gutter="3">
-      <el-form-item label="Destination Warehouse" prop="targetId">
+      <el-form-item label="*Destination Warehouse" prop="targetId">
         <el-select :disabled="isDialogPattern('view')" v-model="freightItem.targetId" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseEnum" :key="key" :label="item" :value="Number(key)" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Batch number" prop="number">
+      <el-form-item label="*Batch number" prop="number">
         <el-input :disabled="isDialogPattern('view')" v-model="freightItem.number" />
       </el-form-item>
     </el-row>
@@ -165,10 +164,6 @@ const batchArr = inject('batchArr');
 const dialogStatus = inject('dialogStatus');
 
 const { proxy } = getCurrentInstance();
-const rules = ref({
-  targetId: [{ required: true, message: 'destination is required', trigger: 'change' }],
-  number: [{ required: true, message: 'batch number is required', trigger: 'change' }],
-});
 
 const disableNewBatch = computed(() => {
   const arr = batchArr.value;

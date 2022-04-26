@@ -7,7 +7,7 @@
       <svg-icon class="icon close-icon" icon-name="close" @click="handleDeleteBatch"></svg-icon>
     </el-row>
     <el-row justify="space-between">
-      <el-form-item :rules="{ required: true, message: 'source number is required', trigger: 'change' }" label="Source">
+      <el-form-item label="Source">
         <el-select :disabled="isDialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
           <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
         </el-select>
@@ -203,7 +203,7 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
-        batch.value.items.push({serial: item['Serial Number'], sku: item['SKU']});
+        batch.value.items.push({serial: item['Serial Number'] || ' ', sku: item['SKU']});
       });
     }
   });
