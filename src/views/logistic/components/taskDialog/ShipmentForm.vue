@@ -119,8 +119,8 @@ const emptyPackage = {
 /* End Data */
 watchEffect(() => {
   const taskId = props.taskId;
-  taskId && listTaskPackagesAPI(taskId).then(_data => {
-    packageArr.value = _data;
+  taskId && listTaskPackagesAPI(taskId).then(data => {
+    packageArr.value = data;
   });
 });
 
@@ -143,8 +143,8 @@ const handleShipment = (type) => {
   //   taskItem.value.costs[key] = products.value[key].cost || 0;
   // }
   if (type === 'update') {
-    updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
-      taskItem.value = _data;
+    updateTaskAPI(taskItem.value.id, taskItem.value).then(data => {
+      taskItem.value = data;
       emit('fetchList');
     });
   }

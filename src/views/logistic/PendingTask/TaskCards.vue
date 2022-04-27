@@ -265,9 +265,12 @@ function removeUnitItem (packageItem) {
 
 const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
-  packageItem.units.forEach((unit, idx, arr) => { // 删除serial为空的unit
-    !unit.serial && arr.splice(idx, 1);
-  });
+  // 删除serial为空的unit
+  const units = packageItem.units;
+  for (let idx = units.length - 1; idx >= 0; i--) {
+    !units[idx].serial && units[idx].splice(idx, 1);
+  }
+
   if (packageItem.units.length === 0) {
     ElMessage.error('Empty Serials!');
     packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据

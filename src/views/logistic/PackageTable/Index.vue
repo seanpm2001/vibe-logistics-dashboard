@@ -233,9 +233,9 @@ const ifMeetHousingCondtion = (taskType, unitStatus) => {
 
 function queryPackage() {
   listLoading.value = true;
-  queryPackagesAPI(listQuery.value).then((_data) => {
-    dataList.value = _data.items;
-    total.value = _data.total;
+  queryPackagesAPI(listQuery.value).then((data) => {
+    dataList.value = data.items;
+    total.value = data.total;
     listLoading.value = false;
   });
 }
@@ -254,8 +254,8 @@ const handleCloseDrawer = (done) => {
 };
 
 const findUnit = (unitSerial) => {
-  return queryUnitsAPI({ serial: unitSerial }).then((_data) => {
-    unitItem.value = _data[0] || unitItem.value;
+  return queryUnitsAPI({ serial: unitSerial }).then((data) => {
+    unitItem.value = data[0] || unitItem.value;
   });
 };
 

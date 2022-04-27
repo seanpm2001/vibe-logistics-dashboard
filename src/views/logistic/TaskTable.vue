@@ -284,9 +284,9 @@ const calTaskStatus = (taskType, packages) => {
 
 function queryTask() {
   listLoading.value = true;
-  queryTasksAPI(listQuery.value).then((_data) => {
-    dataList.value = _data.items;
-    total.value = _data.total;
+  queryTasksAPI(listQuery.value).then((data) => {
+    dataList.value = data.items;
+    total.value = data.total;
     listLoading.value = false;
   });
 }
@@ -309,20 +309,20 @@ const handleCloseDrawer = (done) => {
   done();
 };
 
-const handleDetailRow = (_row, _type) => {
+const handleDetailRow = (_row, type) => {
   const taskId = _row.id;
-  if (_type === 'remove') {
+  if (type === 'remove') {
     deleteTaskAPI(taskId).then(() => fetchList());
     return;
   }
-  findTaskAPI(taskId).then((_data) => {
-    taskItem.value = Object.assign({}, _data); // copy obj
-    _type === 'edit' && (contrastData.value = Object.assign({}, _data));
+  findTaskAPI(taskId).then((data) => {
+    taskItem.value = Object.assign({}, data); // copy obj
+    type === 'edit' && (contrastData.value = Object.assign({}, data));
   });
   const orderId = _row.orderId;
-  findAssignedOrderAPI(orderId).then((_data) => {
-    taskOrderItem.value = formatAssignedOrderItem(_data);
-    _type === 'edit' && (dialogStatus.value = 'update');
+  findAssignedOrderAPI(orderId).then((data) => {
+    taskOrderItem.value = formatAssignedOrderItem(data);
+    type === 'edit' && (dialogStatus.value = 'update');
     dialogTaskVisible.value = true;
   });
 };

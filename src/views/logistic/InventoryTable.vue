@@ -179,7 +179,7 @@
           <el-button type="primary" size="small" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="small" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="row.status!='deleted'" size="small" type="danger" @click="handleDelete(row, $index)">
             Delete
           </el-button>
         </template>
@@ -269,9 +269,9 @@ const addWarehouseMoveTask = () => {
 
 function queryInventory() {
   listLoading.value = true;
-  listInventoriesAPI(listQuery.value).then(_data => {
-    dataList.value = _data.items;
-    total.value = _data.total;
+  listInventoriesAPI(listQuery.value).then(data => {
+    dataList.value = data.items;
+    total.value = data.total;
 
     // Just to simulate the time of the request
     setTimeout(() => {

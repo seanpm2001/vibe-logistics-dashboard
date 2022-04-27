@@ -130,24 +130,24 @@ function calStartEndTime(idx) {
   };
 }
 
-const onStep4Change = (_idx, _type) => {
-  _type === 'add'
+const onStep4Change = (idx, type) => {
+  type === 'add'
     ? step4.value.push(JSON.parse(JSON.stringify(tableItem)))
-    : step4.value.splice(_idx--, 1);
+    : step4.value.splice(idx--, 1);
 };
 
-const onStep2Change = (_idx, _type) => {
-  if (_type === 'add') {
+const onStep2Change = (idx, type) => {
+  if (type === 'add') {
     step2.value.push(JSON.parse(JSON.stringify(step2Item)));
     step3.value.push(JSON.parse(JSON.stringify(tableItem)));
   } else {
-    step2.value.splice(_idx--, 1);
-    step3.value.splice(_idx--, 1);
+    step2.value.splice(idx--, 1);
+    step3.value.splice(idx--, 1);
   }
 };
 
-function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth, endDay) {
-  const _tableData = _type === 'plan' ? planTableData.value : realTableData.value;
+function calTableData(type, saleItem, tableItem, startMonth, startDay, endMonth, endDay) {
+  const _tableData = type === 'plan' ? planTableData.value : realTableData.value;
   // calculate Sales related
   const diffDay = (new Date(saleItem.dateRange[1]) - new Date(saleItem.dateRange[0])) / 86400000;
   const averSaleInventory = Math.ceil(saleItem.amount / diffDay);
@@ -159,7 +159,7 @@ function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth
   const etdStep = tableItem.leadTime1.num * tableItem.leadTime1.timeUnit * 86400000;
   const productStep = tableItem.leadTime2.num * tableItem.leadTime2.timeUnit * 86400000;
 
-  if (_type === 'real') {
+  if (type === 'real') {
     step4.value.forEach(item => {
       const itemTimestamp = Date.parse(item.production);
       const time = item.production.split('-');
@@ -213,7 +213,7 @@ function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth
 
       const moment = Date.parse(new Date(`2022-${month}-${day}`)); // 当前日期的timestamp
     
-      if (_type === 'plan') {
+      if (type === 'plan') {
         // set 前一天的inventory
         const inventoryTime = new Date(moment - 86400000);
         const preInventoryAmount = _tableData[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
@@ -235,7 +235,7 @@ function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth
         // 更新 nextInventory
         nextInventory = preInventoryAmount['inventory'] - averSaleInventory + etaAmount;
         nextInventory < 0 && (nextInventory = 0);
-      } else if (_type === 'real') {
+      } else if (type === 'real') {
         // set 前一天的inventory
         const inventoryTime = new Date(moment - 86400000);
         const preInventoryAmount = _tableData[inventoryTime.getMonth() + 1][inventoryTime.getDate()];
@@ -248,7 +248,7 @@ function calTableData(_type, saleItem, tableItem, startMonth, startDay, endMonth
     }
   }
 
-  if (_type === 'plan') {
+  if (type === 'plan') {
     const etaItem = biggerZeroArr[0];
     if (etaItem) {
       step3.value[0].eta = `2020-${etaItem.month}-${etaItem.day}`;

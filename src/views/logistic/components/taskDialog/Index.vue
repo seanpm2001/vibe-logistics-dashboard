@@ -216,40 +216,39 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
-function removeEmptyTask () {
-  taskItem.value.products.forEach((product, idx, arr) => {
-    console.log('product: ', product);
-    const code = product.productCode;
+function removeEmptyTask (products) {
+  for (let idx = products.length - 1; idx >= 0; idx--) {
+    const code = products[idx].productCode;
     if (!code)
-      arr.splice(idx--, 1);
-  });
+      products[idx].splice(idx, 1);
+  }
 }
 
-const handleWarehouseTask = _type => {
-  removeEmptyTask();
-  if (_type === 'create') {
-    createTaskAPI(taskItem.value).then(_data => {
-      taskItem.value = _data;
+const handleWarehouseTask = type => {
+  removeEmptyTask(taskItem.value.products);
+  if (type === 'create') {
+    createTaskAPI(taskItem.value).then(data => {
+      taskItem.value = data;
       fetchList();
     });
   } else {
-    updateTaskAPI(taskItem.value.id, taskItem.value).then(_data => {
-      taskItem.value = _data || taskItem.value;
+    updateTaskAPI(taskItem.value.id, taskItem.value).then(data => {
+      taskItem.value = data || taskItem.value;
       fetchList();
     });
   }
 };
 
-const onSpecifySerialChange = (_idx, _type) => {
+const onSpecifySerialChange = (idx, type) => {
   const serialArr = specifySerailArr.value;
-  _type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(_idx--, 1);
+  type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx--, 1);
 };
 
-const onProductChange = (_idx, _type) => {
+const onProductChange = (idx, type) => {
   const products = taskItem.value.products;
-  _type === 'add'
+  type === 'add'
     ? products.push({sku: null, condition: null, quantity: null})
-    : products.splice(_idx--, 1);
+    : products.splice(idx--, 1);
 };
 
 const onHoldTask = () => { // TODO: onHoldTask

@@ -346,14 +346,14 @@ function queryOrders () {
   (showAssignedOrder.value
     ? queryAssignedOrdersAPI(listQuery.value)
     : queryOrdersAPI(listQuery.value)
-  ).then((_data) => {
-    dataList.value = _data.items;
+  ).then((data) => {
+    dataList.value = data.items;
     if (showAssignedOrder.value) {
       dataList.value.forEach((item) => {
         formatAssignedOrderItem(item);
       });
     }
-    total.value = _data.total;
+    total.value = data.total;
     listLoading.value = false;
   });
 }
@@ -372,8 +372,8 @@ const showOrderDrawer = (_raw) => {
   drawerOrderVisible.value = true;
 };
 
-const showAssignDialog = (_type, _orderId) => {
-  assignPattern.value = _type;
+const showAssignDialog = (type, _orderId) => {
+  assignPattern.value = type;
   assignOrderId.value = _orderId || null;
   dialogAssignVisible.value = true;
 };
@@ -417,8 +417,8 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
  
   let taskId = null;
 
-  await createTaskAPI(taskItem.value).then(_data => {
-    taskId = _data.id;
+  await createTaskAPI(taskItem.value).then(data => {
+    taskId = data.id;
   });
   taskItem.value = emptyTaskItem;
   return taskId;
@@ -504,9 +504,9 @@ const unassignSelected = () => {
 
 const addWarehouseTask = (_orderId, sourceWHId) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
-  findAssignedOrderAPI(_orderId).then((_data) => {
+  findAssignedOrderAPI(_orderId).then((data) => {
     taskItem.value.orderId = _orderId;
-    taskOrderItem.value = formatAssignedOrderItem(_data);
+    taskOrderItem.value = formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });

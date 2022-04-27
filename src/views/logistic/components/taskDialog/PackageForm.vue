@@ -187,16 +187,16 @@ const handleDeletePackage = () => {
   emit('deletePackage', props.packageIdx); // 删除新创建还未提交的package
 };
 
-const handlePackage = (_type) => {
-  if (_type === 'create') {
-    createPackageAPI(props.taskId, taskPackage.value).then((_data) => {
-      taskPackage.value = _data;
-      emit('createPackage', _data, props.taskId, props.packageIdx);
+const handlePackage = (type) => {
+  if (type === 'create') {
+    createPackageAPI(props.taskId, taskPackage.value).then((data) => {
+      taskPackage.value = data;
+      emit('createPackage', data, props.taskId, props.packageIdx);
     });
   } else {
-    updatePackageAPI(taskPackage.value.id, taskPackage.value).then((_data) => {
-      taskPackage.value = _data;
-      emit('updatePackage', _data, props.packageIdx);
+    updatePackageAPI(taskPackage.value.id, taskPackage.value).then((data) => {
+      taskPackage.value = data;
+      emit('updatePackage', data, props.packageIdx);
     });
     emit('editPackage', taskPackage.value?.id);
   }
@@ -206,14 +206,14 @@ const handlePackage = (_type) => {
 //   //   taskPackage.value.costs[key] = products.value[key].cost || 0;
 //   // }
 //   if (type === "create") {
-//     createPackageAPI(props.orderId, taskPackage.value).then(_data => {
-//       taskPackage.value = _data;
-//       emit('createPackage', _data, props.orderId ,props.packageIdx);
+//     createPackageAPI(props.orderId, taskPackage.value).then(data => {
+//       taskPackage.value = data;
+//       emit('createPackage', data, props.orderId ,props.packageIdx);
 //     });
 //   } else {
-//     updatePackageAPI(taskPackage.value.id, taskPackage.value).then(_data => {
-//       taskPackage.value = _data;
-//       emit('updatePackage', _data, props.packageIdx);
+//     updatePackageAPI(taskPackage.value.id, taskPackage.value).then(data => {
+//       taskPackage.value = data;
+//       emit('updatePackage', data, props.packageIdx);
 //     });
 //     emit('editPackage', taskPackage.value?.id);
 //   }

@@ -125,12 +125,12 @@ export function jsonToUnderline(obj) {
   if (obj instanceof Array) {
     obj.forEach(function(item, idx) {
       jsonToUnderline(item);
-      if (JSON.stringify(obj) === '[{}]')
+      if (JSON.stringify(obj) === '[{}]') // 删除由于双向绑定导致的数组中的空对象
         obj.splice(idx, 1);
     });
   } else if (obj instanceof Object) {
     Object.keys(obj).forEach(function(key) {
-      if (!obj[key]) {
+      if (!obj[key]) { // 删除value为null的字段
         delete obj[key];
         return;
       }

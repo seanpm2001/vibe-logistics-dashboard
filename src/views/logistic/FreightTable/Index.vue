@@ -283,9 +283,9 @@ const statusTypeDict = {
 
 function queryFreight() {
   listLoading.value = true;
-  queryFreightsAPI(listQuery.value).then((_data) => {
-    dataList.value = _data.items;
-    total.value = _data.total;
+  queryFreightsAPI(listQuery.value).then((data) => {
+    dataList.value = data.items;
+    total.value = data.total;
     listLoading.value = false;
   });
 }
@@ -304,8 +304,8 @@ const handleFilter = () => {
   fetchList();
 };
 
-const sortChange = (_data) => {
-  const { prop, order } = _data;
+const sortChange = (data) => {
+  const { prop, order } = data;
   if (prop === 'id') {
     sortByID(order);
   }
@@ -346,23 +346,23 @@ const handleDelSelected = () => {
 };
 
 const listBatches = (_freightId, callback) => {
-  listBatchesAPI(_freightId).then((_data) => {
-    batchArr.value = _data;
+  listBatchesAPI(_freightId).then((data) => {
+    batchArr.value = data;
     callback && callback();
   });
 };
 
-const handleDetailRow = (_row, _type) => {
+const handleDetailRow = (_row, type) => {
   const freightId = _row.id;
-  if (_type === 'remove') {
+  if (type === 'remove') {
     deleteFreightAPI(freightId).then(() => fetchList());
     return;
   }
-  findFreightAPI(freightId).then((_data) => {
-    freightItem.value = Object.assign({}, _data); // copy obj
-    _type === 'edit' && (contrastData.value = Object.assign({}, _data));
+  findFreightAPI(freightId).then((data) => {
+    freightItem.value = Object.assign({}, data); // copy obj
+    type === 'edit' && (contrastData.value = Object.assign({}, data));
     listBatches(freightId, () => {
-      dialogStatus.value = _type;
+      dialogStatus.value = type;
       dialogFreightVisible.value = true;
     });
   });

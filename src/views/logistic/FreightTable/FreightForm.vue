@@ -193,8 +193,8 @@ const createFreight = () => {
   proxy.$refs.dataForm.validate((valid) => {
     if (valid) {
       const data = formatDate(freightItem.value);
-      createFreightAPI(data).then(_data => {
-        freightItem.value = _data;
+      createFreightAPI(data).then(data => {
+        freightItem.value = data;
         dialogStatus.value = 'edit';
         emit('fetchList');
       });
@@ -206,9 +206,9 @@ const updateFreight = () => {
   proxy.$refs.dataForm.validate((valid) => {
     if (valid) {
       const updates = freightItem.value;
-      updateFreightAPI(updates.id, updates).then(_data => {
-        freightItem.value = _data;
-        contrastData.value = _data;
+      updateFreightAPI(updates.id, updates).then(data => {
+        freightItem.value = data;
+        contrastData.value = data;
         emit('fetchList');
       });
     }

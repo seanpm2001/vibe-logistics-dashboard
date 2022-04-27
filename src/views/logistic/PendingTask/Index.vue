@@ -113,8 +113,8 @@ function getOrderIdArr (taskList) {
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
-    params.append('task_type', 'FULFILLMENT');
-    params.append('task_type', 'REPLACE');
+    params.append('tasktype', 'FULFILLMENT');
+    params.append('tasktype', 'REPLACE');
     queryTasksAPI(params).then(data => {
       dataList.value = data.items;
       total.value = data.total;
