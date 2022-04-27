@@ -416,10 +416,11 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   removeEmptyProducts(taskItem.value);
  
   let taskId = null;
+
   await createTaskAPI(taskItem.value).then(_data => {
-    taskItem.value = emptyTaskItem;
     taskId = _data.id;
   });
+  taskItem.value = emptyTaskItem;
   return taskId;
 }
 
@@ -428,11 +429,16 @@ function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
     ElMessage.error('Please at least select an order!');
     return;
   }
-  multipleSelection.value.forEach((item) => {
-    assignOrdersAPI(sourceWHId, [item.id]).then(data => {
-      submitInitTaskItem(item.items, sourceWHId, carrier, data.id); // 传递products {productCode: '', quantity: 0}
+  const assignOrder = (sourceWHId, selection) => {
+    assignOrdersAPI(sourceWHId, [selection.id]).then(data => {
+      submitInitTaskItem(selection.items, sourceWHId, carrier, data.id); // 传递products {productCode: '', quantity: 0}
     });
+  };
+  const promiseArr = [];
+  multipleSelection.value.forEach((item) => {
+    promiseArr.push(assignOrder(sourceWHId, item));
   });
+  Promise.all(promiseArr).then(() => fetchList());
 }
 
 const sourceId = ref(null);

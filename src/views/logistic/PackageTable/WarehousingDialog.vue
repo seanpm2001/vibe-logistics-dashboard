@@ -151,8 +151,9 @@ const onUnitConditionChange = () => {
 
 const submitWarehousing = () => {
   const unit = warehousingItem.value;
-  updatePackageUnitAPI(unit.packageId, unit.id, unit).then((_data) => {
-    warehousingItem.value = _data || warehousingItem.value;
+  updatePackageUnitAPI(unit.packageId, unit.id, unit).then((data) => {
+    warehousingItem.value = data || warehousingItem.value;
+    warehousingItem.value.accessories[0] = { productCode: null, quantity: null };
   });
 };
 </script>
