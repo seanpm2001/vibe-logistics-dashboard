@@ -384,15 +384,15 @@ function removeEmptyProducts (taskItem) {
 }
 
 async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
-  taskItem.value = emptyTaskItem;
-  taskItem.value.orderId = orderId;
-  taskItem.value.taskType = 'FULFILLMENT';
-  taskItem.value.sourceId = sourceWHId;
-  taskItem.value.targetId = 18; // Default Customer
-  taskItem.value.carrier = carrier;
+  const task = {};
+  task.orderId = orderId;
+  task.taskType = 'FULFILLMENT';
+  task.sourceId = sourceWHId;
+  task.targetId = 18; // Default Customer
+  task.carrier = carrier;
+  task.products = [];
 
   // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
-
   for (let idx = products.length - 1; idx >= 0; idx--) {
     const productCode = products[idx].productCode;
     if (productCode.includes('EPP')) {
@@ -404,7 +404,7 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
     if (codeSkuArrEnum[productCode].length === 1)
       sku = codeSkuArrEnum[productCode][0] || null;
 
-    taskItem.value.products[idx] = {
+    task.products[idx] = {
       productCode: productCode,
       sku: sku,
       condition: 'GOOD',
@@ -413,14 +413,13 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
     };
   }
 
-  removeEmptyProducts(taskItem.value);
+  removeEmptyProducts(task); // 若products变成[{}]，删除task.products
  
   let taskId = null;
 
-  await createTaskAPI(taskItem.value).then(data => {
+  await createTaskAPI(task).then(data => {
     taskId = data.id;
   });
-  taskItem.value = emptyTaskItem;
   return taskId;
 }
 
