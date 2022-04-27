@@ -24,7 +24,7 @@
     </div>
     <el-divider />
     <TaskCards @fetchList="fetchList" />
-
+    
     <Pagination
       v-show="total > 0"
       :total="total"
@@ -62,8 +62,8 @@ watchEffect(() => {
 
 const total = ref(0);
 const dataList = ref(null);
-const orderEnum = ref({});
-const contrastTask = ref(null);
+const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
+const contrastTask = ref(null); // 对比数据是否修改
 
 const shortcuts = [
   {

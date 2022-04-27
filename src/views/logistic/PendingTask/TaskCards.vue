@@ -196,7 +196,7 @@ const handleUnitChange = (unitArr, idx, type, task) => {
       ElMessage.error('Exceed quantity limit');
       return;
     }
-    unitArr.push({ serial: null, status: 'DELIVERING' });
+    unitArr.push({ serial: null });
   }
 };
 
@@ -270,7 +270,7 @@ const handleSubmitPackage = (packageItem, task) => {
   });
   if (packageItem.units.length === 0) {
     ElMessage.error('Empty Serials!');
-    packageItem.units.push({ serial: null }); // 填充1个unit给被清空的units双向绑定数据
+    packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
     return;
   }
   const packageData = removeUnitItem(packageItem);
@@ -307,7 +307,7 @@ const onPackagesChange = (task, packages, type, idx) => {
       ElMessage.error('Exceed quantity limit');
       return;
     }
-    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null}]});
+    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null, status: 'DELIVERING'}]});
   }
 };
 
