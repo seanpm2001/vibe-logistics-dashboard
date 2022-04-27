@@ -175,7 +175,7 @@ const transitTimeEnum = [{key: 'day', value: 1}, {key: 'week', value: 7}];
 const transitTimeBase = ref(1);
 const transitTime = computed(() => {
   const data = freightItem.value;
-  return Math.ceil((new Date(data.ataWh) - new Date(data.atdOp))/(86400*1000*transitTimeBase.value));
+  return Math.ceil((new Date(data.pickup) - new Date(data.ataWh))/(86400*1000*transitTimeBase.value));
 });
 
 const datePropertyArr = ['ataDp', 'atdOp', 'etaDp', 'etdOp', 'pickup', 'ataWh', 'etaWh'];

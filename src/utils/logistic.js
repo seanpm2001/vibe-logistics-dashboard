@@ -12,12 +12,14 @@ const combineSameProductQuantity = (arr => {
 export const formatAssignedOrderItem = orderItem => {
   const raws = orderItem.rawOrders;
   const originId = orderItem.id;
+  const createdAt = orderItem.createdAt;
   let productsArr = [];
   raws.forEach(item => {
     productsArr = productsArr.concat(item.items); // products array [{product_code: 'ABC', quantity: 1}]
   });
   orderItem = Object.assign(orderItem, raws[0]);
   orderItem.id = originId;
+  orderItem.createdAt = createdAt;
   orderItem.products = combineSameProductQuantity(productsArr); // {sku: totalQuantity}
   return orderItem;
 };

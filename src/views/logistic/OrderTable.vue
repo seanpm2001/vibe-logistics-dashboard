@@ -261,7 +261,6 @@ import {
   createTaskAPI,
   deleteTaskAPI
 } from '@/api/logistic';
-import { parseTime } from '@/utils/format';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 import { packageStatusEnum, codeNameEnum, codeIconEnum, carrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
@@ -379,6 +378,11 @@ const showAssignDialog = (_type, _orderId) => {
   dialogAssignVisible.value = true;
 };
 
+function removeEmptyProducts (taskItem) {
+  if (JSON.stringify(taskItem.products[0]) === '{}')
+    delete taskItem['products'];
+}
+
 async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   taskItem.value = emptyTaskItem;
   taskItem.value.orderId = orderId;
@@ -388,12 +392,18 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   taskItem.value.carrier = carrier;
 
   // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
-  products.forEach((product, idx) => {
+
+  for (let idx = products.length - 1; idx >= 0; idx--) {
+    const product = products[idx];
     const productCode = product.productCode;
+    if (productCode.includes('EPP')) {
+      products.splice(idx, 1);
+      continue;
+    }
+
     let sku = null;
     if (codeSkuArrEnum[productCode].length === 1)
       sku = codeSkuArrEnum[productCode][0] || null;
-    console.log('sku: ', sku);
 
     taskItem.value.products[idx] = {
       productCode: productCode,
@@ -402,7 +412,10 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
       quantity: product.quantity,
       serialNote: null,
     };
-  });
+  }
+
+  removeEmptyProducts(taskItem.value);
+ 
   let taskId = null;
   await createTaskAPI(taskItem.value).then(_data => {
     taskItem.value = emptyTaskItem;
@@ -510,7 +523,10 @@ const editWarehouseTask = (orderId, taskId) => {
 };
 
 const handleSelectionChange = (selectedArr) => {
-  multipleSelection.value = selectedArr.sort((pre, next) => next.orderId > pre.orderId);
+  multipleSelection.value = selectedArr.sort(
+    (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
+  );
+  console.log('multipleSelection: ', multipleSelection.value);
 };
 
 const resetForm = () => {};
