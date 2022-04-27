@@ -394,8 +394,7 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
 
   for (let idx = products.length - 1; idx >= 0; idx--) {
-    const product = products[idx];
-    const productCode = product.productCode;
+    const productCode = products[idx].productCode;
     if (productCode.includes('EPP')) {
       products.splice(idx, 1);
       continue;
@@ -409,7 +408,7 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
       productCode: productCode,
       sku: sku,
       condition: 'GOOD',
-      quantity: product.quantity,
+      quantity: products[idx].quantity,
       serialNote: null,
     };
   }
