@@ -14,6 +14,15 @@
           :value="key"
         />
       </el-select>
+      <el-button
+        v-permission="['ADMIN', 'VIBE_MANAGER']"
+        :disabled="!multipleSelection?.length"
+        type="primary"
+        :icon="Delete"
+        @click="delSelectedTask()"
+      >
+        Delete Selected
+      </el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -24,6 +33,7 @@
       highlight-current-row
       style="width: 100%"
       height="68vh"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50" height="40" align="center" />
       <el-table-column label="ID" width="120px" align="center">
@@ -141,6 +151,7 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { Delete } from '@element-plus/icons-vue';
 import TaskDialog from './components/taskDialog/Index.vue';
 import {
   listWarehousesAPI,
@@ -305,6 +316,23 @@ const handlePagination = (_config) => {
   fetchList();
 };
 
+const handleSelectionChange = (selectedArr) => {
+  multipleSelection.value = selectedArr.sort(
+    (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
+  );
+};
+
+const delSelectedTask = () => {
+  const promiseArr = [];
+  multipleSelection.value.forEach((item) => {
+    promiseArr.push(deleteTaskAPI(item.id));
+  });
+  Promise.allSettled(promiseArr).then(() => {
+    fetchList();
+    multipleSelection.value = [];
+  });
+};
+
 const handleCloseDrawer = (done) => {
   done();
 };
@@ -363,6 +391,8 @@ onBeforeUnmount(() => {
   font-weight: 500
 
 .filter-container
+  display: flex
+  justify-content: space-between
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem

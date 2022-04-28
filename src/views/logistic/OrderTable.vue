@@ -437,7 +437,7 @@ function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
   multipleSelection.value.forEach((item) => {
     promiseArr.push(assignOrder(sourceWHId, item));
   });
-  Promise.all(promiseArr).then(() => fetchList());
+  Promise.allSettled(promiseArr).then(() => fetchList());
 }
 
 const sourceId = ref(null);
@@ -484,7 +484,7 @@ const assignOrders = () => {
 };
 
 const unassignOrders = (order) => {
-  if (order.tasks.length > 0) {
+  if (order.tasks?.length > 0) {
     ElMessage.error('Please remove all tasks before unassign!');
     return;
   }
@@ -495,7 +495,7 @@ const unassignOrders = (order) => {
 
 const unassignSelected = () => {
   multipleSelection.value.forEach((item) => {
-    unassignOrders(item.id);
+    unassignOrders(item);
   });
   multipleSelection.value = [];
   fetchList();
@@ -530,7 +530,6 @@ const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
   );
-  console.log('multipleSelection: ', multipleSelection.value);
 };
 
 const resetForm = () => {};

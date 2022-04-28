@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import TaskCards from './TaskCards.vue';
 import { parseTime, formatAssignedOrderItem } from '@/utils';
@@ -46,7 +47,7 @@ import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,
-  perPage: 10,
+  perPage: 20,
   start: null,
   end: null,
   search: '',
@@ -68,11 +69,11 @@ const contrastTask = ref(null); // 对比数据是否修改
 const shortcuts = [
   {
     text: 'Today',
-    value: () => ['2022-04-01', new Date()],
+    value: () => [new Date().getTime() - 86400 * 1000, new Date()],
   },
   {
     text: 'Tomorrow',
-    value: () => ['2022-04-01', new Date().getTime() + 86400 * 1000],
+    value: () => [new Date(), new Date().getTime() + 86400 * 1000],
   },
 ];
 
@@ -116,6 +117,12 @@ function queryTask () {
     params.append('tasktype', 'FULFILLMENT');
     params.append('tasktype', 'REPLACE');
     queryTasksAPI(params).then(data => {
+      if (!data.items.length) {
+        listQuery.value.search = '';
+        ElMessage.error('Can\'t find related.');
+        return;
+      }
+
       dataList.value = data.items;
       total.value = data.total;
       contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
