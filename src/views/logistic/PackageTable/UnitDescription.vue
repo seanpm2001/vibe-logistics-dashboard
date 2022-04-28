@@ -72,21 +72,15 @@ const updateSerial = () => {
 };
 
 const checkUnit = isChecked => {
-  ElMessageBox.confirm(
-    'Check it?',
-    'Warning',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-      callback: (action) => {
-        if (action === 'confirm') {
-          unitItem.value.checked = true;
-          updateSerial();
-        }
-      },
-    }
-  );
+  ElMessageBox.confirm('Check it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        unitItem.value.checked = true;
+        updateSerial();
+      }
+    },
+  });
 };
 </script>
 

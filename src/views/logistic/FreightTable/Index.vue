@@ -417,8 +417,6 @@ const beforeCloseDialog = (done) => {
   }
   isChanged &&
     ElMessageBox.confirm('Unsaved changes, are you sure to leave?', 'Warning', {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {

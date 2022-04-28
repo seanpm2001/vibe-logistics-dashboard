@@ -131,22 +131,16 @@ const beforeCloseDialog = done => {
 
 const onUnitConditionChange = () => {
   const unit = unitItem.value;
-  ElMessageBox.confirm(
-    'Update it?',
-    'Warning',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-      callback: (action) => {
-        if (action === 'confirm') {
-          updateUnitAPI(unit.serial, unit);
-        } else {
-          emit('findUnit', unit.serial);
-        }
-      },
-    }
-  );
+  ElMessageBox.confirm('Update it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        updateUnitAPI(unit.serial, unit);
+      } else {
+        emit('findUnit', unit.serial);
+      }
+    },
+  });
 };
 
 const submitWarehousing = () => {

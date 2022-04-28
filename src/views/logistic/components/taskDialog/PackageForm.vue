@@ -169,8 +169,6 @@ const handleDeletePackage = () => {
   if (packageId) {
     // 删除数据库中的package
     ElMessageBox.confirm(`Remove the package (ID:${packageId})?`, 'Warning', {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {

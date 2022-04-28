@@ -161,24 +161,17 @@ const closePreviewDialog = (done) => {
 const handleDeleteBatch = () => {
   const batchId = batch.value?.id;
   if (batchId) { // 删除数据库中的batch
-    ElMessageBox.confirm(
-      `Remove the batch (ID:${batchId})?`,
-      'Warning',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-        callback: (action) => {
-          if (action === 'confirm') {
-            deleteBatchAPI(batchId).then(() => {
-              emit('deleteBatch', props.batchIdx);
-            });
-          } else if (action === 'cancel') {
-            ElMessage.info('Delete canceled');
-          }
-        },
-      }
-    );
+    ElMessageBox.confirm(`Remove the batch (ID:${batchId})?`, 'Warning', {
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          deleteBatchAPI(batchId).then(() => {
+            emit('deleteBatch', props.batchIdx);
+          });
+        } else
+          ElMessage.info('Delete canceled');
+      },
+    });
     return;
   }
   emit('deleteBatch', props.batchIdx); // 删除新创建还未提交的batch
@@ -240,25 +233,19 @@ const handleExceed = (files, fileList) => {
 };
 const beforeRemove = (file, fileList) => {
   return new Promise((resolve, reject) => {
-    ElMessageBox.confirm(
-      `Remove the file of ${file.name} ?`,
-      'Warning',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-        callback: (action) => {
-          if (action === 'confirm') {
-            // 移除文件时重置sub batch products
-            updateBatchProducts('remove', file);
-            resolve(action);
-          } else if (action === 'cancel') {
-            reject();
-            ElMessage.info('Delete canceled');
-          }
-        },
-      }
-    );
+    ElMessageBox.confirm(`Remove the file of ${file.name} ?`, 'Warning', {
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          // 移除文件时重置sub batch products
+          updateBatchProducts('remove', file);
+          resolve(action);
+        } else if (action === 'cancel') {
+          reject();
+          ElMessage.info('Delete canceled');
+        }
+      },
+    });
   });
 };
 

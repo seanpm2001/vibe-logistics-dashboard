@@ -311,22 +311,16 @@ const viewUnitDescription = (unit, products) => {
 };
 
 const onUnitStatusChange = (unit) => {
-  ElMessageBox.confirm(
-    'Update it?',
-    'Warning',
-    {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
-      type: 'warning',
-      callback: (action) => {
-        if (action === 'confirm') {
-          updatePackageUnitAPI(unit.packageId, unit.id, unit);
-        } else {
-          fetchList();
-        }
-      },
-    }
-  );
+  ElMessageBox.confirm('Update it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        updatePackageUnitAPI(unit.packageId, unit.id, unit);
+      } else {
+        fetchList();
+      }
+    },
+  });
 };
 
 function initGlobalData() {
