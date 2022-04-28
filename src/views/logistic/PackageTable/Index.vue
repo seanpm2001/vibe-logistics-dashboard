@@ -176,19 +176,9 @@ import {
 import { useLogisticStore } from '@/store';
 
 /* Start data */
-const logisticStore = useLogisticStore();
-const { warehouseEnum } = storeToRefs(logisticStore);
+const { warehouseEnum } = storeToRefs(useLogisticStore());
 const { proxy } = getCurrentInstance();
 
-const listQuery = ref({
-  page: 1,
-  perPage: 10,
-  search: '',
-});
-
-const tableKey = ref(0);
-const dataList = shallowRef(null);
-const total = ref(0);
 const warehousingItem = ref({});
 
 const listLoading = ref(true);
@@ -206,6 +196,15 @@ const warehousingTaskInfo = ref({
 const dialogHousingVisible = ref(false);
 const dialogCheckUnitVisible = ref(false);
 
+const listQuery = ref({
+  page: 1,
+  perPage: 10,
+  search: '',
+});
+const tableKey = ref(0);
+const dataList = shallowRef(null);
+const total = ref(0);
+
 // Warehousing Dialog
 provide('warehousingTaskInfo', warehousingTaskInfo);
 provide('dialogHousingVisible', dialogHousingVisible);
@@ -218,18 +217,6 @@ const unitItem = ref({});
 const serialScopeArr = ref([]);
 provide('unitItem', unitItem);
 /* End data */
-const ifMeetHousingCondtion = (taskType, unitStatus) => {
-  if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
-    const meetTaskArr = ['FULFILLMENT', 'REPLACE', 'MOVE', 'RETURN_TO_REPAIR'];
-    if (meetTaskArr.includes(taskType))
-      return true;
-  } else if (unitStatus === 'DELIVERED_BUT_UNCHECKED') {
-    const meetTaskArr = ['RETURN', 'MOVE', 'RETURN_TO_REPAIR'];
-    if (meetTaskArr.includes(taskType))
-      return true;
-  }
-  return false;
-};
 
 function queryPackage() {
   listLoading.value = true;
@@ -242,6 +229,22 @@ function queryPackage() {
 
 const fetchList = () => {
   setTimeout(() => queryPackage(), 200);
+};
+
+useWarehouseEnumHook();
+useQueryHook(listQuery, 'package', fetchList);
+
+const ifMeetHousingCondtion = (taskType, unitStatus) => {
+  if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
+    const meetTaskArr = ['FULFILLMENT', 'REPLACE', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  } else if (unitStatus === 'DELIVERED_BUT_UNCHECKED') {
+    const meetTaskArr = ['RETURN', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  }
+  return false;
 };
 
 const handlePagination = (_config) => {
@@ -322,26 +325,6 @@ const onUnitStatusChange = (unit) => {
     },
   });
 };
-
-function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}')
-    // init warehouseEnum:{}
-    logisticStore.setWarehouseEnum();
-}
-
-onMounted(() => {
-  initGlobalData();
-
-  listQuery.value = logisticStore.listQuery['package'];
-  fetchList();
-});
-onBeforeUnmount(() => {
-  logisticStore.setListQuery({
-    query: listQuery.value,
-    perPage: listQuery.perPage,
-    pageName: 'package',
-  });
-});
 </script>
 
 <style lang="sass" scoped>

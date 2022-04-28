@@ -30,6 +30,7 @@ export const useLogisticStore = defineStore({
     },
 
     setListQuery (payload) {
+      console.log('payload: ', payload);
       const { query, pageName } = payload;
       this.$patch(state => state.listQuery[pageName] = query);
     },

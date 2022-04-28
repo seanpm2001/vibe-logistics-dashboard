@@ -211,22 +211,9 @@ import { useLogisticStore } from '@/store';
 /* Start Data */
 const { proxy } = getCurrentInstance();
 
-const logisticStore = useLogisticStore();
-const { warehouseEnum } = storeToRefs(logisticStore);
-
-const listQuery = ref({
-  page: 1,
-  limit: 10,
-  search: undefined,
-  sort: '+id'
-});
+const { warehouseEnum } = storeToRefs(useLogisticStore());
 
 const sortEnum = ref([{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }]);
-
-const tableKey = ref(0);
-const dataList = shallowRef(null);
-const total = ref(0);
-const listLoading = ref(true);
 const dialogTaskVisible = ref(false);
 const dialogStatus = ref('');
 const downloadLoading = ref(false);
@@ -244,28 +231,22 @@ const taskItem = ref({
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const taskOrderItem = null;
 
+const listQuery = ref({
+  page: 1,
+  limit: 10,
+  search: undefined,
+  sort: '+id'
+});
+const tableKey = ref(0);
+const dataList = shallowRef(null);
+const total = ref(0);
+const listLoading = ref(true);
+
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 /* End Data */
-
-const temp = ref({
-  id: 0,
-  content: {},
-  remark: '',
-  timestamp: new Date(),
-  title: '',
-  type: '',
-  status: 'In Transit'
-});
-
-const addWarehouseMoveTask = () => {
-  taskItem.value = Object.assign({}, emptyTaskItem);
-  taskItem.value.type = 'MOVE';
-  dialogStatus.value = 'create';
-  dialogTaskVisible.value = true;
-};
 
 function queryInventory() {
   listLoading.value = true;
@@ -282,6 +263,26 @@ function queryInventory() {
 
 const fetchList = () => {
   setTimeout(() => queryInventory(), 200);
+};
+
+useWarehouseEnumHook();
+useQueryHook(listQuery, 'inventory', fetchList);
+
+const temp = ref({
+  id: 0,
+  content: {},
+  remark: '',
+  timestamp: new Date(),
+  title: '',
+  type: '',
+  status: 'In Transit'
+});
+
+const addWarehouseMoveTask = () => {
+  taskItem.value = Object.assign({}, emptyTaskItem);
+  taskItem.value.type = 'MOVE';
+  dialogStatus.value = 'create';
+  dialogTaskVisible.value = true;
 };
 
 const handlePagination = config => {
@@ -374,26 +375,6 @@ const getSortClass = key => {
   const sort = listQuery.value.sort;
   return sort === `+${key}` ? 'ascending' : 'descending';
 };
-
-function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
-    logisticStore.setWarehouseEnum();
-}
-
-onMounted(() => {
-  initGlobalData();
-
-  listQuery.value = logisticStore.listQuery['inventory'];
-  fetchList();
-});
-
-onBeforeUnmount(() => {
-  logisticStore.setListQuery({
-    query: listQuery.value,
-    perPage: listQuery.perPage,
-    pageName: 'inventory'
-  });
-});
 </script>
 
 <style lang="sass" scoped>

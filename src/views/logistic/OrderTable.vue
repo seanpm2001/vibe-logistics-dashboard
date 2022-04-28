@@ -268,8 +268,7 @@ import { useUserStore, useLogisticStore } from '@/store';
 /* Start data */
 const router = useRouter();
 const { role } = storeToRefs(useUserStore());
-const logisticStore = useLogisticStore();
-const { warehouseEnum } = storeToRefs(logisticStore);
+const { warehouseEnum } = storeToRefs(useLogisticStore());
 
 const { proxy } = getCurrentInstance();
 
@@ -339,8 +338,7 @@ provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 /* End data */
 
-const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
-
+/* Start Query Related */
 function queryOrders () {
   listLoading.value = true;
   (showAssignedOrder.value
@@ -361,6 +359,12 @@ function queryOrders () {
 function fetchList() {
   setTimeout(() => queryOrders(), 200);
 }
+
+useWarehouseEnumHook();
+useQueryHook(listQuery, 'order', fetchList);
+/* End Query Related */
+
+const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
 
 const handleFilter = () => {
   listQuery.value.page = 1;
@@ -533,25 +537,6 @@ const handleSelectionChange = (selectedArr) => {
 };
 
 const resetForm = () => {};
-
-function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}') // init warehouseEnum:{}
-    logisticStore.setWarehouseEnum();
-}
-
-onMounted(() => {
-  initGlobalData();
-
-  listQuery.value = logisticStore.listQuery['order'];
-  fetchList();
-});
-
-onBeforeUnmount(() => {
-  logisticStore.setListQuery({
-    query: listQuery.value,
-    pageName: 'order',
-  });
-});
 </script>
 
 <style lang="sass" scoped>

@@ -197,8 +197,7 @@ import FreightForm from './FreightForm.vue';
 import { parseTime } from '@/utils/format';
 import { useLogisticStore } from '@/store';
 
-const logisticStore = useLogisticStore();
-const { warehouseEnum } = storeToRefs(logisticStore);
+const { warehouseEnum } = storeToRefs(useLogisticStore());
 
 import {
   queryFreightsAPI,
@@ -270,16 +269,9 @@ provide('contrastData', contrastData);
 provide('batchArr', batchArr);
 provide('dialogStatus', dialogStatus);
 provide('listQuery', listQuery);
-/* end data */
+/* End data */
 
-const isDialogPattern = (type) => dialogStatus.value === type;
-
-const statusTypeDict = {
-  'Picked Up': 'success',
-  'In Transit': 'info',
-  Delivered: 'info',
-  Cancelled: 'danger',
-};
+/* Start query related */
 
 function queryFreight() {
   listLoading.value = true;
@@ -292,6 +284,19 @@ function queryFreight() {
 
 const fetchList = () => {
   setTimeout(() => queryFreight(), 200);
+};
+
+useWarehouseEnumHook();
+useQueryHook(listQuery, 'freight', fetchList);
+/* End query related */
+
+const isDialogPattern = (type) => dialogStatus.value === type;
+
+const statusTypeDict = {
+  'Picked Up': 'success',
+  'In Transit': 'info',
+  Delivered: 'info',
+  Cancelled: 'danger',
 };
 
 const handlePagination = (_config) => {
@@ -426,26 +431,6 @@ const beforeCloseDialog = (done) => {
       },
     });
 };
-
-function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}')
-    logisticStore.setWarehouseEnum();
-}
-
-onMounted(() => {
-  initGlobalData();
-
-  listQuery.value = logisticStore.listQuery['freight'];
-  fetchList();
-});
-
-onBeforeUnmount(() => {
-  logisticStore.setListQuery({
-    query: listQuery.value,
-    perPage: listQuery.perPage,
-    pageName: 'freight',
-  });
-});
 </script>
 
 <style lang="sass" scoped>

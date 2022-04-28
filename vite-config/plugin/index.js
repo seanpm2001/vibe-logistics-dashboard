@@ -16,7 +16,9 @@ export function createVitePlugins(isBuild) {
     }),
     AutoImport({ // 自动按需引入依赖
       // resolvers: [ElementPlusResolver()],
-      imports: ['vue', 'vue-router', 'pinia'],
+      imports: ['vue', 'vue-router', 'pinia', {
+        '@/hooks/useLogistic': ['useQueryHook', 'useWarehouseEnumHook'],
+      }],
       dts: 'src/auto-imports.d.ts',
     }),
     Components({

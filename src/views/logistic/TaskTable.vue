@@ -171,21 +171,11 @@ import { formatAssignedOrderItem } from '@/utils/logistic';
 import { useLogisticStore } from '@/store';
 
 /* Start Data */
-const logisticStore = useLogisticStore();
-const { warehouseEnum } = storeToRefs(logisticStore);
-
-const listQuery = ref({
-  page: 1,
-  perPage: 10,
-});
-
-const tableKey = ref(0);
-const dataList = shallowRef(null);
+const { warehouseEnum } = storeToRefs(useLogisticStore());
 const taskOrderItem = shallowRef(null);
 const packageList = ref([]);
 
-const total = ref(0);
-const listLoading = ref(true);
+
 const dialogStatus = ref('view');
 const downloadLoading = ref(false);
 const disableNewShipment = ref(true);
@@ -234,12 +224,37 @@ const taskPatternEnum = {
   ALL: 'All tasks',
 };
 
+const listQuery = ref({
+  page: 1,
+  perPage: 10,
+});
+const tableKey = ref(0);
+const dataList = shallowRef(null);
+const total = ref(0);
+const listLoading = ref(true);
+
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 /* End Data */
+
+function queryTask() {
+  listLoading.value = true;
+  queryTasksAPI(listQuery.value).then((data) => {
+    dataList.value = data.items;
+    total.value = data.total;
+    listLoading.value = false;
+  });
+}
+
+const fetchList = () => {
+  setTimeout(() => queryTask(), 200);
+};
+
+useWarehouseEnumHook();
+useQueryHook(listQuery, 'task', fetchList);
 
 const calTaskStatus = (taskType, packages) => {
   const statusSet = {};
@@ -293,18 +308,6 @@ const calTaskStatus = (taskType, packages) => {
   return res;
 };
 
-function queryTask() {
-  listLoading.value = true;
-  queryTasksAPI(listQuery.value).then((data) => {
-    dataList.value = data.items;
-    total.value = data.total;
-    listLoading.value = false;
-  });
-}
-
-const fetchList = () => {
-  setTimeout(() => queryTask(), 200);
-};
 
 const handleFilter = () => {
   listQuery.value.page = 1;
@@ -354,28 +357,6 @@ const handleDetailRow = (_row, type) => {
     dialogTaskVisible.value = true;
   });
 };
-
-function initGlobalData() {
-  if (JSON.stringify(warehouseEnum.value) === '{}')
-    // init warehouseEnum:{}
-    logisticStore.setWarehouseEnum();
-}
-
-onMounted(() => {
-  initGlobalData();
-
-  listQuery.value = logisticStore.listQuery['task'];
-  console.log('listQuery.value: ', listQuery.value);
-  fetchList();
-});
-
-onBeforeUnmount(() => {
-  logisticStore.setListQuery({
-    query: listQuery.value,
-    perPage: listQuery.perPage,
-    pageName: 'task',
-  });
-});
 </script>
 
 <style lang="sass" scoped>
