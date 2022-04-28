@@ -35,10 +35,18 @@
                 <el-divider direction="vertical" />
                 ful: 
                 <el-tag
+                  v-if="product.sku"
                   size="small"
-                  :type="product.quantity === calTaskFulQTy(task.packages)[product.sku] ? '' : 'danger'"
+                  :type="product.quantity === calTaskFulQty('sku', task.packages)[product.sku] ? '' : 'danger'"
                 >
-                  {{ calTaskFulQTy(task.packages)[product.sku] || 0 }}
+                  {{ calTaskFulQty('sku', task.packages)[product.sku] || 0 }}
+                </el-tag>
+                <el-tag
+                  v-else
+                  size="small"
+                  :type="product.quantity === calTaskFulQty('code', task.packages)[product.productCode] ? '' : 'danger'"
+                >
+                  {{ calTaskFulQty('code', task.packages)[product.productCode] || 0 }}
                 </el-tag>
                 <el-divider v-if="product.serialNote?.length" direction="vertical" />
                 <el-tooltip v-if="product.serialNote?.length" effect="light">
@@ -134,7 +142,7 @@
 import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
 import { debounce } from '@/utils';
-import { carrierEnum, codeNameEnum } from '@/enums/logistic';
+import { carrierEnum, codeNameEnum, skuCodeEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
@@ -148,13 +156,15 @@ const contrastTask = inject('contrastTask');
 
 /* End Data */
 
-const calTaskFulQTy = (packageArr) => {
+const calTaskFulQty = (type, packageArr) => {
   const temp = {};
   packageArr.forEach(packageItem => {
     packageItem.units.forEach(unit => {
       const sku = unit.item?.sku;
-      if (sku)
+      if (type === 'sku')
         temp[sku] = (temp[sku] || 0) + 1;
+      else 
+        temp[skuCodeEnum[sku]] = (temp[skuCodeEnum[sku]] || 0) + 1;
     });
   });
   return temp;
@@ -231,7 +241,8 @@ const remoteMethod = (query, task, packageItem, unit) => {
       const taskProducts = task.products;
       unitList.value = data.filter(item => {
         for (const i in taskProducts)
-          if (item.sku === taskProducts[i].sku) return true;
+          if (item.sku === taskProducts[i].sku || skuCodeEnum[item.sku] === taskProducts[i].productCode)
+            return true;
       });
     });
   } else {
@@ -267,7 +278,7 @@ const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
   // 删除serial为空的unit
   const units = packageItem.units;
-  for (let idx = units.length - 1; idx >= 0; i--) {
+  for (let idx = units.length - 1; idx >= 0; idx--) {
     !units[idx].serial && units[idx].splice(idx, 1);
   }
 
