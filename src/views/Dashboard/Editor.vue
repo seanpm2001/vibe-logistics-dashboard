@@ -12,12 +12,15 @@
       </div>
     </div>
     <div>
-      <img :src="emptyGif" class="emptyGif">
+      <img
+        :src="emptyGif"
+        class="emptyGif"
+      >
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import PanThumb from '@/components/PanThumb.vue';
 import GithubCorner from '@/components/GithubCorner.vue';
 import { useUserStore } from '@/store';

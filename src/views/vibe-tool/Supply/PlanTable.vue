@@ -20,36 +20,85 @@
       />
     </el-form-item> -->
     <el-form-item label="Time Dimension:">
-      <el-select disabled style="width: 120px;" v-model="timeDimension" placeholder="Time">
-        <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="item" :value="item" />
+      <el-select
+        v-model="timeDimension"
+        disabled
+        style="width: 120px;"
+        placeholder="Time"
+      >
+        <el-option
+          v-for="(item, key) in timeUnitEnum"
+          :key="key"
+          :label="item"
+          :value="item"
+        />
       </el-select>
     </el-form-item>
   </el-row>
   
   <el-row class="table">
-    <template v-for="(monthItem, month) in planTableData" :key="month">
+    <template
+      v-for="(monthItem, month) in planTableData"
+      :key="month"
+    >
       <template v-if="ifShowThisMonth(monthItem)">
-        <el-row class='month-row mgr-5 no-warp'>
+        <el-row class="month-row mgr-5 no-warp">
           <div class="day-col f-col no-warp">
-            <p class="header">{{monthAbbrEnum[month]}}</p>
-            <p class="header">Sales</p>
-            <p class="header">Inventory</p>
-            <p class="header" style="line-height: 18px">Min. Inventory</p>
-            <p class="header">ETA US</p>
-            <p class="header">ETD CN</p>
-            <p class="header">Production</p>
-            <p class="header">Material</p>
+            <p class="header">
+              {{ monthAbbrEnum[month] }}
+            </p>
+            <p class="header">
+              Sales
+            </p>
+            <p class="header">
+              Inventory
+            </p>
+            <p
+              class="header"
+              style="line-height: 18px"
+            >
+              Min. Inventory
+            </p>
+            <p class="header">
+              ETA US
+            </p>
+            <p class="header">
+              ETD CN
+            </p>
+            <p class="header">
+              Production
+            </p>
+            <p class="header">
+              Material
+            </p>
           </div>
-          <template v-for="(item, day) in monthItem" :key="item">
-            <div class="f-col" >
-              <p class="header">{{day}}</p>
-              <p class="grey">{{item?.sales}}</p>
-              <p class="light-grey">{{item?.inventory}}</p>
-              <p class="grey">{{item?.minInventory}}</p>
-              <p class="light-grey">{{item?.eta}}</p>
-              <p class="grey">{{item?.etd}}</p>
-              <p class="light-grey">{{item?.production}}</p>
-              <p class="grey"></p>
+          <template
+            v-for="(item, day) in monthItem"
+            :key="item"
+          >
+            <div class="f-col">
+              <p class="header">
+                {{ day }}
+              </p>
+              <p class="grey">
+                {{ item?.sales }}
+              </p>
+              <p class="light-grey">
+                {{ item?.inventory }}
+              </p>
+              <p class="grey">
+                {{ item?.minInventory }}
+              </p>
+              <p class="light-grey">
+                {{ item?.eta }}
+              </p>
+              <p class="grey">
+                {{ item?.etd }}
+              </p>
+              <p class="light-grey">
+                {{ item?.production }}
+              </p>
+              <p class="grey" />
             </div>
           </template>
         </el-row>
@@ -58,7 +107,7 @@
   </el-row>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const props = defineProps({
   timeUnitEnum: {
     type: Object,

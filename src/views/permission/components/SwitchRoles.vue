@@ -4,7 +4,10 @@
       Your roles: {{ role }}
     </div>
     Switch roles:
-    <el-radio-group v-model="role" @change="switchRoles">
+    <el-radio-group
+      v-model="role"
+      @change="switchRoles"
+    >
       <el-radio-button label="admin" />
       <el-radio-button label="manager" />
       <el-radio-button label="editor" />
@@ -13,7 +16,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useUserStore } from '@/store';
 
 const { proxy } = getCurrentInstance();

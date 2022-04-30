@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    <h1 class="">Ui Refactor Page</h1>
+    <h1 class="">
+      Ui Refactor Page
+    </h1>
     <div class="content">
       <p>
         You could click the <strong>link under Css Show</strong> or the <strong>link with 'Css' in the title</strong> to see different styling techniques to get inspiration for UI refactoring.
@@ -10,25 +12,46 @@
       </p>
     </div>
     <div class="card-container">
-      <el-space alignment="flex-start" wrap>
-        <el-card class="box-card" style="width: 250px">
+      <el-space
+        alignment="flex-start"
+        wrap
+      >
+        <el-card
+          class="box-card"
+          style="width: 250px"
+        >
           <template #header>
             <div class="card-header">
               <span>Bilibili (easy to do)</span>
             </div>
           </template>
-          <div v-for="(item, index) in iframeUrlData['bilibili']" :key="index" class="text item">
-            <el-link @click="openDialog(index, 'bilibili')">{{ item.name }}</el-link>
+          <div
+            v-for="(item, index) in iframeUrlData['bilibili']"
+            :key="index"
+            class="text item"
+          >
+            <el-link @click="openDialog(index, 'bilibili')">
+              {{ item.name }}
+            </el-link>
           </div>
         </el-card>
-        <el-card class="box-card" style="width: 250px">
+        <el-card
+          class="box-card"
+          style="width: 250px"
+        >
           <template #header>
             <div class="card-header">
               <span>Website (time to research)</span>
             </div>
           </template>
-          <div v-for="(item, index) in iframeUrlData['website']" :key="index" class="text item">
-            <el-link @click="openDialog(index, 'website')">{{ item.name }}</el-link>
+          <div
+            v-for="(item, index) in iframeUrlData['website']"
+            :key="index"
+            class="text item"
+          >
+            <el-link @click="openDialog(index, 'website')">
+              {{ item.name }}
+            </el-link>
           </div>
         </el-card>
       </el-space>
@@ -42,12 +65,15 @@
       destroy-on-close
       center
     >
-      <iframe class="ui-iframe" :src="iframeUrl"></iframe>
+      <iframe
+        class="ui-iframe"
+        :src="iframeUrl"
+      />
     </el-dialog>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 
 const centerDialogVisible = ref(false);

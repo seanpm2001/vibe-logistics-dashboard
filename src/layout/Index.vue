@@ -1,7 +1,13 @@
 <template>
-  <div :class="classObj" class="layout-wrapper">
+  <div
+    :class="classObj"
+    class="layout-wrapper"
+  >
     <!--left side-->
-    <Sidebar v-if="settings.showLeftMenu" class="sidebar-container" />
+    <Sidebar
+      v-if="settings.showLeftMenu"
+      class="sidebar-container"
+    />
     <!--right container-->
     <div class="main-container">
       <Navbar v-if="settings.showTopNavbar" />
@@ -11,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useAppStore } from '@/store';
 import { Sidebar, Navbar, AppMain, TagsView } from './components';
 

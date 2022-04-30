@@ -1,5 +1,8 @@
 <template>
-  <div :style="{zIndex:zIndex,height:height,width:width}" class="pan-item">
+  <div
+    :style="{zIndex:zIndex,height:height,width:width}"
+    class="pan-item"
+  >
     <div class="pan-info">
       <div class="pan-info-roles-container">
         <slot />
@@ -10,7 +13,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import avatarUrl from '@img/common/avatar.gif';
 // eslint-disable-next-line no-undef
 const props = defineProps({

@@ -2,34 +2,34 @@
   <div class="page">
     <div class="wrap">
       <div class="icon">
-        <div class="item one"></div>
+        <div class="item one" />
         <span>视频服务</span>
       </div>
       <div class="icon">
-        <div class="item two"></div>
+        <div class="item two" />
         <span>数据安全</span>
       </div>
       <div class="icon">
-        <div class="item three"></div>
+        <div class="item three" />
         <span>互联数据</span>
       </div>
       <div class="icon">
-        <div class="item four"></div>
+        <div class="item four" />
         <span>开发运维</span>
       </div>
       <div class="icon">
-        <div class="item five"></div>
+        <div class="item five" />
         <span>万物联网</span>
       </div>
       <div class="icon">
-        <div class="item six"></div>
+        <div class="item six" />
         <span>弹性计算</span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 </script>
 

@@ -5,9 +5,8 @@
     <div
       id="captcha-dom"
       class="nc-container"
-    ></div>
+    />
   </div>
-
 </template>
 
 <script>

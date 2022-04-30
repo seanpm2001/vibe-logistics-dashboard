@@ -2,16 +2,22 @@
   <div class="app-main">
     <router-view v-slot="{ Component }">
       <!--has transition  Judging by settings.mainNeedAnimation-->
-      <transition  name="fade-transform" mode="out-in">
+      <transition
+        name="fade-transform"
+        mode="out-in"
+      >
         <keep-alive :include="cachedViews">
-          <component :is="Component" :key="key" />
+          <component
+            :is="Component"
+            :key="key"
+          />
         </keep-alive>
       </transition>
     </router-view>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useAppStore } from '@/store/app';
 
 const route = useRoute();

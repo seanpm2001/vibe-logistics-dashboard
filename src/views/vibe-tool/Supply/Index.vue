@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <el-row align="middle">
-      <svg-icon class="vibe-icon" icon-name="vibe"></svg-icon>
+      <svg-icon
+        class="vibe-icon"
+        icon-name="vibe"
+      />
       <span class="page-name">supply</span>
     </el-row>
     <el-divider />
@@ -15,40 +18,58 @@
 
       <el-divider />
       <Step3
-        :timeUnitEnum="timeUnitEnum"
+        :time-unit-enum="timeUnitEnum"
       >
         <template #btn>
-          <el-button @click="calPlanTable" class="mgt-5" type="primary">Calculate Plan Table</el-button>
+          <el-button
+            class="mgt-5"
+            type="primary"
+            @click="calPlanTable"
+          >
+            Calculate Plan Table
+          </el-button>
         </template>
       </Step3>
       <el-divider />
       <PlanTable
-        :timeUnitEnum="timeUnitEnum"
-        :planTableData="planTableData"
-        :monthAbbrEnum="monthAbbrEnum"
+        :time-unit-enum="timeUnitEnum"
+        :plan-table-data="planTableData"
+        :month-abbr-enum="monthAbbrEnum"
       />
 
       <el-divider />
       <Step4
-        :timeUnitEnum="timeUnitEnum"
+        :time-unit-enum="timeUnitEnum"
         @onStep4Change="onStep4Change"
       >
         <template #btn>
-          <el-button @click="onStep4Change(0, 'add')" class="mgt-5" type="primary">Add</el-button>
-          <el-button @click="calRealTable" class="mgt-5" type="primary">Calculate Real Table</el-button>
+          <el-button
+            class="mgt-5"
+            type="primary"
+            @click="onStep4Change(0, 'add')"
+          >
+            Add
+          </el-button>
+          <el-button
+            class="mgt-5"
+            type="primary"
+            @click="calRealTable"
+          >
+            Calculate Real Table
+          </el-button>
         </template>
       </Step4>
 
       <RealTable
-        :timeUnitEnum="timeUnitEnum"
-        :realTableData="realTableData"
-        :monthAbbrEnum="monthAbbrEnum"
+        :time-unit-enum="timeUnitEnum"
+        :real-table-data="realTableData"
+        :month-abbr-enum="monthAbbrEnum"
       />
     </el-form>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage } from'element-plus';
 import { timeUnitEnum, monthDaysEnum, monthAbbrEnum } from '@/enums/supply';
 import { checkRequiredData, calTableEnum } from './util';

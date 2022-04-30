@@ -1,5 +1,8 @@
 <template>
-  <div id="Sidebar" class="reset-menu-style">
+  <div
+    id="Sidebar"
+    class="reset-menu-style"
+  >
     <!--router nav-->
     <el-scrollbar>
       <el-menu
@@ -13,13 +16,19 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <SubMenu v-for="route in routes" :key="route.path" :routerItem="route" :base-path="route.path" :isCollapse="isCollapse" />
+        <SubMenu
+          v-for="routeItem in routes"
+          :key="routeItem.path"
+          :router-item="routeItem"
+          :base-path="routeItem.path"
+          :is-collapse="isCollapse"
+        />
       </el-menu>
     </el-scrollbar>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import SubMenu from './SubMenu.vue';
 import { useAppStore, usePermissionStore } from '@/store';
 

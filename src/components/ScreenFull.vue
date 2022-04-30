@@ -1,11 +1,24 @@
 <template>
-  <div id="screenfull" class="pl-1 pr-1 mtPx-2" >
-    <svg-icon v-if="isFullscreen" icon-name="exit-fullscreen" class="nav-svg-icon" @click="click" />
-    <svg-icon v-else icon-name="fullscreen" class="nav-svg-icon" @click="click" />
+  <div
+    id="screenfull"
+    class="pl-1 pr-1 mtPx-2"
+  >
+    <svg-icon
+      v-if="isFullscreen"
+      icon-name="exit-fullscreen"
+      class="nav-svg-icon"
+      @click="click"
+    />
+    <svg-icon
+      v-else
+      icon-name="fullscreen"
+      class="nav-svg-icon"
+      @click="click"
+    />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import screenfull from 'screenfull';
 import { ElMessage } from 'element-plus';
 

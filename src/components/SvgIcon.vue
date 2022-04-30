@@ -1,11 +1,24 @@
 <template>
-  <div v-if="ifExternal" :style="styleExternalIcon" class="svg-external-icon svg-icon"/>
-  <svg v-else :class="svgClass" aria-hidden="true">
-    <use width=100% height=100% :href="symbolId" :fill="color" />
+  <div
+    v-if="ifExternal"
+    :style="styleExternalIcon"
+    class="svg-external-icon svg-icon"
+  />
+  <svg
+    v-else
+    :class="svgClass"
+    aria-hidden="true"
+  >
+    <use
+      width="100%"
+      height="100%"
+      :href="symbolId"
+      :fill="color"
+    />
   </svg>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { isExternal } from '@/utils/validate';
 
 const props = defineProps({
@@ -19,9 +32,11 @@ const props = defineProps({
   },
   iconClass: {
     type: String,
+    default: ''
   },
   alt: {
     type: String,
+    default: ''
   },
   color: {
     type: String,

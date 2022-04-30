@@ -1,15 +1,18 @@
 <template>
-  <router-view name="backBtn"></router-view>
+  <router-view name="backBtn" />
   <router-view v-slot="{ Component }">
     <transition name="slide-fade">
       <keep-alive>
-        <component class="page-transition-view" :is="Component" />
+        <component
+          :is="Component"
+          class="page-transition-view"
+        />
       </keep-alive>
     </transition>
   </router-view>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 </script>
 

@@ -1,8 +1,8 @@
 <template>
   <el-dialog
+    v-model="dialogHousingVisible"
     width="90%"
     title="Warehousing Task"
-    v-model="dialogHousingVisible"
     :close-on-click-modal="false"
     :before-close="beforeCloseDialog"
   >
@@ -11,19 +11,25 @@
       v-model="warehousingTaskInfo"
     >
       <el-form-item label="Target Warehouse">
-        <el-tag>#{{warehouseEnum[warehousingTaskInfo.targetId]}}</el-tag>
+        <el-tag>#{{ warehouseEnum[warehousingTaskInfo.targetId] }}</el-tag>
       </el-form-item>
-      <el-row justify="space-between" :gutter="3">
+      <el-row
+        justify="space-between"
+        :gutter="3"
+      >
         <el-form-item label="Origin Warehouse Task">
-          <el-tag>#{{warehousingTaskInfo.taskId}}</el-tag>
+          <el-tag>#{{ warehousingTaskInfo.taskId }}</el-tag>
         </el-form-item>
         <el-form-item label="Origin Warehouse Task Type">
-          <el-tag>#{{taskTypeEnum[warehousingTaskInfo.taskType]}}</el-tag>
+          <el-tag>#{{ taskTypeEnum[warehousingTaskInfo.taskType] }}</el-tag>
         </el-form-item>
       </el-row>
-      <el-row justify="space-between" :gutter="3">
+      <el-row
+        justify="space-between"
+        :gutter="3"
+      >
         <el-form-item label="Package ID">
-          <el-tag>#{{warehousingItem.packageId}}</el-tag>
+          <el-tag>#{{ warehousingItem.packageId }}</el-tag>
         </el-form-item>
         <el-form-item label="Package Status">
           <el-tag>computed value</el-tag>
@@ -35,53 +41,108 @@
             clearable
             @change="onUnitConditionChange"
           >
-            <el-option v-for="(item, key) in unitConditionEnum" :key="item" :label="item" :value="key" />
+            <el-option
+              v-for="(item, key) in unitConditionEnum"
+              :key="item"
+              :label="item"
+              :value="key"
+            />
           </el-select>
         </el-form-item>
       </el-row>
 
       <el-divider />
 
-      <el-row justify="space-between" :gutter="3">
+      <el-row
+        justify="space-between"
+        :gutter="3"
+      >
         <el-form-item label="Serial">
-          <el-tag>#{{warehousingItem.serial}}</el-tag>
+          <el-tag>#{{ warehousingItem.serial }}</el-tag>
         </el-form-item>
         <el-checkbox v-model="warehousingItem.shipmentDamage">
           Shipping Damaged
         </el-checkbox>
         <el-form-item label="Package Box Condition">
-          <el-select v-model="warehousingItem.packageBoxCondition" placeholder="Please select" clearable>
-            <el-option v-for="(item, key) in packageConditionEnum" :key="item" :label="item" :value="key" />
+          <el-select
+            v-model="warehousingItem.packageBoxCondition"
+            placeholder="Please select"
+            clearable
+          >
+            <el-option
+              v-for="(item, key) in packageConditionEnum"
+              :key="item"
+              :label="item"
+              :value="key"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="Note(return reason)">
-          <el-input v-model="warehousingItem.shipmentDamageNote" placeholder="Note"/>
+          <el-input
+            v-model="warehousingItem.shipmentDamageNote"
+            placeholder="Note"
+          />
         </el-form-item>
         <el-form-item label="Accessory Consumption">
-          <el-select v-model="warehousingItem.accessories[0].productCode" placeholder="Please select" clearable>
-            <el-option v-for="(item, key) in packageProductEnum" :key="item" :label="item" :value="key" />
+          <el-select
+            v-model="warehousingItem.accessories[0].productCode"
+            placeholder="Please select"
+            clearable
+          >
+            <el-option
+              v-for="(item, key) in packageProductEnum"
+              :key="item"
+              :label="item"
+              :value="key"
+            />
           </el-select>
-          <el-input-number placeholder="0" v-model="warehousingItem.accessories[0].quantity" />
+          <el-input-number
+            v-model="warehousingItem.accessories[0].quantity"
+            placeholder="0"
+          />
         </el-form-item>
       </el-row>
       <el-card>
         <el-row justify="space-between">
           <el-form-item label="*Next Stage as a:">
-            <el-select disabled v-model="nextStage" placeholder="Please select" clearable>
-              <el-option v-for="(item, key) in { UNIT: 'Unit', BUNDLE: 'Bundle' }" :key="item" :label="item" :value="key" />
+            <el-select
+              v-model="nextStage"
+              disabled
+              placeholder="Please select"
+              clearable
+            >
+              <el-option
+                v-for="(item, key) in { UNIT: 'Unit', BUNDLE: 'Bundle' }"
+                :key="item"
+                :label="item"
+                :value="key"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item v-if="nextStage === 'BUNDLE'" label="New Stylus">
-            <el-input v-model="bundleItem.stylus" placeholder="Serial" />
+          <el-form-item
+            v-if="nextStage === 'BUNDLE'"
+            label="New Stylus"
+          >
+            <el-input
+              v-model="bundleItem.stylus"
+              placeholder="Serial"
+            />
           </el-form-item>
-          <el-form-item class="mgl-10" v-if="nextStage === 'BUNDLE'" label="New Carema">
-            <el-input v-model="bundleItem.carema" placeholder="Serial" />
+          <el-form-item
+            v-if="nextStage === 'BUNDLE'"
+            class="mgl-10"
+            label="New Carema"
+          >
+            <el-input
+              v-model="bundleItem.carema"
+              placeholder="Serial"
+            />
           </el-form-item>
         </el-row>
       </el-card>
     </el-form>
 
-    <template v-slot:footer>
+    <template #footer>
       <el-button @click="submitWarehousing">
         Submit
       </el-button>
@@ -89,7 +150,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '@/enums/logistic';
 import { updateUnitAPI, updatePackageUnitAPI } from '@/api/logistic';

@@ -1,10 +1,17 @@
 <template>
-  <div style="padding: 0 12px" @click="toggleClick">
-    <svg-icon icon-name="hamburger" :class="{ 'is-active': isActive }" class="hamburger" />
+  <div
+    style="padding: 0 12px"
+    @click="toggleClick"
+  >
+    <svg-icon
+      icon-name="hamburger"
+      :class="{ 'is-active': isActive }"
+      class="hamburger"
+    />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 defineProps({
   isActive: {
     type: Boolean,

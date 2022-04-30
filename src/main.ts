@@ -15,7 +15,7 @@ import 'virtual:svg-icons-register'; // svg component, Important
 if (process.env.USE_MOCK) setupProdMockServer(); // development mock
 
 export const app = createApp(App);
-app.component('svg-icon', SvgIcon);
+app.component('SvgIcon', SvgIcon);
 
 app
   .use(createPinia())

@@ -1,42 +1,95 @@
 <template>
   <div class="page">
     <div class="nav">
-      <div class="logo">Explore.</div>
+      <div class="logo">
+        Explore.
+      </div>
       <div class="nav-links">
         <ul>
-          <li><img src="@img/parallax/linkedin.png" alt="" /></li>
-          <li><img src="@img/parallax/facebook.png" alt="" /></li>
-          <li><img src="@img/parallax/instagram-logo.png" alt="" /></li>
+          <li>
+            <img
+              src="@img/parallax/linkedin.png"
+              alt=""
+            >
+          </li>
+          <li>
+            <img
+              src="@img/parallax/facebook.png"
+              alt=""
+            >
+          </li>
+          <li>
+            <img
+              src="@img/parallax/instagram-logo.png"
+              alt=""
+            >
+          </li>
         </ul>
       </div>
     </div>
 
-    <section id="sectionone" class="screen">
+    <section
+      id="sectionone"
+      class="screen"
+    >
       <div id="scene">
-        <div data-depth="0.1" class="bg">
-          <img src="@img/parallax/background.png" alt="" />
+        <div
+          data-depth="0.1"
+          class="bg"
+        >
+          <img
+            src="@img/parallax/background.png"
+            alt=""
+          >
         </div>
-        <div data-depth="0.2" class="rock1">
-          <img src="@img/parallax/rock.png" alt="" />
+        <div
+          data-depth="0.2"
+          class="rock1"
+        >
+          <img
+            src="@img/parallax/rock.png"
+            alt=""
+          >
         </div>
-        <div data-depth="1.2" class="earth">
-          <img src="@img/parallax/earth.png" alt="" />
+        <div
+          data-depth="1.2"
+          class="earth"
+        >
+          <img
+            src="@img/parallax/earth.png"
+            alt=""
+          >
         </div>
-        <div data-depth="0.1" class="text">
+        <div
+          data-depth="0.1"
+          class="text"
+        >
           <h1>PLANETS</h1>
         </div>
-        <div data-depth="0.4" class="mid">
-          <img src="@img/parallax/mid.png" alt="" />
+        <div
+          data-depth="0.4"
+          class="mid"
+        >
+          <img
+            src="@img/parallax/mid.png"
+            alt=""
+          >
         </div>
-        <div data-depth="0.1" class="fore">
-          <img src="@img/parallax/foreground.png" alt="" />
+        <div
+          data-depth="0.1"
+          class="fore"
+        >
+          <img
+            src="@img/parallax/foreground.png"
+            alt=""
+          >
         </div>
       </div>
     </section>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 import '@/assets/js/parallax.min';
 onMounted(() => {

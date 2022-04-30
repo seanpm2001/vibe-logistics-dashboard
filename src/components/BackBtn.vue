@@ -1,10 +1,13 @@
 <template>
-  <div class="btn back-btn" @click="routeGoBack">
+  <div
+    class="btn back-btn"
+    @click="routeGoBack"
+  >
     <svg-icon icon-name="back" /> Back
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 const router = useRouter();
 

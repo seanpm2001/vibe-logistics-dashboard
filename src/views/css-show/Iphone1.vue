@@ -6,31 +6,35 @@
     </h2>
 
     <div id="iphone">
-      <div id="hardware"></div>
+      <div id="hardware" />
       <div id="ui">
-        <img src="https://assets.codepen.io/2002878/iphone12-5g_top_ui.jpg" class="top-ui" alt="">
+        <img
+          src="https://assets.codepen.io/2002878/iphone12-5g_top_ui.jpg"
+          class="top-ui"
+          alt=""
+        >
         
         <ul>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_01.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_01.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_02.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_02.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_03.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_03.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_04.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_04.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_05.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_05.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_06.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_06.jpg">
           </li>
           <li>
-            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_07.jpg" />
+            <img src="https://assets.codepen.io/2002878/iphone12-5g_show_07.jpg">
           </li>
         </ul>
       </div>
@@ -38,7 +42,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 onMounted(() => {
   const rows = document.querySelectorAll('#ui ul li');

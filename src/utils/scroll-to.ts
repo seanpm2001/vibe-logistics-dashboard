@@ -1,3 +1,4 @@
+/* eslint-disable */
 Math.easeInOutQuad = function(t, b, c, d) {
   t /= d / 2;
   if (t < 1) {
@@ -8,7 +9,7 @@ Math.easeInOutQuad = function(t, b, c, d) {
 };
 
 // requestAnimationFrame for Smart Animating http://goo.gl/sx5sts
-var requestAnimFrame = (function() {
+const requestAnimFrame = (function() {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) { window.setTimeout(callback, 1000 / 60) };
 })();
 
@@ -41,7 +42,7 @@ export function scrollTo(to, duration, callback) {
     // increment the time
     currentTime += increment;
     // find the value with the quadratic in-out easing function
-    var val = Math.easeInOutQuad(currentTime, start, change, duration);
+    const val = Math.easeInOutQuad(currentTime, start, change, duration);
     // move the document.body
     move(val);
     // do the animation unless its over
