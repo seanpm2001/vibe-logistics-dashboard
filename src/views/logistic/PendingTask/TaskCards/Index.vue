@@ -24,7 +24,7 @@
 
         <div
           ref="taskPackageArr"
-          class="col2 package-operation"
+          class="col2 package-info"
         >
           <template
             v-for="(item, packageIdx) in task.packages"
@@ -245,20 +245,21 @@ const remoteMethod = (query, task, packageItem, unit) => {
   }
 };
 
-let focusStorage = null;
+let focusStorage = {};
 const handleInputFocus = (el, taskIdx, packageIdx) => {
   focusStorage = { taskIdx, packageIdx };
 };
 
 function clickNextUnitInput () {
   const { taskIdx, packageIdx } = focusStorage;
-  proxy.$nextTick(() => {
-    const serialCell = proxy.$refs['taskPackageArr'][taskIdx].querySelectorAll('.package-row')[packageIdx].querySelector('.serial-cell');
-    setTimeout(() => {
-      const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');
-      lastUnitInput.click();
-    }, 500);
-  });
+  if (taskIdx)
+    proxy.$nextTick(() => {
+      const serialCell = proxy.$refs['taskPackageArr'][taskIdx].querySelectorAll('.package-row')[packageIdx].querySelector('.serial-cell');
+      setTimeout(() => {
+        const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');
+        lastUnitInput.click();
+      }, 500);
+    });
 }
 
 function removeUnitItem (packageItem) {
@@ -340,7 +341,7 @@ const handleDeletePackage = (packageId) => {
     grid-column-start: 3
   .col4
     grid-column-start: 4
-  .col2.package-operation
+  .col2.package-info
     display: grid
     grid-gap: 0
     grid-column-end: 5
