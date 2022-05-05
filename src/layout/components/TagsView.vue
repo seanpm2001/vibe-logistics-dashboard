@@ -16,7 +16,7 @@
         @contextmenu.prevent="openMenu(tag, $event)"
       >
         {{ tag.title }}
-        <span
+        <Close
           v-if="!isAffix(tag)"
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag(tag)"
@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Close } from '@element-plus/icons-vue';
 import { resolve } from 'path';
 import { useAppStore, useTagsViewStore, usePermissionStore } from '@/store';
 
