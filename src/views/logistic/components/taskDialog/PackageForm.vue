@@ -29,6 +29,7 @@
           v-model="taskPackage.weight"
           :disabled="notPackagePermission"
           placeholder="Weight (kg)"
+          @input="val => (taskPackage.weight = toNumber(val))"
         />
       </el-form-item>
       <el-form-item label="Length">
@@ -36,6 +37,7 @@
           v-model="taskPackage.length"
           :disabled="notPackagePermission"
           placeholder="Length (cm)"
+          @input="val => (taskPackage.length = toNumber(val))"
         />
       </el-form-item>
       <el-form-item label="Width">
@@ -43,6 +45,7 @@
           v-model="taskPackage.width"
           :disabled="notPackagePermission"
           placeholder="Width (cm)"
+          @input="val => (taskPackage.width = toNumber(val))"
         />
       </el-form-item>
       <el-form-item label="Height">
@@ -50,6 +53,7 @@
           v-model="taskPackage.height"
           :disabled="notPackagePermission"
           placeholder="Height (cm)"
+          @input="val => (taskPackage.height = toNumber(val))"
         />
       </el-form-item>
     </el-row>
@@ -132,7 +136,7 @@
 </template>
 
 <script lang="ts" setup>
-import { debounce } from '@/utils';
+import { debounce, toNumber } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
   createPackageAPI,

@@ -95,14 +95,16 @@ export const enum packageConditionEnum {
 // }
 export const enum carrierEnum {
   TRUCK = 'Truck',
-  // RRTS = 'RRTS-Truck',
-  // DAYLIGHT = 'Daylight-Truck',
-  // PILOT = 'PILOT-Truck',
-  // SAIA = 'SAIA-Truck',
-  // RL = 'R&L-Truck',
   UPS = 'UPS',
   USPS = 'USPS',
   FEDEX = 'FedEx',
+}
+export const enum transportEnum {
+  RRTS = 'RRTS-Truck',
+  DAYLIGHT = 'Daylight-Truck',
+  PILOT = 'PILOT-Truck',
+  SAIA = 'SAIA-Truck',
+  RL = 'R&L-Truck',
 }
 export const enum codeNameEnum {
   '55V1B' = '55 V1 Board',

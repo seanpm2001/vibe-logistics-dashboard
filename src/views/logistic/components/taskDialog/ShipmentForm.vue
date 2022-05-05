@@ -121,7 +121,7 @@
       v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
       :disabled="disableNewPackage"
       type="primary"
-      icon="el-icon-circle-plus"
+      :icon="CirclePlus"
       @click="addPackage"
     >
       Add Package
@@ -130,6 +130,7 @@
 </template>
 
 <script lang="ts" setup>
+import { CirclePlus } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api/logistic';

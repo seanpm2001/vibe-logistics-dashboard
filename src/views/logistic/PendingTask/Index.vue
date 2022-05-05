@@ -14,6 +14,7 @@
           v-model="listQuery.search"
           style="width: 330px;"
           placeholder="Search: (order info)"
+          @change="fetchList"
         >
           <template #prepend>
             <el-select

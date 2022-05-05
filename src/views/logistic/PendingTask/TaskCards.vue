@@ -33,7 +33,17 @@
           {{ task.taskType }}
         </el-descriptions-item>
         <el-descriptions-item label="Carrier">
-          {{ carrierEnum[task.carrier] }}
+          <el-select
+            v-model="task.carrier"
+            placeholder="Please select"
+          >
+            <el-option
+              v-for="(item, key) in carrierEnum"
+              :key="item"
+              :label="item"
+              :value="key"
+            />
+          </el-select>
         </el-descriptions-item>
         <el-descriptions-item label="Shipment Info">
           <OrderShipmentInfo :order-item="orderEnum[task.orderId] || {}" />
@@ -173,18 +183,22 @@
                     <el-input
                       v-model="item.weight"
                       placeholder="Weight"
+                      @input="val => (item.weight = toNumber(val))"
                     />
                     <el-input
                       v-model="item.length"
                       placeholder="Length"
+                      @input="val => (item.length = toNumber(val))"
                     />
                     <el-input
                       v-model="item.width"
                       placeholder="Width"
+                      @input="val => (item.width = toNumber(val))"
                     />
                     <el-input
                       v-model="item.height"
                       placeholder="Height"
+                      @input="val => (item.height = toNumber(val))"
                     />
                   </el-row>
                 </div>
@@ -247,7 +261,7 @@
 <script lang="ts" setup>
 import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
-import { debounce } from '@/utils';
+import { debounce, toNumber } from '@/utils';
 import { carrierEnum, codeNameEnum, skuCodeEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
