@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import Hamburger from './Hamburger.vue';
+import { Breadcrumb, Hamburger, ScreenFull} from './components';
 import avatarUrl from '@img/common/avatar.gif';
 import { useUserStore, useAppStore } from '@/store';
 

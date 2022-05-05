@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import PanThumb from '@/components/PanThumb.vue';
-import GithubCorner from '@/components/GithubCorner.vue';
+import PanThumb from './components/PanThumb.vue';
+import GithubCorner from './components/GithubCorner.vue';
 import { useUserStore } from '@/store';
 
 const userStore = useUserStore();
