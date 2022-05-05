@@ -1,28 +1,48 @@
 <template>
   <template v-if="!routerItem?.hidden">
     <template v-if="showSidebarItem(routerItem.children, routerItem)">
-      <Link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
-          <MenuItem :meta="onlyOneChild.meta || routerItem.meta" :isCollapse="isCollapse" />
+      <Link
+        v-if="onlyOneChild.meta"
+        :to="resolvePath(onlyOneChild.path)"
+      >
+        <el-menu-item
+          :index="resolvePath(onlyOneChild.path)"
+          :class="{ 'submenu-title-noDropdown': !isNest }"
+        >
+          <MenuItem
+            :meta="onlyOneChild.meta || routerItem.meta"
+            :is-collapse="isCollapse"
+          />
         </el-menu-item>
       </Link>
     </template>
-    <el-sub-menu v-else ref="subMenu" :index="resolvePath(routerItem.path)" popper-append-to-body>
-      <template v-if="routerItem.meta" #title>
-        <MenuItem :meta="routerItem.meta" :isCollapse="isCollapse" />
+    <el-sub-menu
+      v-else
+      ref="subMenu"
+      :index="resolvePath(routerItem.path)"
+      popper-append-to-body
+    >
+      <template
+        v-if="routerItem.meta"
+        #title
+      >
+        <MenuItem
+          :meta="routerItem.meta"
+          :is-collapse="isCollapse"
+        />
       </template>
       <SubMenu
         v-for="child in routerItem?.children"
         :key="child.path"
         :is-nest="true"
-        :routerItem="child"
+        :router-item="child"
         :base-path="resolvePath(child.path)"
       />
     </el-sub-menu>
   </template>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import path from 'path';
 import Link from './Link.vue';
 import MenuItem from './MenuItem.vue';

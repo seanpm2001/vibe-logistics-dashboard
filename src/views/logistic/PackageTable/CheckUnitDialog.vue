@@ -1,8 +1,8 @@
 <template>
   <el-dialog
+    v-model="dialogCheckUnitVisible"
     width="50%"
     title="Check Unit"
-    v-model="dialogCheckUnitVisible"
     :close-on-click-modal="false"
   >
     <el-row>
@@ -11,7 +11,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 /* Start Data*/
 const dialogCheckUnitVisible = inject('dialogCheckUnitVisible');
 

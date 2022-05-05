@@ -1,7 +1,15 @@
 <template>
   <div class="streamer-container">
-    <div ref='sec' class="sec" @click="toggleBgColor">
-      <video autoplay muted loop>
+    <div
+      ref="sec"
+      class="sec"
+      @click="toggleBgColor"
+    >
+      <video
+        autoplay
+        muted
+        loop
+      >
         <source src="@/assets/video/run.mp4">
       </video>
       <h2>Run</h2>
@@ -9,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 import throttle from 'lodash/throttle';
 const { proxy } = getCurrentInstance();

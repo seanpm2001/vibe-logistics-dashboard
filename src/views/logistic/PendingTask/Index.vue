@@ -3,19 +3,44 @@
     <div class="statistics">
       <div class="f-row col-center">
         <el-date-picker
-          v-model="dateFilter" :shortcuts="shortcuts"
-          type="daterange" value-format="YYYY-MM-DD" placeholder="Please pick a date"
+          v-model="dateFilter"
+          :shortcuts="shortcuts"
+          type="daterange"
+          value-format="YYYY-MM-DD"
+          placeholder="Please pick a date"
         />
         <span class="mgl-5 mgr-5"> before 11.30 am</span>
-        <el-input v-model="listQuery.search" style="width: 200px;"  placeholder="Search: (order info)" />
-        <el-button class="mgl-5" type="primary" :icon="Search"  @click="fetchList">Search</el-button>
+        <el-input
+          v-model="listQuery.search"
+          style="width: 200px;"
+          placeholder="Search: (order info)"
+        />
+        <el-button
+          class="mgl-5"
+          type="primary"
+          :icon="Search"
+          @click="fetchList"
+        >
+          Search
+        </el-button>
       </div>
-      <el-descriptions :column="3" border>
-        <template v-for="(item, key) in codeQTY" :key="key">
-          <el-descriptions-item label="Product Name">{{ codeNameEnum[key] || '' }}</el-descriptions-item>
-          <el-descriptions-item label="Req QTY">{{ item.req }}</el-descriptions-item>
+      <el-descriptions
+        :column="3"
+        border
+      >
+        <template
+          v-for="(item, key) in codeQTY"
+          :key="key"
+        >
+          <el-descriptions-item label="Product Name">
+            {{ codeNameEnum[key] || '' }}
+          </el-descriptions-item>
+          <el-descriptions-item label="Req QTY">
+            {{ item.req }}
+          </el-descriptions-item>
           <el-descriptions-item
-            label="Fulfilled QTY" :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+            label="Fulfilled QTY"
+            :class-name="item.req === item.ful ? '' : 'error-border-tip'"
           >
             {{ item.ful || 0 }}
           </el-descriptions-item>
@@ -33,7 +58,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import TaskCards from './TaskCards.vue';

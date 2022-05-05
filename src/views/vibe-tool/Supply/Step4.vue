@@ -2,9 +2,15 @@
   <span class="step-title">
     Step 4 - Real Production Plan
   </span>
-  <el-table :data="step4" max-height="250">
-    <el-table-column label="Production" width="280px">
-      <template v-slot="{ row }">
+  <el-table
+    :data="step4"
+    max-height="250"
+  >
+    <el-table-column
+      label="Production"
+      width="280px"
+    >
+      <template #default="{ row }">
         <el-date-picker
           v-model="row.production"
           type="date"
@@ -12,38 +18,99 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="amount" label="Amount" width="100px">
-      <template v-slot="{ row }">
-        <el-input style="width: 70px;" v-model="row.amount" placeholder="Num"></el-input>
+    <el-table-column
+      prop="amount"
+      label="Amount"
+      width="100px"
+    >
+      <template #default="{ row }">
+        <el-input
+          v-model="row.amount"
+          style="width: 70px;"
+          placeholder="Num"
+        />
       </template>
     </el-table-column>
-    <el-table-column label="*Production -> ETD" width="300px" align="center">
-      <template v-slot="{ row }">
-        <el-input style="width: 70px;" v-model="row.leadTime1.num" placeholder="Num"></el-input>
-        <el-select style="width: 120px;" v-model="row.leadTime1.timeUnit" placeholder="Time">
-          <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="key" :value="item" />
+    <el-table-column
+      label="*Production -> ETD"
+      width="300px"
+      align="center"
+    >
+      <template #default="{ row }">
+        <el-input
+          v-model="row.leadTime1.num"
+          style="width: 70px;"
+          placeholder="Num"
+        />
+        <el-select
+          v-model="row.leadTime1.timeUnit"
+          style="width: 120px;"
+          placeholder="Time"
+        >
+          <el-option
+            v-for="(item, key) in timeUnitEnum"
+            :key="key"
+            :label="key"
+            :value="item"
+          />
         </el-select>
       </template>
     </el-table-column>
     <el-table-column label="*ETD -> ETA">
-      <template v-slot="{ row }">
-        <el-input style="width: 70px;" v-model="row.leadTime2.num" placeholder="Num"></el-input>
-        <el-select style="width: 120px;" v-model="row.leadTime2.timeUnit" placeholder="Time">
-          <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="key" :value="item" />
+      <template #default="{ row }">
+        <el-input
+          v-model="row.leadTime2.num"
+          style="width: 70px;"
+          placeholder="Num"
+        />
+        <el-select
+          v-model="row.leadTime2.timeUnit"
+          style="width: 120px;"
+          placeholder="Time"
+        >
+          <el-option
+            v-for="(item, key) in timeUnitEnum"
+            :key="key"
+            :label="key"
+            :value="item"
+          />
         </el-select>
       </template>
     </el-table-column>
     <el-table-column label="Leading Time 3">
-      <template v-slot="{ row }">
-        <el-input disabled style="width: 70px;" v-model="row.leadTime3.num" placeholder="Num"></el-input>
-        <el-select disabled style="width: 120px;" v-model="row.leadTime3.timeUnit" placeholder="Time">
-          <el-option v-for="(item, key) in timeUnitEnum" :key="key" :label="key" :value="item" />
+      <template #default="{ row }">
+        <el-input
+          v-model="row.leadTime3.num"
+          disabled
+          style="width: 70px;"
+          placeholder="Num"
+        />
+        <el-select
+          v-model="row.leadTime3.timeUnit"
+          disabled
+          style="width: 120px;"
+          placeholder="Time"
+        >
+          <el-option
+            v-for="(item, key) in timeUnitEnum"
+            :key="key"
+            :label="key"
+            :value="item"
+          />
         </el-select>
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="Operations" width="120px">
-      <template v-slot="{ $index }">
-        <el-button type="danger" size="small" @click.prevent="deleteRow($index)">
+    <el-table-column
+      fixed="right"
+      label="Operations"
+      width="120px"
+    >
+      <template #default="{ $index }">
+        <el-button
+          type="danger"
+          size="small"
+          @click.prevent="deleteRow($index)"
+        >
           Remove
         </el-button>
       </template>
@@ -52,7 +119,7 @@
   <slot name="btn" />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 const emit = defineEmits(['onStep4Change']);
 const props = defineProps({
   timeUnitEnum: {

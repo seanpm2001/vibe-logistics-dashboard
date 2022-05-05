@@ -1,63 +1,114 @@
 <template>
   <div>
-    <el-row class="header" justify="space-between" :gutter="3">
+    <el-row
+      class="header"
+      justify="space-between"
+      :gutter="3"
+    >
       <span>
         Shipment <span v-if="taskItem?.carrier"> [Database]</span>:
       </span> 
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item label="*Carrier">
-        <el-select :disabled="notShipmentPermission" v-model="taskItem.carrier" placeholder="Please select">
-          <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
+        <el-select
+          v-model="taskItem.carrier"
+          :disabled="notShipmentPermission"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in carrierEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" align="middle" :gutter="3">
+    <el-row
+      justify="space-between"
+      align="middle"
+      :gutter="3"
+    >
       <el-form-item label="Delivery Cost">
-        <el-input :disabled="notShipmentPermission" v-model="taskItem.deliveryCost" placeholder="Delivery Cost"/>
+        <el-input
+          v-model="taskItem.deliveryCost"
+          :disabled="notShipmentPermission"
+          placeholder="Delivery Cost"
+        />
       </el-form-item>
       <el-form-item label="Liftgate Cost">
         <el-checkbox @change="handleCostChange('liftgateCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.liftgateCost" placeholder="Liftgate Cost"/>
+          <el-input
+            v-model="taskItem.liftgateCost"
+            :disabled="notShipmentPermission"
+            placeholder="Liftgate Cost"
+          />
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Limited Cost">
         <el-checkbox @change="handleCostChange('limitedCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.limitedCost" placeholder="Limited Cost"/>
+          <el-input
+            v-model="taskItem.limitedCost"
+            :disabled="notShipmentPermission"
+            placeholder="Limited Cost"
+          />
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Residential Cost">
         <el-checkbox @change="handleCostChange('residentialCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.residentialCost" placeholder="Residential Cost"/>
+          <el-input
+            v-model="taskItem.residentialCost"
+            :disabled="notShipmentPermission"
+            placeholder="Residential Cost"
+          />
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Inside Cost">
         <el-checkbox @change="handleCostChange('insideCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.insideCost" placeholder="Inside Cost"/>
+          <el-input
+            v-model="taskItem.insideCost"
+            :disabled="notShipmentPermission"
+            placeholder="Inside Cost"
+          />
         </el-checkbox>
       </el-form-item>
       <el-form-item label="Insure Cost">
         <el-checkbox @change="handleCostChange('insureCost')">
-          <el-input :disabled="notShipmentPermission" v-model="taskItem.insureCost" placeholder="Insure Cost"/>
+          <el-input
+            v-model="taskItem.insureCost"
+            :disabled="notShipmentPermission"
+            placeholder="Insure Cost"
+          />
         </el-checkbox>
       </el-form-item>
     </el-row>
     
     <template v-if="!notShipmentPermission">
-      <el-button :disabled="!taskId" type="primary" @click="handleShipment('update')">
+      <el-button
+        :disabled="!taskId"
+        type="primary"
+        @click="handleShipment('update')"
+      >
         Update Shipment Info
       </el-button>
     </template>
 
     <el-card v-if="packageArr.length > 0">
-      <template v-for="(item, index) in packageArr" :key="index">
+      <template
+        v-for="(item, index) in packageArr"
+        :key="index"
+      >
         <PackageForm
           :ref="`package-${index}`"
-          :taskId="taskItem?.id"
-          :packageIdx="index"
-          :packageItem="item"
-          :warehouseEnum="warehouseEnum"
-          :dialogStatus="dialogStatus"
+          :task-id="taskItem?.id"
+          :package-idx="index"
+          :package-item="item"
+          :warehouse-enum="warehouseEnum"
+          :dialog-status="dialogStatus"
           @deletePackage="removePackage"
           @createPackage="submitPackage"
           @editPackage="updatePackage"
@@ -66,8 +117,8 @@
     </el-card>
     
     <el-button
-      v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
       v-if="!!taskItem.carrier"
+      v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
       :disabled="disableNewPackage"
       type="primary"
       icon="el-icon-circle-plus"
@@ -78,7 +129,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api/logistic';

@@ -1,19 +1,27 @@
 <template>
   <div class="page">
-    <el-row justify="space-between" class="filter-container">
+    <el-row
+      justify="space-between"
+      class="filter-container"
+    >
       <el-row>
         <el-input
           v-model="listQuery.search"
           placeholder="Order Info"
           style="width: 120px"
         />
-        <el-button @click="handleFilter" v-wave type="primary" :icon="Search">
+        <el-button
+          v-wave
+          type="primary"
+          :icon="Search"
+          @click="handleFilter"
+        >
           Search
         </el-button>
         <el-select
+          v-model="showAssignedOrder"
           :disabled="listLoading"
           placeholder="Assigned Order"
-          v-model="showAssignedOrder"
           style="width: 175px"
           @change="handleFilter"
         >
@@ -25,9 +33,9 @@
           />
         </el-select>
         <el-select
+          v-model="listQuery.orderFrom"
           disabled
           placeholder="Order From"
-          v-model="listQuery.orderFrom"
           style="width: 130px"
           @change="handleFilter"
         >
@@ -80,81 +88,127 @@
       height="68vh"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50" height="40" align="center" />
-      <el-table-column class-name="order-info" label="Order" width="240px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        type="selection"
+        width="50"
+        height="40"
+        align="center"
+      />
+      <el-table-column
+        class-name="order-info"
+        label="Order"
+        width="240px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag @click="showOrderDrawer(row)">
             #<span class="link-type">{{ row.id }}</span>
           </el-tag>
           <div v-if="row.rawOrders">
-            <template v-for="item in row.rawOrders" :key="item.id">
-              <el-tag @click="showOrderDrawer(item)">#{{ item.id }}</el-tag>
-              <br />
+            <template
+              v-for="item in row.rawOrders"
+              :key="item.id"
+            >
+              <el-tag @click="showOrderDrawer(item)">
+                #{{ item.id }}
+              </el-tag>
+              <br>
             </template>
           </div>
           <p>{{ formatDate(row.createdAt) }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="Shipment Info" min-width="280px" align="center">
-        <template v-slot="{ row }">
-          <OrderShipmentInfo :orderItem="row" />
+      <el-table-column
+        label="Shipment Info"
+        min-width="280px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <OrderShipmentInfo :order-item="row" />
         </template>
       </el-table-column>
-      <el-table-column label="Products" width="255px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Products"
+        width="255px"
+        align="center"
+      >
+        <template #default="{ row }">
           <div class="product-row">
             <template v-if="showAssignedOrder">
-              <template v-for="item in row.items" :key="item.productCode">
+              <template
+                v-for="item in row.items"
+                :key="item.productCode"
+              >
                 <div align="left">
                   <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
                   <span class="mgl-5">{{ codeNameEnum[item.productCode] || item.productCode }}:
-                    <el-tag class="mgl-5" size="small">{{ item.quantity }}</el-tag>
+                    <el-tag
+                      class="mgl-5"
+                      size="small"
+                    >{{ item.quantity }}</el-tag>
                   </span>
                 </div>
               </template>
             </template>
             <template v-else>
-              <template v-for="item in row.items" :key="item.productCode">
+              <template
+                v-for="item in row.items"
+                :key="item.productCode"
+              >
                 <div align="left">
                   <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
-                  <span class="mgl-5"
-                    >{{ codeNameEnum[item.productCode] || item.productCode }}:<el-tag
-                      class="mgl-5"
-                      size="small"
-                      >{{ item.quantity }}</el-tag
-                    ></span
-                  >
+                  <span class="mgl-5">{{ codeNameEnum[item.productCode] || item.productCode }}:<el-tag
+                    class="mgl-5"
+                    size="small"
+                  >{{ item.quantity }}</el-tag></span>
                 </div>
               </template>
             </template>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Warehouse Task" width="240px" align="center">
-        <template v-slot="{ row }">
-          <template v-for="(item, index) in row.tasks" :key="item.id">
+      <el-table-column
+        label="Warehouse Task"
+        width="240px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <template
+            v-for="(item, index) in row.tasks"
+            :key="item.id"
+          >
             <div class="mgb-5">
-              <el-tag class="cursor-pointer" @click="editWarehouseTask(row.id, item.id)">
-                Task {{index+1}}
+              <el-tag
+                class="cursor-pointer"
+                @click="editWarehouseTask(row.id, item.id)"
+              >
+                Task {{ index+1 }}
               </el-tag>
               <el-popconfirm
-                  v-if="item?.id"
-                  @confirm="deleteTaskAPI(item.id).then(() => fetchList())"
-                  confirm-button-text="OK"
-                  cancel-button-text="No, Thanks"
-                  icon-color="red"
-                  title="Are you sure to delete this?"
-                >
-                  <template #reference>
-                    <svg-icon class="cursor-pointer" icon-name="close" />
-                  </template>
+                v-if="item?.id"
+                confirm-button-text="OK"
+                cancel-button-text="No, Thanks"
+                icon-color="red"
+                title="Are you sure to delete this?"
+                @confirm="deleteTaskAPI(item.id).then(() => fetchList())"
+              >
+                <template #reference>
+                  <svg-icon
+                    class="cursor-pointer"
+                    icon-name="close"
+                  />
+                </template>
               </el-popconfirm>
             </div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="Status" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Status"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
             {{ packageStatusEnum[row.status] }}
           </el-tag>
@@ -167,7 +221,7 @@
         min-width="240px"
         class-name="small-padding fixed-width"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <el-button
             v-if="!showAssignedOrder"
             type="primary"
@@ -177,8 +231,8 @@
             Assign & Add 1st WH Task
           </el-button>
           <el-button
-            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             v-if="showAssignedOrder"
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             type="success"
             size="small"
             @click="addWarehouseTask(row.id)"
@@ -186,8 +240,8 @@
             Add WH Task
           </el-button>
           <el-button
-            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             v-if="showAssignedOrder"
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             type="danger"
             size="small"
             @click="unassignOrders(row)"
@@ -205,14 +259,20 @@
     />
     
     <el-dialog
+      v-model="dialogAssignVisible"
       width="32%"
       title="Assign Warehouse"
-      v-model="dialogAssignVisible"
       :close-on-click-modal="false"
     >
-      <el-row class="mgb-5" align="middle">
+      <el-row
+        class="mgb-5"
+        align="middle"
+      >
         Please select Warehouse:  &ensp;*
-        <el-select v-model="sourceId" placeholder="Please select">
+        <el-select
+          v-model="sourceId"
+          placeholder="Please select"
+        >
           <el-option
             v-for="(item, key) in warehouseEnum"
             :key="item"
@@ -223,29 +283,47 @@
       </el-row>
       <el-row align="middle">
         Please select Carrier: &ensp;
-        <el-select v-model="taskCarrier" placeholder="Please select">
-          <el-option v-for="(item, key) in carrierEnum" :key="item" :label="item" :value="key" />
+        <el-select
+          v-model="taskCarrier"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in carrierEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-row>
-      <template v-slot:footer>
-        <el-button type="primary" @click="assignOrders()"> submit </el-button>
+      <template #footer>
+        <el-button
+          type="primary"
+          @click="assignOrders()"
+        >
+          submit
+        </el-button>
       </template>
     </el-dialog>
 
     <TaskDialog
       ref="taskForm"
-      :warehouseEnum="warehouseEnum"
-      :emptyTaskItem="emptyTaskItem"
-      :dialogStatus="dialogStatus"
+      :warehouse-enum="warehouseEnum"
+      :empty-task-item="emptyTaskItem"
+      :dialog-status="dialogStatus"
     />
 
-    <el-drawer v-model="drawerOrderVisible" title="Order Info" size="60%" direction="ltr">
-      <OrderDescription :orderItem="orderItem" />
+    <el-drawer
+      v-model="drawerOrderVisible"
+      title="Order Info"
+      size="60%"
+      direction="ltr"
+    >
+      <OrderDescription :order-item="orderItem" />
     </el-drawer>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Search, Delete } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import TaskDialog from './components/taskDialog/Index.vue';

@@ -6,16 +6,27 @@
         placeholder="Package Info"
         style="width: 120px"
       />
-      <el-button v-wave @click="handleFilter" type="primary" :icon="Search">
+      <el-button
+        v-wave
+        type="primary"
+        :icon="Search"
+        @click="handleFilter"
+      >
         Search
       </el-button>
-      <el-button disabled v-wave @click="handleFilter" type="primary" :icon="Filter">
+      <el-button
+        v-wave
+        disabled
+        type="primary"
+        :icon="Filter"
+        @click="handleFilter"
+      >
         Filter Warehousing List
       </el-button>
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER']"
-        style="float: right"
         v-wave
+        style="float: right"
         type="danger"
         :icon="Delete"
         @click="handleDelSelected"
@@ -34,9 +45,18 @@
       height="68vh"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50" height="40" align="center" />
-      <el-table-column label="Package ID" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        type="selection"
+        width="50"
+        height="40"
+        align="center"
+      />
+      <el-table-column
+        label="Package ID"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
             #<span class="link-type">{{ row.id }}</span>
           </el-tag>
@@ -48,21 +68,41 @@
         align="center"
         width="120px"
       />
-      <el-table-column label="Carrier" width="160px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Carrier"
+        width="160px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ row.task.carrier }}
         </template>
       </el-table-column>
-      <el-table-column label="Task Type" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Task Type"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ taskTypeEnum[row.task.taskType] }}
         </template>
       </el-table-column>
-      <el-table-column label="Units's Serials: Status" width="560px">
-        <template v-slot="{ row }">
-          <template v-for="unit in row.units" :key="unit">
-            <el-row justify="start" align="middle">
-              <span class="link" @click="viewUnitDescription(unit, row.task.products)">{{ unit.serial }}</span>
+      <el-table-column
+        label="Units's Serials: Status"
+        width="560px"
+      >
+        <template #default="{ row }">
+          <template
+            v-for="unit in row.units"
+            :key="unit"
+          >
+            <el-row
+              justify="start"
+              align="middle"
+            >
+              <span
+                class="link"
+                @click="viewUnitDescription(unit, row.task.products)"
+              >{{ unit.serial }}</span>
               <el-button
                 :disabled="unit.checked || !ifMeetHousingCondtion(row.task.taskType, unit.status)"
                 size="small"
@@ -72,18 +112,23 @@
                 Check
               </el-button>
               <el-select
-                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
                 v-model="unit.status"
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
                 style="width: 210px; margin: 0 10px;"
                 placeholder="Please select"
                 @change="onUnitStatusChange(unit)"
               >
-                <el-option v-for="(status, key) in packageStatusEnum" :key="status" :label="status" :value="key" />
+                <el-option
+                  v-for="(status, key) in packageStatusEnum"
+                  :key="status"
+                  :label="status"
+                  :value="key"
+                />
               </el-select>
               
               <el-button
-                v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
                 v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
                 :disabled="!unit.checked"
                 size="small"
                 type="primary"
@@ -95,21 +140,35 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Content" width="200px">
-        <template v-slot="{ row }">
-          <template v-for="product in row.task.products" :key="product.productCode">
+      <el-table-column
+        class-name="product-column"
+        label="Content"
+        width="200px"
+      >
+        <template #default="{ row }">
+          <template
+            v-for="product in row.task.products"
+            :key="product.productCode"
+          >
             <div>
               <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
               <span class="mgl-5">
                 {{ codeNameEnum[product.productCode] || product.productCode }}:
-                <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
+                <el-tag
+                  class="mgl-5"
+                  size="small"
+                >{{ product.quantity }}</el-tag>
               </span>
             </div>
           </template>
         </template>
       </el-table-column>
-         <el-table-column label="Last Modified" width="160px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Last Modified"
+        width="160px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ row.lastModified }}
         </template>
       </el-table-column>
@@ -121,16 +180,21 @@
         min-width="240px"
         class-name="small-padding fixed-width"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <el-popconfirm
-            @confirm="deletePackage(row.id)"
             confirm-button-text="OK"
             cancel-button-text="No, Thanks"
             icon-color="red"
             title="Are you sure to delete this?"
+            @confirm="deletePackage(row.id)"
           >
             <template #reference>
-              <el-button size="small" type="danger"> Delete</el-button>
+              <el-button
+                size="small"
+                type="danger"
+              >
+                Delete
+              </el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -143,22 +207,27 @@
       @fetchList="fetchList"
     />
 
-    <el-drawer v-model="drawerUnitVisible" title="Unit Info" size="60%" direction="ltr">
+    <el-drawer
+      v-model="drawerUnitVisible"
+      title="Unit Info"
+      size="60%"
+      direction="ltr"
+    >
       <UnitDescription 
-        :serialScopeArr="serialScopeArr"
+        :serial-scope-arr="serialScopeArr"
         @fetchList="fetchList"
       />
     </el-drawer>
 
     <HousingDialog
       ref="housingDialog"
-      :warehouseEnum="warehouseEnum"
+      :warehouse-enum="warehouseEnum"
       @findUnit="findUnit"
     />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from './UnitDescription.vue';

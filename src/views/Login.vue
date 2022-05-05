@@ -1,13 +1,24 @@
 <template>
   <div class="container">
     <div class="form-warp">
-      <el-form ref="inForm" :rules="formRules" :model="signInForm" class="sign-in-form">
-        <h2 class="form-title">登录</h2>
+      <el-form
+        ref="inForm"
+        :rules="formRules"
+        :model="signInForm"
+        class="sign-in-form"
+      >
+        <h2 class="form-title">
+          登录
+        </h2>
         <div>
           <span class="svg-container">
             <svg-icon icon-name="user" />
           </span>
-          <el-input ref="inUsername" v-model="signInForm.email" placeholder="用户名" />
+          <el-input
+            ref="inUsername"
+            v-model="signInForm.email"
+            placeholder="用户名"
+          />
         </div>
         <div prop="password">
           <span class="svg-container">
@@ -34,16 +45,28 @@
           :loading="btnLoading"
           class="submit-btn"
           @click="handleLogin((signInPattern = true))"
-          >立即登录</el-button
         >
+          立即登录
+        </el-button>
       </el-form>
-      <el-form ref="upForm" :rules="formRules" :model="signUpForm" class="sign-up-form">
-        <h2 class="form-title">注册</h2>
+      <el-form
+        ref="upForm"
+        :rules="formRules"
+        :model="signUpForm"
+        class="sign-up-form"
+      >
+        <h2 class="form-title">
+          注册
+        </h2>
         <div>
           <span class="svg-container">
             <svg-icon icon-name="user" />
           </span>
-          <el-input ref="upUsername" v-model="signUpForm.email" placeholder="用户名" />
+          <el-input
+            ref="upUsername"
+            v-model="signUpForm.email"
+            placeholder="用户名"
+          />
         </div>
         <div>
           <span class="svg-container">
@@ -66,28 +89,39 @@
           :loading="btnLoading"
           class="submit-btn"
           @click="handleLogin((signInPattern = false))"
-          >立即注册</el-button
         >
+          立即注册
+        </el-button>
       </el-form>
     </div>
     <div class="desc-warp">
       <div class="desc-warp-item sign-up-desc">
         <div class="content">
-          <button @click="toggleSignUp(true)">注册</button>
+          <button @click="toggleSignUp(true)">
+            注册
+          </button>
         </div>
-        <img :src="signInSrc" alt="sign-in.svg" />
+        <img
+          :src="signInSrc"
+          alt="sign-in.svg"
+        >
       </div>
       <div class="desc-warp-item sign-in-desc">
         <div class="content">
-          <button @click="toggleSignUp(false)">登录</button>
+          <button @click="toggleSignUp(false)">
+            登录
+          </button>
         </div>
-        <img :src="signUpSrc" alt="sign-up.svg" />
+        <img
+          :src="signUpSrc"
+          alt="sign-up.svg"
+        >
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 // 局部组件（导入）
 import Captcha from '@/components/Captcha/Index.vue';
 import { ElMessage } from 'element-plus';

@@ -1,17 +1,20 @@
 <template>
   <div class="page">
-    <el-row justify="space-between" class="filter-container">
+    <el-row
+      justify="space-between"
+      class="filter-container"
+    >
       <el-row>
         <el-input
-          :disabled="isDialogPattern('view')"
           v-model="listQuery.title"
+          :disabled="isDialogPattern('view')"
           placeholder="Batch Num"
           style="width: 120px"
           @keyup.enter="handleFilter"
         />
         <el-select
-          :disabled="isDialogPattern('view') || true"
           v-model="listQuery.sort"
+          :disabled="isDialogPattern('view') || true"
           style="width: 150px"
           @change="handleFilter"
         >
@@ -23,20 +26,24 @@
           />
         </el-select>
         <el-button
-          disabled
           v-wave
+          disabled
           type="primary"
           :icon="Search"
           @click="handleFilter"
         >
           Search
         </el-button>
-        <el-button type="primary" :icon="Edit" @click="showCreateDialog">
+        <el-button
+          type="primary"
+          :icon="Edit"
+          @click="showCreateDialog"
+        >
           Add
         </el-button>
         <el-button
-          disabled
           v-wave
+          disabled
           :loading="downloadLoading"
           type="primary"
           :icon="Download"
@@ -46,8 +53,8 @@
         </el-button>
       </el-row>
       <el-button
-        style="float: right"
         v-wave
+        style="float: right"
         type="danger"
         :icon="Delete"
         @click="handleDelSelected"
@@ -67,7 +74,12 @@
       @sort-change="sortChange"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50" height="40" align="center" />
+      <el-table-column
+        type="selection"
+        width="50"
+        height="40"
+        align="center"
+      />
       <el-table-column
         label="ID"
         prop="id"
@@ -76,57 +88,95 @@
         width="80"
         :class-name="getSortClass('id')"
       />
-      <el-table-column label="Batch Number" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Batch Number"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
-            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{
+            #<span
+              class="link-type"
+              @click="handleDetailRow(row, 'view')"
+            >{{
               row.number
             }}</span>
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Target" width="110px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Target"
+        width="110px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>{{ warehouseEnum[row.targetId] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Status" width="100" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Status"
+        width="100"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag :type="statusTypeDict[row.status]">
             {{ freightStatusEnum[row.status] }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="ETA WH" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="ETA WH"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <span>{{ row.etaWh?.split("T")[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="ATA WH" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="ATA WH"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <span>{{ row.ataWh?.split("T")[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="ETA DP" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="ETA DP"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <span>{{ row.etaDp?.split("T")[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pickup" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Pickup"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <span>{{ row.pickup?.split("T")[0] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Content" width="240px">
-        <template v-slot="{ row }">
-          <template v-for="(item, key) in row.content" :key="item">
+      <el-table-column
+        label="Content"
+        width="240px"
+      >
+        <template #default="{ row }">
+          <template
+            v-for="(item, key) in row.content"
+            :key="item"
+          >
             <div>
               <svg-icon :icon-name="codeIconEnum[key]" />
-              <span class="mgl-5"
-                >{{ codeNameEnum[key] }}:<el-tag class="mgl-5" size="small">{{
-                  item
-                }}</el-tag></span
-              >
+              <span class="mgl-5">{{ codeNameEnum[key] }}:<el-tag
+                class="mgl-5"
+                size="small"
+              >{{
+                item
+              }}</el-tag></span>
             </div>
           </template>
         </template>
@@ -138,22 +188,36 @@
         min-width="300px"
         class-name="small-padding fixed-width"
       >
-        <template v-slot="{ row }">
-          <el-button v-permission="['ADMIN','VIBE_MANAGER']" type="primary" size="small" @click="handleDetailRow(row, 'edit')">
+        <template #default="{ row }">
+          <el-button
+            v-permission="['ADMIN','VIBE_MANAGER']"
+            type="primary"
+            size="small"
+            @click="handleDetailRow(row, 'edit')"
+          >
             Edit
           </el-button>
-          <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
+          <el-button
+            type="success"
+            size="small"
+            @click="handleDetailRow(row, 'view')"
+          >
             View detail
           </el-button>
           <el-popconfirm
-            @confirm="handleDetailRow(row, 'remove')"
             confirm-button-text="OK"
             cancel-button-text="No, Thanks"
             icon-color="red"
             title="Are you sure to delete this?"
+            @confirm="handleDetailRow(row, 'remove')"
           >
             <template #reference>
-              <el-button v-permission="['ADMIN','VIBE_MANAGER']" v-if="row.status != 'deleted'" size="small" type="danger">
+              <el-button
+                v-if="row.status != 'deleted'"
+                v-permission="['ADMIN','VIBE_MANAGER']"
+                size="small"
+                type="danger"
+              >
                 Delete
               </el-button>
             </template>
@@ -169,28 +233,35 @@
     />
 
     <el-dialog
+      v-model="dialogFreightVisible"
       width="80%"
       title="Freight"
-      v-model="dialogFreightVisible"
       :before-close="beforeCloseDialog"
       :close-on-click-modal="false"
     >
       <FreightForm
         ref="freightForm"
-        :warehouseEnum="warehouseEnum"
-        :emptyFreightForm="emptyFreightForm"
+        :warehouse-enum="warehouseEnum"
+        :empty-freight-form="emptyFreightForm"
         @fetchList="fetchList"
       />
 
-      <template v-slot:footer>
-        <el-button v-if="isDialogPattern('create')" @click="resetForm"> Reset </el-button>
-        <el-button @click="dialogFreightVisible = false"> Close </el-button>
+      <template #footer>
+        <el-button
+          v-if="isDialogPattern('create')"
+          @click="resetForm"
+        >
+          Reset
+        </el-button>
+        <el-button @click="dialogFreightVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Delete, Download, Edit, Search } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import FreightForm from './FreightForm.vue';

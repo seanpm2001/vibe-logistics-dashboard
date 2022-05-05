@@ -1,13 +1,23 @@
 <template>
-  <div ref="eyeContainer" class="eye-container" @mousemove="eyeBall">
+  <div
+    ref="eyeContainer"
+    class="eye-container"
+    @mousemove="eyeBall"
+  >
     <div class="eye-box">
-      <div ref="leftEye" class="eye"></div>
-      <div ref="rightEye" class="eye"></div>
+      <div
+        ref="leftEye"
+        class="eye"
+      />
+      <div
+        ref="rightEye"
+        class="eye"
+      />
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 const { proxy } = getCurrentInstance();
 const refs = computed(() => proxy.$refs);

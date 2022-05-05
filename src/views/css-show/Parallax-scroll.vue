@@ -1,37 +1,49 @@
 <template>
   <div class="page">
-    <div class="image" style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic1.jpg')"></div>
+    <div
+      class="image"
+      style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic1.jpg')"
+    />
     <div class="heading">
-        <h1>When you are confused</h1>
+      <h1>When you are confused</h1>
     </div>
     <div class="text">
-        <h1>Set goals in your mind</h1>
+      <h1>Set goals in your mind</h1>
     </div>
 
-    <div class="image" style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic2.jpg')"></div>
+    <div
+      class="image"
+      style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic2.jpg')"
+    />
     <div class="heading">
-        <h1>When you're down</h1>
+      <h1>When you're down</h1>
     </div>
     <div class="text">
-        <h1>Try to wake up the beast in your heart</h1>
+      <h1>Try to wake up the beast in your heart</h1>
     </div>
 
-    <div class="image" style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic3.jpg')"></div>
+    <div
+      class="image"
+      style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic3.jpg')"
+    />
     <div class="heading">
-        <h1>When prople leave you</h1>
+      <h1>When prople leave you</h1>
     </div>
     <div class="text">
-        <h1>It's time to start your season</h1>
+      <h1>It's time to start your season</h1>
     </div>
 
-    <div class="image" style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic4.jpg')"></div>
+    <div
+      class="image"
+      style="background-image: url('https://cdn.jsdelivr.net/gh/leopold7/parallax-scrolling-demo@main/images/pic4.jpg')"
+    />
     <div class="heading">
-        <h1>Come on,stranger.</h1>
+      <h1>Come on,stranger.</h1>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 // import onMounted  from "vue"
 // import "@/assets/js/jarallax"
 // import "@/assets/js/jarallax-element"

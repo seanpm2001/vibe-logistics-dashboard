@@ -2,21 +2,59 @@
   <div class="page">
     <el-card>
       <el-form
-      label-position="left"
+        label-position="left"
       >
         <strong style="font-size: 20px; color: #000">General Transports (Recommended)</strong>
         <el-divider />
-        <el-form-item style="margin-right: 32px" label="55 Board Number(0-40)">
-          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board55Num" placeholder="0"></el-input-number>
+        <el-form-item
+          style="margin-right: 32px"
+          label="55 Board Number(0-40)"
+        >
+          &nbsp;<el-input-number
+            v-model="board55Num"
+            :min="0"
+            :max="40"
+            placeholder="0"
+            @input="calculatePrice(cascaderArr)"
+          />
         </el-form-item>
-        <el-form-item style="margin-right: 32px" label="55 Stand Number(0-40)">
-          &nbsp;<el-input-number :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand55Num" placeholder="0"></el-input-number>
+        <el-form-item
+          style="margin-right: 32px"
+          label="55 Stand Number(0-40)"
+        >
+          &nbsp;<el-input-number
+            v-model="stand55Num"
+            :min="0"
+            :max="40"
+            placeholder="0"
+            @input="calculatePrice(cascaderArr)"
+          />
         </el-form-item>
-        <el-form-item style="margin-right: 32px" label="75 Board Number(0-40)">
-          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="board75Num" placeholder="0"></el-input-number>
+        <el-form-item
+          style="margin-right: 32px"
+          label="75 Board Number(0-40)"
+        >
+          &nbsp;<el-input-number
+            v-model="board75Num"
+            :disabled="disable75Input"
+            :min="0"
+            :max="40"
+            placeholder="0"
+            @input="calculatePrice(cascaderArr)"
+          />
         </el-form-item>
-        <el-form-item style="margin-right: 32px" label="75 Stand Number(0-40)">
-          &nbsp;<el-input-number :disabled="disable75Input" :min="0" :max="40" @input="calculatePrice(cascaderArr)" v-model="stand75Num" placeholder="0"></el-input-number>
+        <el-form-item
+          style="margin-right: 32px"
+          label="75 Stand Number(0-40)"
+        >
+          &nbsp;<el-input-number
+            v-model="stand75Num"
+            :disabled="disable75Input"
+            :min="0"
+            :max="40"
+            placeholder="0"
+            @input="calculatePrice(cascaderArr)"
+          />
         </el-form-item>
         <el-form-item label="Country/Area/Transport:">
           <el-cascader
@@ -30,11 +68,17 @@
           />
         </el-form-item>
       </el-form>
-      <div>Country/Area/Transport: <span class="cascader-font">{{cascaderArr?.join(' / ') || ''}}</span></div>
+      <div>Country/Area/Transport: <span class="cascader-font">{{ cascaderArr?.join(' / ') || '' }}</span></div>
       <div>
-        <strong class="price">Price: {{price || 'TBA'}}</strong>
+        <strong class="price">Price: {{ price || 'TBA' }}</strong>
       </div>
-      <el-button type="danger" @click="resetFunc" class="resetButton">RESET</el-button>
+      <el-button
+        type="danger"
+        class="resetButton"
+        @click="resetFunc"
+      >
+        RESET
+      </el-button>
       <el-divider />
       <div class="note">
         <strong>Note:</strong>
@@ -49,7 +93,10 @@
         <br>
         <br>
         4. UPS expedite shipping quote procedure link⬇.
-        <a target="_blank" href="https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3">https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3</a>
+        <a
+          target="_blank"
+          href="https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3"
+        >https://www.notion.so/vibeus/How-to-quote-expedite-shipping-via-UPS-a76cd9e386e24742b2ee430939ee0bd3</a>
       </div>
     </el-card>
     
@@ -60,21 +107,32 @@
         <strong>For Alaska, Hawaii, Puerto Rico: $375 per box:</strong>
         <el-row align="middle">
           Unit Number:
-          <el-input-number :min="0" v-model="prUPSNum"></el-input-number>
+          <el-input-number
+            v-model="prUPSNum"
+            :min="0"
+          />
         </el-row>
         
-        <strong class="price">Price: ${{prUPSNum * 375}}</strong>
+        <strong class="price">Price: ${{ prUPSNum * 375 }}</strong>
         <el-divider />
         <strong>For US other states (max 4 boxes): </strong>
         <el-row align="middle">
           55 Board Number($175/box):
-          <el-input-number :min="0" :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4" v-model="ups55BoardNum"></el-input-number>
+          <el-input-number
+            v-model="ups55BoardNum"
+            :min="0"
+            :max="ups55BoardNum + ups55StandNum >= 4 ? ups55BoardNum : 4"
+          />
         </el-row>
         <el-row align="middle">
           55 Stand Number($80/box):&nbsp;
-          <el-input-number :min="0" :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4" v-model="ups55StandNum"></el-input-number>
+          <el-input-number
+            v-model="ups55StandNum"
+            :min="0"
+            :max="ups55BoardNum + ups55StandNum >= 4 ? ups55StandNum : 4"
+          />
         </el-row>
-        <strong class="price">Price: ${{upsPrice}}</strong>
+        <strong class="price">Price: ${{ upsPrice }}</strong>
         <el-divider />
         <div class="note">
           <strong>Note:</strong>
@@ -86,7 +144,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { calCostFn } from '@/enums/easy-quote';
 /* Start 单独拎出来的数据 */
 const prUPSNum = ref(0);

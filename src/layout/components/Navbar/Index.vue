@@ -6,38 +6,55 @@
         class="hamburger-container"
         @toggleClick="toggleSideBar"
       />
-      <Breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+      <Breadcrumb
+        id="breadcrumb-container"
+        class="breadcrumb-container"
+      />
     </div>
 
     <div class="right-menu">
       <ScreenFull />
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="hover"
+      >
         <div class="avatar-wrapper">
-          <img :src="`${avatarUrl}?imageView2/1/w/80/h/80`" class="user-avatar">
+          <img
+            :src="`${avatarUrl}?imageView2/1/w/80/h/80`"
+            class="user-avatar"
+          >
         </div>
-        <template v-slot:dropdown>
+        <template #dropdown>
           <el-dropdown-menu>
             <router-link to="/">
               <el-dropdown-item>Dashboard</el-dropdown-item>
             </router-link>
-            <a target="_blank" href="https://github.com/vibeus/vibe-logistics-dashboard">
+            <a
+              target="_blank"
+              href="https://github.com/vibeus/vibe-logistics-dashboard"
+            >
               <el-dropdown-item>Github</el-dropdown-item>
             </a>
-            <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+            <a
+              target="_blank"
+              href="https://panjiachen.github.io/vue-element-admin-site/#/"
+            >
               <el-dropdown-item>Docs</el-dropdown-item>
             </a>
-            <el-dropdown-item divided @click="logout">
+            <el-dropdown-item
+              divided
+              @click="logout"
+            >
               <span style="display:block;">Log Out</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-
       </el-dropdown>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import Hamburger from './Hamburger.vue';
 import avatarUrl from '@img/common/avatar.gif';
 import { useUserStore, useAppStore } from '@/store';

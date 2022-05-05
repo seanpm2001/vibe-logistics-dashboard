@@ -1,17 +1,39 @@
 <template>
   <div class="page">
-    <el-row justify="space-between" class="filter-container">
+    <el-row
+      justify="space-between"
+      class="filter-container"
+    >
       <el-row>
-        <el-input v-model="listQuery.search" placeholder="Search" style="width: 200px;" @keyup.enter="handleFilter" />
-        <el-button v-wave type="primary" :icon="Search" @click="handleFilter">
+        <el-input
+          v-model="listQuery.search"
+          placeholder="Search"
+          style="width: 200px;"
+          @keyup.enter="handleFilter"
+        />
+        <el-button
+          v-wave
+          type="primary"
+          :icon="Search"
+          @click="handleFilter"
+        >
           Search
         </el-button>
-        <el-button v-wave :loading="downloadLoading" type="primary" :icon="Download" @click="handleDownload">
+        <el-button
+          v-wave
+          :loading="downloadLoading"
+          type="primary"
+          :icon="Download"
+          @click="handleDownload"
+        >
           Export
         </el-button>
       </el-row>
 
-      <el-button type="primary" @click="addWarehouseMoveTask">
+      <el-button
+        type="primary"
+        @click="addWarehouseMoveTask"
+      >
         Add a warehouse move task
       </el-button>
     </el-row>
@@ -25,161 +47,294 @@
       highlight-current-row
       @sort-change="sortChange"
     >
-      <el-table-column label="Warehouse" width="150px" align="center">
-        <template v-slot="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.search }}</span>
+      <el-table-column
+        label="Warehouse"
+        width="150px"
+        align="center"
+      >
+        <template #default="{row}">
+          <span
+            class="link-type"
+            @click="handleUpdate(row)"
+          >{{ row.search }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="In Stock" width="200px">
-        <template v-slot="{row}">
+      <el-table-column
+        class-name="product-column"
+        label="In Stock"
+        width="200px"
+      >
+        <template #default="{row}">
           <div v-if="row.in_stock.board55_v1">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>55″ Board: <span class="count">{{ row.in_stock.board55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stand_white55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-current" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-current"
+            />
             <span>55″ White Stand: <span class="count">{{ row.in_stock.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stand_red55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-red" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-red"
+            />
             <span>55″ Red Stand: <span class="count">{{ row.in_stock.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.in_stock.stylus55_x2">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Stylus ×2: <span class="count">{{ row.in_stock.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.in_stock.stylus55_active">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Active Stylus: <span class="count">{{ row.in_stock.stylus55_active }}</span></span>
           </div>
           <div v-if="row.in_stock.board75_pro">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>75″ Board: <span class="count">{{ row.in_stock.board75_pro }}</span></span>
           </div>
           <div v-if="row.in_stock.stand75_pro">
-            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-grey"
+            />
             <span>75″ Grey Stand: <span class="count">{{ row.in_stock.stand75_pro }}</span></span>
           </div>
           <div v-if="row.in_stock.ops75_pro">
-            <svg-icon icon-name="product-ops-75" class="product-icon" />
+            <svg-icon
+              icon-name="product-ops-75"
+              class="product-icon"
+            />
             <span>75″ OPS: <span class="count">{{ row.in_stock.ops75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Avaliable" width="200px">
-        <template v-slot="{row}">
+      <el-table-column
+        class-name="product-column"
+        label="Avaliable"
+        width="200px"
+      >
+        <template #default="{row}">
           <div v-if="row.available.board55_v1">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>55″ Board: <span class="count">{{ row.available.board55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stand_white55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-current" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-current"
+            />
             <span>55″ White Stand: <span class="count">{{ row.available.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stand_red55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-red" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-red"
+            />
             <span>55″ Red Stand: <span class="count">{{ row.available.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.available.stylus55_x2">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Stylus ×2: <span class="count">{{ row.available.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.available.stylus55_active">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Active Stylus: <span class="count">{{ row.available.stylus55_active }}</span></span>
           </div>
           <div v-if="row.available.board75_pro">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>75″ Board: <span class="count">{{ row.available.board75_pro }}</span></span>
           </div>
           <div v-if="row.available.stand75_pro">
-            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-grey"
+            />
             <span>75″ Grey Stand: <span class="count">{{ row.available.stand75_pro }}</span></span>
           </div>
           <div v-if="row.available.ops75_pro">
-            <svg-icon icon-name="product-ops-75" class="product-icon" />
+            <svg-icon
+              icon-name="product-ops-75"
+              class="product-icon"
+            />
             <span>75″ OPS: <span class="count">{{ row.available.ops75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Pending In" width="200px">
-        <template v-slot="{row}">
+      <el-table-column
+        class-name="product-column"
+        label="Pending In"
+        width="200px"
+      >
+        <template #default="{row}">
           <div v-if="row.pending_in.board55_v1">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>55″ Board: <span class="count">{{ row.pending_in.board55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stand_white55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-current" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-current"
+            />
             <span>55″ White Stand: <span class="count">{{ row.pending_in.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stand_red55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-red" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-red"
+            />
             <span>55″ Red Stand: <span class="count">{{ row.pending_in.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_in.stylus55_x2">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Stylus ×2: <span class="count">{{ row.pending_in.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.pending_in.stylus55_active">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Active Stylus: <span class="count">{{ row.pending_in.stylus55_active }}</span></span>
           </div>
           <div v-if="row.pending_in.board75_pro">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>75″ Board: <span class="count">{{ row.pending_in.board75_pro }}</span></span>
           </div>
           <div v-if="row.pending_in.stand75_pro">
-            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-grey"
+            />
             <span>75″ Grey Stand: <span class="count">{{ row.pending_in.stand75_pro }}</span></span>
           </div>
           <div v-if="row.pending_in.ops75_pro">
-            <svg-icon icon-name="product-ops-75" class="product-icon" />
+            <svg-icon
+              icon-name="product-ops-75"
+              class="product-icon"
+            />
             <span>75″ OPS: <span class="count">{{ row.pending_in.ops75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Pending Out" width="200px">
-        <template v-slot="{row}">
+      <el-table-column
+        class-name="product-column"
+        label="Pending Out"
+        width="200px"
+      >
+        <template #default="{row}">
           <div v-if="row.pending_out.board55_v1">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>55″ Board: <span class="count">{{ row.pending_out.board55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stand_white55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-current" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-current"
+            />
             <span>55″ White Stand: <span class="count">{{ row.pending_out.stand_white55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stand_red55_v1">
-            <svg-icon icon-name="product-stand" class="product-icon is-red" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-red"
+            />
             <span>55″ Red Stand: <span class="count">{{ row.pending_out.stand_red55_v1 }}</span></span>
           </div>
           <div v-if="row.pending_out.stylus55_x2">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Stylus ×2: <span class="count">{{ row.pending_out.stylus55_x2 }}</span></span>
           </div>
           <div v-if="row.pending_out.stylus55_active">
-            <svg-icon icon-name="product-stylus" class="product-icon" />
+            <svg-icon
+              icon-name="product-stylus"
+              class="product-icon"
+            />
             <span>55″ Active Stylus: <span class="count">{{ row.pending_out.stylus55_active }}</span></span>
           </div>
           <div v-if="row.pending_out.board75_pro">
-            <svg-icon icon-name="product-board" class="product-icon" />
+            <svg-icon
+              icon-name="product-board"
+              class="product-icon"
+            />
             <span>75″ Board: <span class="count">{{ row.pending_out.board75_pro }}</span></span>
           </div>
           <div v-if="row.pending_out.stand75_pro">
-            <svg-icon icon-name="product-stand" class="product-icon is-grey" />
+            <svg-icon
+              icon-name="product-stand"
+              class="product-icon is-grey"
+            />
             <span>75″ Grey Stand: <span class="count">{{ row.pending_out.stand75_pro }}</span></span>
           </div>
           <div v-if="row.pending_out.ops75_pro">
-            <svg-icon icon-name="product-ops-75" class="product-icon" />
+            <svg-icon
+              icon-name="product-ops-75"
+              class="product-icon"
+            />
             <span>75″ OPS: <span class="count">{{ row.pending_out.ops75_pro }}</span></span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
-        <template v-slot="{row,$index}">
-          <el-button type="primary" size="small" @click="handleUpdate(row)">
+      <el-table-column
+        label="Actions"
+        align="center"
+        width="300px"
+        class-name="small-padding fixed-width"
+      >
+        <template #default="{row,$index}">
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleUpdate(row)"
+          >
             Edit
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="small" type="danger" @click="handleDelete(row, $index)">
+          <el-button
+            v-if="row.status!='deleted'"
+            size="small"
+            type="danger"
+            @click="handleDelete(row, $index)"
+          >
             Delete
           </el-button>
         </template>
@@ -193,14 +348,14 @@
     />
 
     <TaskDialog
-      :emptyTaskItem="emptyTaskItem"
-      :warehouseEnum="warehouseEnum"
-      :dialogStatus="dialogStatus"
+      :empty-task-item="emptyTaskItem"
+      :warehouse-enum="warehouseEnum"
+      :dialog-status="dialogStatus"
     />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { parseTime } from '@/utils/format';

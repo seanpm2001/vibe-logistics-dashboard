@@ -1,37 +1,80 @@
 <template>
-  <template v-for="(task, taskIdx) in dataList" :key="task.id">
+  <template
+    v-for="(task, taskIdx) in dataList"
+    :key="task.id"
+  >
     <el-card>
-      <el-descriptions :column="4" direction="vertical" border>
-        <el-descriptions-item width="300px" label="Create Date">{{ formatDate(task.createdAt) }}</el-descriptions-item>
+      <el-descriptions
+        :column="4"
+        direction="vertical"
+        border
+      >
+        <el-descriptions-item
+          width="300px"
+          label="Create Date"
+        >
+          {{ formatDate(task.createdAt) }}
+        </el-descriptions-item>
         <el-descriptions-item label="Order ID">
           {{ orderEnum[task.orderId]?.id }}
-          <template v-for="order in orderEnum[task.orderId]?.rawOrders" :key="order.id">
-            <el-tag size="small">{{order?.id}}</el-tag>
+          <template
+            v-for="order in orderEnum[task.orderId]?.rawOrders"
+            :key="order.id"
+          >
+            <el-tag size="small">
+              {{ order?.id }}
+            </el-tag>
           </template>
         </el-descriptions-item>
-        <el-descriptions-item label="Task ID">{{ task.id }}</el-descriptions-item>
-        <el-descriptions-item label="TaskType">{{ task.taskType }}</el-descriptions-item>
-        <el-descriptions-item label="Carrier">{{ carrierEnum[task.carrier] }}</el-descriptions-item>
+        <el-descriptions-item label="Task ID">
+          {{ task.id }}
+        </el-descriptions-item>
+        <el-descriptions-item label="TaskType">
+          {{ task.taskType }}
+        </el-descriptions-item>
+        <el-descriptions-item label="Carrier">
+          {{ carrierEnum[task.carrier] }}
+        </el-descriptions-item>
         <el-descriptions-item label="Shipment Info">
-          <OrderShipmentInfo :orderItem="orderEnum[task.orderId]" />
+          <OrderShipmentInfo :order-item="orderEnum[task.orderId]" />
         </el-descriptions-item>
       </el-descriptions>
       <div class="package-operation">
         <el-row>
-          <div class="meta-data label w-380">Meta Data</div>
-          <div class="serial-label label">serials(by shipping package)</div>
-          <div class="label w-200">Tracking Number</div>
-          <div class="label w-200">Operation</div>
+          <div class="meta-data label w-380">
+            Meta Data
+          </div>
+          <div class="serial-label label">
+            serials(by shipping package)
+          </div>
+          <div class="label w-200">
+            Tracking Number
+          </div>
+          <div class="label w-200">
+            Operation
+          </div>
         </el-row>
         <div class="f-row">
           <div class="meta-data cell w-380">
-            <template v-for="(product, idx) in task.products" :key="product.sku">
+            <template
+              v-for="(product, idx) in task.products"
+              :key="product.sku"
+            >
               product name:
-              <el-tag size="small">{{ codeNameEnum[product.productCode] || product.productCode }}</el-tag>
-              <el-row style="margin-left: 16px" align="middle">
-                sku: <el-tag size="small">{{ product.sku }}</el-tag>
+              <el-tag size="small">
+                {{ codeNameEnum[product.productCode] || product.productCode }}
+              </el-tag>
+              <el-row
+                style="margin-left: 16px"
+                align="middle"
+              >
+                sku: <el-tag size="small">
+                  {{ product.sku }}
+                </el-tag>
                 <el-divider direction="vertical" />
-                req: <el-tag size="small">{{ product.quantity }} </el-tag>
+                req: <el-tag size="small">
+                  {{ product.quantity }}
+                </el-tag>
                 <el-divider direction="vertical" />
                 ful: 
                 <el-tag
@@ -48,12 +91,23 @@
                 >
                   {{ calTaskFulQty('code', task.packages)[product.productCode] || 0 }}
                 </el-tag>
-                <el-divider v-if="product.serialNote?.length" direction="vertical" />
-                <el-tooltip v-if="product.serialNote?.length" effect="light">
-                  <el-button size="small">Specify Serial:</el-button>
+                <el-divider
+                  v-if="product.serialNote?.length"
+                  direction="vertical"
+                />
+                <el-tooltip
+                  v-if="product.serialNote?.length"
+                  effect="light"
+                >
+                  <el-button size="small">
+                    Specify Serial:
+                  </el-button>
                   <template #content>
                     <el-tag size="small">
-                      <template v-for="serial in product.serialNote" :key="serial">
+                      <template
+                        v-for="serial in product.serialNote"
+                        :key="serial"
+                      >
                         {{ serial }};
                       </template>
                     </el-tag>
@@ -63,11 +117,20 @@
               <el-divider v-if="idx !== (task.products.length - 1)" />
             </template>
           </div>
-          <div ref="taskPackageArr" class="f-col">
-            <template v-for="(item, packageIdx) in task.packages" :key="item.id">
+          <div
+            ref="taskPackageArr"
+            class="f-col"
+          >
+            <template
+              v-for="(item, packageIdx) in task.packages"
+              :key="item.id"
+            >
               <el-row class="package-row">
                 <div class="serial-cell cell">
-                  <template v-for="(unit, index) in item.units" :key="unit.serial">
+                  <template
+                    v-for="(unit, index) in item.units"
+                    :key="unit.serial"
+                  >
                     <div class="f-row col-center">
                       <svg-icon
                         class="icon mgr-5"
@@ -89,56 +152,78 @@
                         @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                       >
                         <el-option
-                          v-for="unit in unitList"
-                          :key="unit.serial"
-                          :label="unit.serial"
-                          :value="unit.serial"
+                          v-for="unitOpt in unitList"
+                          :key="unitOpt.serial"
+                          :label="unitOpt.serial"
+                          :value="unitOpt.serial"
                         />
                       </el-select>
                     </div>
                   </template>
                 </div>
                 <div :class="'cell w-200' + (item.trackingNumber ? '' : ' error-border-tip')">
-                  <el-input v-model="item.trackingNumber" placeholder="Tracking Number" />
+                  <el-input
+                    v-model="item.trackingNumber"
+                    placeholder="Tracking Number"
+                  />
                 </div>
                 <div class="cell w-200">
                   <el-button
-                    v-if="item.id" class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                    v-if="item.id"
+                    class="mgr-5"
+                    type="primary"
                     :disabled="diableUpdatePackage(item, packageIdx, taskIdx)"
+                    @click="handleSubmitPackage(item, task)"
                   >
                     Update
                   </el-button>
                   <el-button
-                    v-else :disabled="!item.trackingNumber"
-                    class="mgr-5" type="primary" @click="handleSubmitPackage(item, task)"
+                    v-else
+                    :disabled="!item.trackingNumber"
+                    class="mgr-5"
+                    type="primary"
+                    @click="handleSubmitPackage(item, task)"
                   >
                     Submit
                   </el-button>
                   <el-popconfirm
-                      v-if="item?.id"
-                      @confirm="handleDeletePackage(item?.id)"
-                      confirm-button-text="OK"
-                      cancel-button-text="No, Thanks"
-                      icon-color="red"
-                      title="Are you sure to delete this?"
-                    >
-                      <template #reference>
-                        <el-button type="danger">Delete</el-button>
-                      </template>
+                    v-if="item?.id"
+                    confirm-button-text="OK"
+                    cancel-button-text="No, Thanks"
+                    icon-color="red"
+                    title="Are you sure to delete this?"
+                    @confirm="handleDeletePackage(item?.id)"
+                  >
+                    <template #reference>
+                      <el-button type="danger">
+                        Delete
+                      </el-button>
+                    </template>
                   </el-popconfirm>
-                  <el-button v-else type="danger" @click="onPackagesChange(null, task.packages, 'remove', packageIdx)">Remove</el-button>
+                  <el-button
+                    v-else
+                    type="danger"
+                    @click="onPackagesChange(null, task.packages, 'remove', packageIdx)"
+                  >
+                    Remove
+                  </el-button>
                 </div>
               </el-row>
             </template>
           </div>
         </div>
-        <el-button :disabled="disableNewPackage(task.packages)" @click="onPackagesChange(task, task.packages, 'add')">Add Package</el-button>
+        <el-button
+          :disabled="disableNewPackage(task.packages)"
+          @click="onPackagesChange(task, task.packages, 'add')"
+        >
+          Add Package
+        </el-button>
       </div>
     </el-card>
   </template>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import OrderShipmentInfo from '../components/OrderShipmentInfo.vue';
 import { ElMessage } from 'element-plus';
 import { debounce } from '@/utils';

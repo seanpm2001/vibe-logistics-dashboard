@@ -1,11 +1,14 @@
 <template>
-  <div id="sky" class="sky-container">
-    <canvas class="canvas dust-canvas"></canvas>
-    <canvas class="canvas star-canvas"></canvas>
+  <div
+    id="sky"
+    class="sky-container"
+  >
+    <canvas class="canvas dust-canvas" />
+    <canvas class="canvas star-canvas" />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 
 /* Begin draw */

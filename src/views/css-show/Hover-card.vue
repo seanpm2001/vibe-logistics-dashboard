@@ -58,24 +58,24 @@
       </div>
     </div>
     <div class="card2">
-        <div class="circle">
-          <h2>06</h2>
-        </div>
-        <div class="imgBox">
-          <img :src="buddha1">
-          <img :src="buddha2">
-        </div>
-        <div class="content">
-          <p>
-            With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.
-          </p>
-          <a href="/#/hover-card">Learn More</a>
-        </div>
+      <div class="circle">
+        <h2>06</h2>
       </div>
+      <div class="imgBox">
+        <img :src="buddha1">
+        <img :src="buddha2">
+      </div>
+      <div class="content">
+        <p>
+          With Vibe’s interactive smart boards and collaboration software, teams can innovate, ideate, and collaborate in real-time from anywhere in the world.
+        </p>
+        <a href="/#/hover-card">Learn More</a>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 import buddha1 from '@img/css-show/buddha1.jpeg';
 import buddha2 from '@img/css-show/buddha2.jpeg';

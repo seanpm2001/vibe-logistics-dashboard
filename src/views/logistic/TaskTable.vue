@@ -2,8 +2,8 @@
   <div class="page">
     <div class="filter-container">
       <el-select
-        placeholder="Task type"
         v-model="showTaskPattern"
+        placeholder="Task type"
         style="width: 155px"
         @change="handleFilter"
       >
@@ -35,55 +35,98 @@
       height="68vh"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50" height="40" align="center" />
-      <el-table-column label="ID" width="120px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        type="selection"
+        width="50"
+        height="40"
+        align="center"
+      />
+      <el-table-column
+        label="ID"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
-            #<span class="link-type" @click="handleDetailRow(row, 'view')">{{
+            #<span
+              class="link-type"
+              @click="handleDetailRow(row, 'view')"
+            >{{
               row.id
             }}</span>
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Order ID" width="120px" align="center">
-        <template v-slot="{ row }">
-          <el-tag
-            >#<span class="link-type">{{ row.orderId }}</span></el-tag
-          >
+      <el-table-column
+        label="Order ID"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <el-tag>
+            #<span class="link-type">{{ row.orderId }}</span>
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Source" width="110px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Source"
+        width="110px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ warehouseEnum[row.sourceId] }}
         </template>
       </el-table-column>
-      <el-table-column label="Target" width="110px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Target"
+        width="110px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ warehouseEnum[row.targetId] }}
         </template>
       </el-table-column>
-      <el-table-column label="Task Type" width="110px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Task Type"
+        width="110px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
             {{ taskTypeEnum[row.taskType] }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Last Modified" width="160px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Last Modified"
+        width="160px"
+        align="center"
+      >
+        <template #default="{ row }">
           {{ row.lastModified }}
         </template>
       </el-table-column>
-      <el-table-column label="Task Units Status" width="260px" align="center">
-        <template v-slot="{ row }">
+      <el-table-column
+        label="Task Units Status"
+        width="260px"
+        align="center"
+      >
+        <template #default="{ row }">
           <el-tag>
             {{ calTaskStatus(row.taskType, row.packages) }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column class-name="product-column" label="Content" width="240px">
-        <template v-slot="{ row }">
-          <template v-for="product in row.products" :key="product.sku">
+      <el-table-column
+        class-name="product-column"
+        label="Content"
+        width="240px"
+      >
+        <template #default="{ row }">
+          <template
+            v-for="product in row.products"
+            :key="product.sku"
+          >
             <div>
               <svg-icon
                 :icon-name="
@@ -92,7 +135,10 @@
               />
               <span class="mgl-5">
                 {{ codeNameEnum[product.productCode] || product.productCode }}:
-                <el-tag class="mgl-5" size="small">{{ product.quantity }}</el-tag>
+                <el-tag
+                  class="mgl-5"
+                  size="small"
+                >{{ product.quantity }}</el-tag>
               </span>
             </div>
           </template>
@@ -105,7 +151,7 @@
         min-width="300px"
         class-name="small-padding fixed-width"
       >
-        <template v-slot="{ row }">
+        <template #default="{ row }">
           <el-button
             v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
             type="primary"
@@ -114,20 +160,24 @@
           >
             Edit
           </el-button>
-          <el-button type="success" size="small" @click="handleDetailRow(row, 'view')">
+          <el-button
+            type="success"
+            size="small"
+            @click="handleDetailRow(row, 'view')"
+          >
             View Detail
           </el-button>
           <el-popconfirm
-            @confirm="handleDetailRow(row, 'remove')"
             confirm-button-text="OK"
             cancel-button-text="No, Thanks"
             icon-color="red"
             title="Are you sure to delete this?"
+            @confirm="handleDetailRow(row, 'remove')"
           >
             <template #reference>
               <el-button
-                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
                 v-if="row.status != 'deleted'"
+                v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
                 size="small"
                 type="danger"
               >
@@ -139,17 +189,21 @@
       </el-table-column>
     </el-table>
 
-    <Pagination v-show="total > 0" :total="total" @fetchList="fetchList" />
+    <Pagination
+      v-show="total > 0"
+      :total="total"
+      @fetchList="fetchList"
+    />
 
     <TaskDialog
-      :emptyTaskItem="emptyTaskItem"
-      :warehouseEnum="warehouseEnum"
-      :dialogStatus="dialogStatus"
+      :empty-task-item="emptyTaskItem"
+      :warehouse-enum="warehouseEnum"
+      :dialog-status="dialogStatus"
     />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Delete } from '@element-plus/icons-vue';
 import TaskDialog from './components/taskDialog/Index.vue';

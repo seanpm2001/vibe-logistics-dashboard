@@ -1,5 +1,8 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
+  <div
+    id="tags-view-container"
+    class="tags-view-container"
+  >
     <div class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
@@ -20,16 +23,31 @@
         />
       </router-link>
     </div>
-    <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
-      <li @click="closeOthersTags">Close Others</li>
-      <li @click="closeAllTags(selectedTag)">Close All</li>
+    <ul
+      v-show="visible"
+      :style="{ left: left + 'px', top: top + 'px' }"
+      class="contextmenu"
+    >
+      <li @click="refreshSelectedTag(selectedTag)">
+        Refresh
+      </li>
+      <li
+        v-if="!isAffix(selectedTag)"
+        @click="closeSelectedTag(selectedTag)"
+      >
+        Close
+      </li>
+      <li @click="closeOthersTags">
+        Close Others
+      </li>
+      <li @click="closeAllTags(selectedTag)">
+        Close All
+      </li>
     </ul>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { resolve } from 'path';
 import { useAppStore, useTagsViewStore, usePermissionStore } from '@/store';
 

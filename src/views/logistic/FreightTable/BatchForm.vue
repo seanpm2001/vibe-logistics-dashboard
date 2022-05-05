@@ -1,33 +1,61 @@
 <template>
   <div>
-    <el-row justify="space-between" class="header">
+    <el-row
+      justify="space-between"
+      class="header"
+    >
       <span>
-        Sub-Batch <span v-if="batch?.id">{{batch?.id}} [Database]</span>:
+        Sub-Batch <span v-if="batch?.id">{{ batch?.id }} [Database]</span>:
       </span> 
-      <svg-icon class="icon close-icon" icon-name="close" @click="handleDeleteBatch"></svg-icon>
+      <svg-icon
+        class="icon close-icon"
+        icon-name="close"
+        @click="handleDeleteBatch"
+      />
     </el-row>
     <el-row justify="space-between">
       <el-form-item label="Source">
-        <el-select :disabled="isDialogPattern('view')" v-model="batch.sourceId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseEnum" :key="item" :label="item" :value="Number(key)" />
+        <el-select
+          v-model="batch.sourceId"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in warehouseEnum"
+            :key="item"
+            :label="item"
+            :value="Number(key)"
+          />
         </el-select>
       </el-form-item>
       <el-row>
         Total Purchase Cost:
-        <el-input v-if="batch.id" style="width: 80px; margin-left: 1rem;" disabled v-model="totalCost" placeholder=""/>
-        <el-input v-else style="width: 80px; margin-left: 1rem;" disabled v-model="totalCostNew" placeholder=""/>
+        <el-input
+          v-if="batch.id"
+          v-model="totalCost"
+          style="width: 80px; margin-left: 1rem;"
+          disabled
+          placeholder=""
+        />
+        <el-input
+          v-else
+          v-model="totalCostNew"
+          style="width: 80px; margin-left: 1rem;"
+          disabled
+          placeholder=""
+        />
       </el-row>
     </el-row>
     <div class="form-upload-row">
       <el-row :gutter="40">
         <el-col :span="11">
           <el-upload
+            v-if="isDialogPattern('edit')"
             action=""
             class="upload-serial"
             accept=".xlsx, .xls"
             drag
             multiple
-            v-if="isDialogPattern('edit')"
             :auto-upload="false"
             :on-preview="handlePreview"
             :on-change="handleUpdate"
@@ -36,50 +64,98 @@
             :on-exceed="handleExceed"
             :file-list="xmlFileList"
           >
-            <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
+            <el-icon class="el-icon--upload">
+              <UploadFilled />
+            </el-icon>
             <div class="el-upload__text">
               Drag xls/xlsx files here or <em>click to upload</em>
             </div>
           </el-upload>
           <el-row style="margin: .75rem 0 0 -1rem">
-            <el-button v-if="!batch?.id && isDialogPattern('edit')" type="primary" @click="handleBatch('create')">
+            <el-button
+              v-if="!batch?.id && isDialogPattern('edit')"
+              type="primary"
+              @click="handleBatch('create')"
+            >
               Submit Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id && isDialogPattern('edit')" type="primary" @click="handleBatch('update')">
+            <el-button
+              v-if="batch?.id && isDialogPattern('edit')"
+              type="primary"
+              @click="handleBatch('update')"
+            >
               Update Sub-Batch
             </el-button>
-            <el-button v-if="batch?.id" type="success" @click="dialogExcelVisible=true">
+            <el-button
+              v-if="batch?.id"
+              type="success"
+              @click="dialogExcelVisible=true"
+            >
               Show Serial Excel
             </el-button>
           </el-row>
         </el-col>
         <el-col :span="11">
-          <div class="freight-product-box" v-for="(item, key) in products" :key="key">
+          <div
+            v-for="(item, key) in products"
+            :key="key"
+            class="freight-product-box"
+          >
             <el-divider />
             <el-form-item :label="'SKU'">
-              <el-input disabled v-model="item.sku" placeholder="SKU"/>
+              <el-input
+                v-model="item.sku"
+                disabled
+                placeholder="SKU"
+              />
             </el-form-item>
             <el-form-item label="Quantity Count:">
-              <el-input disabled v-model="item.quantityCount" placeholder="Quantity Count"/>
+              <el-input
+                v-model="item.quantityCount"
+                disabled
+                placeholder="Quantity Count"
+              />
             </el-form-item>
             <el-form-item label="Purchase Cost">
-              <el-input v-model="item.cost" placeholder="Purchase Cost"/>
+              <el-input
+                v-model="item.cost"
+                placeholder="Purchase Cost"
+              />
             </el-form-item>
           </div>
         </el-col>
       </el-row>
     </div>
-    <el-dialog title="Excel Preview" v-model="dialogExcelVisible" :before-close="closePreviewDialog">
-      <el-table :data="previewExcelArr" border fit highlight-current-row style="width: 80%; margin: 0 auto;">
-        <el-table-column type="index" width="100" />
-        <el-table-column prop="sku" label="SKU" />
-        <el-table-column prop="serial" label="Serial Number" />
+    <el-dialog
+      v-model="dialogExcelVisible"
+      title="Excel Preview"
+      :before-close="closePreviewDialog"
+    >
+      <el-table
+        :data="previewExcelArr"
+        border
+        fit
+        highlight-current-row
+        style="width: 80%; margin: 0 auto;"
+      >
+        <el-table-column
+          type="index"
+          width="100"
+        />
+        <el-table-column
+          prop="sku"
+          label="SKU"
+        />
+        <el-table-column
+          prop="serial"
+          label="Serial Number"
+        />
       </el-table>
     </el-dialog>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';
@@ -214,7 +290,7 @@ const handleBatch = (type) => {
   } else {
     updateBatchAPI(batch.value.id, batch.value).then(data => {
       batch.value = data;
-      emit('updateBatch', data, props.batchIdx);
+      emit('editBatch', data, props.batchIdx);
     });
     emit('editBatch', batch.value?.id);
   }

@@ -1,26 +1,39 @@
 <template>
   <div>
-    <el-row class="header" justify="space-between" :gutter="3">
+    <el-row
+      class="header"
+      justify="space-between"
+      :gutter="3"
+    >
       <span> Package <span v-if="taskPackage?.id"> [Database]</span>: </span>
       <svg-icon
         v-if="!notPackagePermission"
         class="icon close-icon"
         icon-name="close"
         @click="handleDeletePackage"
-      ></svg-icon>
+      />
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item label="*Tracking Number">
         <el-input
-          :disabled="notPackagePermission"
           v-model="taskPackage.trackingNumber"
+          :disabled="notPackagePermission"
           placeholder="Tracking Number"
         />
       </el-form-item>
     </el-row>
 
-    <template v-for="(item, index) in taskPackage.units" :key="index">
-      <el-row align="middle" class="add-minus-row">
+    <template
+      v-for="(item, index) in taskPackage.units"
+      :key="index"
+    >
+      <el-row
+        align="middle"
+        class="add-minus-row"
+      >
         <svg-icon
           class="icon"
           :style="taskPackage.units.length >= quantityNum ? 'visibility: hidden;' : ''"
@@ -55,18 +68,21 @@
       </el-row>
     </template>
 
-    <div class="f-row controls" v-if="!notPackagePermission">
+    <div
+      v-if="!notPackagePermission"
+      class="f-row controls"
+    >
       <el-button
-        :disabled="!taskId"
         v-if="taskPackage?.id"
+        :disabled="!taskId"
         type="primary"
         @click="handlePackage('update')"
       >
         Update Package
       </el-button>
       <el-button
-        :disabled="!taskId"
         v-else
+        :disabled="!taskId"
         type="primary"
         @click="handlePackage('create')"
       >
@@ -78,13 +94,16 @@
         content="You need to have/submit a 'Shipment' part before 'Submit Package'"
         placement="right"
       >
-        <svg-icon class="mgl-5" icon-name="tips" />123
+        <svg-icon
+          class="mgl-5"
+          icon-name="tips"
+        />123
       </el-tooltip>
     </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { debounce } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
@@ -194,7 +213,7 @@ const handlePackage = (type) => {
   } else {
     updatePackageAPI(taskPackage.value.id, taskPackage.value).then((data) => {
       taskPackage.value = data;
-      emit('updatePackage', data, props.packageIdx);
+      emit('editPackage', data, props.packageIdx);
     });
     emit('editPackage', taskPackage.value?.id);
   }

@@ -12,13 +12,19 @@
       </div>
     </div>
     <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-      </el-col>
+      <el-col
+        :xs="{span: 24}"
+        :sm="{span: 12}"
+        :md="{span: 12}"
+        :lg="{span: 6}"
+        :xl="{span: 6}"
+        style="margin-bottom:30px;"
+      />
     </el-row>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import PanThumb from '@/components/PanThumb.vue';
 import GithubCorner from '@/components/GithubCorner.vue';
 import { useUserStore } from '@/store';

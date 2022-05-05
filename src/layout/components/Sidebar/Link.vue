@@ -1,10 +1,13 @@
 <template>
-  <component :is="type" v-bind="linkProps(to)">
+  <component
+    :is="type"
+    v-bind="linkProps(to)"
+  >
     <slot />
   </component>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { isExternal } from '@/utils';
 const props = defineProps({
   to: {

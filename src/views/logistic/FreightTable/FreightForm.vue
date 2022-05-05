@@ -5,112 +5,307 @@
     label-position="left"
     label-width="180px"
   >
-    <el-row justify="space-between" :gutter="3">
-      <el-form-item label="*Destination Warehouse" prop="targetId">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.targetId" placeholder="Please select">
-          <el-option v-for="(item, key) in warehouseEnum" :key="key" :label="item" :value="Number(key)" />
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
+      <el-form-item
+        label="*Destination Warehouse"
+        prop="targetId"
+      >
+        <el-select
+          v-model="freightItem.targetId"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in warehouseEnum"
+            :key="key"
+            :label="item"
+            :value="Number(key)"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="*Batch number" prop="number">
-        <el-input :disabled="isDialogPattern('view')" v-model="freightItem.number" />
+      <el-form-item
+        label="*Batch number"
+        prop="number"
+      >
+        <el-input
+          v-model="freightItem.number"
+          :disabled="isDialogPattern('view')"
+        />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
-      <el-form-item label="Status" prop="status">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.status" placeholder="Please select">
-          <el-option v-for="(item, key) in freightStatusEnum" :key="item" :label="item" :value="key" />
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
+      <el-form-item
+        label="Status"
+        prop="status"
+      >
+        <el-select
+          v-model="freightItem.status"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in freightStatusEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="Ocean Freight Cost" prop="cost">
-        <el-input :disabled="isDialogPattern('view')" v-model="freightItem.cost" />
+      <el-form-item
+        label="Ocean Freight Cost"
+        prop="cost"
+      >
+        <el-input
+          v-model="freightItem.cost"
+          :disabled="isDialogPattern('view')"
+        />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
-      <el-form-item label="Mode" prop="mode">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.mode" placeholder="Please select">
-          <el-option v-for="(item, key) in modeEnum" :key="item" :label="item" :value="key" />
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
+      <el-form-item
+        label="Mode"
+        prop="mode"
+      >
+        <el-select
+          v-model="freightItem.mode"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in modeEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="Ocean Forwarder" prop="oceanForwarder">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.oceanForwarder" placeholder="Please select">
-          <el-option v-for="(item, key) in forwarderEnum" :key="item" :label="item" :value="key" />
+      <el-form-item
+        label="Ocean Forwarder"
+        prop="oceanForwarder"
+      >
+        <el-select
+          v-model="freightItem.oceanForwarder"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in forwarderEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
-      <el-form-item label="Origin Port" prop="oriPort">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.oriPort" placeholder="Please select">
-          <el-option v-for="(item, key) in oriPortEnum" :key="item" :label="item" :value="key" />
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
+      <el-form-item
+        label="Origin Port"
+        prop="oriPort"
+      >
+        <el-select
+          v-model="freightItem.oriPort"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in oriPortEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="Destination Port" prop="destPort">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.destPort" placeholder="Please select">
-          <el-option v-for="(item, key) in destPortEnum" :key="item" :label="item" :value="key" />
+      <el-form-item
+        label="Destination Port"
+        prop="destPort"
+      >
+        <el-select
+          v-model="freightItem.destPort"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in destPortEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
-      <el-form-item label="Container Type" prop="container">
-        <el-select :disabled="isDialogPattern('view')" v-model="freightItem.container" placeholder="Please select">
-          <el-option v-for="(item, key) in containerEnum" :key="item" :label="item" :value="key" />
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
+      <el-form-item
+        label="Container Type"
+        prop="container"
+      >
+        <el-select
+          v-model="freightItem.container"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(item, key) in containerEnum"
+            :key="item"
+            :label="item"
+            :value="key"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="Pick Up" prop="pickup">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.pickup" type="date" placeholder="Please pick a date" />
-      </el-form-item>
-    </el-row>
-    <el-row justify="space-between" >
-      <el-form-item label="ETD Origin Port" prop="etdOp">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etdOp" type="date" placeholder="Please pick a date" />
-      </el-form-item>
-      <el-form-item label="ATD Origin Port" prop="atdOp">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.atdOp" type="date" placeholder="Please pick a date" />
+      <el-form-item
+        label="Pick Up"
+        prop="pickup"
+      >
+        <el-date-picker
+          v-model="freightItem.pickup"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
       </el-form-item>
     </el-row>
     <el-row justify="space-between">
-      <el-form-item label="ETA Destination Port" prop="etaDp">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etaDp" type="date" placeholder="Please pick a date" />
+      <el-form-item
+        label="ETD Origin Port"
+        prop="etdOp"
+      >
+        <el-date-picker
+          v-model="freightItem.etdOp"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
       </el-form-item>
-      <el-form-item label="ATA Destination Port" prop="ataDp">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.ataDp" type="date" placeholder="Please pick a date" />
+      <el-form-item
+        label="ATD Origin Port"
+        prop="atdOp"
+      >
+        <el-date-picker
+          v-model="freightItem.atdOp"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
       </el-form-item>
     </el-row>
     <el-row justify="space-between">
-      <el-form-item label="ETA Warehouse" prop="etaWh">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.etaWh" type="date" placeholder="Please pick a date" />
+      <el-form-item
+        label="ETA Destination Port"
+        prop="etaDp"
+      >
+        <el-date-picker
+          v-model="freightItem.etaDp"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
       </el-form-item>
-      <el-form-item label="ATA Warehouse" prop="ataWh">
-        <el-date-picker :disabled="isDialogPattern('view')" v-model="freightItem.ataWh" type="date" placeholder="Please pick a date" />
+      <el-form-item
+        label="ATA Destination Port"
+        prop="ataDp"
+      >
+        <el-date-picker
+          v-model="freightItem.ataDp"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
       </el-form-item>
     </el-row>
-    <el-row justify="space-between" :gutter="3">
+    <el-row justify="space-between">
+      <el-form-item
+        label="ETA Warehouse"
+        prop="etaWh"
+      >
+        <el-date-picker
+          v-model="freightItem.etaWh"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
+      </el-form-item>
+      <el-form-item
+        label="ATA Warehouse"
+        prop="ataWh"
+      >
+        <el-date-picker
+          v-model="freightItem.ataWh"
+          :disabled="isDialogPattern('view')"
+          type="date"
+          placeholder="Please pick a date"
+        />
+      </el-form-item>
+    </el-row>
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item label="Transit Time">
-        <el-input disabled v-model="transitTime" placeholder=""/>
+        <el-input
+          v-model="transitTime"
+          disabled
+          placeholder=""
+        />
       </el-form-item>
       <el-form-item label="Transit Enum">
-        <el-select :default="1" :disabled="isDialogPattern('view')" v-model="transitTimeBase" placeholder="Please select">
-          <el-option v-for="item in transitTimeEnum" :key="item" :label="item.key" :value="item.value" />
+        <el-select
+          v-model="transitTimeBase"
+          :default="1"
+          :disabled="isDialogPattern('view')"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="item in transitTimeEnum"
+            :key="item"
+            :label="item.key"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
     </el-row>
     <template v-if="!isDialogPattern('view')">
-      <el-button v-if="isDialogPattern('create')" type="primary" @click="createFreight">
+      <el-button
+        v-if="isDialogPattern('create')"
+        type="primary"
+        @click="createFreight"
+      >
         Submit Freight
       </el-button>
-      <el-button v-if="isDialogPattern('edit')" type="primary" @click="updateFreight">
+      <el-button
+        v-if="isDialogPattern('edit')"
+        type="primary"
+        @click="updateFreight"
+      >
         Update Freight
       </el-button>
     </template>
 
     <el-card v-if="batchArr.length > 0">
-      <template v-for="(item, index) in batchArr" :key="index">
+      <template
+        v-for="(item, index) in batchArr"
+        :key="index"
+      >
         <BatchForm
           :ref="`batch-${index}`"
-          :freightId="freightItem.id"
-          :batchIdx="index"
-          :batchItem="item"
-          :warehouseEnum="warehouseEnum"
-          :dialogStatus="dialogStatus"
+          :freight-id="freightItem.id"
+          :batch-idx="index"
+          :batch-item="item"
+          :warehouse-enum="warehouseEnum"
+          :dialog-status="dialogStatus"
           @deleteBatch="removeBatch"
           @createBatch="submitBatch"
           @editBatch="updateBatch"
@@ -119,7 +314,13 @@
     </el-card>
     
     <div class="f-row controls">
-      <el-button v-if="!isDialogPattern('view')" :disabled="disableNewBatch" type="primary" icon="el-icon-circle-plus" @click="handleAddBatch">
+      <el-button
+        v-if="!isDialogPattern('view')"
+        :disabled="disableNewBatch"
+        type="primary"
+        icon="el-icon-circle-plus"
+        @click="handleAddBatch"
+      >
         Add Sub-Batch
       </el-button>
       <el-tooltip
@@ -128,13 +329,16 @@
         content="You need to have/submit a freight part before 'Add new Sub-Batch'"
         placement="right"
       >
-        <svg-icon class="mgl-5" icon-name="tips" />
+        <svg-icon
+          class="mgl-5"
+          icon-name="tips"
+        />
       </el-tooltip>
     </div>
   </el-form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ElMessage, ElTooltip } from 'element-plus';
 import BatchForm from './BatchForm.vue';
 import {

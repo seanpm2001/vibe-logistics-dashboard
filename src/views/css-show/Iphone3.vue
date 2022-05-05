@@ -1,7 +1,11 @@
 <template>
   <div class="page">
     <div id="sticky">
-      <canvas id="iphone-se" width="432" height="976"></canvas>
+      <canvas
+        id="iphone-se"
+        width="432"
+        height="976"
+      />
       
       <div id="loading">
         <p>iPhone SE packs our most powerful chip into our most popular size at our most affordable price. It’s just what you’ve been waiting for.</p>
@@ -18,7 +22,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 // $(function () {
 //   $('#iphone-se').height($(window).height());
 // });

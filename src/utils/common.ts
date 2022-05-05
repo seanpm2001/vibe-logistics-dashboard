@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * @param {string} url
  * @returns {Object}
@@ -24,7 +25,7 @@ export function getQueryObject(url) {
 export function byteLength(str) {
   // returns the byte length of an utf8 string
   let s = str.length;
-  for (var i = str.length - 1; i >= 0; i--) {
+  for (let i = str.length - 1; i >= 0; i--) {
     const code = str.charCodeAt(i);
     if (code > 0x7f && code <= 0x7ff) s++;
     else if (code > 0x7ff && code <= 0xffff) s += 2;
@@ -191,10 +192,10 @@ export function debounce(func, wait, immediate) {
 }
 
 export function throttle(fn, delay, mustRunDelay){
-  var timer = null;
-  var t_start;
+  let timer = null;
+  let t_start;
   return function(){
-    var context = this, args = arguments, t_curr = +new Date();
+    const context = this, args = arguments, t_curr = +new Date();
     clearTimeout(timer);
     if(!t_start){
       t_start = t_curr;

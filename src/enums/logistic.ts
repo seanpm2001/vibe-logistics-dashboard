@@ -95,10 +95,14 @@ export const packageConditionEnum = {
 // };
 export const carrierEnum = {
   TRUCK: 'Truck',
-  GLS: 'GLS',
-  FEDEX: 'Fedex',
+  RRTS: 'RRTS-Truck',
+  DAYLIGHT: 'Daylight-Truck',
+  PILOT: 'PILOT-Truck',
+  SAIA: 'SAIA-Truck',
+  RL: 'R&L-Truck',
   UPS: 'UPS',
-  AIR: 'AIR',
+  USPS: 'USPS',
+  FEDEX: 'FedEx',
 };
 export const codeNameEnum = {
   '55V1B': '55 V1 Board',

@@ -19,11 +19,12 @@ export function createVitePlugins(isBuild) {
       imports: ['vue', 'vue-router', 'pinia', {
         '@/hooks/useLogistic': ['useQueryHook', 'useWarehouseEnumHook'],
       }],
-      dts: 'src/auto-imports.d.ts',
+      dts: 'typings/auto-imports.d.ts',
     }),
     Components({
       resolvers: [ElementPlusResolver()],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      dirs: 'typings/auto-imports.d.ts',
     }),
   ];
 
