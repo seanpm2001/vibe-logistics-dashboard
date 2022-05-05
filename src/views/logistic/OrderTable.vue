@@ -8,16 +8,17 @@
         <el-input
           v-model="listQuery.search"
           placeholder="Order Info"
-          style="width: 120px"
-        />
-        <el-button
-          v-wave
-          type="primary"
-          :icon="Search"
-          @click="handleFilter"
+          style="width: 150px"
         >
-          Search
-        </el-button>
+          <template #append>
+            <el-button
+              v-wave
+              type="primary"
+              :icon="Search"
+              @click="handleFilter"
+            />
+          </template>
+        </el-input>
         <el-select
           v-model="showAssignedOrder"
           :disabled="listLoading"

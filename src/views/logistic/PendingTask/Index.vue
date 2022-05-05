@@ -12,17 +12,33 @@
         <span class="mgl-5 mgr-5"> before 11.30 am</span>
         <el-input
           v-model="listQuery.search"
-          style="width: 200px;"
+          style="width: 330px;"
           placeholder="Search: (order info)"
-        />
-        <el-button
-          class="mgl-5"
-          type="primary"
-          :icon="Search"
-          @click="fetchList"
         >
-          Search
-        </el-button>
+          <template #prepend>
+            <el-select
+              v-model="listQuery.carrier"
+              placeholder="Carrier"
+              style="width: 140px"
+              @change="handleFilter"
+            >
+              <el-option
+                v-for="(carrier, key) in carrierEnum"
+                :key="key"
+                :label="carrier"
+                :value="key"
+              />
+            </el-select>
+          </template>
+          <template #append>
+            <el-button
+              class="mgl-5"
+              type="primary"
+              :icon="Search"
+              @click="fetchList"
+            />
+          </template>
+        </el-input>
       </div>
       <el-descriptions
         :column="3"
@@ -64,7 +80,7 @@ import { Search } from '@element-plus/icons-vue';
 import TaskCards from './TaskCards.vue';
 import { parseTime, formatAssignedOrderItem } from '@/utils';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
-import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
+import { skuCodeEnum, codeNameEnum, carrierEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
 
 /* Start Data */
@@ -130,6 +146,11 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
   return temp;
 });
 
+const handleFilter = () => {
+  listQuery.value.page = 1;
+  fetchList();
+};
+
 function getOrderIdArr (taskList) {
   const temp = [];
   taskList.forEach(task => temp.push(task.orderId));
@@ -166,12 +187,14 @@ const fetchList = () => {
 };
 
 function initDateFilter () {
-  dateFilter.value = ['2022-04-01', parseTime(new Date(), '{y}-{m}-{d}')];
+  dateFilter.value = [
+    parseTime(new Date() - 86400000 * 10, '{y}-{m}-{d}'), // 十天前
+    parseTime(new Date(), '{y}-{m}-{d}')
+  ];
 }
 
 onMounted(() => {
   initDateFilter();
-  fetchList();
 });
 </script>
 
