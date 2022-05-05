@@ -78,7 +78,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import TaskCards from './TaskCards.vue';
+import TaskCards from './TaskCards/Index.vue';
 import { parseTime, formatAssignedOrderItem } from '@/utils';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
 import { skuCodeEnum, codeNameEnum, carrierEnum } from '@/enums/logistic';
