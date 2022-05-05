@@ -36,7 +36,7 @@
           {{ carrierEnum[task.carrier] }}
         </el-descriptions-item>
         <el-descriptions-item label="Shipment Info">
-          <OrderShipmentInfo :order-item="orderEnum[task.orderId]" />
+          <OrderShipmentInfo :order-item="orderEnum[task.orderId] || {}" />
         </el-descriptions-item>
       </el-descriptions>
       <div class="package-operation">
