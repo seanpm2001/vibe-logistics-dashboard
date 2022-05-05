@@ -324,8 +324,9 @@ const remoteMethod = query => {
   if (query) {
     queryUnitsAPI({ serial: query }).then(data => {
       unitList.value = data.filter(item => {
-        for (const i in taskProducts) {
-          if (item.sku === taskProducts[i].sku) return true;
+        for (const idx in taskProducts) {
+          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
+            return true;
         }
       });
     });

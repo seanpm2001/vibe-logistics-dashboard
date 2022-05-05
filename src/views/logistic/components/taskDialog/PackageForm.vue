@@ -24,6 +24,34 @@
           placeholder="Tracking Number"
         />
       </el-form-item>
+      <el-form-item label="Weight">
+        <el-input
+          v-model="taskPackage.weight"
+          :disabled="notPackagePermission"
+          placeholder="Weight (kg)"
+        />
+      </el-form-item>
+      <el-form-item label="Length">
+        <el-input
+          v-model="taskPackage.length"
+          :disabled="notPackagePermission"
+          placeholder="Length (cm)"
+        />
+      </el-form-item>
+      <el-form-item label="Width">
+        <el-input
+          v-model="taskPackage.width"
+          :disabled="notPackagePermission"
+          placeholder="Width (cm)"
+        />
+      </el-form-item>
+      <el-form-item label="Height">
+        <el-input
+          v-model="taskPackage.height"
+          :disabled="notPackagePermission"
+          placeholder="Height (cm)"
+        />
+      </el-form-item>
     </el-row>
 
     <template
@@ -97,7 +125,7 @@
         <svg-icon
           class="mgl-5"
           icon-name="tips"
-        />123
+        />
       </el-tooltip>
     </div>
   </div>
@@ -112,7 +140,7 @@ import {
   updatePackageAPI,
   queryUnitsAPI,
 } from '@/api/logistic';
-import { packageStatusEnum } from '@/enums/logistic';
+import { packageStatusEnum, skuCodeEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
 // eslint-disable-next-line no-undef
@@ -162,8 +190,9 @@ const remoteMethod = query => {
   if (query) {
     queryUnitsAPI({ serial: query }).then(data => {
       unitList.value = data.filter(item => {
-        for (const i in taskProducts) {
-          if (item.sku === taskProducts[i].sku) return true;
+        for (const idx in taskProducts) {
+          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
+            return true;
         }
       });
     });

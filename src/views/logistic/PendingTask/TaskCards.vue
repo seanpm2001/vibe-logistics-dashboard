@@ -45,12 +45,13 @@
             Meta Data
           </div>
           <div class="serial-label label">
-            serials(by shipping package)
+            Package Serials
           </div>
           <div class="label w-200">
-            Tracking Number
+            Package Tracking Number
+            Weight(kg) & Dimension(cm)
           </div>
-          <div class="label w-200">
+          <div class="label w-180">
             Operation
           </div>
         </el-row>
@@ -60,13 +61,14 @@
               v-for="(product, idx) in task.products"
               :key="product.sku"
             >
-              product name:
-              <el-tag size="small">
-                {{ codeNameEnum[product.productCode] || product.productCode }}
-              </el-tag>
+              <div class="mgb-5">
+                product name:
+                <el-tag size="small">
+                  {{ codeNameEnum[product.productCode] || product.productCode }}
+                </el-tag>
+              </div>
               <el-row
                 style="margin-left: 16px"
-                align="middle"
               >
                 sku: <el-tag size="small">
                   {{ product.sku }}
@@ -146,6 +148,7 @@
                       <el-select
                         v-model="unit.serial"
                         placeholder="Please select"
+                        class="w-200"
                         filterable
                         remote
                         :remote-method="(query) => debounce(remoteMethod(query, task, item, unit), 500)"
@@ -166,8 +169,26 @@
                     v-model="item.trackingNumber"
                     placeholder="Tracking Number"
                   />
+                  <el-row class="dimension">
+                    <el-input
+                      v-model="item.weight"
+                      placeholder="Weight"
+                    />
+                    <el-input
+                      v-model="item.length"
+                      placeholder="Length"
+                    />
+                    <el-input
+                      v-model="item.width"
+                      placeholder="Width"
+                    />
+                    <el-input
+                      v-model="item.height"
+                      placeholder="Height"
+                    />
+                  </el-row>
                 </div>
-                <div class="cell w-200">
+                <div class="cell w-180">
                   <el-button
                     v-if="item.id"
                     class="mgr-5"
@@ -325,8 +346,8 @@ const remoteMethod = (query, task, packageItem, unit) => {
 
       const taskProducts = task.products;
       unitList.value = data.filter(item => {
-        for (const i in taskProducts)
-          if (item.sku === taskProducts[i].sku || skuCodeEnum[item.sku] === taskProducts[i].productCode)
+        for (const idx in taskProducts)
+          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
             return true;
       });
     });
@@ -423,14 +444,16 @@ const handleDeletePackage = (packageId) => {
 .package-operation
   .serial-cell, .serial-label
     width: 220px
+  .w-180
+    width: 180px
   .w-200
-    width: 200px
+    width: 240px
   .w-380
-    width: 400px
+    width: 350px
     @media (max-width: 1420px)
       width: 200px
   .el-input
-    max-width: 200px
+    max-width: 240px
   .label, .cell
     maging: 0
     padding: 16px
@@ -440,4 +463,8 @@ const handleDeletePackage = (packageId) => {
     background-color: rgb(250, 250, 250)
   .meta-data
     background-color: rgb(250, 250, 250)
+
+.dimension
+  .el-input
+    width: 60px
 </style>
