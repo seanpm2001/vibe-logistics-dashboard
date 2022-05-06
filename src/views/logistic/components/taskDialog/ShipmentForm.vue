@@ -6,23 +6,40 @@
       :gutter="3"
     >
       <span>
-        Shipment <span v-if="taskItem?.carrier"> [Database]</span>:
+        Shipment:
       </span> 
     </el-row>
     <el-row
       justify="space-between"
       :gutter="3"
     >
-      <el-form-item label="*Carrier">
+      <el-form-item label="*Transport Mode">
+        <el-select
+          v-model="taskItem.transportMode"
+          :disabled="notShipmentPermission"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(transport, key) in transportEnum"
+            :key="transport"
+            :label="transport"
+            :value="key"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        v-if="taskItem.transportMode"
+        label="*Carrier"
+      >
         <el-select
           v-model="taskItem.carrier"
           :disabled="notShipmentPermission"
           placeholder="Please select"
         >
           <el-option
-            v-for="(item, key) in carrierEnum"
-            :key="item"
-            :label="item"
+            v-for="(carrier, key) in transportCarrierEnum[taskItem.transportMode]"
+            :key="carrier"
+            :label="carrier"
             :value="key"
           />
         </el-select>
@@ -134,7 +151,7 @@ import { CirclePlus } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api/logistic';
-import { carrierEnum } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
 const props = defineProps({

@@ -4,7 +4,10 @@
     :key="task.id"
   >
     <el-card>
-      <CardDescriptions :task="task" />
+      <CardDescriptions
+        :task="task"
+        @fetch-list="fetchList"
+      />
       <div class="package-wrapper">
         <div class="col1 meta-data label w-380">
           Meta Data
@@ -166,6 +169,8 @@ const contrastTask = inject('contrastTask');
 
 /* End Data */
 
+const fetchList = () => emit('fetchList');
+
 function compareIfEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
@@ -176,7 +181,7 @@ const diableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
 };
 
 const disableNewPackage = packageArr => {
-  if (packageArr.length === 0 || packageArr[packageArr.length - 1]?.id)
+  if (!packageArr || packageArr.length === 0 || packageArr[packageArr.length - 1]?.id)
     return false;
   return true;
 };
@@ -323,7 +328,7 @@ const onPackagesChange = (task, packages, type, idx) => {
 
 const handleDeletePackage = (packageId) => {
   packageId && deletePackageAPI(packageId).then(() => {
-    emit('fetchList');
+    fetchList();
   });
 };
 </script>

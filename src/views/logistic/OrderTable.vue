@@ -282,16 +282,36 @@
           />
         </el-select>
       </el-row>
-      <el-row align="middle">
+      <el-row
+        class="mgb-5"
+        align="middle"
+      >
+        Please select Transport: &ensp;*
+        <el-select
+          v-model="taskTransport"
+          placeholder="Please select"
+        >
+          <el-option
+            v-for="(transport, key) in transportEnum"
+            :key="key"
+            :label="transport"
+            :value="key"
+          />
+        </el-select>
+      </el-row>
+      <el-row
+        v-if="taskTransport"
+        align="middle"
+      >
         Please select Carrier: &ensp;
         <el-select
           v-model="taskCarrier"
           placeholder="Please select"
         >
           <el-option
-            v-for="(item, key) in carrierEnum"
-            :key="item"
-            :label="item"
+            v-for="(carrier, key) in transportCarrierEnum[taskTransport]"
+            :key="key"
+            :label="carrier"
             :value="key"
           />
         </el-select>
@@ -341,7 +361,7 @@ import {
   deleteTaskAPI
 } from '@/api/logistic';
 import { formatAssignedOrderItem } from '@/utils/logistic';
-import { packageStatusEnum, codeNameEnum, codeIconEnum, carrierEnum, codeSkuArrEnum } from '@/enums/logistic';
+import { packageStatusEnum, codeNameEnum, codeIconEnum, transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start data */
@@ -382,6 +402,7 @@ const taskItem = ref({
   }],
   // shipment info
   carrier: null,
+  transportMode: null,
   deliveryCost: null,
   liftgateCost: null,
   limitedCost: null,
@@ -466,13 +487,16 @@ function removeEmptyProducts (taskItem) {
     delete taskItem['products'];
 }
 
-async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
+async function submitInitTaskItem (products, assignedData, orderId) {
+  const { sourceWHId, carrier, transportMode } = assignedData;
+
   const task = {};
   task.orderId = orderId;
   task.taskType = 'FULFILLMENT';
   task.sourceId = sourceWHId;
   task.targetId = 18; // Default Customer
   task.carrier = carrier;
+  task.transportMode = transportMode;
   task.products = [];
 
   // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
@@ -506,14 +530,16 @@ async function submitInitTaskItem (products, sourceWHId, carrier, orderId) {
   return taskId;
 }
 
-function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
+function assignSelectedOrders(assignedData, selectedArr) {
+  const { sourceWHId } = assignedData;
+
   if (!selectedArr.length) {
     ElMessage.error('Please at least select an order!');
     return;
   }
   const assignOrder = (sourceWHId, selection) => {
     assignOrdersAPI(sourceWHId, [selection.id]).then(data => {
-      submitInitTaskItem(selection.items, sourceWHId, carrier, data.id); // 传递products {productCode: '', quantity: 0}
+      submitInitTaskItem(selection.items, assignedData, data.id); // 传递products {productCode: '', quantity: 0}
     });
   };
   const promiseArr = [];
@@ -524,10 +550,15 @@ function assignSelectedOrders(sourceWHId, carrier, selectedArr) {
 }
 
 const sourceId = ref(null);
+const taskTransport = ref(null);
 const taskCarrier = ref(null);
 const assignOrders = () => {
   const sourceWHId = sourceId.value;
-  const carrier = taskCarrier.value;
+  const assignedData = {
+    sourceWHId,
+    carrier: taskCarrier.value,
+    transportMode: taskTransport.value
+  };
   const selectedArr = multipleSelection.value;
   if (!sourceWHId) {
     ElMessage.error('Please select a target warehouse!');
@@ -538,7 +569,7 @@ const assignOrders = () => {
   
   if (pattern === 'assignSelected') {
     // 单独处理批量assign，不展示warehouse task dialog
-    assignSelectedOrders(sourceWHId, carrier, selectedArr);
+    assignSelectedOrders(assignedData, selectedArr);
     dialogAssignVisible.value = false;
     fetchList();
     return;
@@ -557,7 +588,7 @@ const assignOrders = () => {
     .then(async (data) => {
       dialogAssignVisible.value = false;
       const products = formatAssignedOrderItem(data)?.items;
-      const taskId = await submitInitTaskItem(products, sourceWHId, carrier, data.id);
+      const taskId = await submitInitTaskItem(products, assignedData, data.id);
       taskId && editWarehouseTask(data.id, taskId);
     })
     .finally(() => {

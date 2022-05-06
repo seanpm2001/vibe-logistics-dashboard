@@ -27,16 +27,16 @@
     <el-descriptions-item label="TaskType">
       {{ task.taskType }}
     </el-descriptions-item>
-    <el-descriptions-item label="Carrier & Transport">
-      {{ carrierEnum[task.carrier] }}
-
-
+    <el-descriptions-item label="Transport & Carrier">
+      {{ transportEnum[task.transportMode] }}
       <el-select
-        v-if="task.carrier === 'TRUCK'"
+        v-if="task.transportMode"
+        v-model="taskCarrier"
         placeholder="Please select"
+        @change="onCarrierChange(task)"
       >
         <el-option
-          v-for="(item, key) in transportEnum"
+          v-for="(item, key) in transportCarrierEnum[task.transportMode]"
           :key="item"
           :label="item"
           :value="key"
@@ -49,9 +49,13 @@
   </el-descriptions>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
-import { carrierEnum, transportEnum } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
+import { updateTaskAPI } from '@/api/logistic';
+
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
   task: {
@@ -60,9 +64,25 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['fetchList']);
+const taskCarrier = ref(props.task.carrier);
+
 const orderEnum = inject('orderEnum');
 
 const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
+
+const onCarrierChange = (task) => {
+  task.carrier = taskCarrier.value;
+  ElMessageBox.confirm('Update it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm')
+        updateTaskAPI(task.id, task).then(() => emit('fetchList'));
+      else
+        ElMessage.info('Update Canceled.');
+    },
+  });
+};
 </script>
 
 <style lang="sass" scoped>

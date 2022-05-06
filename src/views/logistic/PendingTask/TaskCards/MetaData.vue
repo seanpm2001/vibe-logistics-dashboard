@@ -76,7 +76,7 @@ const props = defineProps({
 
 const calTaskFulQty = (type, packageArr) => {
   const temp = {};
-  packageArr.forEach(packageItem => {
+  packageArr?.forEach(packageItem => {
     packageItem.units.forEach(unit => {
       const sku = unit.item?.sku;
       if (type === 'sku')

@@ -10,27 +10,39 @@
           placeholder="Please pick a date"
         />
         <span class="mgl-5 mgr-5"> before 11.30 am</span>
+        <el-select
+          v-model="listQuery.transportMode"
+          placeholder="Transport"
+          style="width: 120px"
+          @change="handleFilter"
+        >
+          <el-option
+            v-for="(transport, key) in transportEnum"
+            :key="key"
+            :label="transport"
+            :value="key"
+          />
+        </el-select>
+        <el-select
+          v-if="listQuery.transportMode"
+          v-model="listQuery.carrier"
+          placeholder="Carrier"
+          style="width: 120px"
+          @change="handleFilter"
+        >
+          <el-option
+            v-for="(carrier, key) in transportCarrierEnum[listQuery.transportMode]"
+            :key="key"
+            :label="carrier"
+            :value="key"
+          />
+        </el-select>
         <el-input
           v-model="listQuery.search"
-          style="width: 330px;"
+          style="width: 200px;"
           placeholder="Search: (order info)"
           @change="fetchList"
         >
-          <template #prepend>
-            <el-select
-              v-model="listQuery.carrier"
-              placeholder="Carrier"
-              style="width: 140px"
-              @change="handleFilter"
-            >
-              <el-option
-                v-for="(carrier, key) in carrierEnum"
-                :key="key"
-                :label="carrier"
-                :value="key"
-              />
-            </el-select>
-          </template>
           <template #append>
             <el-button
               class="mgl-5"
@@ -81,7 +93,7 @@ import { Search } from '@element-plus/icons-vue';
 import TaskCards from './TaskCards/Index.vue';
 import { parseTime, formatAssignedOrderItem } from '@/utils';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
-import { skuCodeEnum, codeNameEnum, carrierEnum } from '@/enums/logistic';
+import { skuCodeEnum, codeNameEnum, transportEnum, transportCarrierEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
 
 /* Start Data */
@@ -93,6 +105,8 @@ const listQuery = ref({
   start: null,
   end: null,
   search: '',
+  carrier: '',
+  transportMode: '',
 });
 
 watchEffect(() => {
@@ -128,13 +142,13 @@ provide('contrastTask', contrastTask);
 const codeQTY = computed(() => { // SKU Quantity Statistics
   const temp = {};
   dataList.value?.forEach(task => {
-    task.products.forEach(product => {
+    task.products?.forEach(product => {
       const code = product.productCode;
-      if (code.includes('EPP')) return; // 不需要追踪code为EPP相关的product
+      if (code?.includes('EPP')) return; // 不需要追踪code为EPP相关的product
       temp[code] = temp[code] || {};
       temp[code]['req'] = (temp[code]['req'] || 0) + product.quantity;
     });
-    task.packages.forEach(packageItem => {
+    task.packages?.forEach(packageItem => {
       packageItem.units.forEach(unit => {
         const code = skuCodeEnum[unit.item?.sku];
         if (code) {

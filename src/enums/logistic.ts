@@ -93,19 +93,24 @@ export const enum packageConditionEnum {
 //   'Scrap' = 'SCRAP',
 //   'Damaged' = 'DAMAGED',
 // }
-export const enum carrierEnum {
-  TRUCK = 'Truck',
-  UPS = 'UPS',
-  USPS = 'USPS',
-  FEDEX = 'FedEx',
-}
-export const enum transportEnum {
-  RRTS = 'RRTS-Truck',
-  DAYLIGHT = 'Daylight-Truck',
-  PILOT = 'PILOT-Truck',
-  SAIA = 'SAIA-Truck',
-  RL = 'R&L-Truck',
-}
+export const transportEnum = {
+  TRUCK: 'Truck',
+  EXPRESS: 'Express'
+};
+export const transportCarrierEnum = {
+  TRUCK: {
+    RRTS: 'RRTS',
+    DAYLIGHT: 'Daylight',
+    PILOT: 'PILOT',
+    SAIA: 'SAIA',
+    RL: 'R&L',
+  },
+  EXPRESS: {
+    UPS: 'UPS',
+    USPS: 'USPS',
+    FEDEX: 'FedEx',
+  }
+};
 export const enum codeNameEnum {
   '55V1B' = '55 V1 Board',
   '55V1WS' = '55 V1 White Stand',

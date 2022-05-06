@@ -240,7 +240,6 @@ import {
   codeNameEnum,
   codeIconEnum,
   skuCodeEnum,
-  carrierEnum,
 } from '@/enums/logistic';
 import { useLogisticStore } from '@/store';
 
