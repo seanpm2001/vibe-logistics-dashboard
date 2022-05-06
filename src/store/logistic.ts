@@ -38,7 +38,7 @@ export const useLogisticStore = defineStore({
     setUnitList () {
       return new Promise(resolve => {
         queryUnitsAPI({ search: '' })
-          .then(data => M_unitList(data));
+          .then(data => this.M_unitList(data));
       });
     },
 
@@ -47,7 +47,7 @@ export const useLogisticStore = defineStore({
         .then(data => {
           const options = {};
           data.forEach(item => options[item.id] = item.name);
-          M_warehouseEnum(options);
+          this.M_warehouseEnum(options);
         })
         .catch(() => this.warehouseEnum = fixedWarehouseEnum);
     }
