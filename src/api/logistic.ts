@@ -4,18 +4,20 @@
 
 import { ElMessage } from 'element-plus';
 import requester from './http';
+// import { resItemData, resItemsData, loginForm } from './type';
 
-const handleReqElMsg = (fn, action, name, identifier) => {
+
+const handleReqElMsg = (fn, action: string, name: string, identifier?) => {
   return new Promise((resolve, reject) => {
     let item = null;
     const isCreation = action === 'Create';
     fn
-      .then(_data => {
-        item = _data?.item;
+      .then((data) => {
+        item = data?.item;
         resolve(item);
         ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`);
       })
-      .catch(err => {
+      .catch((err: any) => {
         ElMessage.error(`${action} ${name} ${isCreation ? '' : identifier } failed.`);
         reject(err);
       });
@@ -23,7 +25,7 @@ const handleReqElMsg = (fn, action, name, identifier) => {
 };
 
 /* 海运 Freight API */
-export async function queryFreightsAPI (params) {
+export async function queryFreightsAPI (params?) {
   const res = await requester.get('freights', {
     params,
   });
@@ -35,68 +37,68 @@ export async function createFreightAPI (data) {
   );
   return item;
 }
-export async function findFreightAPI (freightId) {
+export async function findFreightAPI (freightId: number) {
   const { item } = await requester.get(`freight/${freightId}`);
   return item;
 }
-export async function updateFreightAPI (freightId, updates) {
+export async function updateFreightAPI (freightId: number, updates) {
   const item = handleReqElMsg(
     requester.put(`freight/${freightId}`, updates), 'Update', 'Freight', freightId
   );
   return item;
 }
-export async function deleteFreightAPI (freightId) {
+export async function deleteFreightAPI (freightId: number) {
   handleReqElMsg(
     requester.delete(`freight/${freightId}`), 'Delete', 'Freight', freightId
   );
 }
 
 /* 批次 Batch API */
-export async function listBatchesAPI (freightId) {
+export async function listBatchesAPI (freightId: number) {
   const { items } = await requester.get(`freight/${freightId}/batches`);
   return items;
 }
-export async function createBatchAPI (freightId, data) {
+export async function createBatchAPI (freightId: number, data) {
   const item = handleReqElMsg(
     requester.post(`freight/${freightId}/batches`, data), 'Create', 'Sub-Batch'
   );
   return item;
 }
-export async function updateBatchAPI (batchId, updates) {
+export async function updateBatchAPI (batchId: number, updates) {
   const item = handleReqElMsg(
     requester.put(`batch/${batchId}`, updates), 'Update', 'Sub-Batch', batchId
   );
   return item;
 }
-export async function deleteBatchAPI (batchId) {
+export async function deleteBatchAPI (batchId: number) {
   handleReqElMsg(
     requester.delete(`batch/${batchId}`), 'Delete', 'Sub-Batch', batchId
   );
 }
 
 /* 订单 Order API */
-export async function queryOrdersAPI (params) {
+export async function queryOrdersAPI (params?) {
   const res = await requester.get('orders/raw', {
     params,
   });
   return res;
 }
-export async function queryAssignedOrdersAPI (params) {
+export async function queryAssignedOrdersAPI (params?) {
   const res = await requester.get('orders/assigned', {
     params,
   });
   return res;
 }
-export async function queryAssignedBatchOrdersAPI (orderIdArr) {
+export async function queryAssignedBatchOrdersAPI (orderIdArr: []) {
   const orderIdStr = orderIdArr.join(',');
   const { items } = await requester.get('/orders/assigned/batch/' + orderIdStr);
   return items;
 }
-export async function findAssignedOrderAPI (orderId) {
+export async function findAssignedOrderAPI (orderId: number) {
   const { item } = await requester.get(`orders/assigned/${orderId}`);
   return item;
 }
-export async function assignOrdersAPI (sourceId, orderArr) {
+export async function assignOrdersAPI (sourceId: number, orderArr: Array<number>) {
   const item = handleReqElMsg(
     requester.post('orders/assign', {
       assigned_to: sourceId,
@@ -105,7 +107,7 @@ export async function assignOrdersAPI (sourceId, orderArr) {
   );
   return item;
 }
-export async function unassignOrdersAPI (orderId) {
+export async function unassignOrdersAPI (orderId: number) {
   handleReqElMsg(
     requester.delete(`orders/assigned/${orderId}`), 'Unassign', 'Order', orderId
   );
@@ -113,7 +115,7 @@ export async function unassignOrdersAPI (orderId) {
 
 
 /* 仓库 Warehouse API */
-export async function listWarehousesAPI (params) {
+export async function listWarehousesAPI (params?) {
   const { items } = await requester.get('warehouses', {
     params,
   });
@@ -121,7 +123,7 @@ export async function listWarehousesAPI (params) {
 }
 
 /* 仓库 Warehouse Tasks API */
-export async function queryTasksAPI (params) {
+export async function queryTasksAPI (params?) {
   const res = await requester.get('/warehouse/tasks', {
     params,
   });
@@ -133,23 +135,23 @@ export async function createTaskAPI (data) {
   );
   return item;
 }
-export async function findTaskAPI (taskId) {
+export async function findTaskAPI (taskId: number) {
   const { item } = await requester.get(`/warehouse/task/${taskId}`);
   return item;
 }
-export async function updateTaskAPI (taskId, updates) {
+export async function updateTaskAPI (taskId: number, updates) {
   delete updates['packages'];
   const item = handleReqElMsg(
     requester.put(`/warehouse/task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
   );
   return item;
 }
-export async function deleteTaskAPI (taskId) {
+export async function deleteTaskAPI (taskId: number) {
   handleReqElMsg(
     requester.delete(`/warehouse/task/${taskId}`), 'Delete', 'Warehouse Task', taskId
   );
 }
-export async function createShipmentUnitsAPI (taskId, data) {
+export async function createShipmentUnitsAPI (taskId: number, data) {
   const item = handleReqElMsg(
     requester.post(`/warehouse/task/${taskId}/units`, data), 'Create', 'Package'
   );
@@ -158,36 +160,36 @@ export async function createShipmentUnitsAPI (taskId, data) {
 
 
 /* 批次 Shipment Package API */
-export async function queryPackagesAPI (params) {
+export async function queryPackagesAPI (params?) {
   const res = await requester.get('/warehouse/packages', {
     params,
   });
   return res;
 }
-export async function createPackageAPI (taskId, data) {
+export async function createPackageAPI (taskId: number, data) {
   const item = handleReqElMsg(
     requester.post(`/warehouse/task/${taskId}/packages`, data), 'Create', 'Package'
   );
   return item;
 }
-export async function listTaskPackagesAPI (taskId) {
+export async function listTaskPackagesAPI (taskId: number) {
   const { items } = await requester.get(`/warehouse/task/${taskId}/packages`);
   return items;
 }
-export async function updatePackageAPI (packageId, updates) {
+export async function updatePackageAPI (packageId: number, updates) {
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}`, updates), 'Update', 'Package', packageId
   );
   return item;
 }
-export async function deletePackageAPI (packageId) {
+export async function deletePackageAPI (packageId: number) {
   handleReqElMsg(
     requester.delete(`/warehouse/package/${packageId}`), 'Delete', 'Package', packageId
   );
 }
 
 /* Warehousing API */
-export async function updatePackageUnitAPI(packageId, unitId, updates) {
+export async function updatePackageUnitAPI(packageId: number, unitId: number, updates) {
   delete updates['item'];
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
@@ -196,11 +198,11 @@ export async function updatePackageUnitAPI(packageId, unitId, updates) {
 }
 
 /* 单个商品 Unit API */
-export async function queryUnitsAPI (params) {
+export async function queryUnitsAPI (params?) {
   const res = await requester.get('/units/search', { params });
   return res.items;
 }
-export async function updateUnitAPI (unitSerial, updates) {
+export async function updateUnitAPI (unitSerial: string, updates) {
   const item = handleReqElMsg(
     requester.put(`unit/${unitSerial}`, updates), 'Update', 'Unit', unitSerial
   );
@@ -209,7 +211,7 @@ export async function updateUnitAPI (unitSerial, updates) {
 
 
 /* 库存 Inventory API */
-export async function listInventoriesAPI (params) {
+export async function listInventoriesAPI (params?) {
   const { data } = await requester.get('/mock/inventories', {
     params,
   });
@@ -220,8 +222,8 @@ export async function listInventoriesAPI (params) {
 export async function loginAPI(formInfo) {
   let res = null;
   await requester.post('/login', formInfo)
-    .then(_data => {
-      res = _data;
+    .then((data) => {
+      res = data;
       ElMessage.success('Welcome to Vibe Logisitc System.');
     })
     .catch(() => ElMessage.error('Wrong username or password.'));

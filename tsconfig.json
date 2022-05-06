@@ -15,12 +15,12 @@
     //移除注解
     "removeComments": true,
     //不可以忽略any
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     //关闭 this 类型注解提示
     "noImplicitThis": true,
     //null/undefined不能作为其他类型的子类型：
     //let a: number = null; //这里会报错.
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     //生成枚举的映射代码
     "preserveConstEnums": true,
     //根目录

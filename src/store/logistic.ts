@@ -38,8 +38,7 @@ export const useLogisticStore = defineStore({
     setUnitList () {
       return new Promise(resolve => {
         queryUnitsAPI({ search: '' })
-          .then(data => M_unitList(data))
-          .finally(() => resolve());
+          .then(data => M_unitList(data));
       });
     },
 

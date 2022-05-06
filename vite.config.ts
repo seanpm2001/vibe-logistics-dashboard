@@ -5,7 +5,9 @@ import { createVitePlugins } from './vite-config/plugin';
 import proxy from './vite-config/proxy';
 import { resolve } from 'path';
 
-export default (({command}) => {
+const resolvePath = (path: string) => resolve(__dirname, path);
+
+export default (({command} : {command: string}) => {
   const isBuild = command === 'build';
   // 加载不同生产环境下的配置
   const NODE_ENV =  process.env.NODE_ENV || 'development'; // 无local API，默认采用beta API的配置
@@ -21,9 +23,9 @@ export default (({command}) => {
     plugins: createVitePlugins(isBuild),
     resolve: {
       alias: [
-        { find: '@', replacement: resolve(__dirname, 'src'), },
-        { find: '@img', replacement: resolve(__dirname, 'src/assets/img') },
-        { find: '@css', replacement: resolve(__dirname, 'src/assets/css') },
+        { find: '@', replacement: resolvePath('src'), },
+        { find: '@img', replacement: resolvePath('src/assets/img') },
+        { find: '@css', replacement: resolvePath('src/assets/css') },
       ]
     },
     css: {
@@ -44,8 +46,7 @@ export default (({command}) => {
       },
       // preprocessorOptions: {
       //   scss: { //define global scss variable
-      //     // eslint-disable-next-line quotes
-      //     additionalData: `@use "@css/_variables.scss" as *;`
+      //     additionalData: `@use "${resolvePath('src/assets/css/_variables.sass')}" as *;`
       //   }
       // }
     },

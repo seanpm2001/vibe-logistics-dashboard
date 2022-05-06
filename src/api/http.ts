@@ -7,7 +7,7 @@ import { jsonToHump, jsonToUnderline } from '@/utils/format';
 
 
 /* start 将同一时刻的请求合并。*/
-let loadingInstance = null;
+let loadingInstance = null as any;
 let needLoadingRequestCount = 0;
 const startLoading = () => loadingInstance = ElLoading.service({fullscreen: true});
 const endLoading = () => loadingInstance.close();
@@ -30,7 +30,7 @@ const requester = axios.create({
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
   }
-});
+}) as any;
 
 // request interceptor
 requester.interceptors.request.use(
@@ -38,7 +38,7 @@ requester.interceptors.request.use(
     const { method, url } = config;
     jsonToUnderLineParamsAndData(config);
     config.headers['Authorization'] = 'Bearer ' + getToken();
-    if (method === 'get' && !url.includes('/'))
+    if (method === 'get' && !url?.includes('/'))
       return config; // query API 不触发全屏loading
     showFullScreenLoading();
     return config;
@@ -85,7 +85,7 @@ requester.interceptors.response.use(
 
 export default requester;
 
-function jsonToUnderLineParamsAndData(config) {
+function jsonToUnderLineParamsAndData(config: any) {
   const params = config.params;
   const data = config.data;
   jsonToUnderline(params);
