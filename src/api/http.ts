@@ -23,7 +23,7 @@ const tryHideFullScreenLoading = () => {
 /* end 将同一时刻的请求合并。*/
 
 const requester = axios.create({
-  baseURL: 'https://logistics.vibe.dev/api',
+  baseURL: 'https://logistics.vibe.dev/beta/api',
   // baseURL: '/api',
   timeout: 6000, // 设置超时时间
   withCredentials: true, // 允许携带cookie

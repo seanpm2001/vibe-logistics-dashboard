@@ -8,11 +8,11 @@
 export const VITE_PORT = 3000;
 
 // prefix
-export const API_PREFIX = '/api';
+export const API_PREFIX = '/beta/api';
 
 // serve
-export const API_BASE_URL = '/api';
-export const API_TARGET_URL = 'https://logistics.vibe.dev/api/';
+export const API_BASE_URL = '/beta/api';
+export const API_TARGET_URL = 'https://logistics.vibe.dev/beta/api/';
 
 // mock
 export const MOCK_API_BASE_URL = '/api/mock';
