@@ -364,7 +364,7 @@ const handleDeletePackage = (packageId) => {
   .el-input
     max-width: 240px
   .label, .cell
-    maging: 0
+    margin: 0
     padding: 16px
     min-height: calc(74px - 32px)
     border: 1px solid rgb(235, 238, 245)

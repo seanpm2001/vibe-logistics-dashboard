@@ -7,12 +7,12 @@ import vPermission from '@/directive/permission';
 import vWave from '@/directive/wave';
 import './permission'; // permission control
 
-import { setupProdMockServer } from '../mock/mock-prod-server';
+// import { setupProdMockServer } from '../mock/mock-prod-server';
 import SvgIcon from '@/components/SvgIcon.vue'; // svg component
 import 'virtual:svg-icons-register'; // svg component, Important
 
 
-if (process.env.USE_MOCK) setupProdMockServer(); // development mock
+// if (process.env.USE_MOCK) setupProdMockServer(); // development mock
 
 export const app = createApp(App);
 app.component('SvgIcon', SvgIcon);
