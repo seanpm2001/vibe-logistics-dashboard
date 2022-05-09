@@ -213,7 +213,7 @@ const checkCapslock = (e) => {
 const showPwd = (signInPattern) => {
   passwordType.value = passwordType.value === 'password' ? '' : 'password';
   const password = signInPattern ? 'inPassword' : 'upPassword';
-  proxy.$nextTick(() => {
+  nextTick(() => {
     proxy.$refs[password].focus();
   });
 };

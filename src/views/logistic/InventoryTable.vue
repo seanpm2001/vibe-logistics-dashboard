@@ -471,7 +471,7 @@ const handleUpdate = row => {
   temp.value.timestamp = new Date(temp.value.timestamp);
   dialogStatus.value = 'update';
   dialogFormVisible.value = true;
-  proxy.$nextTick(() => {
+  nextTick(() => {
     proxy.$refs['dataForm'].clearValidate();
   });
 };

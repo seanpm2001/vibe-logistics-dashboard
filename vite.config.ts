@@ -78,15 +78,16 @@ export default (({command} : {command: string}) => {
         }
       }
     },
-    port: VITE_PORT,
-    open: true,
-    https: false,
-    hot: true,
-    hotOnly: false,
+    
     base: process.env.VITE_BASE_URL,
-    outDir: process.env.VITE_OUTPUT_DIR,
+    
     // 本地运行配置，及反向代理配置
     server: {
+      port: VITE_PORT,
+      https: false,
+      hot: true,
+      hotOnly: false,
+      open: true,
       host: process.env.VITE_HOST,
       cors: true,
       proxy, // 反向代理配置

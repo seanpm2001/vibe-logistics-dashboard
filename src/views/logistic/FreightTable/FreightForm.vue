@@ -438,7 +438,7 @@ const updateBatch = (data, batchIdx) => {
 };
 
 const resetForm = () => {
-  proxy.$nextTick(() => {
+  nextTick(() => {
     batchArr.value = [];
     freightItem.value = Object.assign({}, props.emptyFreightForm);
     proxy.$refs['dataForm'].clearValidate();

@@ -392,7 +392,7 @@ const sortByID = (_order) => {
 };
 
 const resetForm = () => {
-  proxy.$nextTick(() => {
+  nextTick(() => {
     proxy.$refs['freightForm']?.resetForm();
   });
 };

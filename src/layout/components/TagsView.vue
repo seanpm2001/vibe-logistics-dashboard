@@ -138,17 +138,15 @@ const initTags = () => {
   const affixTags = (state.affixTags = filterAffixTags(routes.value));
   for (const tag of affixTags) {
     // Must have tag name
-    if (tag.name) {
+    if (tag.name)
       tagsViewStore.addVisitedView(tag);
-    }
   }
 };
 
 const addTags = () => {
   const { name } = $route;
-  if (name) {
+  if (name)
     tagsViewStore.addView($route);
-  }
   return false;
 };
 const refreshSelectedTag = (view) => {

@@ -102,16 +102,40 @@
         align="center"
       >
         <template #default="{ row }">
-          <el-tag @click="showOrderDrawer(row)">
-            #<span class="link-type">{{ row.id }}</span>
+          <el-tag>
+            <a
+              v-if="!row.rawOrders && row.shopifyId"
+              :href="`https://vibeus.myshopify.com/admin/orders/${row.shopifyId}`"
+              target="_blank"
+            >
+              #{{ row.id }}
+            </a>
+            <span
+              v-else
+              @click="showOrderDrawer(row)"
+            >
+              #{{ row.id }}
+            </span>
           </el-tag>
           <div v-if="row.rawOrders">
             <template
               v-for="item in row.rawOrders"
               :key="item.id"
             >
-              <el-tag @click="showOrderDrawer(item)">
-                #{{ item.id }}
+              <el-tag>
+                <a
+                  v-if="item.shopifyId"
+                  :href="`https://vibeus.myshopify.com/admin/orders/${item.shopifyId}`"
+                  target="_blank"
+                >
+                  #{{ item.id }}
+                </a>
+                <span
+                  v-else
+                  @click="showOrderDrawer(item)"
+                >
+                  #{{ item.id }}
+                </span>
               </el-tag>
               <br>
             </template>

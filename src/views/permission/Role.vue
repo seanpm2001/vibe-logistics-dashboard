@@ -223,7 +223,7 @@
 //   dialogVisible.value = true;
 //   checkStrictly.value = true;
 //   role.value = deepClone(scope.row);
-//   proxy.$nextTick(() => {
+//   nextTick(() => {
 //     const routes = this.generateRoutes(role.value.routes);
 //     this.$refs.tree.setCheckedNodes(this.generateArr(routes));
 //     // set checked state of a node not affects its father and child nodes

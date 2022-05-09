@@ -258,7 +258,7 @@ const handleInputFocus = (el, taskIdx, packageIdx) => {
 function clickNextUnitInput () {
   const { taskIdx, packageIdx } = focusStorage;
   if (taskIdx)
-    proxy.$nextTick(() => {
+    nextTick(() => {
       const serialCell = proxy.$refs['taskPackageArr'][taskIdx].querySelectorAll('.package-row')[packageIdx].querySelector('.serial-cell');
       setTimeout(() => {
         const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');

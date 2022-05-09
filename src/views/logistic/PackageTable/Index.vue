@@ -151,7 +151,7 @@
       <el-table-column
         class-name="product-column"
         label="Content"
-        width="200px"
+        width="220px"
       >
         <template #default="{ row }">
           <template
@@ -421,7 +421,9 @@ const carrierUrlEnum = {
   CAP_TRANS: '',
 };
 const getTrackingUrl = (carrier, trackingNumber) => {
-  return carrierUrlEnum[carrier](trackingNumber);
+  if (carrierUrlEnum[carrier])
+    return carrierUrlEnum[carrier](trackingNumber);
+  return '#/logistic/package';
 };
 </script>
 

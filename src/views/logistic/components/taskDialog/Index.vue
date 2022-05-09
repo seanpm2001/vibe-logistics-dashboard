@@ -390,7 +390,7 @@ const onHoldTask = () => { // TODO: onHoldTask
 };
 
 const resetForm = () => {
-  proxy.$nextTick(() => {
+  nextTick(() => {
     packageArr.value = [];
     taskItem.value = Object.assign({}, props.emptyTaskItem);
     proxy.$refs['dataForm'].clearValidate();
