@@ -440,11 +440,6 @@ const addWarehouseMoveTask = () => {
   dialogTaskVisible.value = true;
 };
 
-const handlePagination = config => {
-  listQuery.value = Object.assign(listQuery.value, config);
-  fetchList();
-};
-
 const handleFilter = () => {
   listQuery.value.page = 1;
   fetchList();

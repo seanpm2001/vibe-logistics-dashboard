@@ -51,17 +51,7 @@
     //"typeRoots": ["./node_modules/@types/", "./types"],
     "lib": ["ES2018", "DOM"]
   },
-  "include": [
-    ".d.ts",
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "vite-config/**/*.ts",
-    "**/*.ts",
-    "**/*.vue",
-    "**/*.md",
-  ],
+  "include": ["src", "vite-config", "typings"],
   "exclude": [
     "node_modules",
     "dist"

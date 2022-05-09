@@ -370,11 +370,6 @@ const statusTypeDict = {
   Cancelled: 'danger',
 };
 
-const handlePagination = (_config) => {
-  Object.assign(listQuery.value, _config);
-  fetchList();
-};
-
 const handleFilter = () => {
   listQuery.value.page = 1;
   fetchList();

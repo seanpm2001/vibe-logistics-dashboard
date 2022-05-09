@@ -368,11 +368,6 @@ const handleFilter = () => {
   fetchList();
 };
 
-const handlePagination = (_config) => {
-  Object.assign(listQuery.value, _config);
-  fetchList();
-};
-
 const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)

@@ -64,10 +64,18 @@
       </el-table-column>
       <el-table-column
         label="Tracking Num"
-        prop="trackingNumber"
         align="center"
-        width="120px"
-      />
+        width="200px"
+      >
+        <template #default="{ row }">
+          <a
+            :href="getTrackingUrl(row.task.carrier, row.trackingNumber)"
+            target="_blank"
+          >
+            {{ row.trackingNumber }}
+          </a>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Carrier"
         width="160px"
@@ -232,7 +240,7 @@ import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import UnitDescription from './UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
-import { parseTime, jsonToHump } from '@/utils/format';
+import { jsonToHump } from '@/utils';
 import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '@/api/logistic';
 import {
   packageStatusEnum,
@@ -254,7 +262,6 @@ const drawerUnitVisible = ref(false);
 const multipleSelection = ref([]);
 
 const warehousingTaskInfo = ref({
-  id: null,
   targetId: null,
   packageId: null,
   taskId: null,
@@ -313,11 +320,6 @@ const ifMeetHousingCondtion = (taskType, unitStatus) => {
       return true;
   }
   return false;
-};
-
-const handlePagination = (_config) => {
-  Object.assign(listQuery.value, _config);
-  fetchList();
 };
 
 const handleCloseDrawer = (done) => {
@@ -392,6 +394,34 @@ const onUnitStatusChange = (unit) => {
       }
     },
   });
+};
+
+const carrierUrlEnum = {
+  UPS: (trackNum: string) => `https://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1=${trackNum}&requester=ST/trackdetails`,
+  GLS: (trackNum: string) => `https://www.gso.com/Trackshipment?TrackingNumbers=${trackNum}`,
+  DAYLIGHT: (trackNum: string) => `https://mydaylight.dylt.com/external/shipment?probill=${trackNum}`,
+  USPS: (trackNum: string) => `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackNum}`,
+  TNT: (trackNum: string) => `https://www.tnt.com/express/en_us/site/tracking.html?searchType=con&cons=${trackNum}`,
+  R_AND_L: (trackNum: string) => `https://www2.rlcarriers.com/freight/shipping/shipment-tracing?pro=${trackNum}&docType=PRO&source=web`,
+  DAYANDROSS: (trackNum: string) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
+  KUEHNE_NAGEL: (trackNum: string) => `https://onlineservices.kuehne-nagel.com/public-tracking/shipments?query=${trackNum}`,
+  SAIA: (trackNum: string) => `https://www.saia.com/track/details;pro=${trackNum}`,
+  FASTFRATE: (trackNum: string) => `https://www.fastfrate.com/fastnet/fastnet.aspx?ProbillNo=${trackNum}`,
+  SF: (trackNum: string) => `https://www.sf-express.com/cn/en/dynamic_function/waybill/#search/bill-number/${trackNum}`,
+  ESTES: (trackNum: string) => `https://www.estes-express.com/myestes/shipment-tracking/?type=PRO&query=${trackNum}`,
+  ABF: (trackNum: string) => `https://arcb.com/tools/tracking.html#/${trackNum}`,
+  FEDEX: (trackNum: string) => `https://www.fedex.com/fedextrack/?trknbr=${trackNum}`,
+  XPO: (trackNum: string) => `https://track.xpoweb.com/ltl-shipment/${trackNum}/`,
+  TOLL: (trackNum: string) => `https://www.mytoll.com/?externalSearchQuery=${trackNum}&op=Search`,
+  ROSENAU: (trackNum: string) => `https://www.rosenau.ca/track-shipment/?probillNumber=${trackNum}`,
+  RRTS: (trackNum: string) => `https://tools.rrts.com/LTLTrack/?searchValues=${trackNum}`,
+  KINDERSLEY: (trackNum: string) => `https://tnt.kindersleytransport.com/tnt.php?SEARCH_CRITERIA=${trackNum}`,
+  PILOT: (trackNum: string) => `https://www.pilotdelivers.com/pilot-shipment-detail/?Pro=${trackNum}`,
+  AUK: '',
+  CAP_TRANS: '',
+};
+const getTrackingUrl = (carrier, trackingNumber) => {
+  return carrierUrlEnum[carrier](trackingNumber);
 };
 </script>
 

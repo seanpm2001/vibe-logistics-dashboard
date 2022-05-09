@@ -159,7 +159,7 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
     });
   });
   return temp;
-});
+}) as Record<string, any>;
 
 const handleFilter = () => {
   listQuery.value.page = 1;

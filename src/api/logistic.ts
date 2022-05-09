@@ -24,6 +24,8 @@ const handleReqElMsg = (fn, action: string, name: string, identifier?) => {
   });
 };
 
+const jsonClone = (obj: object) :object => JSON.parse(JSON.stringify(obj));
+
 /* 海运 Freight API */
 export async function queryFreightsAPI (params?) {
   const res = await requester.get('freights', {
@@ -140,9 +142,11 @@ export async function findTaskAPI (taskId: number) {
   return item;
 }
 export async function updateTaskAPI (taskId: number, updates) {
-  delete updates['packages'];
+  const data = jsonClone(updates);
+  delete data['packages'];
+
   const item = handleReqElMsg(
-    requester.put(`/warehouse/task/${taskId}`, updates), 'Update', 'Warehouse Task', taskId
+    requester.put(`/warehouse/task/${taskId}`, data), 'Update', 'Warehouse Task', taskId
   );
   return item;
 }
@@ -190,9 +194,10 @@ export async function deletePackageAPI (packageId: number) {
 
 /* Warehousing API */
 export async function updatePackageUnitAPI(packageId: number, unitId: number, updates) {
-  delete updates['item'];
+  const data = jsonClone(updates);
+  delete data['item'];
   const item = handleReqElMsg(
-    requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, updates), 'Update', 'Package Unit', unitId
+    requester.put(`/warehouse/package/${packageId}/unit/${unitId}`, data), 'Update', 'Package Unit', unitId
   );
   return item;
 }

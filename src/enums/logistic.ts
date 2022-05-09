@@ -1,29 +1,29 @@
-export const enum freightStatusEnum {
+export enum freightStatusEnum {
   IN_TRANSIT = 'In Transit',
   DELIVERED = 'Delivered',
   CANCELLED = 'Canceled',
   PICKED_UP = 'Picked Up'
 }
-export const enum forwarderEnum {
+export enum forwarderEnum {
   FPL = 'Full Power Logistics',
   FLEXPORT = 'FLEXPORT',
   LIGHTNING = 'LIGHTNING',
   AGL = 'AGL',
   SF = 'SF'
 }
-export const enum modeEnum {
+export enum modeEnum {
   OCEAN = 'Ocean',
   AIR = 'Air',
   TRUCK = 'Truck'
 }
-export const enum containerEnum {
+export enum containerEnum {
   GP20 = '20GP',
   GP40 = '40GP',
   HQ40 = '40HQ',
   HQ45 = '45HQ',
   LCL = 'LCL'
 }
-export const enum oriPortEnum {
+export enum oriPortEnum {
   CALGARY = 'Calgary',
   CALIFORNIA = 'California',
   FUZHOU = 'Fuzhou',
@@ -31,7 +31,7 @@ export const enum oriPortEnum {
   XIAMEN = 'Xiamen',
   YANTIAN = 'Yantian'
 }
-export const enum destPortEnum {
+export enum destPortEnum {
   CALGARY = 'Calgary',
   FELIXTOWE = 'Felixtowe',
   FUZHOU = 'Fuzhou',
@@ -39,7 +39,7 @@ export const enum destPortEnum {
   LA_LB = 'LA/LB',
   MELBOURNE = 'Melbourne'
 }
-export const enum packageStatusEnum {
+export enum packageStatusEnum {
   DELIVERING = 'Delivering',
   DELIVERED_BUT_UNCHECKED = 'Delivered but unchecked',
   COMPLETE_WITH_DELIVERED = 'Complete with delivered',
@@ -48,7 +48,7 @@ export const enum packageStatusEnum {
   RETURNED_BUT_UNCHECKED = 'Returned but unchecked',
   LOST = 'Lost'
 }
-export const enum taskStatusEnum {
+export enum taskStatusEnum {
   UNFULFILLED = 'Unfulfilled',
   FULFILLED_AND_DELIVERING = 'Fulfilled and delivering',
   FAILED = 'Failed',
@@ -56,23 +56,23 @@ export const enum taskStatusEnum {
   ONHOLD = 'Onhold',
   CANCELLED = 'Cancelled'
 }
-export const enum taskTypeEnum {
+export enum taskTypeEnum {
   FULFILLMENT = 'Fulfillment',
   REPLACE = 'Replace',
   RETURN = 'Return',
   RETURN_TO_REPAIR = 'Return to Repair',
 }
-export const enum inventoryTaskTypeEnum {
+export enum inventoryTaskTypeEnum {
   MOVE = 'Move'
 }
-export const enum taskReasonEnum {
+export enum taskReasonEnum {
   ITEM_UPGRADE = 'Unit Upgrade',
   ITEM_DEGRADE = 'Unit Degrade',
   ITEM_DEMAGED = 'Unit Damaged',
   HARDWARE_DEFECT = 'Hardware Defect',
   PACKAGE_LOST = 'Package Lost'
 }
-export const enum unitConditionEnum {
+export enum unitConditionEnum {
   GOOD = 'Good',
   FIXED_A = 'Fixed Class A',
   FIXED_B = 'Fixed Class B',
@@ -80,12 +80,12 @@ export const enum unitConditionEnum {
   SCRAP = 'Scrap',
   DAMAGED = 'Damaged',
 }
-export const enum packageConditionEnum {
+export enum packageConditionEnum {
   GOOD = 'Good',
   MISSING = 'Missing',
   DAMAGED = 'Damaged',
 }
-// export const enum reversedConditionEnum {
+// export enum reversedConditionEnum {
 //   'Good' = 'GOOD',
 //   'Fixed Class A' = 'FIXED_A',
 //   'Fixed Class B' = 'FIXED_B',
@@ -111,7 +111,7 @@ export const transportCarrierEnum = {
     FEDEX: 'FedEx',
   }
 };
-export const enum codeNameEnum {
+export enum codeNameEnum {
   '55V1B' = '55 V1 Board',
   '55V1WS' = '55 V1 White Stand',
   '55V1RS' = '55 V1 Red Stand',
@@ -150,7 +150,7 @@ export const enum codeNameEnum {
   '55S1BPB' = '55 S1 Package Box',
   '75ProBPB' = '75 Pro Package Box'
 }
-export const enum codeIconEnum {
+export enum codeIconEnum {
   '55V1B' = 'product-board',
   '55V1WS' = 'product-stand',
   '55V1RS' = 'product-stand',
@@ -179,7 +179,7 @@ export const enum codeIconEnum {
   '75ProBPB' = '75 Pro Package Box'
 }
 
-export const enum skuCodeEnum {
+export enum skuCodeEnum {
   'V55N201W/WOS' = '55V1B',
   'V55N203W' = '55V1B',
   'V55N205W' = '55V1B',
