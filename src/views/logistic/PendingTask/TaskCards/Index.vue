@@ -155,7 +155,7 @@
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, toNumber } from '@/utils';
+import { debounce, toNumber, formatVBDate } from '@/utils';
 import { skuCodeEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
@@ -165,7 +165,6 @@ const { proxy } = getCurrentInstance();
 
 const dataList = inject('dataList');
 const contrastTask = inject('contrastTask');
-
 
 /* End Data */
 

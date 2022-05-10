@@ -8,7 +8,7 @@
       width="300px"
       label="Create Date"
     >
-      {{ formatDate(task.createdAt) }}
+      {{ formatVBDate(task.createdAt) }}
     </el-descriptions-item>
     <el-descriptions-item label="Order ID">
       {{ orderEnum[task.orderId]?.id }}
@@ -54,6 +54,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { updateTaskAPI } from '@/api/logistic';
+import { formatVBDate } from '@/utils/logistic';
 
 const { proxy } = getCurrentInstance();
 
@@ -68,8 +69,6 @@ const emit = defineEmits(['fetchList']);
 const taskCarrier = ref(props.task.carrier);
 
 const orderEnum = inject('orderEnum');
-
-const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
 
 const onCarrierChange = (task) => {
   task.carrier = taskCarrier.value;

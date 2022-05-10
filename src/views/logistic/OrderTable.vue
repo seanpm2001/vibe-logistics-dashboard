@@ -140,7 +140,7 @@
               <br>
             </template>
           </div>
-          <p>{{ formatDate(row.createdAt) }}</p>
+          <p>{{ formatVBDate(row.createdAt) }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -384,7 +384,7 @@ import {
   createTaskAPI,
   deleteTaskAPI
 } from '@/api/logistic';
-import { formatAssignedOrderItem } from '@/utils/logistic';
+import { formatAssignedOrderItem, formatVBDate } from '@/utils/logistic';
 import { packageStatusEnum, codeNameEnum, codeIconEnum, transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 
@@ -487,8 +487,6 @@ function fetchList() {
 useWarehouseEnumHook();
 useQueryHook(listQuery, 'order', fetchList);
 /* End Query Related */
-
-const formatDate = date => date.replace('T', ' ').replace(/\.\d+/, '');
 
 const handleFilter = () => {
   listQuery.value.page = 1;

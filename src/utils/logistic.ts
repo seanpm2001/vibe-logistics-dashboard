@@ -23,3 +23,5 @@ export const formatAssignedOrderItem = orderItem => {
   orderItem.products = combineSameProductQuantity(productsArr); // {sku: totalQuantity}
   return orderItem;
 };
+
+export const formatVBDate = (date: string) => date.replace('T', ' ').replace(/\.\d+/, '');

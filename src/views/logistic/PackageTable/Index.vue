@@ -172,6 +172,31 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="Fulfilled At"
+        width="180px"
+        align="center"
+      >
+        <template #default="{ row }">
+          {{ formatVBDate(row.createdAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Delivered At"
+        width="260px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <el-date-picker
+            v-model="row.deliveredAt"
+            :disabled="notCommonPermission"
+            type="date"
+            placeholder="Please pick a date"
+            value-format="YYYY-MM-DD"
+            @change="onDeliveredAtChange(row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
         label="Last Modified"
         width="160px"
         align="center"
@@ -237,23 +262,21 @@
 
 <script lang="ts" setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import UnitDescription from './UnitDescription.vue';
 import HousingDialog from './WarehousingDialog.vue';
-import { jsonToHump } from '@/utils';
-import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI } from '@/api/logistic';
+import { jsonToHump, formatVBDate } from '@/utils';
+import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI, updatePackageAPI } from '@/api/logistic';
 import {
   packageStatusEnum,
   taskTypeEnum,
   codeNameEnum,
   codeIconEnum,
-  skuCodeEnum,
 } from '@/enums/logistic';
-import { useLogisticStore } from '@/store';
+import { useLogisticStore, useUserStore } from '@/store';
 
 /* Start data */
 const { warehouseEnum } = storeToRefs(useLogisticStore());
-const { proxy } = getCurrentInstance();
 
 const warehousingItem = ref({});
 
@@ -292,6 +315,10 @@ const unitItem = ref({});
 const serialScopeArr = ref([]);
 provide('unitItem', unitItem);
 /* End data */
+
+const { role } = storeToRefs(useUserStore());
+const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE'].includes(role.value));
+
 
 function queryPackage() {
   listLoading.value = true;
@@ -424,6 +451,18 @@ const getTrackingUrl = (carrier, trackingNumber) => {
   if (carrierUrlEnum[carrier])
     return carrierUrlEnum[carrier](trackingNumber);
   return '#/logistic/package';
+};
+
+const onDeliveredAtChange = (packageItem) => {
+  ElMessageBox.confirm('Update it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm')
+        updatePackageAPI(packageItem.id, packageItem);
+      else
+        fetchList();
+    },
+  });
 };
 </script>
 
