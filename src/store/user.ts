@@ -34,6 +34,7 @@ export const useUserStore = defineStore({
     login(userInfo) {
       return new Promise((resolve, reject) => {
         loginAPI(userInfo).then(data => {
+          console.log('data: ', data);
           setToken(data.accessToken);
           resolve(null);
         }).catch(error => {

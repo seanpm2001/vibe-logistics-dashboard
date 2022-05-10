@@ -1,26 +1,9 @@
 import axios from 'axios';
 import { useUserStore } from '../store';
-import { ElMessage, ElLoading } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import 'element-plus/theme-chalk/src/loading.scss';
-import { getToken } from '@/utils/auth';
+import { getToken, tryHideFullScreenLoading, showFullScreenLoading } from '@/utils';
 import { jsonToHump, jsonToUnderline } from '@/utils/format';
-
-
-/* start 将同一时刻的请求合并。*/
-let loadingInstance = null as any;
-let needLoadingRequestCount = 0;
-const startLoading = () => loadingInstance = ElLoading.service({fullscreen: true});
-const endLoading = () => loadingInstance.close();
-
-const showFullScreenLoading = () => {
-  needLoadingRequestCount++ === 0 && startLoading();
-};
-
-const tryHideFullScreenLoading = () => {
-  if (needLoadingRequestCount <= 0) return;
-  --needLoadingRequestCount === 0 && endLoading();
-};
-/* end 将同一时刻的请求合并。*/
 
 const requester = axios.create({
   baseURL: 'https://logistics.vibe.dev/beta/api',

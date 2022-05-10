@@ -78,7 +78,7 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    component: () => import('@/views/Login.vue'),
+    component: () => import('@/views/Login/Index.vue'),
     hidden: true
   },
   // {

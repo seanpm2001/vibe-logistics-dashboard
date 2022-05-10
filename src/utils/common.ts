@@ -281,3 +281,14 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ');
   }
 }
+
+import defaultSettings from '@/settings';
+
+const title = defaultSettings.title || 'Vibe Logistics System';
+
+export function getPageTitle(pageTitle) {
+  if (pageTitle) {
+    return `${pageTitle} - ${title}`;
+  }
+  return `${title}`;
+}

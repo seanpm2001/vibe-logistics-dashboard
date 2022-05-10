@@ -1,10 +1,10 @@
 import router from './router/index';
 import { useUserStore, usePermissionStore } from './store';
-import { ElMessage } from 'element-plus';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css'; // progress bar style
 import { getToken } from '@/utils/auth'; // get token from cookie
-import getPageTitle from '@/utils/get-page-title';
+import { getPageTitle, tryHideFullScreenLoading, showFullScreenLoading } from '@/utils';
+
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 // no redirect whitelist
@@ -28,6 +28,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       const isGetUserInfo = permissionStore.isGetUserInfo;
       if (isGetUserInfo) {
+        showFullScreenLoading();
         next();
       } else {
         try {
@@ -69,5 +70,6 @@ router.beforeEach(async(to, from, next) => {
 
 router.afterEach(() => {
   // finish progress bar
+  tryHideFullScreenLoading();
   NProgress.done();
 });

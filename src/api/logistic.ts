@@ -228,6 +228,7 @@ export async function loginAPI(formInfo) {
   let res = null;
   await requester.post('/login', formInfo)
     .then((data) => {
+      console.log('data: ', data);
       res = data;
       ElMessage.success('Welcome to Vibe Logisitc System.');
     })

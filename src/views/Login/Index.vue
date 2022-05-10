@@ -123,7 +123,7 @@
 
 <script lang="ts" setup>
 // 局部组件（导入）
-import Captcha from '@/components/Captcha/Index.vue';
+import Captcha from './Captcha/Index.vue';
 import { ElMessage } from 'element-plus';
 import { validUsername } from '@/utils/validate';
 import { useUserStore } from '@/store';
@@ -273,33 +273,7 @@ function loginReq () {
 }
 </script>
 
-<style lang="sass">
-.test-alert
-  .el-icon-info
-    margin-right: 8px
-  .el-alert__content
-    display: flex
-    align-items: center
-    .el-alert__closebtn
-      margin-left: 8px
-      font-size: 13px
-      border: 1px solid #000
-      border-radius: 50%
-      cursor: pointer
-</style>
-
 <style scoped lang="sass">
-.test-alert
-  position: absolute
-  bottom: 8px
-  left: 8px
-  z-index: 999
-  display: flex
-  align-items: center
-  .el-alert__content
-    display: flex
-    align-items: center
-
 .container
   position: relative
   width: 100%
