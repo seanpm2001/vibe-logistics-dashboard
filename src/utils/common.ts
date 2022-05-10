@@ -156,7 +156,7 @@ export function getTime(type) {
  * @param {boolean} immediate
  * @return {*}
  */
-export function debounce(func, wait, immediate) {
+export function debounce(func, wait, immediate?) {
   let timeout, args, context, timestamp, result;
 
   const later = function() {

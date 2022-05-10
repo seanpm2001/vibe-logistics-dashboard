@@ -163,7 +163,7 @@ const emit = defineEmits(['fetchList']);
 /* Start Data */
 const { proxy } = getCurrentInstance();
 
-const dataList = inject('dataList');
+const dataList = inject('dataList') as any;
 const contrastTask = inject('contrastTask');
 
 /* End Data */
@@ -231,7 +231,6 @@ const remoteMethod = (query, task, packageItem, unit) => {
         return;
       }
       if (query && data.length === 1) { // 只有一个符合，直接submit
-        const packageId = packageItem.id;
         unit.serial = query;
         handleSubmitPackage(packageItem, task);
         return;
@@ -249,7 +248,7 @@ const remoteMethod = (query, task, packageItem, unit) => {
   }
 };
 
-let focusStorage = {};
+let focusStorage = {} as { taskIdx: number, packageIdx: number };
 const handleInputFocus = (el, taskIdx, packageIdx) => {
   focusStorage = { taskIdx, packageIdx };
 };
@@ -312,7 +311,7 @@ function removeEmptyUnit (packageItem) {
   });
 }
 
-const onPackagesChange = (task, packages, type, idx) => {
+const onPackagesChange = (task, packages, type, idx?) => {
   if (type === 'remove')
     packages.splice(idx, 1);
   else {
@@ -327,7 +326,7 @@ const onPackagesChange = (task, packages, type, idx) => {
 
 const handleDeletePackage = (packageId) => {
   packageId && deletePackageAPI(packageId).then(() => {
-    fetchList();
+    fetchList(); 
   });
 };
 </script>

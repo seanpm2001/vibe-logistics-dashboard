@@ -1,58 +1,7 @@
 <template>
   <div class="page">
     <div class="statistics">
-      <div class="f-row col-center">
-        <el-date-picker
-          v-model="dateFilter"
-          :shortcuts="shortcuts"
-          type="daterange"
-          value-format="YYYY-MM-DD"
-          placeholder="Please pick a date"
-        />
-        <span class="mgl-5 mgr-5"> before 11.30 am</span>
-        <el-select
-          v-model="listQuery.transportMode"
-          placeholder="Transport"
-          style="width: 120px"
-          @change="handleFilter"
-        >
-          <el-option
-            v-for="(transport, key) in transportEnum"
-            :key="key"
-            :label="transport"
-            :value="key"
-          />
-        </el-select>
-        <el-select
-          v-if="listQuery.transportMode"
-          v-model="listQuery.carrier"
-          placeholder="Carrier"
-          style="width: 120px"
-          @change="handleFilter"
-        >
-          <el-option
-            v-for="(carrier, key) in transportCarrierEnum[listQuery.transportMode]"
-            :key="key"
-            :label="carrier"
-            :value="key"
-          />
-        </el-select>
-        <el-input
-          v-model="listQuery.search"
-          style="width: 200px;"
-          placeholder="Search: (order info)"
-          @change="fetchList"
-        >
-          <template #append>
-            <el-button
-              class="mgl-5"
-              type="primary"
-              :icon="Search"
-              @click="fetchList"
-            />
-          </template>
-        </el-input>
-      </div>
+      <FilterHeader @fetch-list="fetchList" />
       <el-descriptions
         :column="3"
         border
@@ -89,16 +38,15 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
-import { Search } from '@element-plus/icons-vue';
+import FilterHeader from './FilterHeader.vue';
 import TaskCards from './TaskCards/Index.vue';
-import { parseTime, formatAssignedOrderItem } from '@/utils';
+import { formatAssignedOrderItem } from '@/utils/logistic';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
-import { skuCodeEnum, codeNameEnum, transportEnum, transportCarrierEnum } from '@/enums/logistic';
+import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
 
 /* Start Data */
 // const { role } = storeToRefs(useUserStore());
-const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 20,
@@ -107,31 +55,14 @@ const listQuery = ref({
   search: '',
   carrier: '',
   transportMode: '',
+  typeArr: ['FULFILLMENT', 'REPLACE'],
 });
 
-watchEffect(() => {
-  if (dateFilter.value) {
-    listQuery.value.start = dateFilter.value[0] + 'T11:30:00';
-    listQuery.value.end = dateFilter.value[1] + 'T11:30:00';
-    fetchList();
-  }
-});
 
 const total = ref(0);
 const dataList = ref(null);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const contrastTask = ref(null); // 对比数据是否修改
-
-const shortcuts = [
-  {
-    text: 'Today',
-    value: () => [new Date().getTime() - 86400 * 1000, new Date()],
-  },
-  {
-    text: 'Tomorrow',
-    value: () => [new Date(), new Date().getTime() + 86400 * 1000],
-  },
-];
 
 provide('listQuery', listQuery);
 provide('dataList', dataList);
@@ -161,11 +92,6 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
   return temp;
 }) as Record<string, any>;
 
-const handleFilter = () => {
-  listQuery.value.page = 1;
-  fetchList();
-};
-
 function getOrderIdArr (taskList) {
   const temp = [];
   taskList.forEach(task => temp.push(task.orderId));
@@ -175,8 +101,9 @@ function getOrderIdArr (taskList) {
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
-    params.append('tasktype', 'FULFILLMENT');
-    params.append('tasktype', 'REPLACE');
+    listQuery.value.typeArr.forEach(type => {
+      params.append('tasktype', type);
+    });
     queryTasksAPI(params).then(data => {
       if (!data.items.length) {
         listQuery.value.search = '';
@@ -200,17 +127,6 @@ function queryTask () {
 const fetchList = () => {
   setTimeout(() => queryTask(), 200);
 };
-
-function initDateFilter () {
-  dateFilter.value = [
-    parseTime(new Date() - 86400000 * 10, '{y}-{m}-{d}'), // 十天前
-    parseTime(new Date(), '{y}-{m}-{d}')
-  ];
-}
-
-onMounted(() => {
-  initDateFilter();
-});
 </script>
 
 <style lang="sass" scoped>

@@ -4,16 +4,17 @@
       <el-input
         v-model="listQuery.search"
         placeholder="Package Info"
-        style="width: 120px"
-      />
-      <el-button
-        v-wave
-        type="primary"
-        :icon="Search"
-        @click="handleFilter"
+        style="width: 220px"
       >
-        Search
-      </el-button>
+        <template #append>
+          <el-button
+            class="mgl-5"
+            type="primary"
+            :icon="Search"
+            @click="handleFilter"
+          />
+        </template>
+      </el-input>
       <el-button
         v-wave
         disabled

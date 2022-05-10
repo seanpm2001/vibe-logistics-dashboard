@@ -56,15 +56,16 @@ export enum taskStatusEnum {
   ONHOLD = 'Onhold',
   CANCELLED = 'Cancelled'
 }
-export enum taskTypeEnum {
-  FULFILLMENT = 'Fulfillment',
-  REPLACE = 'Replace',
-  RETURN = 'Return',
-  RETURN_TO_REPAIR = 'Return to Repair',
-}
-export enum inventoryTaskTypeEnum {
-  MOVE = 'Move'
-}
+export const taskTypeEnum = {
+  FULFILLMENT: 'Fulfillment',
+  REPLACE:'Replace',
+  RETURN: 'Return',
+  RETURN_TO_REPAIR: 'Return to Repair',
+};
+export const inventoryTaskTypeEnum = {
+  MOVE: 'Move'
+};
+export const allTaskTypeEnum = Object.assign({}, taskTypeEnum, inventoryTaskTypeEnum)
 export enum taskReasonEnum {
   ITEM_UPGRADE = 'Unit Upgrade',
   ITEM_DEGRADE = 'Unit Degrade',
