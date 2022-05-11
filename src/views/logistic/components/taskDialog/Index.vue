@@ -104,7 +104,7 @@
           </el-form-item>
           <el-form-item label="On hold">
             <el-switch
-              v-model="isOnHold"
+              v-model="taskItem.onHold"
               :disabled="notCommonPermission"
               @click="onHoldTask"
             >

@@ -426,6 +426,7 @@ const taskItem = ref({
   returnReason: null,
   newAddress: null,
   note: null,
+  onHold: false,
   products: [{
     id: null,
     productCode: null,

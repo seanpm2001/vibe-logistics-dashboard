@@ -208,31 +208,20 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { Delete } from '@element-plus/icons-vue';
 import TaskDialog from './components/taskDialog/Index.vue';
 import {
-  listWarehousesAPI,
   queryTasksAPI,
   findTaskAPI,
   deleteTaskAPI,
   findAssignedOrderAPI,
 } from '@/api/logistic';
-import {
-  packageStatusEnum,
-  taskTypeEnum,
-  codeNameEnum,
-  codeIconEnum,
-  skuCodeEnum,
-} from '@/enums/logistic';
+import { taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 import { useLogisticStore } from '@/store';
 
 /* Start Data */
 const { warehouseEnum } = storeToRefs(useLogisticStore());
 const taskOrderItem = shallowRef(null);
-const packageList = ref([]);
-
 
 const dialogStatus = ref('view');
-const downloadLoading = ref(false);
-const disableNewShipment = ref(true);
 const dialogTaskVisible = ref(false);
 
 const multipleSelection = ref([]);
@@ -246,6 +235,7 @@ const taskItem = ref({
   returnReason: null,
   newAddress: null,
   note: null,
+  onHold: false,
   products: [{
     id: null,
     productCode: null,

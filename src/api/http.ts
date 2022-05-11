@@ -68,10 +68,23 @@ requester.interceptors.response.use(
 
 export default requester;
 
+const hump2Underline = (str: string) => str.replace(/([A-Z])/g, '_$1').toLowerCase();
+
 function jsonToUnderLineParamsAndData(config: any) {
-  const params = config.params;
+  let params = config.params;
+  if (typeof params === 'object') { // 传入的params为URLSearchParams
+    let newParams = '';
+    for (const item of params) {
+      const newKey = hump2Underline(item[0]);
+      console.log('newKey: ', newKey);
+      newParams += `&${newKey}=${item[1]}`;
+    }
+    params = new URLSearchParams(newParams); // 去除第一个&
+  } else {
+    jsonToUnderline(params);
+  }
+  console.log('params: ', params);
   const data = config.data;
-  jsonToUnderline(params);
   jsonToUnderline(data);
   config.params = params;
   config.data = data;

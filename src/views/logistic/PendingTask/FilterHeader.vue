@@ -9,7 +9,7 @@
     />
     <span class="mgl-5 mgr-5"> before 11.30 am</span>
     <el-select
-      v-model="listQuery.typeArr"
+      v-model="typeArr"
       placeholder="Task Type"
       multiple
       clearable
@@ -74,6 +74,7 @@ import { parseTime } from '@/utils/format';
 const emit = defineEmits(['fetchList']);
 
 const listQuery = inject('listQuery') as any;
+const typeArr = inject('typeArr');
 
 const shortcuts = [
   {

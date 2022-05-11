@@ -50,14 +50,15 @@ import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 const listQuery = ref({
   page: 1,
   perPage: 20,
+  onHold: false,
   start: null,
   end: null,
   search: '',
   carrier: '',
   transportMode: '',
-  typeArr: ['FULFILLMENT', 'REPLACE'],
 });
 
+const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
 const total = ref(0);
 const dataList = ref(null);
@@ -65,6 +66,7 @@ const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const contrastTask = ref(null); // 对比数据是否修改
 
 provide('listQuery', listQuery);
+provide('typeArr', typeArr);
 provide('dataList', dataList);
 provide('orderEnum', orderEnum);
 provide('contrastTask', contrastTask);
@@ -101,7 +103,7 @@ function getOrderIdArr (taskList) {
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
-    listQuery.value.typeArr.forEach(type => {
+    typeArr.value.forEach(type => {
       params.append('tasktype', type);
     });
     queryTasksAPI(params).then(data => {
