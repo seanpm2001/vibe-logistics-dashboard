@@ -1,5 +1,6 @@
 <template>
   <el-descriptions
+    class="mgb-5"
     :column="2"
     border
   >
@@ -43,15 +44,15 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
-        Marketplace
+        Created At
       </template>
-      {{ (orderItem?.marketplace) }}
+      {{ formatVBDate(orderItem?.createdAt) }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
-        Created At
+        Marketplace
       </template>
-      {{ (orderItem?.createdAt) }}
+      {{ (orderItem?.marketplace) }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -69,8 +70,7 @@
 
 <script lang="ts" setup>
 import OrderShipmentInfo from './OrderShipmentInfo.vue';
-import { ElMessageBox } from 'element-plus';
-import { packageStatusEnum } from '@/enums/logistic';
+import { formatVBDate } from '@/utils/logistic';
 import { codeNameEnum, codeIconEnum, skuCodeEnum } from '@/enums/logistic';
 
 // eslint-disable-next-line no-undef

@@ -199,23 +199,27 @@
       >
         <template #default="{ row }">
           <template
-            v-for="(item, index) in row.tasks"
-            :key="item.id"
+            v-for="(task, index) in row.tasks"
+            :key="task.id"
           >
             <div class="mgb-5">
               <el-tag
-                class="cursor-pointer"
-                @click="editWarehouseTask(row.id, item.id)"
+                type="success"
+                class="cursor-pointer mgr-5"
+                @click="editWarehouseTask(row.id, task.id)"
               >
                 Task {{ index+1 }}
               </el-tag>
+              <el-tag class="mgr-5">
+                {{ task.taskType }}
+              </el-tag>
               <el-popconfirm
-                v-if="item?.id"
+                v-if="task?.id"
                 confirm-button-text="OK"
                 cancel-button-text="No, Thanks"
                 icon-color="red"
                 title="Are you sure to delete this?"
-                @confirm="deleteTaskAPI(item.id).then(() => fetchList())"
+                @confirm="deleteTaskAPI(task.id).then(() => fetchList())"
               >
                 <template #reference>
                   <svg-icon
@@ -364,6 +368,12 @@
       direction="ltr"
     >
       <OrderDescription :order-item="orderItem" />
+      <template
+        v-for="order in orderItem.rawOrders"
+        :key="order.id"
+      >
+        <OrderDescription :order-item="order" />
+      </template>
     </el-drawer>
   </div>
 </template>
