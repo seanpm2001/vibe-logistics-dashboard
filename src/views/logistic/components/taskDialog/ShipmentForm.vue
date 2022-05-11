@@ -180,6 +180,7 @@ const notShipmentPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOU
 
 const emptyPackage = {
   trackingNumber: null,
+  unitSystem: null,
   units: [{
     serial: null,
     status: 'DELIVERING',
@@ -200,7 +201,8 @@ const disableNewPackage = computed(() => {
 });
 
 const addPackage = () => {
-  packageArr.value.push(Object.assign({}, emptyPackage));
+  const unitSystem = taskItem.targetId !== 6 ? 'SI' : 'BS';
+  packageArr.value.push(Object.assign({}, emptyPackage, { unitSystem }));
 };
 
 const handleCostChange = (key) => {

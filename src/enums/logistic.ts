@@ -65,7 +65,7 @@ export const taskTypeEnum = {
 export const inventoryTaskTypeEnum = {
   MOVE: 'Move'
 };
-export const allTaskTypeEnum = Object.assign({}, taskTypeEnum, inventoryTaskTypeEnum)
+export const allTaskTypeEnum = Object.assign({}, taskTypeEnum, inventoryTaskTypeEnum);
 export enum taskReasonEnum {
   ITEM_UPGRADE = 'Unit Upgrade',
   ITEM_DEGRADE = 'Unit Degrade',

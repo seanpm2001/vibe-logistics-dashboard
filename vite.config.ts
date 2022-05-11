@@ -87,7 +87,7 @@ export default (({command} : {command: string}) => {
       https: false,
       hot: true,
       hotOnly: false,
-      open: true,
+      open: false,
       host: process.env.VITE_HOST,
       cors: true,
       proxy, // 反向代理配置

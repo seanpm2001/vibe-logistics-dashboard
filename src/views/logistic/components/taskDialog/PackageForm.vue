@@ -28,7 +28,7 @@
         <el-input
           v-model="taskPackage.weight"
           :disabled="notPackagePermission"
-          placeholder="Weight (kg)"
+          placeholder="Weight"
           @input="val => (taskPackage.weight = toNumber(val))"
         />
       </el-form-item>
@@ -36,7 +36,7 @@
         <el-input
           v-model="taskPackage.length"
           :disabled="notPackagePermission"
-          placeholder="Length (cm)"
+          placeholder="Length"
           @input="val => (taskPackage.length = toNumber(val))"
         />
       </el-form-item>
@@ -44,7 +44,7 @@
         <el-input
           v-model="taskPackage.width"
           :disabled="notPackagePermission"
-          placeholder="Width (cm)"
+          placeholder="Width"
           @input="val => (taskPackage.width = toNumber(val))"
         />
       </el-form-item>
@@ -52,9 +52,23 @@
         <el-input
           v-model="taskPackage.height"
           :disabled="notPackagePermission"
-          placeholder="Height (cm)"
+          placeholder="Height"
           @input="val => (taskPackage.height = toNumber(val))"
         />
+      </el-form-item>
+      <el-form-item label="Unit">
+        <el-select
+          v-model="taskPackage.unitSystem"
+          placeholder="Unit System"
+          default-first-option
+        >
+          <el-option
+            v-for="unitSys in ['SI', 'BS']"
+            :key="unitSys"
+            :label="unitSys"
+            :value="unitSys"
+          />
+        </el-select>
       </el-form-item>
     </el-row>
 

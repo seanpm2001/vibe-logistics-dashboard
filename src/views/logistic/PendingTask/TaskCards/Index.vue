@@ -15,9 +15,9 @@
         <div class="col2 serial-label label">
           Package Serials
         </div>
-        <div class="col3 label w-200">
+        <div class="col3 label w-300">
           Package Tracking Number
-          Weight(kg) & Dimension(cm)
+          Weight & Dimension & Unit System
         </div>
         <div class="col4 label w-180">
           Operation
@@ -69,7 +69,7 @@
                 </div>
               </template>
             </div>
-            <div :class="'col3 cell w-200' + (item.trackingNumber ? '' : ' error-border-tip')">
+            <div :class="'col3 cell w-300' + (item.trackingNumber ? '' : ' error-border-tip')">
               <el-input
                 v-model="item.trackingNumber"
                 placeholder="Tracking Number"
@@ -95,6 +95,18 @@
                   placeholder="Height"
                   @input="val => (item.height = toNumber(val))"
                 />
+                <el-select
+                  v-model="item.unitSystem"
+                  placeholder="Unit System"
+                  default-first-option
+                >
+                  <el-option
+                    v-for="unitSys in ['SI', 'BS']"
+                    :key="unitSys"
+                    :label="unitSys"
+                    :value="unitSys"
+                  />
+                </el-select>
               </el-row>
             </div>
             <div class="col4 cell w-180">
@@ -155,7 +167,7 @@
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, toNumber, formatVBDate } from '@/utils';
+import { debounce, toNumber } from '@/utils';
 import { skuCodeEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
@@ -320,7 +332,8 @@ const onPackagesChange = (task, packages, type, idx?) => {
       ElMessage.error('Exceed quantity limit');
       return;
     }
-    packages.push({id: null, taskId: task.id, trackingNumber: null, units: [{serial: null, status: 'DELIVERING'}]});
+    const unitSystem = task.targetId !== 6 ? 'SI' : 'BS';
+    packages.push({id: null, taskId: task.id, trackingNumber: null, unitSystem, units: [{serial: null, status: 'DELIVERING'}]});
   }
 };
 
@@ -355,12 +368,14 @@ const handleDeletePackage = (packageId) => {
     width: 185px
   .w-200
     width: 240px
+  .w-300
+    width: 300px
   .w-380
     width: 350px
     @media (max-width: 1420px)
       width: 200px
   .el-input
-    max-width: 240px
+    max-width: 300px
   .label, .cell
     margin: 0
     padding: 16px
