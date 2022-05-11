@@ -63,10 +63,10 @@
           default-first-option
         >
           <el-option
-            v-for="unitSys in ['SI', 'BS']"
-            :key="unitSys"
+            v-for="(unitSys, key) in unitSystemEnum"
+            :key="key"
             :label="unitSys"
-            :value="unitSys"
+            :value="key"
           />
         </el-select>
       </el-form-item>
@@ -158,7 +158,7 @@ import {
   updatePackageAPI,
   queryUnitsAPI,
 } from '@/api/logistic';
-import { packageStatusEnum, skuCodeEnum } from '@/enums/logistic';
+import { skuCodeEnum, unitSystemEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
 // eslint-disable-next-line no-undef

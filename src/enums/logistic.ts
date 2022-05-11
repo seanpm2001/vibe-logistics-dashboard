@@ -39,6 +39,10 @@ export enum destPortEnum {
   LA_LB = 'LA/LB',
   MELBOURNE = 'Melbourne'
 }
+export enum unitSystemEnum {
+  SI = 'SI(kg/cm)',
+  BS = 'BS(lbs/inch)'
+}
 export enum packageStatusEnum {
   DELIVERING = 'Delivering',
   DELIVERED_BUT_UNCHECKED = 'Delivered but unchecked',

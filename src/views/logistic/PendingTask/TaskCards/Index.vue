@@ -15,7 +15,7 @@
         <div class="col2 serial-label label">
           Package Serials
         </div>
-        <div class="col3 label w-300">
+        <div class="col3 label w-340">
           Package Tracking Number
           Weight & Dimension & Unit System
         </div>
@@ -69,7 +69,7 @@
                 </div>
               </template>
             </div>
-            <div :class="'col3 cell w-300' + (item.trackingNumber ? '' : ' error-border-tip')">
+            <div :class="'col3 cell w-340' + (item.trackingNumber ? '' : ' error-border-tip')">
               <el-input
                 v-model="item.trackingNumber"
                 placeholder="Tracking Number"
@@ -101,10 +101,10 @@
                   default-first-option
                 >
                   <el-option
-                    v-for="unitSys in ['SI', 'BS']"
-                    :key="unitSys"
+                    v-for="(unitSys, key) in unitSystemEnum"
+                    :key="key"
                     :label="unitSys"
-                    :value="unitSys"
+                    :value="key"
                   />
                 </el-select>
               </el-row>
@@ -168,7 +168,7 @@ import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber } from '@/utils';
-import { skuCodeEnum } from '@/enums/logistic';
+import { skuCodeEnum, unitSystemEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
 const emit = defineEmits(['fetchList']);
@@ -368,14 +368,14 @@ const handleDeletePackage = (packageId) => {
     width: 185px
   .w-200
     width: 240px
-  .w-300
-    width: 300px
+  .w-340
+    width: 360px
   .w-380
     width: 350px
     @media (max-width: 1420px)
       width: 200px
   .el-input
-    max-width: 300px
+    max-width: 360px
   .label, .cell
     margin: 0
     padding: 16px
@@ -389,4 +389,8 @@ const handleDeletePackage = (packageId) => {
 .dimension
   .el-input
     width: 60px
+  .el-select
+    width: 120px
+    .el-input
+      width: 120px
 </style>
