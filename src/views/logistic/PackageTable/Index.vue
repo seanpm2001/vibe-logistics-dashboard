@@ -1,40 +1,10 @@
 <template>
   <div class="page">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.search"
-        placeholder="Package Info"
-        style="width: 220px"
-      >
-        <template #append>
-          <el-button
-            class="mgl-5"
-            type="primary"
-            :icon="Search"
-            @click="handleFilter"
-          />
-        </template>
-      </el-input>
-      <el-button
-        v-wave
-        disabled
-        type="primary"
-        :icon="Filter"
-        @click="handleFilter"
-      >
-        Filter Warehousing List
-      </el-button>
-      <el-button
-        v-permission="['ADMIN', 'VIBE_MANAGER']"
-        v-wave
-        style="float: right"
-        type="danger"
-        :icon="Delete"
-        @click="handleDelSelected"
-      >
-        Delete Selected Item
-      </el-button>
-    </div>
+    <FilterHeader
+      :multiple-selection="multipleSelection"
+      @fetch-list="fetchList"
+      @handle-del-selected="handleDelSelected"
+    />
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -61,6 +31,18 @@
           <el-tag>
             #<span class="link-type">{{ row.id }}</span>
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Order ID"
+        width="220px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <AssignedOrderId
+            :order="orderEnum[row.task.orderId]"
+            @show-order-drawer="showOrderDrawer(orderEnum[row.task.orderId])"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -258,23 +240,33 @@
       :warehouse-enum="warehouseEnum"
       @findUnit="findUnit"
     />
+
+    <el-drawer
+      v-model="drawerOrderVisible"
+      title="Order Info"
+      size="60%"
+      direction="ltr"
+    >
+      <OrderDescription :order-item="orderItem" />
+      <template
+        v-for="order in orderItem.rawOrders"
+        :key="order.id"
+      >
+        <OrderDescription :order-item="order" />
+      </template>
+    </el-drawer>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { ElMessageBox } from 'element-plus';
-import UnitDescription from './UnitDescription.vue';
-import HousingDialog from './WarehousingDialog.vue';
+import { UnitDescription, HousingDialog, FilterHeader } from './components';
+import { AssignedOrderId, OrderDescription } from '../components';
 import { jsonToHump, formatVBDate } from '@/utils';
-import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI, updatePackageAPI } from '@/api/logistic';
-import {
-  packageStatusEnum,
-  taskTypeEnum,
-  codeNameEnum,
-  codeIconEnum,
-} from '@/enums/logistic';
+import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, updatePackageUnitAPI, updatePackageAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
+import { packageStatusEnum, taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { useLogisticStore, useUserStore } from '@/store';
+import { formatAssignedOrderItem } from '@/utils/logistic';
 
 /* Start data */
 const { warehouseEnum } = storeToRefs(useLogisticStore());
@@ -320,13 +312,21 @@ provide('unitItem', unitItem);
 const { role } = storeToRefs(useUserStore());
 const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE'].includes(role.value));
 
-
+const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryPackage() {
   listLoading.value = true;
   queryPackagesAPI(listQuery.value).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
     listLoading.value = false;
+
+    const orderIdArr = dataList.value.map(item => item.task.orderId);
+    console.log('orderIdArr: ', orderIdArr);
+    queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      data.forEach(order => {
+        orderEnum.value[order.id] = formatAssignedOrderItem(order);
+      });
+    });
   });
 }
 
@@ -354,6 +354,14 @@ const handleCloseDrawer = (done) => {
   done();
 };
 
+const orderItem = shallowRef(null);
+const drawerOrderVisible = ref(false);
+const showOrderDrawer = (order) => {
+  orderItem.value = order;
+  console.log('orderItem: ', orderItem);
+  drawerOrderVisible.value = true;
+};
+
 const findUnit = (unitSerial) => {
   return queryUnitsAPI({ serial: unitSerial }).then((data) => {
     unitItem.value = data[0] || unitItem.value;
@@ -376,11 +384,6 @@ const editHousingTask = (_unit, _task) => {
     warehousingItem.value = _unit;
     dialogHousingVisible.value = true;
   });
-};
-
-const handleFilter = () => {
-  listQuery.value.page = 1;
-  fetchList();
 };
 
 const handleSelectionChange = (_selectedArr) => {
@@ -478,14 +481,6 @@ const onDeliveredAtChange = (packageItem) => {
   margin-bottom: 1rem
   font-size: 18px
   font-weight: 500
-
-.filter-container
-  margin-bottom: .5rem
-  > .el-button
-    margin-left: .5rem
-  .el-icon
-    width: 1em
-    height: 1em
 
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px
