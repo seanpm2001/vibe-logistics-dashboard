@@ -96,7 +96,6 @@ provide('dataList', dataList);
 
 // Unit Description
 const unitItem = ref({});
-const serialScopeArr = ref([]);
 provide('unitItem', unitItem);
 /* End data */
 
@@ -156,11 +155,26 @@ const editHousingTask = (_unit, _task) => {
 const multipleSelection = ref([]);
 provide('multipleSelection', multipleSelection);
 
+const unique = arr => Array.from(new Set(arr));
 
-const viewUnitDescription = (unit, products) => {
+const serialScopeArr = ref([]);
+const viewUnitDescription = (unit, task) => {
+  serialScopeArr.value = [];
+
+  const { products, orderId } = task;
   products.forEach(product => {
     serialScopeArr.value = [].concat(product.serialNote);
   });
+  console.log('orderEnum.value[orderId]: ', orderEnum.value[orderId]);
+  orderEnum.value[orderId].tasks?.forEach(task => {
+    task.packages.forEach(item => {
+      item.units?.forEach(unit => {
+        serialScopeArr.value.push(unit.serial);
+      });
+    });
+  });
+  serialScopeArr.value = unique(serialScopeArr.value);
+
   unitItem.value = unit;
   drawerUnitVisible.value = true;
 };
@@ -186,11 +200,4 @@ const viewUnitDescription = (unit, products) => {
 
 :deep(.el-dialog)
   width: 80%
-
-.link
-  margin-right: 15px
-  color: #66c
-  &:hover
-    cursor: pointer
-    text-decoration: underline
 </style>

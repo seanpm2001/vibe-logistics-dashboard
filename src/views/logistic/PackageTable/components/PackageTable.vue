@@ -85,13 +85,13 @@
           >
             <span
               class="link"
-              @click="viewUnitDescription(unit, row.task.products)"
+              @click="viewUnitDescription(unit, row.task)"
             >{{ unit.serial }}</span>
             <el-button
               :disabled="unit.checked || !ifMeetHousingCondtion(row.task.taskType, unit.status)"
               size="small"
               :type="unit.checked ? 'success' : 'primary'"
-              @click="viewUnitDescription(unit, row.task.products)"
+              @click="viewUnitDescription(unit, row.task)"
             >
               Check
             </el-button>
@@ -244,8 +244,8 @@ const handleSelectionChange = (_selectedArr) => {
   multipleSelection.value = _selectedArr.sort((pre, next) => next.id - pre.id);
 };
 
-const viewUnitDescription = (unit, products) => {
-  emit('viewUnitDescription', unit, products);
+const viewUnitDescription = (unit, task) => {
+  emit('viewUnitDescription', unit, task);
 };
 
 const editHousingTask = (_unit, _task) => {
@@ -332,5 +332,10 @@ const onDeliveredAtChange = (packageItem) => {
 </script>
 
 <style lang="sass" scoped>
-
+.link
+  margin-right: 15px
+  color: #66c
+  cursor: pointer
+  &:hover
+    text-decoration: underline
 </style>

@@ -86,13 +86,13 @@ import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 const props = defineProps({
   serialScopeArr: {
     type: Array,
-    required: true
+    default: () => []
   }
 });
 
 const emit = defineEmits(['fetchList']);
 
-const unitItem = inject('unitItem');
+const unitItem = inject('unitItem') as any;
 
 const updateSerial = () => {
   const unit = unitItem.value;
