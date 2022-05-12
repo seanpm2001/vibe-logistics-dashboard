@@ -39,13 +39,9 @@
 
 <script setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
+import { deletePackageAPI } from '@/api/logistic';
 
-defineProps({
-  multipleSelection: {
-    type: Array,
-    required: true
-  }
-});
+const multipleSelection = inject('multipleSelection');
 
 const listQuery = inject('listQuery');
 
@@ -57,7 +53,14 @@ const handleFilter = () => {
   fetchList();
 };
 
-const handleDelSelected = () => emit('handleDelSelected');
+const handleDelSelected = () => {
+  multipleSelection.value.forEach((item) => {
+    const packageId = item.id;
+    deletePackageAPI(packageId);
+  });
+  multipleSelection.value = [];
+  fetchList();
+};
 </script>
 
 <style lang="sass" scoped>

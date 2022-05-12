@@ -39,7 +39,6 @@
     </el-row>
     <el-table
       :key="tableKey"
-      v-loading="listLoading"
       :data="dataList"
       height="68vh"
       border
@@ -395,7 +394,6 @@ const listQuery = ref({
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
-const listLoading = ref(true);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
@@ -404,15 +402,10 @@ provide('listQuery', listQuery);
 /* End Data */
 
 function queryInventory() {
-  listLoading.value = true;
   listInventoriesAPI(listQuery.value).then(data => {
     dataList.value = data.items;
     total.value = data.total;
 
-    // Just to simulate the time of the request
-    setTimeout(() => {
-      listLoading.value = false;
-    }, 1.5 * 1000);
   });
 }
 

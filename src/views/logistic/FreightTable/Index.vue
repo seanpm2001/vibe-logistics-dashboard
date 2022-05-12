@@ -64,7 +64,6 @@
     </el-row>
     <el-table
       :key="tableKey"
-      v-loading="listLoading"
       :data="dataList"
       border
       fit
@@ -328,7 +327,6 @@ const downloadLoading = ref(false);
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
-const listLoading = ref(true); // queryList loading
 const listQuery = ref({
   page: 1,
   perPage: 10,
@@ -345,11 +343,9 @@ provide('listQuery', listQuery);
 /* Start query related */
 
 function queryFreight() {
-  listLoading.value = true;
   queryFreightsAPI(listQuery.value).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
-    listLoading.value = false;
   });
 }
 

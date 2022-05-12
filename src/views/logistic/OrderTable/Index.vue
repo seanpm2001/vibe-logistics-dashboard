@@ -7,7 +7,6 @@
     />
     <el-table
       :key="tableKey"
-      v-loading="listLoading"
       :data="dataList"
       border
       fit
@@ -347,7 +346,6 @@ const taskPermissionArr = ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'];
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
-const listLoading = ref(true);
 const listQuery = ref({
   page: 1,
   perPage: 10,
@@ -364,7 +362,6 @@ provide('listQuery', listQuery);
 
 /* Start Query Related */
 function queryOrders () {
-  listLoading.value = true;
   (showAssignedOrder.value
     ? queryAssignedOrdersAPI(listQuery.value)
     : queryOrdersAPI(listQuery.value)
@@ -376,7 +373,6 @@ function queryOrders () {
       });
     }
     total.value = data.total;
-    listLoading.value = false;
   });
 }
 

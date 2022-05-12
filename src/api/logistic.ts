@@ -24,7 +24,7 @@ const handleReqElMsg = (fn, action: string, name: string, identifier?) => {
   });
 };
 
-const jsonClone = (obj: object) :object => JSON.parse(JSON.stringify(obj));
+const jsonClone = (obj: object) :any => JSON.parse(JSON.stringify(obj));
 
 /* 海运 Freight API */
 export async function queryFreightsAPI (params?) {
@@ -180,9 +180,22 @@ export async function listTaskPackagesAPI (taskId: number) {
   const { items } = await requester.get(`/warehouse/task/${taskId}/packages`);
   return items;
 }
+
+function removeEmptyAccessories (units) {
+  units.forEach((unit, idx, arr) => {
+    if (!unit.accessories.length)
+      delete arr[idx]['accessories'];
+  });
+}
 export async function updatePackageAPI (packageId: number, updates) {
+  const data = jsonClone(updates);
+  delete data['task'];
+  delete data['taskId'];
+  removeEmptyAccessories(data.units);
+  console.log('data: ', data);
+
   const item = handleReqElMsg(
-    requester.put(`/warehouse/package/${packageId}`, updates), 'Update', 'Package', packageId
+    requester.put(`/warehouse/package/${packageId}`, data), 'Update', 'Package', packageId
   );
   return item;
 }

@@ -5,7 +5,6 @@
     />
     <el-table
       :key="tableKey"
-      v-loading="listLoading"
       :data="dataList"
       border
       fit
@@ -264,7 +263,6 @@ const listQuery = ref({
 const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
-const listLoading = ref(true);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
@@ -277,11 +275,9 @@ provide('multipleSelection', multipleSelection);
 
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryTask() {
-  listLoading.value = true;
   queryTasksAPI(listQuery.value).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
-    listLoading.value = false;
 
     const orderIdArr = getTaskOrderIdArr(dataList.value);
     queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
@@ -353,7 +349,7 @@ const calTaskStatus = (taskType, packages) => {
 
 const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
-    (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
+    (pre, next) => new Date(pre.createdAt).getTime() - new Date(next.createdAt).getTime()
   );
 };
 

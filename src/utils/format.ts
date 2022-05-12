@@ -130,7 +130,7 @@ export function jsonToUnderline(obj) {
     });
   } else if (obj instanceof Object) {
     Object.keys(obj).forEach(function(key) {
-      if (!obj[key]) { // 删除value为null的字段
+      if (obj[key] === null) { // 删除value为null的字段
         delete obj[key];
         return;
       }

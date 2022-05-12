@@ -106,7 +106,6 @@
             <el-switch
               v-model="taskItem.onHold"
               :disabled="notCommonPermission"
-              @click="onHoldTask"
             >
               On hold:
             </el-switch>
@@ -359,6 +358,7 @@ function removeEmptyTask (products) {
 
 const handleWarehouseTask = type => {
   removeEmptyTask(taskItem.value.products);
+  console.log('taskItem.value: ', taskItem.value);
   if (type === 'create') {
     createTaskAPI(taskItem.value).then(data => {
       taskItem.value = data;
@@ -382,10 +382,6 @@ const onProductChange = (idx, type) => {
   type === 'add'
     ? products.push({sku: null, condition: null, quantity: null})
     : products.splice(idx--, 1);
-};
-
-const onHoldTask = () => { // TODO: onHoldTask
-  console.log('onHoldTask');
 };
 
 const resetForm = () => {

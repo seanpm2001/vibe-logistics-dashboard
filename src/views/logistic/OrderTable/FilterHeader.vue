@@ -20,7 +20,6 @@
       </el-input>
       <el-select
         v-model="showAssignedOrder"
-        :disabled="listLoading"
         placeholder="Assigned Order"
         style="width: 175px"
         @change="handleFilter"

@@ -21,8 +21,7 @@ requester.interceptors.request.use(
     const { method, url } = config;
     jsonToUnderLineParamsAndData(config);
     config.headers['Authorization'] = 'Bearer ' + getToken();
-    if (method === 'get' && !url?.includes('/'))
-      return config; // query API 不触发全屏loading
+    
     showFullScreenLoading();
     return config;
   },
