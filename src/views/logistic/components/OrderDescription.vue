@@ -6,6 +6,8 @@
   >
     <el-descriptions-item>
       <template #label>
+        <strong v-if="orderItem?.rawOrders">Assigned </strong>
+        <strong v-else>Origin </strong>
         Order Id
       </template>
       {{ orderItem?.id }}
