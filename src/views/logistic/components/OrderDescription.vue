@@ -16,7 +16,7 @@
         <el-tag>{{ order.id }}</el-tag>
       </template>
     </el-descriptions-item>
-    <el-descriptions-item>
+    <el-descriptions-item :min-width="200">
       <template #label>
         Order from
       </template>
@@ -24,11 +24,23 @@
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
+        Marketplace
+      </template>
+      {{ (orderItem?.marketplace) }}
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        Created At
+      </template>
+      {{ formatVBDate(orderItem?.createdAt) }}
+    </el-descriptions-item>
+    <el-descriptions-item :min-width="200">
+      <template #label>
         Products
       </template>
       <template
         v-for="product in orderItem.items"
-        :key="product.sku"
+        :key="product.productCode"
       >
         <div>
           <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
@@ -41,18 +53,6 @@
           </span>
         </div>
       </template>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        Created At
-      </template>
-      {{ formatVBDate(orderItem?.createdAt) }}
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        Marketplace
-      </template>
-      {{ (orderItem?.marketplace) }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>

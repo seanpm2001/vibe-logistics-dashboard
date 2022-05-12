@@ -124,7 +124,7 @@ useQueryHook(listQuery, 'package', fetchList);
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
 const showOrderDrawer = (order) => {
-  orderItem.value = order;
+  orderItem.value = formatAssignedOrderItem(order);
   drawerOrderVisible.value = true;
 };
 
@@ -165,7 +165,6 @@ const viewUnitDescription = (unit, task) => {
   products.forEach(product => {
     serialScopeArr.value = [].concat(product.serialNote);
   });
-  console.log('orderEnum.value[orderId]: ', orderEnum.value[orderId]);
   orderEnum.value[orderId].tasks?.forEach(task => {
     task.packages.forEach(item => {
       item.units?.forEach(unit => {

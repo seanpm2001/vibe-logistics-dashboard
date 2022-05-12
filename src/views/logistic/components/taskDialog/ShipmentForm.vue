@@ -134,7 +134,7 @@
     </el-card>
     
     <el-button
-      v-if="!!taskItem.carrier"
+      v-if="taskItem.carrier"
       v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
       :disabled="disableNewPackage"
       type="primary"

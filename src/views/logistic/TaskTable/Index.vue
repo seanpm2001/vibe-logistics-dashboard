@@ -209,6 +209,7 @@ import {
 } from '@/api/logistic';
 import { taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
+import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 import { useLogisticStore } from '@/store';
 
 /* Start Data */
@@ -360,7 +361,7 @@ const handleCloseDrawer = (done) => {
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
 const showOrderDrawer = (order) => {
-  orderItem.value = order;
+  orderItem.value = formatAssignedOrderItem(order);
   drawerOrderVisible.value = true;
 };
 
