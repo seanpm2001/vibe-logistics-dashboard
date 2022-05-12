@@ -277,6 +277,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus';
 import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
@@ -306,16 +307,23 @@ const emit = defineEmits(['fetchList']);
 const fetchList = () => emit['fetchList'];
 
 /* Start data */
-const dialogTaskVisible = inject('dialogTaskVisible');
-const taskItem = inject('taskItem');
+const dialogTaskVisible = inject('dialogTaskVisible') as boolean;
+const taskItem = inject('taskItem') as any;
 const specifySerailArr = inject('specifySerailArr');
-const taskOrderItem = inject('taskOrderItem');
+const taskOrderItem = inject('taskOrderItem') as any;
 
 const { proxy } = getCurrentInstance();
 const { role } = storeToRefs(useUserStore());
 const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value));
 
 const unitList = shallowRef(null);
+
+watchEffect(() => {
+  if (taskItem.value.sourceId !== 18 && taskItem.value.taskType === 'RETURN' ) {
+    taskItem.value.sourceId = 18;
+    ElMessage.warning('Source has been set to Customer!');
+  }
+});
 
 const remoteMethod = query => {
   const taskProducts = taskItem.value.products;

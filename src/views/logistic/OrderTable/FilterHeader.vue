@@ -89,6 +89,7 @@ defineProps({
 });
 
 const listQuery = inject('listQuery');
+const showAssignedOrder = inject('showAssignedOrder');
 
 const emit = defineEmits(['fetchList', 'showAssignDialog']);
 const fetchList = () => emit('fetchList');

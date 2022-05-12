@@ -358,6 +358,7 @@ provide('taskItem', taskItem);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
+provide('showAssignedOrder', showAssignedOrder);
 /* End data */
 
 /* Start Query Related */
