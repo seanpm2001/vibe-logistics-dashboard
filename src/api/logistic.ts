@@ -183,6 +183,7 @@ export async function listTaskPackagesAPI (taskId: number) {
 
 function removeEmptyAccessories (units) {
   units.forEach((unit, idx, arr) => {
+    delete arr[idx]['item']; // 删除无用字段
     if (!unit.accessories.length)
       delete arr[idx]['accessories'];
   });

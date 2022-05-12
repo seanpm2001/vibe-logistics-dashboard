@@ -57,7 +57,7 @@
 import { UnitDescription, HousingDialog, FilterHeader, PackageTable } from './components';
 import { OrderDescription } from '../components';
 import { jsonToHump } from '@/utils';
-import { queryPackagesAPI, deletePackageAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
+import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
 import { useLogisticStore } from '@/store';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 
@@ -150,13 +150,6 @@ const editHousingTask = (_unit, _task) => {
     _unit.accessories[0] = Object.assign({ productCode: null, quantity: null }, _unit.accessories[0]);
     warehousingItem.value = _unit;
     dialogHousingVisible.value = true;
-  });
-};
-
-
-const deletePackage = (packageId) => {
-  deletePackageAPI(packageId).then(() => {
-    fetchList();
   });
 };
 
