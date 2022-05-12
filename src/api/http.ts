@@ -72,18 +72,16 @@ const hump2Underline = (str: string) => str.replace(/([A-Z])/g, '_$1').toLowerCa
 
 function jsonToUnderLineParamsAndData(config: any) {
   let params = config.params;
-  if (typeof params === 'object') { // 传入的params为URLSearchParams
+  if (params && typeof params[Symbol.iterator] === 'function') { // 传入的params为URLSearchParams
     let newParams = '';
     for (const item of params) {
       const newKey = hump2Underline(item[0]);
-      console.log('newKey: ', newKey);
       newParams += `&${newKey}=${item[1]}`;
     }
     params = new URLSearchParams(newParams); // 去除第一个&
   } else {
     jsonToUnderline(params);
   }
-  console.log('params: ', params);
   const data = config.data;
   jsonToUnderline(data);
   config.params = params;
