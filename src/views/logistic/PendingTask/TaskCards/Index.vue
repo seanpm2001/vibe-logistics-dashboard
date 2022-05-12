@@ -6,6 +6,7 @@
     <el-card>
       <CardDescriptions
         :task="task"
+        :order-enum="orderEnum"
         @fetch-list="fetchList"
       />
       <div class="package-wrapper">
@@ -171,6 +172,13 @@ import { debounce, toNumber } from '@/utils';
 import { skuCodeEnum, unitSystemEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
+const props = defineProps({
+  orderEnum: {
+    type: Object,
+    default: () => {}
+  }
+});
+
 const emit = defineEmits(['fetchList']);
 /* Start Data */
 const { proxy } = getCurrentInstance();
@@ -285,15 +293,23 @@ function removeUnitItem (packageItem) {
   return temp;
 }
 
+function isAccessoriesPackage (orderId) {
+  const products = props.orderEnum[orderId].products;
+  products.forEach((product) => {
+    // TODO: isAccessoriesPackage
+  });
+  return true;
+}
+
 const handleSubmitPackage = (packageItem, task) => {
   const packageId = packageItem.id;
   // 删除serial为空的unit
   const units = packageItem.units;
   for (let idx = units.length - 1; idx >= 0; idx--) {
-    !units[idx].serial && units[idx].splice(idx, 1);
+    !units[idx].serial && units.splice(idx, 1);
   }
 
-  if (packageItem.units.length === 0) {
+  if (packageItem.units.length === 0 && isAccessoriesPackage(task.orderId)) {
     ElMessage.error('Empty Serials!');
     packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
     return;
