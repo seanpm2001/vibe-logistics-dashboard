@@ -91,7 +91,7 @@ export async function queryAssignedOrdersAPI (params?) {
   });
   return res;
 }
-export async function queryAssignedBatchOrdersAPI (orderIdArr: []) {
+export async function queryAssignedBatchOrdersAPI (orderIdArr: Array<number>) {
   const orderIdStr = orderIdArr.join(',');
   const { items } = await requester.get('/orders/assigned/batch/' + orderIdStr);
   return items;

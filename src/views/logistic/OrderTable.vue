@@ -102,44 +102,10 @@
         align="center"
       >
         <template #default="{ row }">
-          <el-tag>
-            <a
-              v-if="!row.rawOrders && row.shopifyId"
-              :href="`https://vibeus.myshopify.com/admin/orders/${row.shopifyId}`"
-              target="_blank"
-            >
-              #{{ row.id }}
-            </a>
-            <span
-              v-else
-              @click="showOrderDrawer(row)"
-            >
-              #{{ row.id }}
-            </span>
-          </el-tag>
-          <div v-if="row.rawOrders">
-            <template
-              v-for="item in row.rawOrders"
-              :key="item.id"
-            >
-              <el-tag>
-                <a
-                  v-if="item.shopifyId"
-                  :href="`https://vibeus.myshopify.com/admin/orders/${item.shopifyId}`"
-                  target="_blank"
-                >
-                  #{{ item.id }}
-                </a>
-                <span
-                  v-else
-                  @click="showOrderDrawer(item)"
-                >
-                  #{{ item.id }}
-                </span>
-              </el-tag>
-              <br>
-            </template>
-          </div>
+          <AssignedOrderId
+            :order="row"
+            @show-order-drawer="showOrderDrawer(row)"
+          />
           <p>{{ formatVBDate(row.createdAt) }}</p>
         </template>
       </el-table-column>
@@ -380,10 +346,8 @@
 
 <script lang="ts" setup>
 import { Search, Delete } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import TaskDialog from './components/taskDialog/Index.vue';
-import OrderDescription from './components/OrderDescription.vue';
-import OrderShipmentInfo from './components/OrderShipmentInfo.vue';
+import { ElMessage } from 'element-plus';
+import { AssignedOrderId, TaskDialog, OrderDescription, OrderShipmentInfo } from './components';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
@@ -407,7 +371,6 @@ const { proxy } = getCurrentInstance();
 
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
-const drawerOrderVisible = ref(false);
 
 const showAssignedOrder = ref(false);
 const assignPattern = ref('');
@@ -415,7 +378,6 @@ const assignOrderId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
 
 const multipleSelection = ref([]);
-const orderItem = shallowRef(null);
 const taskOrderItem = shallowRef(null);
 const taskItem = ref({
   id: null,
@@ -504,6 +466,8 @@ const handleFilter = () => {
   fetchList();
 };
 
+const orderItem = shallowRef(null);
+const drawerOrderVisible = ref(false);
 const showOrderDrawer = (_raw) => {
   orderItem.value = _raw;
   drawerOrderVisible.value = true;
@@ -523,7 +487,7 @@ function removeEmptyProducts (taskItem) {
 async function submitInitTaskItem (products, assignedData, orderId) {
   const { sourceWHId, carrier, transportMode } = assignedData;
 
-  const task = {};
+  const task = {} as any;
   task.orderId = orderId;
   task.taskType = 'FULFILLMENT';
   task.sourceId = sourceWHId;
@@ -648,7 +612,7 @@ const unassignSelected = () => {
   fetchList();
 };
 
-const addWarehouseTask = (_orderId, sourceWHId) => {
+const addWarehouseTask = (_orderId) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
   findAssignedOrderAPI(_orderId).then((data) => {
     taskItem.value.orderId = _orderId;

@@ -73,8 +73,7 @@ import OrderShipmentInfo from './OrderShipmentInfo.vue';
 import { formatVBDate } from '@/utils/logistic';
 import { codeNameEnum, codeIconEnum, skuCodeEnum } from '@/enums/logistic';
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
+defineProps({
   orderItem: {
     type: Object,
     required: true

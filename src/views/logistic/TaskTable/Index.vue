@@ -1,29 +1,8 @@
 <template>
   <div class="page">
-    <div class="filter-container">
-      <el-select
-        v-model="showTaskPattern"
-        placeholder="Task type"
-        style="width: 155px"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="(item, key) in taskPatternEnum"
-          :key="item"
-          :label="item"
-          :value="key"
-        />
-      </el-select>
-      <el-button
-        v-permission="['ADMIN', 'VIBE_MANAGER']"
-        :disabled="!multipleSelection?.length"
-        type="primary"
-        :icon="Delete"
-        @click="delSelectedTask()"
-      >
-        Delete Selected
-      </el-button>
-    </div>
+    <FilterHeader
+      @fetch-list="fetchList"
+    />
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -59,13 +38,14 @@
       </el-table-column>
       <el-table-column
         label="Order ID"
-        width="120px"
+        width="220px"
         align="center"
       >
         <template #default="{ row }">
-          <el-tag>
-            #<span class="link-type">{{ row.orderId }}</span>
-          </el-tag>
+          <AssignedOrderId
+            :order="orderEnum[row.orderId]"
+            @show-order-drawer="showOrderDrawer(orderEnum[row.orderId])"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -200,21 +180,36 @@
       :warehouse-enum="warehouseEnum"
       :dialog-status="dialogStatus"
     />
+
+    <el-drawer
+      v-model="drawerOrderVisible"
+      title="Order Info"
+      size="60%"
+      direction="ltr"
+    >
+      <OrderDescription :order-item="orderItem" />
+      <template
+        v-for="order in orderItem.rawOrders"
+        :key="order.id"
+      >
+        <OrderDescription :order-item="order" />
+      </template>
+    </el-drawer>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { Delete } from '@element-plus/icons-vue';
-import TaskDialog from './components/taskDialog/Index.vue';
+import FilterHeader from './FilterHeader.vue';
+import { TaskDialog, AssignedOrderId, OrderDescription } from '../components';
 import {
   queryTasksAPI,
   findTaskAPI,
   deleteTaskAPI,
   findAssignedOrderAPI,
+  queryAssignedBatchOrdersAPI
 } from '@/api/logistic';
 import { taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
-import { formatAssignedOrderItem } from '@/utils/logistic';
+import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { useLogisticStore } from '@/store';
 
 /* Start Data */
@@ -225,7 +220,6 @@ const dialogStatus = ref('view');
 const dialogTaskVisible = ref(false);
 
 const multipleSelection = ref([]);
-const shipmentArr = ref([]);
 const taskItem = ref({
   id: null,
   orderId: null,
@@ -262,11 +256,6 @@ const specifySerailArr = ref([
 
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
-const showTaskPattern = ref(null);
-const taskPatternEnum = {
-  'MY-ONLY': 'My task only',
-  ALL: 'All tasks',
-};
 
 const listQuery = ref({
   page: 1,
@@ -282,14 +271,24 @@ provide('taskItem', taskItem);
 provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
+provide('multipleSelection', multipleSelection);
 /* End Data */
 
+
+const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryTask() {
   listLoading.value = true;
   queryTasksAPI(listQuery.value).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
     listLoading.value = false;
+
+    const orderIdArr = getTaskOrderIdArr(dataList.value);
+    queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      data.forEach(order => {
+        orderEnum.value[order.id] = formatAssignedOrderItem(order);
+      });
+    });
   });
 }
 
@@ -352,31 +351,21 @@ const calTaskStatus = (taskType, packages) => {
   return res;
 };
 
-
-const handleFilter = () => {
-  listQuery.value.page = 1;
-  fetchList();
-};
-
 const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
   );
 };
 
-const delSelectedTask = () => {
-  const promiseArr = [];
-  multipleSelection.value.forEach((item) => {
-    promiseArr.push(deleteTaskAPI(item.id));
-  });
-  Promise.allSettled(promiseArr).then(() => {
-    fetchList();
-    multipleSelection.value = [];
-  });
-};
-
 const handleCloseDrawer = (done) => {
   done();
+};
+
+const orderItem = shallowRef(null);
+const drawerOrderVisible = ref(false);
+const showOrderDrawer = (order) => {
+  orderItem.value = order;
+  drawerOrderVisible.value = true;
 };
 
 const handleDetailRow = (_row, type) => {
@@ -409,13 +398,6 @@ const handleDetailRow = (_row, type) => {
   margin-bottom: 1rem
   font-size: 18px
   font-weight: 500
-
-.filter-container
-  display: flex
-  justify-content: space-between
-  margin-bottom: .5rem
-  > .el-button
-    margin-left: .5rem
 
 :deep(.el-table thead tr > th.el-table__cell .cell)
   height: 20px

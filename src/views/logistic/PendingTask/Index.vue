@@ -40,7 +40,7 @@
 import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCards from './TaskCards/Index.vue';
-import { formatAssignedOrderItem } from '@/utils/logistic';
+import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
 import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
@@ -94,12 +94,6 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
   return temp;
 }) as Record<string, any>;
 
-function getOrderIdArr (taskList) {
-  const temp = [];
-  taskList.forEach(task => temp.push(task.orderId));
-  return temp;
-}
-
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
@@ -116,7 +110,7 @@ function queryTask () {
       dataList.value = data.items;
       total.value = data.total;
       contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
-      const orderIdArr = getOrderIdArr(dataList.value);
+      const orderIdArr = getTaskOrderIdArr(dataList.value);
       queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(order => {
           orderEnum.value[order.id] = formatAssignedOrderItem(order);

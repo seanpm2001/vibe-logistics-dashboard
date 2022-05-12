@@ -278,13 +278,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElTooltip } from 'element-plus';
 import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '@/api/logistic';
 import {
-  taskTypeEnum, taskReasonEnum, taskStatusEnum, skuCodeEnum,
+  taskTypeEnum, taskReasonEnum, skuCodeEnum,
   unitConditionEnum, codeNameEnum, codeSkuArrEnum
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';

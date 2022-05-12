@@ -15,7 +15,7 @@ export const logisticRouter = [
       },
       {
         path: 'task',
-        component: () => import('@/views/logistic/TaskTable.vue'),
+        component: () => import('@/views/logistic/TaskTable/Index.vue'),
         name: 'Task',
         meta: { title: 'WH Task', icon: 'sidebar-task' }
       },

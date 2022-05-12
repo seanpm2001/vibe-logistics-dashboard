@@ -25,3 +25,9 @@ export const formatAssignedOrderItem = orderItem => {
 };
 
 export const formatVBDate = (date: string) => date.replace('T', ' ').replace(/\.\d+/, '');
+
+export const getTaskOrderIdArr = (taskList: any) :Array<number> => {
+  const temp = [];
+  taskList.forEach(task => temp.push(task.orderId));
+  return temp;
+};
