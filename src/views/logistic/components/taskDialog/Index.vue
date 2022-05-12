@@ -224,6 +224,7 @@
                   multiple
                   :multiple-limit="product.quantity"
                   remote
+                  :allow-create="taskItem.taskType === 'RETURN'"
                   :remote-method="query => debounce(remoteMethod(query), 500)"
                 >
                   <el-option

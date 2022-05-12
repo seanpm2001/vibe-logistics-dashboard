@@ -101,6 +101,7 @@
             placeholder="Please select"
             filterable
             remote
+            :allow-create="taskItem.taskType === 'RETURN'"
             :remote-method="query => debounce(remoteMethod(query), 500)"
           >
             <el-option
@@ -182,7 +183,7 @@ const props = defineProps({
 });
 
 /* Start Data */
-const taskItem = inject('taskItem');
+const taskItem = inject('taskItem') as any;
 
 const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
