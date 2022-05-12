@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { UnitDescription, HousingDialog, FilterHeader, PackageTable } from './components';
 import { OrderDescription } from '../components';
-import { jsonToHump } from '@/utils';
+import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';
 import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
 import { useLogisticStore } from '@/store';
 import { formatAssignedOrderItem } from '@/utils/logistic';
@@ -107,8 +107,8 @@ function queryPackage() {
 
     const orderIdArr = dataList.value.map(item => item.task.orderId);
     queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-      data.forEach(order => {
-        orderEnum.value[order.id] = formatAssignedOrderItem(order);
+      data.forEach(async order => {
+        orderEnum.value[order.id] = await formatAssignedOrderItem(order);
       });
     });
   });
@@ -123,9 +123,11 @@ useQueryHook(listQuery, 'package', fetchList);
 
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
-const showOrderDrawer = (order) => {
-  orderItem.value = formatAssignedOrderItem(order);
+const showOrderDrawer = async order => {
+  showFullScreenLoading();
+  orderItem.value = await formatAssignedOrderItem(order);
   drawerOrderVisible.value = true;
+  tryHideFullScreenLoading();
 };
 
 const findUnit = (unitSerial) => {

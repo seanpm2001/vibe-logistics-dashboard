@@ -282,8 +282,8 @@ function queryTask() {
 
     const orderIdArr = getTaskOrderIdArr(dataList.value);
     queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-      data.forEach(order => {
-        orderEnum.value[order.id] = formatAssignedOrderItem(order);
+      data.forEach(async order => {
+        orderEnum.value[order.id] = await formatAssignedOrderItem(order);
       });
     });
   });
@@ -360,9 +360,11 @@ const handleCloseDrawer = (done) => {
 
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
-const showOrderDrawer = (order) => {
-  orderItem.value = formatAssignedOrderItem(order);
+const showOrderDrawer = async order => {
+  showFullScreenLoading();
+  orderItem.value = await formatAssignedOrderItem(order);
   drawerOrderVisible.value = true;
+  tryHideFullScreenLoading();
 };
 
 const handleDetailRow = (_row, type) => {
@@ -376,8 +378,8 @@ const handleDetailRow = (_row, type) => {
     type === 'edit' && (contrastData.value = Object.assign({}, data));
   });
   const orderId = _row.orderId;
-  findAssignedOrderAPI(orderId).then((data) => {
-    taskOrderItem.value = formatAssignedOrderItem(data);
+  findAssignedOrderAPI(orderId).then(async data => {
+    taskOrderItem.value = await formatAssignedOrderItem(data);
     type === 'edit' && (dialogStatus.value = 'update');
     dialogTaskVisible.value = true;
   });

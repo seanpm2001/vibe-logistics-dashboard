@@ -8,7 +8,7 @@ const combineSameProductQuantity = (arr => {
   return result;
 });
 
-export const formatAssignedOrderItem = orderItem => {
+export const formatAssignedOrderItem = async orderItem => {
   const raws = orderItem.rawOrders;
   const originId = orderItem.id;
   const createdAt = orderItem.createdAt;

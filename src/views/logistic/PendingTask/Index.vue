@@ -112,8 +112,8 @@ function queryTask () {
       contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
       const orderIdArr = getTaskOrderIdArr(dataList.value);
       queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-        data.forEach(order => {
-          orderEnum.value[order.id] = formatAssignedOrderItem(order);
+        data.forEach(async order => {
+          orderEnum.value[order.id] = await formatAssignedOrderItem(order);
         });
       });
     });

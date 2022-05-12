@@ -287,6 +287,7 @@ import {
 import { formatAssignedOrderItem, formatVBDate } from '@/utils/logistic';
 import { packageStatusEnum, codeNameEnum, codeIconEnum, transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
+import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 
 /* Start data */
 const router = useRouter();
@@ -369,8 +370,8 @@ function queryOrders () {
   ).then((data) => {
     dataList.value = data.items;
     if (showAssignedOrder.value) {
-      dataList.value.forEach((item) => {
-        formatAssignedOrderItem(item);
+      dataList.value.forEach(async item => {
+        await formatAssignedOrderItem(item);
       });
     }
     total.value = data.total;
@@ -387,9 +388,11 @@ useQueryHook(listQuery, 'order', fetchList);
 
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
-const showOrderDrawer = (_raw) => {
-  orderItem.value = _raw;
+const showOrderDrawer = async order => {
+  showFullScreenLoading();
+  orderItem.value = await formatAssignedOrderItem(order);
   drawerOrderVisible.value = true;
+  tryHideFullScreenLoading();
 };
 
 const showAssignDialog = (type, orderId) => {
@@ -503,7 +506,7 @@ const assignOrders = () => {
   assignOrdersAPI(sourceWHId, orderArr)
     .then(async (data) => {
       dialogAssignVisible.value = false;
-      const products = formatAssignedOrderItem(data)?.items;
+      const products = await formatAssignedOrderItem(data)?.items;
       const taskId = await submitInitTaskItem(products, assignedData, data.id);
       taskId && editWarehouseTask(data.id, taskId);
     })
@@ -533,9 +536,9 @@ const unassignSelected = () => {
 
 const addWarehouseTask = (_orderId) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
-  findAssignedOrderAPI(_orderId).then((data) => {
+  findAssignedOrderAPI(_orderId).then(async data => {
     taskItem.value.orderId = _orderId;
-    taskOrderItem.value = formatAssignedOrderItem(data);
+    taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;
   });
@@ -546,8 +549,8 @@ const editWarehouseTask = (orderId, taskId) => {
     ElMessage.error('You don\'t have permission');
     return;
   }
-  findAssignedOrderAPI(orderId).then((data) => {
-    taskOrderItem.value = formatAssignedOrderItem(data);
+  findAssignedOrderAPI(orderId).then(async data => {
+    taskOrderItem.value = await formatAssignedOrderItem(data);
     findTaskAPI(taskId).then(data => {
       taskItem.value = data;
       dialogStatus.value = 'update';
