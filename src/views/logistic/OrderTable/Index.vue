@@ -1,83 +1,10 @@
 <template>
   <div class="page">
-    <el-row
-      justify="space-between"
-      class="filter-container"
-    >
-      <el-row>
-        <el-input
-          v-model="listQuery.search"
-          placeholder="Order Info"
-          style="width: 150px"
-        >
-          <template #append>
-            <el-button
-              v-wave
-              type="primary"
-              :icon="Search"
-              @click="handleFilter"
-            />
-          </template>
-        </el-input>
-        <el-select
-          v-model="showAssignedOrder"
-          :disabled="listLoading"
-          placeholder="Assigned Order"
-          style="width: 175px"
-          @change="handleFilter"
-        >
-          <el-option
-            v-for="(item, key) in { 'Assigned Orders': true, 'Unassigned Orders': false }"
-            :key="item"
-            :label="key"
-            :value="item"
-          />
-        </el-select>
-        <el-select
-          v-model="listQuery.orderFrom"
-          disabled
-          placeholder="Order From"
-          style="width: 130px"
-          @change="handleFilter"
-        >
-          <el-option
-            v-for="item in ['AFN', 'Shopify', 'MFN']"
-            :key="item"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
-      </el-row>
-      <div v-if="!showAssignedOrder">
-        <el-button 
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-          :disabled="!multipleSelection?.length"
-          type="primary"
-          @click="showAssignDialog('assignSelected')"
-        >
-          Assign Selected
-        </el-button>
-        <el-button
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-          :disabled="!multipleSelection?.length"
-          type="primary"
-          @click="showAssignDialog('combineAndAssign')"
-        >
-          Combine & Assign Selected
-        </el-button>
-      </div>
-      <div v-else>
-        <el-button
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-          :disabled="!multipleSelection?.length"
-          type="primary"
-          :icon="Delete"
-          @click="unassignSelected()"
-        >
-          Unassign Selected
-        </el-button>
-      </div>
-    </el-row>
+    <FilterHeader
+      :multiple-selection="multipleSelection"
+      @fetch-list="fetchList"
+      @show-assign-dialog="showAssignDialog"
+    />
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -345,9 +272,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, Delete } from '@element-plus/icons-vue';
+import FilterHeader from './FilterHeader.vue';
 import { ElMessage } from 'element-plus';
-import { AssignedOrderId, TaskDialog, OrderDescription, OrderShipmentInfo } from './components';
+import { AssignedOrderId, TaskDialog, OrderDescription, OrderShipmentInfo } from '../components';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
@@ -461,11 +388,6 @@ useWarehouseEnumHook();
 useQueryHook(listQuery, 'order', fetchList);
 /* End Query Related */
 
-const handleFilter = () => {
-  listQuery.value.page = 1;
-  fetchList();
-};
-
 const orderItem = shallowRef(null);
 const drawerOrderVisible = ref(false);
 const showOrderDrawer = (_raw) => {
@@ -473,9 +395,9 @@ const showOrderDrawer = (_raw) => {
   drawerOrderVisible.value = true;
 };
 
-const showAssignDialog = (type, _orderId) => {
+const showAssignDialog = (type, orderId) => {
   assignPattern.value = type;
-  assignOrderId.value = _orderId || null;
+  assignOrderId.value = orderId || null;
   dialogAssignVisible.value = true;
 };
 
