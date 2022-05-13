@@ -28,7 +28,7 @@ export const logisticRouter = [
       },
       {
         path: 'package',
-        component: () => import('@/views/logistic/PackageTable/Index.vue'),
+        component: () => import('@/views/logistic/PackagePage/Index.vue'),
         name: 'ShipmentPackage',
         meta: { title: 'Package', icon: 'sidebar-package' }
       },
