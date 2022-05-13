@@ -365,3 +365,18 @@ export const fixedWarehouseEnum = {
   17: 'TPV',
   18: 'Customer'
 };
+
+export const noSerialArr = [
+  '55V1ESt',
+  '55V1ASt',
+  '55V1PC',
+  '55BP',
+  '55SP',
+  '75ProESt',
+  '75ProASt',
+  '75ProPC',
+  '75ProRm',
+  '75ProSHB',
+  '75ProBP',
+  '75ProSP'
+];

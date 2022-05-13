@@ -8,7 +8,13 @@ const combineSameProductQuantity = (arr => {
   return result;
 });
 
-export const formatAssignedOrderItem = async orderItem => {
+const obj2Arr = obj => {
+  return Object.keys(obj).map(key => {
+    return { [key]: obj[key]};
+  });
+};
+
+export const formatAssignedOrderItem = orderItem => {
   const raws = orderItem.rawOrders;
   const originId = orderItem.id;
   const createdAt = orderItem.createdAt;
@@ -16,11 +22,15 @@ export const formatAssignedOrderItem = async orderItem => {
   raws.forEach(order => {
     productsArr = productsArr.concat(order.items); // products array [{product_code: 'ABC', quantity: 1}]
   });
+  const combinedProducts = combineSameProductQuantity(productsArr);
+  const combinedProductsArr = obj2Arr(combinedProducts);
+  console.log('combinedProductsArr: ', combinedProductsArr);
+
   orderItem = Object.assign(orderItem, raws[0]);
   orderItem.id = originId;
   orderItem.createdAt = createdAt;
-  orderItem.items = productsArr;
-  orderItem.products = combineSameProductQuantity(productsArr); // {productCode: totalQuantity}
+  orderItem.items = combinedProductsArr;
+  orderItem.products = combinedProducts; // {productCode: totalQuantity}
 
   return orderItem;
 };

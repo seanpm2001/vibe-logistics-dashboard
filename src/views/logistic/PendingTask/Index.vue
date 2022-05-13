@@ -26,7 +26,10 @@
       </el-descriptions>
     </div>
     <el-divider />
-    <TaskCards @fetchList="fetchList" />
+    <TaskCards
+      :order-enum="orderEnum"
+      @fetchList="fetchList"
+    />
     
     <Pagination
       v-show="total > 0"
@@ -68,7 +71,6 @@ const contrastTask = ref(null); // 对比数据是否修改
 provide('listQuery', listQuery);
 provide('typeArr', typeArr);
 provide('dataList', dataList);
-provide('orderEnum', orderEnum);
 provide('contrastTask', contrastTask);
 /* End Data */
 

@@ -56,19 +56,19 @@ import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { updateTaskAPI } from '@/api/logistic';
 import { formatVBDate } from '@/utils/logistic';
 
-const { proxy } = getCurrentInstance();
-
 const props = defineProps({
   task: {
     type: Object,
     required: true
+  },
+  orderEnum: {
+    type: Object,
+    default: () => {}
   }
 });
 
 const emit = defineEmits(['fetchList']);
 const taskCarrier = ref(props.task.carrier);
-
-const orderEnum = inject('orderEnum');
 
 const onCarrierChange = (task) => {
   task.carrier = taskCarrier.value;
