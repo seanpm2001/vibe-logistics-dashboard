@@ -26,7 +26,10 @@
       </el-descriptions>
     </div>
     <el-divider />
-    <TaskCards :order-enum="orderEnum" @fetchList="fetchList" />
+    <TaskCards
+      :order-enum="orderEnum"
+      @fetchList="fetchList"
+    />
     
     <Pagination
       v-show="total > 0"

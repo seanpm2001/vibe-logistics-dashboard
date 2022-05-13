@@ -169,7 +169,7 @@ import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber } from '@/utils';
-import { skuCodeEnum, unitSystemEnum } from '@/enums/logistic';
+import { skuCodeEnum, unitSystemEnum, noSerialArr } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
 
 const props = defineProps({
@@ -293,11 +293,17 @@ function removeUnitItem (packageItem) {
   return temp;
 }
 
-function isAccessoriesPackage (orderId) {
+function isAccessoriesPackage (packageItem, orderId) {
+  console.log('packageItem: ', packageItem);
   const products = props.orderEnum[orderId].products;
-  products.forEach((product) => {
-    // TODO: isAccessoriesPackage
-  });
+  console.log('props.orderEnum[orderId]: ', props.orderEnum[orderId]);
+  console.log('products: ', products);
+
+  // products.forEach((product) => {
+  //   // TODO: isAccessoriesPackage
+  //   if (noSerialArr.includes(product.productCode))
+  //     console.log(product.productCode);
+  // });
   return true;
 }
 
@@ -309,11 +315,13 @@ const handleSubmitPackage = (packageItem, task) => {
     !units[idx].serial && units.splice(idx, 1);
   }
 
-  if (packageItem.units.length === 0 && isAccessoriesPackage(task.orderId)) {
-    ElMessage.error('Empty Serials!');
+  if (packageItem.units.length === 0)
     packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
-    return;
-  }
+
+  // if (isAccessoriesPackage(packageItem, task.orderId)) {
+  //   // TODO: isAccessoriesPackage
+  // }
+
   const packageData = removeUnitItem(packageItem);
   if (packageId)
     updatePackageAPI(packageId, packageData)
@@ -389,7 +397,7 @@ const handleDeletePackage = (packageId) => {
   .w-380
     width: 350px
     @media (max-width: 1420px)
-      width: 200px
+      width: 220px
   .el-input
     max-width: 360px
   .label, .cell

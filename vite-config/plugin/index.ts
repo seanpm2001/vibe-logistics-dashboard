@@ -24,7 +24,7 @@ export function createVitePlugins(isBuild) {
     Components({
       resolvers: [ElementPlusResolver()],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-      dts: 'typings/components.d.ts',
+      // dts: 'typings/components.d.ts',
       dirs: ['src/components']
     }),
   ];
