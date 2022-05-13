@@ -10,7 +10,10 @@ const combineSameProductQuantity = (arr => {
 
 const obj2Arr = obj => {
   return Object.keys(obj).map(key => {
-    return { [key]: obj[key]};
+    return { 
+      productCode: key,
+      quantity: obj[key]
+    };
   });
 };
 
@@ -30,7 +33,7 @@ export const formatAssignedOrderItem = orderItem => {
   orderItem.id = originId;
   orderItem.createdAt = createdAt;
   orderItem.items = combinedProductsArr;
-  orderItem.products = combinedProducts; // {productCode: totalQuantity}
+  orderItem.productsQty = combinedProducts; // {productCode: totalQuantity}
 
   return orderItem;
 };

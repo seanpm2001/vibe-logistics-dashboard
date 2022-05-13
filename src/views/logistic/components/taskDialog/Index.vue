@@ -310,7 +310,6 @@ const fetchList = () => emit['fetchList'];
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible') as boolean;
 const taskItem = inject('taskItem') as any;
-const specifySerailArr = inject('specifySerailArr');
 const taskOrderItem = inject('taskOrderItem') as any;
 
 const { proxy } = getCurrentInstance();
@@ -318,6 +317,12 @@ const { role } = storeToRefs(useUserStore());
 const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value));
 
 const unitList = shallowRef(null);
+
+// const specifySerailArr = ref([
+//   {
+//     serial: null,
+//   },
+// ]);
 
 watchEffect(() => {
   if (taskItem.value.sourceId !== 18 && taskItem.value.taskType === 'RETURN' ) {
@@ -381,10 +386,10 @@ const handleWarehouseTask = type => {
   }
 };
 
-const onSpecifySerialChange = (idx, type) => {
-  const serialArr = specifySerailArr.value;
-  type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx--, 1);
-};
+// const onSpecifySerialChange = (idx, type) => {
+//   const serialArr = specifySerailArr.value;
+//   type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx--, 1);
+// };
 
 const onProductChange = (idx, type) => {
   const products = taskItem.value.products;

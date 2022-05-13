@@ -239,18 +239,14 @@ const tableKey = ref(0);
 
 const emit = defineEmits(['fetchList', 'showOrderDrawer', 'viewUnitDescription', 'editHousingTask']);
 const fetchList = () => emit('fetchList');
+const viewUnitDescription = (unit, task) => emit('viewUnitDescription', unit, task);
+const editHousingTask = (_unit, _task) => emit('editHousingTask', _unit, _task);
+const showOrderDrawer = (order) => emit('showOrderDrawer', order);
 
 const handleSelectionChange = (_selectedArr) => {
   multipleSelection.value = _selectedArr.sort((pre, next) => next.id - pre.id);
 };
 
-const viewUnitDescription = (unit, task) => {
-  emit('viewUnitDescription', unit, task);
-};
-
-const editHousingTask = (_unit, _task) => {
-  emit('editHousingTask', _unit, _task);
-};
 
 const ifMeetHousingCondtion = (taskType, unitStatus) => {
   if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
@@ -263,10 +259,6 @@ const ifMeetHousingCondtion = (taskType, unitStatus) => {
       return true;
   }
   return false;
-};
-
-const showOrderDrawer = (order) => {
-  emit('showOrderDrawer', order);
 };
 
 const onUnitStatusChange = (unit) => {
@@ -282,9 +274,8 @@ const onUnitStatusChange = (unit) => {
 };
 
 const deletePackage = (packageId) => {
-  deletePackageAPI(packageId).then(() => {
-    fetchList();
-  });
+  deletePackageAPI(packageId)
+    .then(() =>  fetchList());
 };
 
 const carrierUrlEnum = {

@@ -53,31 +53,31 @@
           <div class="product-row">
             <template v-if="showAssignedOrder">
               <template
-                v-for="item in row.items"
-                :key="item.productCode"
+                v-for="(quantity, code) in row.productsQty"
+                :key="code"
               >
                 <div align="left">
-                  <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
-                  <span class="mgl-5">{{ codeNameEnum[item.productCode] || item.productCode }}:
+                  <svg-icon :icon-name="codeIconEnum[code] || 'product-other'" />
+                  <span class="mgl-5">{{ codeNameEnum[code] || code }}:
                     <el-tag
                       class="mgl-5"
                       size="small"
-                    >{{ item.quantity }}</el-tag>
+                    >{{ quantity }}</el-tag>
                   </span>
                 </div>
               </template>
             </template>
             <template v-else>
               <template
-                v-for="item in row.items"
-                :key="item.productCode"
+                v-for="product in row.items"
+                :key="product"
               >
                 <div align="left">
-                  <svg-icon :icon-name="codeIconEnum[item.productCode] || 'product-other'" />
-                  <span class="mgl-5">{{ codeNameEnum[item.productCode] || item.productCode }}:<el-tag
+                  <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
+                  <span class="mgl-5">{{ codeNameEnum[product.productCode] || product.productCode }}:<el-tag
                     class="mgl-5"
                     size="small"
-                  >{{ item.quantity }}</el-tag></span>
+                  >{{ product.quantity }}</el-tag></span>
                 </div>
               </template>
             </template>
@@ -85,6 +85,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="showAssignedOrder"
         label="Warehouse Task"
         width="240px"
         align="center"
@@ -335,10 +336,6 @@ const taskItem = ref({
   insureCost: null,
 });
 
-const specifySerailArr = ref([{
-  serial: null,
-}]);
-
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
@@ -356,7 +353,6 @@ const listQuery = ref({
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
-provide('specifySerailArr', specifySerailArr);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 provide('showAssignedOrder', showAssignedOrder);

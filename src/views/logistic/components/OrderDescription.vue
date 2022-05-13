@@ -41,17 +41,17 @@
         Products
       </template>
       <template
-        v-for="product in orderItem.items"
-        :key="product.productCode"
+        v-for="(quantity, code) in orderItem.productsQty"
+        :key="code"
       >
         <div>
-          <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
+          <svg-icon :icon-name="codeIconEnum[code] || 'product-other'" />
           <span class="mgl-5">
-            {{ codeNameEnum[product.productCode] || product.productCode }}:
+            {{ codeNameEnum[code] || code }}:
             <el-tag
               class="mgl-5"
               size="small"
-            >{{ product.quantity }}</el-tag>
+            >{{ quantity }}</el-tag>
           </span>
         </div>
       </template>
