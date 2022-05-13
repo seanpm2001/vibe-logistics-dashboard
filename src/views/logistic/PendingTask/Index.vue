@@ -86,11 +86,14 @@ const codeQTY = computed(() => { // SKU Quantity Statistics
     task.packages?.forEach(packageItem => {
       packageItem.units.forEach(unit => {
         const code = skuCodeEnum[unit.item?.sku];
-        if (code) {
+        if (code) { // 统计fulfillment的数量
           temp[code] = temp[code] || {};
           temp[code]['ful'] = (temp[code]['ful'] || 0) + 1;
         }
       });
+
+      if (!packageItem.units.length) // 空units默认填充一个unit数据双向绑定
+        packageItem.units.push({ serial: null, status: 'DELIVERING' });
     });
   });
   return temp;
@@ -103,7 +106,7 @@ function queryTask () {
       params.append('tasktype', type);
     });
     queryTasksAPI(params).then(data => {
-      if (!data.items.length) {
+      if (!data.items.length) { // 找不到对应filter的task
         listQuery.value.search = '';
         ElMessage.error('Can\'t find related.');
         return;

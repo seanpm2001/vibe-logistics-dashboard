@@ -225,7 +225,7 @@ const handleUnitChange = (unitArr, idx, type, task) => {
       ElMessage.error('Exceed quantity limit');
       return;
     }
-    unitArr.push({ serial: null });
+    unitArr.push({ serial: null, status: 'DELIVERING' });
   }
 };
 
