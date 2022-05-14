@@ -4,175 +4,18 @@
       :multiple-selection="multipleSelection"
       @fetch-list="fetchList"
       @show-assign-dialog="showAssignDialog"
+      @unassign-orders="unassignOrders"
     />
-    <el-table
-      :key="tableKey"
-      :data="dataList"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-      height="68vh"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column
-        type="selection"
-        width="50"
-        height="40"
-        align="center"
-      />
-      <el-table-column
-        class-name="order-info"
-        label="Order"
-        width="240px"
-        align="center"
-      >
-        <template #default="{ row }">
-          <AssignedOrderId
-            :order="row"
-            @show-order-drawer="showOrderDrawer(row)"
-          />
-          <p>{{ formatVBDate(row.createdAt) }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Shipment Info"
-        min-width="280px"
-        align="center"
-      >
-        <template #default="{ row }">
-          <OrderShipmentInfo :order-item="row" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Products"
-        width="255px"
-        align="center"
-      >
-        <template #default="{ row }">
-          <div class="product-row">
-            <template v-if="showAssignedOrder">
-              <template
-                v-for="(quantity, code) in row.productsQty"
-                :key="code"
-              >
-                <div align="left">
-                  <svg-icon :icon-name="codeIconEnum[code] || 'product-other'" />
-                  <span class="mgl-5">{{ codeNameEnum[code] || code }}:
-                    <el-tag
-                      class="mgl-5"
-                      size="small"
-                    >{{ quantity }}</el-tag>
-                  </span>
-                </div>
-              </template>
-            </template>
-            <template v-else>
-              <template
-                v-for="product in row.items"
-                :key="product"
-              >
-                <div align="left">
-                  <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
-                  <span class="mgl-5">{{ codeNameEnum[product.productCode] || product.productCode }}:<el-tag
-                    class="mgl-5"
-                    size="small"
-                  >{{ product.quantity }}</el-tag></span>
-                </div>
-              </template>
-            </template>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showAssignedOrder"
-        label="Warehouse Task"
-        width="240px"
-        align="center"
-      >
-        <template #default="{ row }">
-          <template
-            v-for="(task, index) in row.tasks"
-            :key="task.id"
-          >
-            <div class="mgb-5">
-              <el-tag
-                type="success"
-                class="cursor-pointer mgr-5"
-                @click="editWarehouseTask(row.id, task.id)"
-              >
-                Task {{ index+1 }}
-              </el-tag>
-              <el-tag class="mgr-5">
-                {{ task.taskType }}
-              </el-tag>
-              <el-popconfirm
-                v-if="task?.id"
-                confirm-button-text="OK"
-                cancel-button-text="No, Thanks"
-                icon-color="red"
-                title="Are you sure to delete this?"
-                @confirm="deleteTaskAPI(task.id).then(() => fetchList())"
-              >
-                <template #reference>
-                  <svg-icon
-                    class="cursor-pointer"
-                    icon-name="close"
-                  />
-                </template>
-              </el-popconfirm>
-            </div>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Status"
-        width="120px"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tag>
-            {{ packageStatusEnum[row.status] }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="Actions"
-        align="center"
-        min-width="240px"
-        class-name="small-padding fixed-width"
-      >
-        <template #default="{ row }">
-          <el-button
-            v-if="!showAssignedOrder"
-            type="primary"
-            size="small"
-            @click="showAssignDialog('assign', row.id)"
-          >
-            Assign & Add 1st WH Task
-          </el-button>
-          <el-button
-            v-if="showAssignedOrder"
-            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-            type="success"
-            size="small"
-            @click="addWarehouseTask(row.id)"
-          >
-            Add WH Task
-          </el-button>
-          <el-button
-            v-if="showAssignedOrder"
-            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-            type="danger"
-            size="small"
-            @click="unassignOrders(row)"
-          >
-            unAssign
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <OrderTable
+      :data-list="dataList"
+      :warehouse-enum="warehouseEnum"
+      @fetch-list="fetchList"
+      @show-order-drawer="showOrderDrawer"
+      @add-warehouse-task="addWarehouseTask"
+      @edit-warehouse-task="editWarehouseTask"
+      @show-assign-dialog="showAssignDialog"
+      @unassign-orders="unassignOrders"
+    />
 
     <Pagination
       v-show="total > 0"
@@ -274,7 +117,7 @@
 <script lang="ts" setup>
 import FilterHeader from './FilterHeader.vue';
 import { ElMessage } from 'element-plus';
-import { AssignedOrderId, TaskDialog, OrderDescription, OrderShipmentInfo } from '../components';
+import { TaskDialog, OrderDescription } from '../components';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
@@ -283,10 +126,9 @@ import {
   findAssignedOrderAPI,
   findTaskAPI,
   createTaskAPI,
-  deleteTaskAPI
-} from '@/api/logistic';
+} from '@/api';
 import { formatAssignedOrderItem, formatVBDate } from '@/utils/logistic';
-import { packageStatusEnum, codeNameEnum, codeIconEnum, transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 
@@ -341,7 +183,6 @@ const contrastData = ref(null);
 
 const taskPermissionArr = ['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'];
 
-const tableKey = ref(0);
 const dataList = shallowRef(null);
 const total = ref(0);
 const listQuery = ref({
@@ -500,7 +341,7 @@ const assignOrders = () => {
 
   // 调用batch assign orders API
   assignOrdersAPI(sourceWHId, orderArr)
-    .then(async (data) => {
+    .then(async (data: any) => {
       dialogAssignVisible.value = false;
       const products = await formatAssignedOrderItem(data)?.items;
       const taskId = await submitInitTaskItem(products, assignedData, data.id);
@@ -517,23 +358,16 @@ const unassignOrders = (order) => {
     ElMessage.error('Please remove all tasks before unassign!');
     return;
   }
-  unassignOrdersAPI(order.id).then((data) => {
-    fetchList();
-  });
+  unassignOrdersAPI(order.id)
+    .then((data) => fetchList());
 };
 
-const unassignSelected = () => {
-  multipleSelection.value.forEach((item) => {
-    unassignOrders(item);
-  });
-  multipleSelection.value = [];
-  fetchList();
-};
 
-const addWarehouseTask = (_orderId) => {
+
+const addWarehouseTask = (orderId: number) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
-  findAssignedOrderAPI(_orderId).then(async data => {
-    taskItem.value.orderId = _orderId;
+  findAssignedOrderAPI(orderId).then(async data => {
+    taskItem.value.orderId = orderId;
     taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
     dialogTaskVisible.value = true;

@@ -153,7 +153,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '@/enums/logistic';
-import { updateUnitAPI, updatePackageUnitAPI } from '@/api/logistic';
+import { updateUnitAPI, updatePackageUnitAPI } from '@/api';
 
 const props = defineProps({
   warehouseEnum: {

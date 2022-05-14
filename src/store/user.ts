@@ -1,4 +1,4 @@
-import { loginAPI, getInfoAPI } from '@/api/logistic';
+import { loginAPI, getInfoAPI } from '@/api';
 import { setToken, removeToken } from '@/utils/auth';
 import router, { asyncRoutes } from '@/router';
 import { useTagsViewStore, usePermissionStore } from './index';

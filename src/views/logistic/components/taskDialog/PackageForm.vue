@@ -158,7 +158,7 @@ import {
   deletePackageAPI,
   updatePackageAPI,
   queryUnitsAPI,
-} from '@/api/logistic';
+} from '@/api';
 import { skuCodeEnum, unitSystemEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 

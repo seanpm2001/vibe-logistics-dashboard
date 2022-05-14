@@ -274,7 +274,7 @@ import {
   findFreightAPI,
   deleteFreightAPI,
   listBatchesAPI,
-} from '@/api/logistic';
+} from '@/api';
 import {
   freightStatusEnum,
   forwarderEnum,

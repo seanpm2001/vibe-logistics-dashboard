@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { queryUnitsAPI, listWarehousesAPI } from '@/api/logistic';
+import { queryUnitsAPI, listWarehousesAPI } from '@/api';
 import { fixedWarehouseEnum } from '@/enums/logistic';
 
 const emptyListQuery = {

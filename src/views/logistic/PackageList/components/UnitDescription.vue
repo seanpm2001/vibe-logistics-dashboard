@@ -80,7 +80,7 @@
 
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus';
-import { updatePackageUnitAPI } from '@/api/logistic';
+import { updatePackageUnitAPI } from '@/api';
 import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 
 const props = defineProps({

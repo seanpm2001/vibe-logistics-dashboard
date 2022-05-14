@@ -170,7 +170,7 @@ import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber } from '@/utils';
 import { skuCodeEnum, unitSystemEnum, noSerialArr } from '@/enums/logistic';
-import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
+import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api';
 
 const props = defineProps({
   orderEnum: {

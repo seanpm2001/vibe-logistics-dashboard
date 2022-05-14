@@ -57,7 +57,7 @@
 import { UnitDescription, HousingDialog, FilterHeader, PackageTable } from './components';
 import { OrderDescription } from '../components';
 import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';
-import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
+import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api';
 import { useLogisticStore } from '@/store';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 

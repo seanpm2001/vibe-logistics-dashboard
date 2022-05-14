@@ -150,7 +150,7 @@
 import { CirclePlus } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import PackageForm from './PackageForm.vue';
-import { updateTaskAPI, listTaskPackagesAPI } from '@/api/logistic';
+import { updateTaskAPI, listTaskPackagesAPI } from '@/api';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 

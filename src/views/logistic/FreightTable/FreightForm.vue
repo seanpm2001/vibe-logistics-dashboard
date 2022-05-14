@@ -341,7 +341,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElTooltip } from 'element-plus';
 import BatchForm from './BatchForm.vue';
-import { createFreightAPI, updateFreightAPI } from '@/api/logistic';
+import { createFreightAPI, updateFreightAPI } from '@/api';
 import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum } from '@/enums/logistic';
 import { parseTime } from '@/utils/format';
 

@@ -44,7 +44,7 @@ import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCards from './TaskCards/Index.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
-import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api/logistic';
+import { queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
 

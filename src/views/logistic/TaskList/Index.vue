@@ -51,7 +51,7 @@ import {
   deleteTaskAPI,
   findAssignedOrderAPI,
   queryAssignedBatchOrdersAPI
-} from '@/api/logistic';
+} from '@/api';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 import { useLogisticStore } from '@/store';

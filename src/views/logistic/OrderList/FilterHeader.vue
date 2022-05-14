@@ -91,15 +91,22 @@ defineProps({
 const listQuery = inject('listQuery');
 const showAssignedOrder = inject('showAssignedOrder');
 
-const emit = defineEmits(['fetchList', 'showAssignDialog']);
+const emit = defineEmits(['fetchList', 'showAssignDialog', 'unassignOrders']);
 const fetchList = () => emit('fetchList');
+const showAssignDialog = (type, orderId) => emit('showAssignDialog', type, orderId);
+const unassignOrders = order => emit('unassignOrders', order);
 
 const handleFilter = () => {
   listQuery.value.page = 1;
   fetchList();
 };
 
-const showAssignDialog = (type, orderId) => {
-  emit('showAssignDialog', type, orderId);
+
+const unassignSelected = () => {
+  multipleSelection.value.forEach((item) => {
+    unassignOrders(item);
+  });
+  multipleSelection.value = [];
+  fetchList();
 };
 </script>

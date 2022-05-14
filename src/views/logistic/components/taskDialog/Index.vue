@@ -282,7 +282,7 @@ import { ElMessage } from 'element-plus';
 import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '@/api/logistic';
+import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '@/api';
 import {
   taskTypeEnum, taskReasonEnum, skuCodeEnum,
   unitConditionEnum, codeNameEnum, codeSkuArrEnum

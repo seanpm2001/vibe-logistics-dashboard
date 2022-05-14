@@ -9,7 +9,7 @@ export const logisticRouter = [
     children: [
       {
         path: 'order',
-        component: () => import('@/views/logistic/OrderTable/Index.vue'),
+        component: () => import('@/views/logistic/OrderList/Index.vue'),
         name: 'Order',
         meta: { title: 'Order', icon: 'sidebar-order' }
       },

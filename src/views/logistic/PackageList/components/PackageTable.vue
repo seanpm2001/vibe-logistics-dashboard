@@ -214,7 +214,7 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
-import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api/logistic';
+import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
 import { packageStatusEnum, taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 import { formatVBDate } from '@/utils';

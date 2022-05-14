@@ -159,7 +159,7 @@
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';
-import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api/logistic';
+import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api';
 
 // eslint-disable-next-line no-undef
 const props = defineProps({

@@ -39,7 +39,7 @@
 
 <script setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
-import { deletePackageAPI } from '@/api/logistic';
+import { deletePackageAPI } from '@/api';
 
 const multipleSelection = inject('multipleSelection');
 

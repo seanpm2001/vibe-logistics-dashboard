@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { Delete } from '@element-plus/icons-vue';
-import { deleteTaskAPI } from '@/api/logistic';
+import { deleteTaskAPI } from '@/api';
 
 const listQuery = inject('listQuery') as any;
 const multipleSelection = inject('multipleSelection') as any;
