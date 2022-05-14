@@ -187,7 +187,7 @@ defineProps({
   },
   showAssignedOrder: {
     type: Boolean,
-    required: true
+    default: false
   }
 });
 

@@ -34,7 +34,7 @@ export const logisticRouter = [
       },
       {
         path: 'freight',
-        component: () => import('@/views/logistic/FreightTable/Index.vue'),
+        component: () => import('@/views/logistic/FreightList/Index.vue'),
         name: 'Freight',
         meta: { title: 'Freight', icon: 'sidebar-freight' }
       },

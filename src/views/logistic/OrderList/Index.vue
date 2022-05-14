@@ -1,7 +1,6 @@
 <template>
   <div class="page">
     <FilterHeader
-      :multiple-selection="multipleSelection"
       @fetch-list="fetchList"
       @show-assign-dialog="showAssignDialog"
       @unassign-orders="unassignOrders"
@@ -116,6 +115,7 @@
 
 <script lang="ts" setup>
 import FilterHeader from './FilterHeader.vue';
+import OrderTable from './OrderTable.vue';
 import { ElMessage } from 'element-plus';
 import { TaskDialog, OrderDescription } from '../components';
 import {
@@ -136,8 +136,6 @@ import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading
 const router = useRouter();
 const { role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
-
-const { proxy } = getCurrentInstance();
 
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
@@ -197,6 +195,7 @@ provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 provide('showAssignedOrder', showAssignedOrder);
+provide('multipleSelection', multipleSelection);
 /* End data */
 
 /* Start Query Related */
@@ -359,9 +358,8 @@ const unassignOrders = (order) => {
     return;
   }
   unassignOrdersAPI(order.id)
-    .then((data) => fetchList());
+    .then(() => fetchList());
 };
-
 
 
 const addWarehouseTask = (orderId: number) => {
@@ -387,12 +385,6 @@ const editWarehouseTask = (orderId, taskId) => {
       dialogTaskVisible.value = true;
     });
   });
-};
-
-const handleSelectionChange = (selectedArr) => {
-  multipleSelection.value = selectedArr.sort(
-    (pre, next) => new Date(pre.createdAt) - new Date(next.createdAt)
-  );
 };
 
 const resetForm = () => {};

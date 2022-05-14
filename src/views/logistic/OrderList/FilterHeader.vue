@@ -81,15 +81,9 @@
 <script setup>
 import { Search, Delete } from '@element-plus/icons-vue';
 
-defineProps({
-  multipleSelection: {
-    type: Array,
-    required: true
-  }
-});
-
 const listQuery = inject('listQuery');
 const showAssignedOrder = inject('showAssignedOrder');
+const multipleSelection = inject('multipleSelection');
 
 const emit = defineEmits(['fetchList', 'showAssignDialog', 'unassignOrders']);
 const fetchList = () => emit('fetchList');
