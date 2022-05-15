@@ -79,7 +79,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-show="showAssignedOrder"
+      v-if="showAssignedOrder"
       label="Warehouse Task"
       width="240px"
       align="center"
