@@ -79,7 +79,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="showAssignedOrder"
+      v-show="showAssignedOrder"
       label="Warehouse Task"
       width="240px"
       align="center"
@@ -139,7 +139,7 @@
     >
       <template #default="{ row }">
         <el-button
-          v-if="!showAssignedOrder"
+          v-show="!showAssignedOrder"
           type="primary"
           size="small"
           @click="showAssignDialog('assign', row.id)"
@@ -147,7 +147,7 @@
           Assign & Add 1st WH Task
         </el-button>
         <el-button
-          v-if="showAssignedOrder"
+          v-show="showAssignedOrder"
           v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
           type="success"
           size="small"
@@ -156,7 +156,7 @@
           Add WH Task
         </el-button>
         <el-button
-          v-if="showAssignedOrder"
+          v-show="showAssignedOrder"
           v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
           type="danger"
           size="small"
@@ -185,13 +185,10 @@ defineProps({
     type: Object,
     required: true
   },
-  showAssignedOrder: {
-    type: Boolean,
-    default: false
-  }
 });
 
 const multipleSelection = inject('multipleSelection') as any;
+const showAssignedOrder = inject('showAssignedOrder');
 
 const tableKey = ref(0);
 const emit = defineEmits(['fetchList', 'showOrderDrawer', 'addWarehouseTask', 'editWarehouseTask', 'showAssignDialog', 'unassignOrders']);
