@@ -103,7 +103,7 @@ function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
     typeArr.value.forEach(type => {
-      params.append('tasktype', type);
+      params.append('taskType', type);
     });
     queryTasksAPI(params).then(data => {
       if (!data.items.length) { // 找不到对应filter的task
