@@ -102,12 +102,12 @@
             filterable
             remote
             :allow-create="taskItem.taskType === 'RETURN'"
-            :remote-method="query => debounce(remoteMethod(query), 500)"
+            :remote-method="query => debounce(remoteMethod(query, taskItem.taskType), 500)"
           >
             <el-option
               v-for="unit in unitList"
               :key="unit.serial"
-              :label="unit.serial + ' : ' + unit.sku"
+              :label="`${unit.serial}${unit.sku ? ' : ' + unit.sku : ''}`"
               :value="unit.serial"
             />
           </el-select>
@@ -184,13 +184,13 @@ const props = defineProps({
 
 /* Start Data */
 const taskItem = inject('taskItem') as any;
+const taskOrderItem = inject('taskOrderItem') as any;
 
 const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
 const taskProducts = Object.assign({}, taskItem.value.products);
 const taskPackage = ref(props.packageItem);
-const previewExcelArr = [].concat(taskPackage.value?.items);
 
 const quantityNum = computed(() => {
   let sum=0;
@@ -203,8 +203,8 @@ const quantityNum = computed(() => {
 
 const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
 
-const unitList = shallowRef(null);
-const remoteMethod = query => {
+const unitList = shallowRef([]);
+const remoteMethod = (query, taskType) => {
   const taskProducts = taskItem.value.products;
   if (query) {
     queryUnitsAPI({ serial: query }).then(data => {
@@ -214,6 +214,15 @@ const remoteMethod = query => {
             return true;
         }
       });
+
+      if (taskType === 'RETURN') // return task append所有task中的serial
+        taskOrderItem.value.tasks?.forEach(task => {
+          task.packages.forEach(item => {
+            item.units?.forEach(unit => {
+              unit.serial && unitList.value.push(unit);
+            });
+          });
+        });
     });
   } else {
     unitList.value = [];
