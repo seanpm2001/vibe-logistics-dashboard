@@ -165,12 +165,13 @@ const viewUnitDescription = (unit, task) => {
 
   const { products, orderId } = task;
   products.forEach(product => {
-    serialScopeArr.value = [].concat(product.serialNote);
+    if (product.serialNote.length)
+      serialScopeArr.value = [].concat(product.serialNote);
   });
   orderEnum.value[orderId].tasks?.forEach(task => {
     task.packages.forEach(item => {
       item.units?.forEach(unit => {
-        serialScopeArr.value.push(unit.serial);
+        unit.serial && serialScopeArr.value.push(unit.serial);
       });
     });
   });
