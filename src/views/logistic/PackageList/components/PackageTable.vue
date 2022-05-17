@@ -93,7 +93,7 @@
               :type="unit.checked ? 'success' : 'primary'"
               @click="viewUnitDescription(unit, row.task)"
             >
-              Check
+              Receive
             </el-button>
             <el-select
               v-model="unit.status"
@@ -118,7 +118,7 @@
               type="primary"
               @click="editHousingTask(unit, row.task)"
             >
-              Warehousing
+              Restocking
             </el-button>
           </el-row>
         </template>

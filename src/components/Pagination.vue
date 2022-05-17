@@ -20,9 +20,7 @@
 <script lang="ts" setup>
 import { scrollTo } from '@/utils/scroll-to';
 
-const { proxy } = getCurrentInstance();
-
-const listQuery = inject('listQuery');
+const listQuery = inject('listQuery') as any;
 
 const props = defineProps({
   total: {
