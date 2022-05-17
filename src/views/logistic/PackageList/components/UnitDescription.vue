@@ -83,7 +83,7 @@ import { ElMessageBox } from 'element-plus';
 import { updatePackageUnitAPI } from '@/api';
 import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 
-const props = defineProps({
+defineProps({
   serialScopeArr: {
     type: Array,
     default: () => []
@@ -100,7 +100,7 @@ const updateSerial = () => {
     .then(() => emit('fetchList'));
 };
 
-const checkUnit = isChecked => {
+const checkUnit = () => {
   ElMessageBox.confirm('Check it?', 'Warning', {
     type: 'warning',
     callback: (action) => {

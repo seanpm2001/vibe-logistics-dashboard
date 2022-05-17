@@ -27,7 +27,6 @@ export const formatAssignedOrderItem = orderItem => {
   });
   const combinedProducts = combineSameProductQuantity(productsArr);
   const combinedProductsArr = obj2Arr(combinedProducts);
-  console.log('combinedProductsArr: ', combinedProductsArr);
 
   orderItem = Object.assign(orderItem, raws[0]);
   orderItem.id = originId;
