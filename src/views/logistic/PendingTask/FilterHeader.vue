@@ -64,17 +64,27 @@
         />
       </template>
     </el-input>
+
+    <el-input
+      v-model="scannedTrackingNumber"
+      style="width: 300px;"
+      placeholder="Scan label to find task"
+      @input="(() => debounce(findTaskByTrackingNumber, 200))()"
+    >
+    </el-input>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue';
 import { transportEnum, transportCarrierEnum, allTaskTypeEnum  } from '@/enums/logistic';
-import { parseTime } from '@/utils/format';
+import { parseTime, debounce } from '@/utils';
 const emit = defineEmits(['fetchList']);
 
 const listQuery = inject('listQuery') as any;
 const typeArr = inject('typeArr');
+
+const scannedTrackingNumber = ref('');
 
 const shortcuts = [
   {
@@ -88,6 +98,21 @@ const shortcuts = [
 ];
 
 const fetchList = () => emit('fetchList');
+
+const findTaskByTrackingNumber = () => {
+  console.log('find task');
+  console.log(scannedTrackingNumber);
+  if (scannedTrackingNumber.value.endsWith(';')) {
+    const searchCopy = listQuery.value.search;
+    listQuery.value.search = scannedTrackingNumber.value.slice(0, -1);
+    scannedTrackingNumber.value = '';
+    fetchList();
+    // Below is just a hack. Need to find a better way in future.
+    setTimeout(() => {
+      listQuery.value.search = searchCopy;
+    }, 300);
+  }
+};
 
 const handleFilter = () => {
   listQuery.value.page = 1;

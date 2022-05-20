@@ -72,6 +72,7 @@ const taskItem = ref({
   taskType: null,
   returnReason: null,
   newAddress: null,
+  trackingNumberNote: null,
   note: null,
   onHold: false,
   products: [{

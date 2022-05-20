@@ -8,7 +8,7 @@
       :order-enum="orderEnum"
       @fetch-list="fetchList"
       @show-order-drawer="showOrderDrawer"
-      @edit-housing-task="editHousingTask"
+      @edit-warehousing-task="editWarehousingTask"
       @view-unit-description="viewUnitDescription"
     />
 
@@ -24,16 +24,17 @@
       size="60%"
       direction="ltr"
     >
-      <UnitDescription 
+      <UnitDescription
         :serial-scope-arr="serialScopeArr"
         @fetchList="fetchList"
       />
     </el-drawer>
 
-    <HousingDialog
-      ref="housingDialog"
+    <WarehousingDialog
+      ref="warehousingDialog"
       :warehouse-enum="warehouseEnum"
       @findUnit="findUnit"
+      @fetch-list="fetchList"
     />
 
     <el-drawer
@@ -54,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UnitDescription, HousingDialog, FilterHeader, PackageTable } from './components';
+import { UnitDescription, WarehousingDialog, FilterHeader, PackageTable } from './components';
 import { OrderDescription } from '../components';
 import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';
 import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api';
@@ -136,7 +137,7 @@ const findUnit = (unitSerial) => {
   });
 };
 
-const editHousingTask = (_unit, _task) => {
+const editWarehousingTask = (_unit, _task) => {
   // 更新unitItem
   findUnit(_unit.serial).then(() => {
     // 更新task info related

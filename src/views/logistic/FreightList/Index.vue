@@ -177,7 +177,7 @@ const beforeCloseDialog = (done) => {
   const isChanged =
     JSON.stringify(contrastData.value) !== JSON.stringify(freightItem.value);
   console.log('isChanged: ', isChanged);
-  
+
   if (!isChanged) {
     resetForm();
     done();

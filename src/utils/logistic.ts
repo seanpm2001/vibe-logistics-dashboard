@@ -10,7 +10,7 @@ const combineSameProductQuantity = (arr => {
 
 const obj2Arr = obj => {
   return Object.keys(obj).map(key => {
-    return { 
+    return {
       productCode: key,
       quantity: obj[key]
     };
@@ -43,4 +43,13 @@ export const getTaskOrderIdArr = (taskList: any) :Array<number> => {
   const temp = [];
   taskList.forEach(task => temp.push(task.orderId));
   return temp;
+};
+
+export const formatTimeString = utcTimeString => {
+  const utcTime = new Date(utcTimeString);
+  const diff = (new Date()).getTimezoneOffset() * 60 * 1000;
+  const localTime = new Date(utcTime - diff);
+  const iso = localTime.toISOString();
+  const ret = iso.slice(0, 19).replace('T', ' ');
+  return ret;
 };

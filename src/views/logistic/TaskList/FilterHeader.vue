@@ -13,15 +13,26 @@
         :value="key"
       />
     </el-select>
-    <el-button
-      v-permission="['ADMIN', 'VIBE_MANAGER']"
-      :disabled="!multipleSelection?.length"
-      type="primary"
-      :icon="Delete"
-      @click="delSelectedTask()"
-    >
-      Delete Selected
-    </el-button>
+
+    <div class="right-subcontainer">
+      <el-button
+        v-if="false"
+        v-permission="['ADMIN', 'VIBE_MANAGER']"
+        type="primary"
+      >
+        Sync Recent UPS Labels
+      </el-button>
+
+      <el-button
+        v-permission="['ADMIN', 'VIBE_MANAGER']"
+        :disabled="!multipleSelection?.length"
+        type="primary"
+        :icon="Delete"
+        @click="delSelectedTask()"
+      >
+        Delete Selected
+      </el-button>
+    </div>
   </div>
 </template>
 

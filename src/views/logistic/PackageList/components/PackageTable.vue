@@ -67,7 +67,11 @@
       align="center"
     >
       <template #default="{ row }">
-        {{ taskTypeEnum[row.task.taskType] }}
+        <el-tag
+          :type="taskColorEnum[row.task.taskType] || 'primary'"
+        >
+          {{ taskTypeEnum[row.task.taskType] }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column
@@ -87,38 +91,42 @@
               class="link"
               @click="viewUnitDescription(unit, row.task)"
             >{{ unit.serial }}</span>
-            <el-button
-              :disabled="unit.checked || !ifMeetHousingCondtion(row.task.taskType, unit.status)"
-              size="small"
-              :type="unit.checked ? 'success' : 'primary'"
-              @click="viewUnitDescription(unit, row.task)"
-            >
-              Receive
-            </el-button>
+
             <el-select
               v-model="unit.status"
               v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
+              :disabled="unit.checked && role == 'WAREHOUSE'"
               style="width: 210px; margin: 0 10px;"
               placeholder="Please select"
               @change="onUnitStatusChange(unit)"
             >
               <el-option
-                v-for="(status, key) in packageStatusEnum"
+                v-for="(status, key) in filterPackageStatus(row.task.taskType, unit.status)"
                 :key="status"
                 :label="status"
                 :value="key"
               />
             </el-select>
-            
+
             <el-button
-              v-if="ifMeetHousingCondtion(row.task.taskType, unit.status)"
+              v-if="unit.checked || ifMeetWarehousingCondition(row.task.taskType, unit.status)"
+              :disabled="unit.checked"
+              size="small"
+              :type="unit.checked ? 'success' : 'primary'"
+              @click="viewUnitDescription(unit, row.task)"
+            >
+              {{ unit.checked ? 'Received' : 'Receive' }}
+            </el-button>
+
+            <el-button
+              v-if="unit.checked || ifMeetWarehousingCondition(row.task.taskType, unit.status)"
               v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"
               :disabled="!unit.checked"
               size="small"
-              type="primary"
-              @click="editHousingTask(unit, row.task)"
+              :type="unit.restocked ? 'success' : 'primary'"
+              @click="editWarehousingTask(unit, row.task)"
             >
-              Restocking
+              {{ unit.restocked ? 'Restocked' : 'Restock' }}
             </el-button>
           </el-row>
         </template>
@@ -215,7 +223,7 @@
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
 import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
-import { packageStatusEnum, taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 import { formatVBDate } from '@/utils';
 
@@ -237,10 +245,10 @@ const multipleSelection = inject('multipleSelection');
 
 const tableKey = ref(0);
 
-const emit = defineEmits(['fetchList', 'showOrderDrawer', 'viewUnitDescription', 'editHousingTask']);
+const emit = defineEmits(['fetchList', 'showOrderDrawer', 'viewUnitDescription', 'editWarehousingTask']);
 const fetchList = () => emit('fetchList');
 const viewUnitDescription = (unit, task) => emit('viewUnitDescription', unit, task);
-const editHousingTask = (_unit, _task) => emit('editHousingTask', _unit, _task);
+const editWarehousingTask = (_unit, _task) => emit('editWarehousingTask', _unit, _task);
 const showOrderDrawer = (order) => emit('showOrderDrawer', order);
 
 const handleSelectionChange = (_selectedArr) => {
@@ -248,12 +256,26 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 
-const ifMeetHousingCondtion = (taskType, unitStatus) => {
-  if (unitStatus === 'RETURNED_BUT_UNCHECKED') {
+const filterPackageStatus = (taskType, unitStatus) => {
+  const packageStatusEnumCopy = JSON.parse(JSON.stringify(packageStatusEnum));
+  if (['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(unitStatus)) {
+    return packageStatusEnumCopy;
+  }
+  if (['FULFILLMENT', 'REPLACE', 'MOVE'].includes(taskType)) {
+    delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
+  }
+  if (['RETURN', 'RETURN_TO_REPAIR', 'MOVE'].includes(taskType)) {
+    delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
+  }
+  return packageStatusEnumCopy;
+};
+
+const ifMeetWarehousingCondition = (taskType, unitStatus) => {
+  if (unitStatus === 'RETURNING') {
     const meetTaskArr = ['FULFILLMENT', 'REPLACE', 'MOVE', 'RETURN_TO_REPAIR'];
     if (meetTaskArr.includes(taskType))
       return true;
-  } else if (unitStatus === 'DELIVERED_BUT_UNCHECKED') {
+  } else if (unitStatus === 'DELIVERING') {
     const meetTaskArr = ['RETURN', 'MOVE', 'RETURN_TO_REPAIR'];
     if (meetTaskArr.includes(taskType))
       return true;
@@ -265,10 +287,15 @@ const onUnitStatusChange = (unit) => {
   ElMessageBox.confirm('Update it?', 'Warning', {
     type: 'warning',
     callback: (action) => {
-      if (action === 'confirm')
+      if (action === 'confirm') {
+        if (!['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(unit.status)) {
+          unit.checked = false;
+          unit.restocked = false;
+        }
         updatePackageUnitAPI(unit.packageId, unit.id, unit);
-      else
+      } else {
         fetchList();
+      }
     },
   });
 };
