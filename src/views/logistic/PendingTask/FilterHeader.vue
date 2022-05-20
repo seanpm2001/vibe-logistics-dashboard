@@ -66,9 +66,10 @@
     </el-input>
 
     <el-input
+      class="scan-label"
       v-model="scannedTrackingNumber"
       style="width: 300px;"
-      placeholder="Scan label to find task"
+      placeholder="Scan shipping label to find task"
       @input="(() => debounce(findTaskByTrackingNumber, 200))()"
     >
     </el-input>
@@ -146,5 +147,6 @@ onMounted(() => {
 </script>
 
 <style lang="sass" scoped>
-
+.scan-label
+  margin-left: 10px
 </style>
