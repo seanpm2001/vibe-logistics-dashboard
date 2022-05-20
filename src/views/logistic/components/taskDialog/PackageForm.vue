@@ -189,10 +189,10 @@ const taskOrderItem = inject('taskOrderItem') as any;
 const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
-const taskProducts = Object.assign({}, taskItem.value.products);
 const taskPackage = ref(props.packageItem);
 
 const quantityNum = computed(() => {
+  const taskProducts = taskItem.value.products;
   let sum=0;
   for (const i in taskProducts) {
     sum += taskProducts[i].quantity;
