@@ -16,7 +16,7 @@
       align="center"
     />
     <el-table-column
-      label="ID"
+      label="Task ID"
       width="120px"
       align="center"
     >
@@ -67,9 +67,20 @@
       align="center"
     >
       <template #default="{ row }">
-        <el-tag>
+        <el-tag
+          :type="taskColorEnum[row.taskType] || 'primary'"
+        >
           {{ taskTypeEnum[row.taskType] }}
         </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Created At"
+      width="160px"
+      align="center"
+    >
+      <template #default="{ row }">
+        {{ formatTimeString(row.createdAt) }}
       </template>
     </el-table-column>
     <el-table-column
@@ -79,6 +90,29 @@
     >
       <template #default="{ row }">
         {{ row.lastModified }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Carrier"
+      width="160px"
+      align="center"
+    >
+      <template #default="{ row }">
+        {{ row.carrier }}
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="UPS Label Synced"
+      width="160px"
+      align="center"
+    >
+      <template #default="{ row }">
+        <el-tag
+          v-if="checkUPSLabelSynced(row)"
+          :type="checkUPSLabelSynced(row) === 'Yes' ? 'primary' : 'danger'"
+        >
+          {{ checkUPSLabelSynced(row) }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column
@@ -167,7 +201,8 @@
 
 <script lang="ts" setup>
 import { AssignedOrderId } from '../components';
-import { taskTypeEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { formatTimeString } from '@/utils';
 
 defineProps({
   dataList: {
@@ -197,6 +232,10 @@ const handleSelectionChange = (selectedArr) => {
     (pre, next) => new Date(pre.createdAt).getTime() - new Date(next.createdAt).getTime()
   );
 };
+
+const IWINID = 6;
+
+const checkUPSLabelSynced = (row) => (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID) ? (row.trackingNumberNote?.replace(' ', '') ? 'Yes' : 'No') : null);
 
 const calTaskStatus = (taskType, packages) => {
   const statusSet = {};

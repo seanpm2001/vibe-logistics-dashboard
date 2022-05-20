@@ -45,11 +45,11 @@ export enum unitSystemEnum {
 }
 export enum packageStatusEnum {
   DELIVERING = 'Delivering',
-  DELIVERED_BUT_UNCHECKED = 'Delivered but unchecked',
+  // DELIVERED_BUT_UNCHECKED = 'Delivered but unchecked',
   COMPLETE_WITH_DELIVERED = 'Complete with delivered',
-  COMPLETE_WITH_RETURNED = 'Complete with returned',
-  RETURNING = 'Returning',
-  RETURNED_BUT_UNCHECKED = 'Returned but unchecked',
+  COMPLETE_WITH_RETURNED = 'Complete with rerouting back',
+  RETURNING = 'Rerouting back',
+  // RETURNED_BUT_UNCHECKED = 'Returned but unchecked',
   LOST = 'Lost'
 }
 export enum taskStatusEnum {
@@ -60,6 +60,12 @@ export enum taskStatusEnum {
   ONHOLD = 'Onhold',
   CANCELLED = 'Cancelled'
 }
+export const taskColorEnum = {
+  FULFILLMENT: 'primary',
+  REPLACE:'warning',
+  RETURN: 'danger',
+  RETURN_TO_REPAIR: 'danger',
+};
 export const taskTypeEnum = {
   FULFILLMENT: 'Fulfillment',
   REPLACE:'Replace',

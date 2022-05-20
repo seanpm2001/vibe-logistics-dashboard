@@ -111,9 +111,23 @@
             </el-switch>
           </el-form-item>
         </el-row>
-        
+
+        <el-row
+          justify="space-between"
+          :gutter="1"
+        >
+          <el-form-item label="Tracking Number Note">
+            <el-input
+              v-model="taskItem.trackingNumberNote"
+              type="textarea"
+              :disabled="notCommonPermission"
+              placeholder="Tracking Number Note"
+            />
+          </el-form-item>
+        </el-row>
+
         <el-card>
-          Product: 
+          Product:
           <el-form-item
             v-if="!notCommonPermission"
             label="Specify Serial"
@@ -268,7 +282,7 @@
         </el-card>
       </el-form>
     </el-card>
-    
+
     <template #footer>
       <el-button @click="dialogTaskVisible = false">
         Close

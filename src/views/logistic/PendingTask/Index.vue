@@ -30,7 +30,7 @@
       :order-enum="orderEnum"
       @fetchList="fetchList"
     />
-    
+
     <Pagination
       v-show="total > 0"
       :total="total"

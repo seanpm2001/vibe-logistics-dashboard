@@ -162,7 +162,8 @@ defineProps({
   },
 });
 
-const emit = defineEmits(['findUnit']);
+const emit = defineEmits(['findUnit', 'fetchList']);
+const fetchList = () => emit('fetchList');
 
 /* Start Data */
 const warehousingTaskInfo = inject('warehousingTaskInfo');
@@ -204,11 +205,26 @@ const onUnitConditionChange = () => {
   });
 };
 
+const completeWarehousingTask = (unit) => {
+  unit.restocked = true;
+  if (unit.status === 'DELIVERING') {
+    unit.status = 'COMPLETE_WITH_DELIVERED';
+  } else if (unit.status === 'RETURNING') {
+    unit.status = 'COMPLETE_WITH_RETURNING';
+  }
+};
+
 const submitWarehousing = () => {
   const unit = warehousingItem.value;
+  // Filter out empty accesory as required by backend
+  // TODO: v-model="warehousingItem.accessories[0].productCode" can be wrong
+  unit.accessories = unit.accessories.filter((accessory) => accessory.productCode);
+  completeWarehousingTask(unit);
   updatePackageUnitAPI(unit.packageId, unit.id, unit).then((data) => {
     warehousingItem.value = data || warehousingItem.value;
     warehousingItem.value.accessories[0] = { productCode: null, quantity: null };
+    dialogHousingVisible.value = false;
+    fetchList();
   });
 };
 </script>
