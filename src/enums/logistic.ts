@@ -61,7 +61,7 @@ export enum taskStatusEnum {
   CANCELLED = 'Cancelled'
 }
 export const taskColorEnum = {
-  FULFILLMENT: 'primary',
+  FULFILLMENT: '', // primary color
   REPLACE:'warning',
   RETURN: 'danger',
   RETURN_TO_REPAIR: 'danger',

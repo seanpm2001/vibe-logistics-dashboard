@@ -66,8 +66,8 @@
     </el-input>
 
     <el-input
-      class="scan-label"
       v-model="scannedTrackingNumber"
+      class="scan-label"
       style="width: 300px;"
       placeholder="Scan shipping label to find task"
       @input="(() => debounce(findTaskByTrackingNumber, 200))()"

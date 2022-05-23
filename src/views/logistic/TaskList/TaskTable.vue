@@ -68,7 +68,7 @@
     >
       <template #default="{ row }">
         <el-tag
-          :type="taskColorEnum[row.taskType] || 'primary'"
+          :type="taskColorEnum[row.taskType] || ''"
         >
           {{ taskTypeEnum[row.taskType] }}
         </el-tag>
@@ -109,7 +109,7 @@
       <template #default="{ row }">
         <el-tag
           v-if="checkUPSLabelSynced(row)"
-          :type="checkUPSLabelSynced(row) === 'Yes' ? 'primary' : 'danger'"
+          :type="checkUPSLabelSynced(row) === 'Yes' ? '' : 'danger'"
         >
           {{ checkUPSLabelSynced(row) }}
         </el-tag>
