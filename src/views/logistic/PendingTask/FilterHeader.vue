@@ -101,10 +101,6 @@ const shortcuts = [
 
 const fetchList = () => emit('fetchList');
 
-const clearSearch = () => {
-  listQuery.value.search = '';
-};
-
 const findTaskByTrackingNumber = () => {
   console.log('find task');
   console.log(scannedTrackingNumber);
