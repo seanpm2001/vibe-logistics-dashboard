@@ -292,7 +292,9 @@ function compareIfEqual(a, b) {
 }
 
 const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
-  if (!packageItem.trackingNumber || compareIfEqual(packageItem, contrastTask.value[taskIdx].packages[packageIdx]))
+  const tempPackage = JSON.parse(JSON.stringify(packageItem));
+  removeEmptyUnit(tempPackage);
+  if (!packageItem.trackingNumber || compareIfEqual(tempPackage, contrastTask.value[taskIdx].packages[packageIdx]))
     return true;
   return false;
 };
