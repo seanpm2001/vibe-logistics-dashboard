@@ -102,8 +102,6 @@ const shortcuts = [
 const fetchList = () => emit('fetchList');
 
 const findTaskByTrackingNumber = () => {
-  console.log('find task');
-  console.log(scannedTrackingNumber);
   if (scannedTrackingNumber.value.endsWith(';')) {
     const searchCopy = listQuery.value.search;
     listQuery.value.search = scannedTrackingNumber.value.slice(0, -1);
