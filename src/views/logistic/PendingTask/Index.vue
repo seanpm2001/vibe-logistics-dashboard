@@ -128,6 +128,10 @@ function queryTask () {
 const fetchList = () => {
   setTimeout(() => queryTask(), 200);
 };
+
+/* Provide functions */
+provide('fetchList', fetchList);
+/* End of provide function */
 </script>
 
 <style lang="sass" scoped>

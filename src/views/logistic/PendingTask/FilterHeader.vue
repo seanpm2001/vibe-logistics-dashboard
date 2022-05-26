@@ -53,6 +53,7 @@
       v-model="listQuery.search"
       style="width: 200px;"
       placeholder="Search: (order info)"
+      clearable
       @change="fetchList"
     >
       <template #append>
@@ -77,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue';
+import { Search, CircleClose } from '@element-plus/icons-vue';
 import { transportEnum, transportCarrierEnum, allTaskTypeEnum  } from '@/enums/logistic';
 import { parseTime, debounce } from '@/utils';
 const emit = defineEmits(['fetchList']);
@@ -100,6 +101,10 @@ const shortcuts = [
 
 const fetchList = () => emit('fetchList');
 
+const clearSearch = () => {
+  listQuery.value.search = '';
+};
+
 const findTaskByTrackingNumber = () => {
   console.log('find task');
   console.log(scannedTrackingNumber);
@@ -108,10 +113,6 @@ const findTaskByTrackingNumber = () => {
     listQuery.value.search = scannedTrackingNumber.value.slice(0, -1);
     scannedTrackingNumber.value = '';
     fetchList();
-    // Below is just a hack. Need to find a better way in future.
-    setTimeout(() => {
-      listQuery.value.search = searchCopy;
-    }, 300);
   }
 };
 

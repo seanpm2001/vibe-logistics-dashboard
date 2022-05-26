@@ -21,9 +21,9 @@
           {{ product.quantity }}
         </el-tag>
         <el-divider direction="vertical" />
-        ful: 
+        ful:
         <el-tag
-          v-if="product.sku"
+          v-if="product.sku && !noSerialArr.includes(skuCodeEnum[product.sku])"
           size="small"
           :type="product.quantity === calTaskFulQty('sku', task.packages)[product.sku] ? '' : 'danger'"
         >
@@ -59,13 +59,25 @@
           </template>
         </el-tooltip>
       </el-row>
+      <el-row
+        v-if="noSerialArr.includes(product.productCode)"
+        style="margin-top: 10px"
+      >
+        <el-button
+          :disabled="disableAccessoryAllocation(product)"
+          :type="updateAccessoryAllocation(product) ? 'primary' : 'plain'"
+          @click="onAccessoryAllocationButtonClick(product)"
+        >
+          {{ updateAccessoryAllocation(product) ? 'Update allocation' : 'Add accesory into existing package' }}
+        </el-button>
+      </el-row>
       <el-divider v-if="idx !== (task.products.length - 1)" />
     </template>
   </div>
 </template>
 
 <script setup>
-import { codeNameEnum, skuCodeEnum } from '@/enums/logistic';
+import { codeNameEnum, skuCodeEnum, noSerialArr } from '@/enums/logistic';
 
 const props = defineProps({
   task: {
@@ -74,20 +86,41 @@ const props = defineProps({
   }
 });
 
+const accessoryAllocation = inject('accessoryAllocation');
+const accessoryAllocationVisible = inject('accessoryAllocationVisible');
+const allocateAccessory = inject('allocateAccessory');
+const onAccessoryAllocationChange = inject('onAccessoryAllocationChange');
+
+const disableAccessoryAllocation = (product) => ((accessoryAllocationVisible.value && product.productCode !== accessoryAllocation.value.productCode) || props.task.packages.length === 0);
+const updateAccessoryAllocation = (product) => (accessoryAllocationVisible.value && product.productCode === accessoryAllocation.value?.productCode);
+
+const onAccessoryAllocationButtonClick = (product) => {
+  if (accessoryAllocationVisible.value)
+    onAccessoryAllocationChange();
+  else
+    allocateAccessory(product);
+};
+
 const calTaskFulQty = (type, packageArr) => {
+  // Important: for a single product (unique product code) in a task, either specify sku or not.
+  // It is not allowed for both.
   const temp = {};
   packageArr?.forEach(packageItem => {
     packageItem.units.forEach(unit => {
       const sku = unit.item?.sku;
       if (type === 'sku')
         temp[sku] = (temp[sku] || 0) + 1;
-      else 
+      else
         temp[skuCodeEnum[sku]] = (temp[skuCodeEnum[sku]] || 0) + 1;
     });
+    if (type === 'code') {
+      packageItem.accessories.forEach(accessory => {
+        temp[accessory.productCode] = (temp[accessory.productCode] || 0) + accessory.quantity;
+      });
+    }
   });
   return temp;
 };
-
 
 </script>
 

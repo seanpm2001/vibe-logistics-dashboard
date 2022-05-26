@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus';
-import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
+import OrderShipmentInfo from '../../../components/OrderShipmentInfo.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { updateTaskAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
