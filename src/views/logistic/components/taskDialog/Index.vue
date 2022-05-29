@@ -25,7 +25,7 @@
           <el-form-item label="Type">
             <el-select
               v-model="taskItem.taskType"
-              :disabled="notCommonPermission"
+              :disabled="notCommonPermission || taskItem.refTaskId"
               placeholder="Please select"
             >
               <el-option
@@ -124,6 +124,31 @@
               placeholder="Tracking Number Note"
             />
           </el-form-item>
+        </el-row>
+
+        <el-row
+          v-if="associatedTaskVisible"
+          align="middle"
+        >
+          Associated {{ taskItem.taskType === 'REPLACE' ? 'return task' : 'replace task' }}:
+          <el-tag
+            v-if="taskItem.refTaskId"
+            class="cursor-pointer mgr-5"
+            :type="taskItem.taskType === 'REPLACE'? 'danger' : 'warning'"
+            style="margin-left: 10px"
+            @click="showAssociatedTask"
+          >
+            {{ taskItem.refTaskId }}
+          </el-tag>
+          <el-button
+            v-if="!taskItem.refTaskId"
+            type="danger"
+            size="small"
+            style="margin-left: 10px"
+            @click="addAssociatedReturnTask"
+          >
+            add
+          </el-button>
         </el-row>
 
         <el-card>
@@ -292,11 +317,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI, queryUnitsAPI } from '@/api';
+import { createTaskAPI, updateTaskAPI, queryUnitsAPI, findTaskAPI } from '@/api';
 import {
   taskTypeEnum, taskReasonEnum, skuCodeEnum,
   unitConditionEnum, codeNameEnum, codeSkuArrEnum
@@ -386,7 +411,6 @@ function removeEmptyTask (products) {
 
 const handleWarehouseTask = type => {
   removeEmptyTask(taskItem.value.products);
-  console.log('taskItem.value: ', taskItem.value);
   if (type === 'create') {
     createTaskAPI(taskItem.value).then(data => {
       taskItem.value = data;
@@ -444,10 +468,63 @@ const beforeCloseDialog = (done) => {
     });
 };
 
+const associatedTaskVisible = computed(() => {
+  const task = taskItem.value;
+  if (task.taskType === 'REPLACE') {
+    return true;
+  } else if (['RETURN', 'RETURN_TO_REPAIR'].includes(task.taskType) && task.refTaskId) {
+    return true;
+  }
+  return false;
+});
+
+const addAssociatedReturnTask = () => {
+  // TODO: need to check if there is any unsaved changes for current replace task
+  ElMessageBox.confirm('Are you sure to add a return associated return task? Please make sure save current task first.', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        initializeAssociatedReturnTask();
+      }
+    },
+  });
+};
+
+const initializeAssociatedReturnTask = () => {
+  const refTaskId = taskItem.value.id;
+  const orderId = taskItem.value.orderId;
+  const products = taskItem.value.products.map((product) => ({
+    productCode: product.productCode,
+    sku: product.sku,
+    quantity: product.quantity
+  }));
+  resetForm();
+  setTimeout(() => {
+    taskItem.value.refTaskId = refTaskId;
+    taskItem.value.taskType = 'RETURN';
+    taskItem.value.products = products;
+    taskItem.value.orderId = orderId;
+  }, 0);
+};
+
+const showAssociatedTask = () => {
+  ElMessageBox.confirm('Are you sure to go to associated task? Please make sure save current task first.', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        const taskId = taskItem.value.refTaskId;
+        resetForm();
+        findTaskAPI(taskId).then(data => {
+          taskItem.value = data;
+        });
+      }
+    },
+  });
+};
+
 </script>
 
 <style lang="sass" scoped>
 .el-form .el-row
   padding: 0 1rem
-
 </style>
