@@ -292,8 +292,6 @@ const updateContrastTask = (packageItem, packageIdx, taskIdx) => {
 };
 
 function compareIfEqual(a, b) {
-  console.log(JSON.stringify(a));
-  console.log(JSON.stringify(b));
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
