@@ -10,6 +10,7 @@
       @show-order-drawer="showOrderDrawer"
       @edit-warehousing-task="editWarehousingTask"
       @view-unit-description="viewUnitDescription"
+      @receive-units="receiveUnits"
     />
 
     <Pagination
@@ -25,7 +26,17 @@
       direction="ltr"
     >
       <UnitDescription
-        :serial-scope-arr="serialScopeArr"
+        @fetchList="fetchList"
+      />
+    </el-drawer>
+
+    <el-drawer
+      v-model="drawerReceiveUnitsVisible"
+      title="Receive Units for Package"
+      size="100%"
+      direction="ltr"
+    >
+      <ReceiveUnits
         @fetchList="fetchList"
       />
     </el-drawer>
@@ -55,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UnitDescription, WarehousingDialog, FilterHeader, PackageTable } from './components';
+import { UnitDescription, WarehousingDialog, FilterHeader, PackageTable, ReceiveUnits } from './components';
 import { OrderDescription } from '../components';
 import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';
 import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api';
@@ -79,6 +90,11 @@ const warehousingTaskInfo = ref({
 const dialogHousingVisible = ref(false);
 const dialogCheckUnitVisible = ref(false);
 
+const drawerReceiveUnitsVisible = ref(false);
+const packageReceived = ref({});
+const taskSerialsAndSkus = ref([]);
+const taskAccessoriesCode = ref([]);
+
 const listQuery = ref({
   page: 1,
   perPage: 10,
@@ -92,8 +108,11 @@ provide('warehousingTaskInfo', warehousingTaskInfo);
 provide('dialogHousingVisible', dialogHousingVisible);
 provide('dialogCheckUnitVisible', dialogCheckUnitVisible);
 provide('warehousingItem', warehousingItem);
+provide('packageReceived', packageReceived);
 provide('listQuery', listQuery);
 provide('dataList', dataList);
+provide('taskSerialsAndSkus', taskSerialsAndSkus);
+provide('taskAccessoriesCode', taskAccessoriesCode);
 
 // Unit Description
 const unitItem = ref({});
@@ -160,26 +179,56 @@ provide('multipleSelection', multipleSelection);
 
 const unique = arr => Array.from(new Set(arr));
 
-const serialScopeArr = ref([]);
-const viewUnitDescription = (unit, task) => {
-  serialScopeArr.value = [];
-
-  const { products, orderId } = task;
-  products.forEach(product => {
-    if (product.serialNote.length)
-      serialScopeArr.value = [].concat(product.serialNote);
-  });
+const getTaskSerialsAndSkus = (task) => {
+  const serials = [];
+  const serialsSku = {};
+  const orderId = task.orderId;
   orderEnum.value[orderId].tasks?.forEach(task => {
     task.packages.forEach(item => {
       item.units?.forEach(unit => {
-        unit.serial && serialScopeArr.value.push(unit.serial);
+        if (unit.serial) {
+          serials.push(unit.serial);
+          serialsSku[unit.serial] = unit.item.sku;
+        }
       });
     });
   });
-  serialScopeArr.value = unique(serialScopeArr.value);
+  const serialsAndSkus = [];
+  unique(serials).forEach((serial) => {
+    serialsAndSkus.push({
+      serial: serial,
+      sku: serialsSku[serial]
+    });
+  });
+  return serialsAndSkus;
+};
 
+const getTaskAccessoriesCode = (task) => {
+  const accessories = [];
+  const orderId = task.orderId;
+  orderEnum.value[orderId].tasks?.forEach(task => {
+    task.packages.forEach(item => {
+      item.accessories?.forEach(accessory => {
+        if (accessory.productCode) {
+          accessories.push(accessory.productCode);
+        }
+      });
+    });
+  });
+  return accessories;
+};
+
+const viewUnitDescription = (unit, task) => {
+  taskSerialsAndSkus.value = getTaskSerialsAndSkus(task);
   unitItem.value = unit;
   drawerUnitVisible.value = true;
+};
+
+const receiveUnits = (packageItem) => {
+  taskSerialsAndSkus.value = getTaskSerialsAndSkus(packageItem.task);
+  taskAccessoriesCode.value = getTaskAccessoriesCode(packageItem.task);
+  packageReceived.value = JSON.parse(JSON.stringify(packageItem));
+  drawerReceiveUnitsVisible.value = true;
 };
 </script>
 

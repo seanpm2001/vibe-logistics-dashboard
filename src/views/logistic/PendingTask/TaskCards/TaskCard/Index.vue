@@ -157,7 +157,7 @@
             </el-button>
             <el-button
               v-else
-              :disabled="!item.trackingNumber"
+              :disabled="!item.trackingNumber || accessoryAllocationVisible"
               class="mgr-5"
               type="primary"
               @click="handleSubmitPackage(item, task)"
@@ -173,13 +173,17 @@
               @confirm="handleDeletePackage(item?.id)"
             >
               <template #reference>
-                <el-button type="danger">
+                <el-button
+                  :disabled="accessoryAllocationVisible"
+                  type="danger"
+                >
                   Delete
                 </el-button>
               </template>
             </el-popconfirm>
             <el-button
               v-else
+              :disabled="accessoryAllocationVisible"
               type="danger"
               @click="onPackagesChange(null, task.packages, 'remove', packageIdx)"
             >
@@ -288,6 +292,8 @@ const updateContrastTask = (packageItem, packageIdx, taskIdx) => {
 };
 
 function compareIfEqual(a, b) {
+  console.log(JSON.stringify(a));
+  console.log(JSON.stringify(b));
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -419,33 +425,42 @@ const handleSubmitPackage = (packageItem, task, createNewUnit=true) => {
     !units[idx].serial && units.splice(idx, 1);
   }
 
-  if (packageItem.units.length === 0)
-    packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
+  // if (packageItem.units.length === 0)
+  //   packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
 
   // if (isAccessoriesPackage(packageItem, task.orderId)) {
   //   // TODO: isAccessoriesPackage
   // }
 
-  const packageData = removeUnitItem(packageItem);
   if (packageId)
-    updatePackageAPI(packageId, packageData)
-      .then(data => Object.assign(packageItem, data))
+    updatePackageAPI(packageId, packageItem)
+      .then(data => {
+        Object.assign(packageItem, data);
+        updateContrastTask(packageItem, packageIdx, taskIdx);
+      })
       .finally(() => {
+        if (packageItem.units.length === 0) {
+          createNewUnit = true;
+        }
         if (createNewUnit) {
           handleUnitChange(packageItem.units, null, 'add', task);
           clickNextUnitInput();
         }
-        updateContrastTask(packageItem, packageIdx, taskIdx);
       });
   else
-    createPackageAPI(packageItem.taskId, packageData)
-      .then(data => Object.assign(packageItem, data))
+    createPackageAPI(packageItem.taskId, packageItem)
+      .then(data => {
+        Object.assign(packageItem, data);
+        updateContrastTask(packageItem, packageIdx, taskIdx);
+      })
       .finally(() => {
+        if (packageItem.units.length === 0) {
+          createNewUnit = true;
+        }
         if (createNewUnit) {
           handleUnitChange(packageItem.units, null, 'add', task);
           clickNextUnitInput();
         }
-        updateContrastTask(packageItem, packageIdx, taskIdx);
       });
   unitList.value = [];
 };
