@@ -130,6 +130,45 @@
             </el-button>
           </el-row>
         </template>
+        <template
+          v-for="accessory in row.accessories"
+          :key="accessory"
+        >
+          <el-row
+            justify="start"
+            align="middle"
+          >
+            <span class="link">
+              {{ codeNameEnum[accessory.productCode] }}: {{ accessory.quantity }}
+            </span>
+
+            <el-select
+              v-model="accessory.status"
+              placeholder="Please select"
+              @change="onAccessoryStatusChange(accessory, row)"
+            >
+              <el-option
+                v-for="(status, key) in filterPackageStatus(row.task.taskType, accessory.status || 'DELIVERING')"
+                :key="status"
+                :label="status"
+                :value="key"
+              />
+            </el-select>
+          </el-row>
+        </template>
+
+        <el-row
+          v-if="row.task.taskType === 'RETURN' || row.task.taskType === 'RETURN_TO_REPAIR'"
+          style="margin-top: 10px"
+        >
+          <el-button
+            size="small"
+            type="primary"
+            @click="receiveUnits(row)"
+          >
+            Receive new units
+          </el-button>
+        </el-row>
       </template>
     </el-table-column>
     <el-table-column
@@ -139,7 +178,7 @@
     >
       <template #default="{ row }">
         <template
-          v-for="product in row.task.products"
+          v-for="product in calPackageProductsQuantity(row)"
           :key="product.productCode"
         >
           <div>
@@ -223,7 +262,7 @@
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
 import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
-import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
+import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, skuCodeEnum, codeIconEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 import { formatVBDate } from '@/utils';
 
@@ -245,11 +284,12 @@ const multipleSelection = inject('multipleSelection');
 
 const tableKey = ref(0);
 
-const emit = defineEmits(['fetchList', 'showOrderDrawer', 'viewUnitDescription', 'editWarehousingTask']);
+const emit = defineEmits(['fetchList', 'showOrderDrawer', 'viewUnitDescription', 'editWarehousingTask', 'receiveUnits']);
 const fetchList = () => emit('fetchList');
 const viewUnitDescription = (unit, task) => emit('viewUnitDescription', unit, task);
 const editWarehousingTask = (_unit, _task) => emit('editWarehousingTask', _unit, _task);
 const showOrderDrawer = (order) => emit('showOrderDrawer', order);
+const receiveUnits = (packageItem) => emit('receiveUnits', packageItem);
 
 const handleSelectionChange = (_selectedArr) => {
   multipleSelection.value = _selectedArr.sort((pre, next) => next.id - pre.id);
@@ -300,6 +340,10 @@ const onUnitStatusChange = (unit) => {
   });
 };
 
+const onAccessoryStatusChange = ((accessory, packageItem) => {
+  console.log('onAccessoryStatusChange');
+});
+
 const deletePackage = (packageId) => {
   deletePackageAPI(packageId)
     .then(() =>  fetchList());
@@ -346,6 +390,26 @@ const onDeliveredAtChange = (packageItem) => {
         fetchList();
     },
   });
+};
+
+const calPackageProductsQuantity = (packageItem) => {
+  const productsQuantity = {};
+  const products = [];
+  packageItem.units?.forEach((unit) => {
+    const productCode = skuCodeEnum[unit.item.sku];
+    productsQuantity[productCode] = (productsQuantity[productCode] || 0) + 1;
+  });
+  packageItem.accessories?.forEach((accessory) => {
+    const productCode = accessory.productCode;
+    productsQuantity[productCode] = (productsQuantity[productCode] || 0) + accessory.quantity;
+  });
+  for (const productCode in productsQuantity) {
+    products.push({
+      productCode: productCode,
+      quantity: productsQuantity[productCode]
+    });
+  }
+  return products;
 };
 </script>
 

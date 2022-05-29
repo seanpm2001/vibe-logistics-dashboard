@@ -13,10 +13,10 @@
         class="mgr-5"
       >
         <el-option
-          v-for="serial in serialScopeArr"
-          :key="serial"
-          :label="serial"
-          :value="serial"
+          v-for="item in taskSerialsAndSkus"
+          :key="item.serial"
+          :label="item.serial"
+          :value="item.serial"
         />
       </el-select>
       <el-button
@@ -83,12 +83,7 @@ import { ElMessageBox } from 'element-plus';
 import { updatePackageUnitAPI } from '@/api';
 import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 
-defineProps({
-  serialScopeArr: {
-    type: Array,
-    default: () => []
-  }
-});
+const taskSerialsAndSkus = inject('taskSerialsAndSkus') as any;
 
 const emit = defineEmits(['fetchList']);
 

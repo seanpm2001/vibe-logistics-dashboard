@@ -171,8 +171,9 @@ export async function queryPackagesAPI (params?) {
   return res;
 }
 export async function createPackageAPI (taskId: number, data) {
+  const packageData = removeUnitItem(data);
   const item = handleReqElMsg(
-    requester.post(`/warehouse/task/${taskId}/packages`, data), 'Create', 'Package'
+    requester.post(`/warehouse/task/${taskId}/packages`, packageData), 'Create', 'Package'
   );
   return item;
 }
@@ -184,12 +185,21 @@ export async function listTaskPackagesAPI (taskId: number) {
 function removeEmptyAccessories (units) {
   units.forEach((unit, idx, arr) => {
     delete arr[idx]['item']; // 删除无用字段
-    if (!unit.accessories.length)
+    if (!unit.accessories?.length)
       delete arr[idx]['accessories'];
   });
 }
+
+function removeUnitItem (packageItem) {
+  const temp = JSON.parse(JSON.stringify(packageItem));
+  temp.units.forEach((unit, idx, arr) => {
+    delete arr[idx]['item'];
+  });
+  return temp;
+}
+
 export async function updatePackageAPI (packageId: number, updates) {
-  const data = jsonClone(updates);
+  const data = jsonClone(removeUnitItem(updates));
   delete data['task'];
   delete data['taskId'];
   removeEmptyAccessories(data.units);
