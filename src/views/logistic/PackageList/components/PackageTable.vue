@@ -95,7 +95,7 @@
             <el-select
               v-model="unit.status"
               v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR', 'WAREHOUSE']"
-              :disabled="unit.checked && role == 'WAREHOUSE'"
+              :disabled="disableUnitStatus(unit, role)"
               style="width: 210px; margin: 0 10px;"
               placeholder="Please select"
               @change="onUnitStatusChange(unit)"
@@ -298,16 +298,35 @@ const handleSelectionChange = (_selectedArr) => {
 
 const filterPackageStatus = (taskType, unitStatus) => {
   const packageStatusEnumCopy = JSON.parse(JSON.stringify(packageStatusEnum));
-  if (['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(unitStatus)) {
-    return packageStatusEnumCopy;
+  if (['FULFILLMENT', 'REPLACE'].includes(taskType)) {
+    if (!['RETURNED_BUT_UNCHECKED', 'COMPLETE_WITH_RETURNED'].includes(unitStatus)) {
+      delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
+      delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
+    }
+    delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
   }
-  if (['FULFILLMENT', 'REPLACE', 'MOVE'].includes(taskType)) {
-    delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
+  if (['RETURN', 'RETURN_TO_REPAIR'].includes(taskType)) {
+    if (!['DELIVERED_BUT_UNCHECKED', 'COMPLETE_WITH_DELIVERED'].includes(unitStatus)) {
+      delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
+      delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
+    }
+    delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
   }
-  if (['RETURN', 'RETURN_TO_REPAIR', 'MOVE'].includes(taskType)) {
-    delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
+  if (['MOVE'].includes(taskType)) {
+    if (!['RETURNED_BUT_UNCHECKED', 'COMPLETE_WITH_RETURNED'].includes(unitStatus)) {
+      delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
+      delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
+    }
+    if (!['DELIVERED_BUT_UNCHECKED', 'COMPLETE_WITH_DELIVERED'].includes(unitStatus)) {
+      delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
+      delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
+    }
   }
   return packageStatusEnumCopy;
+};
+
+const disableUnitStatus = (unit, role) => {
+  return unit.checked && role === 'WAREHOUSE';
 };
 
 const ifMeetWarehousingCondition = (taskType, unitStatus) => {
@@ -341,7 +360,16 @@ const onUnitStatusChange = (unit) => {
 };
 
 const onAccessoryStatusChange = ((accessory, packageItem) => {
-  console.log('onAccessoryStatusChange');
+  ElMessageBox.confirm('Update it?', 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        updatePackageAPI(packageItem.id, packageItem);
+      } else {
+        fetchList();
+      }
+    },
+  });
 });
 
 const deletePackage = (packageId) => {

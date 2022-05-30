@@ -275,7 +275,8 @@ const onAccessoryAllocationChange = () => {
     } else {
       packageItem.accessories.push({
         productCode: productCode,
-        quantity: accessoryAllocation.value.quantities[packageIdx]
+        quantity: accessoryAllocation.value.quantities[packageIdx],
+        status: 'DELIVERING'
       });
     }
     packageItem.accessories = packageItem.accessories.filter((accessory) => accessory.quantity > 0);

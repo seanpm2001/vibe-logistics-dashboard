@@ -207,22 +207,22 @@ const onUnitConditionChange = () => {
 
 const completeWarehousingTask = (unit) => {
   unit.restocked = true;
-  if (unit.status === 'DELIVERING') {
+  if (['DELIVERING', 'DELIVERED_BUT_UNCHECKED'].includes(unit.status)) {
     unit.status = 'COMPLETE_WITH_DELIVERED';
-  } else if (unit.status === 'RETURNING') {
-    unit.status = 'COMPLETE_WITH_RETURNING';
+  } else if (['RETURNING', 'RETURNED_BUT_UNCHECKED'].includes(unit.status)) {
+    unit.status = 'COMPLETE_WITH_RETURNED';
   }
 };
 
 const submitWarehousing = () => {
-  const unit = warehousingItem.value;
+  const unit = JSON.parse(JSON.stringify(warehousingItem.value));
   // Filter out empty accesory as required by backend
   // TODO: v-model="warehousingItem.accessories[0].productCode" can be wrong
   unit.accessories = unit.accessories.filter((accessory) => accessory.productCode);
   completeWarehousingTask(unit);
   updatePackageUnitAPI(unit.packageId, unit.id, unit).then((data) => {
     warehousingItem.value = data || warehousingItem.value;
-    warehousingItem.value.accessories[0] = { productCode: null, quantity: null };
+    warehousingItem.value.accessories[0] = warehousingItem.value.accessories[0] || { productCode: null, quantity: null };
     dialogHousingVisible.value = false;
     fetchList();
   });

@@ -44,33 +44,6 @@
         {{ findTaskUnit(unit.serial)?.sku }}
       </el-descriptions-item>
       <el-descriptions-item>
-        <template #label>
-          Package Box Condition
-        </template>
-        <el-select
-          v-model="unit.packageBoxCondition"
-          disabled
-          placeholder=" "
-        >
-          <el-option
-            v-for="(item, key) in packageConditionEnum"
-            :key="item"
-            :label="item"
-            :value="key"
-          />
-        </el-select>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          Shipment Damage
-        </template>
-        {{ unit.shipmentDamage }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          Shipment Damage Note
-        </template>
-        {{ unit.shipmentDamageNote }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
@@ -238,17 +211,24 @@ const findTaskUnit = (serial) => (taskSerialsAndSkus.value.find((taskUnit) => (t
 const updatePackage = () => {
   const packageItem = packageReceived.value;
   const packageId = packageItem.id;
-  // unit.checked = true
+  // set unit.checked and status
   const units = packageItem.units;
   units.forEach(unit => {
     unit.checked = true;
+    if (unit.status !== 'COMPLETE_WITH_DELIVERED') {
+      unit.status = 'DELIVERED_BUT_UNCHECKED';
+    }
   });
+  const accessories = packageItem.accessories;
+  accessories.forEach(accessory => {
+    accessory.status = 'COMPLETE_WITH_DELIVERED';
+  });
+
   // 删除serial为空的unit
   for (let idx = units.length - 1; idx >= 0; idx--) {
     !units[idx].serial && units.splice(idx, 1);
   }
   // 删除为空的accessory
-  const accessories = packageItem.accessories;
   for (let idx = accessories.length - 1; idx >= 0; idx--) {
     (!accessories[idx].productCode || !accessories[idx].quantity) && accessories.splice(idx, 1);
   }
