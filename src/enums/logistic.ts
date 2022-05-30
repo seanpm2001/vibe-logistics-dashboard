@@ -45,11 +45,11 @@ export enum unitSystemEnum {
 }
 export enum packageStatusEnum {
   DELIVERING = 'Delivering',
-  // DELIVERED_BUT_UNCHECKED = 'Delivered but unchecked',
+  DELIVERED_BUT_UNCHECKED = 'Delivered but not restocked',
   COMPLETE_WITH_DELIVERED = 'Complete with delivered',
   COMPLETE_WITH_RETURNED = 'Complete with rerouting back',
   RETURNING = 'Rerouting back',
-  // RETURNED_BUT_UNCHECKED = 'Returned but unchecked',
+  RETURNED_BUT_UNCHECKED = 'Returned but unchecked',
   LOST = 'Lost'
 }
 export enum taskStatusEnum {
