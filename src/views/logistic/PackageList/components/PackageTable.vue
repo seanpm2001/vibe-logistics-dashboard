@@ -145,6 +145,7 @@
             <el-select
               v-model="accessory.status"
               placeholder="Please select"
+              style="width: 210px; margin: 0 10px;"
               @change="onAccessoryStatusChange(accessory, row)"
             >
               <el-option
@@ -154,6 +155,16 @@
                 :value="key"
               />
             </el-select>
+
+            <el-button
+              v-if="ifMeetWarehousingCondition(row.task.taskType, accessory.status) || showAccessoryReceived(row.task.taskType, accessory.status)"
+              :disabled="['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(accessory.status)"
+              size="small"
+              :type="['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(accessory.status) ? 'success' : 'primary'"
+              @click="receiveAccessory(accessory, row)"
+            >
+              {{ ['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(accessory.status) ? 'Received' : 'Receive' }}
+            </el-button>
           </el-row>
         </template>
 
@@ -262,7 +273,7 @@
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
 import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
-import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, skuCodeEnum, codeIconEnum } from '@/enums/logistic';
+import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, skuCodeEnum, codeIconEnum, packageConditionEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 import { formatVBDate } from '@/utils';
 
@@ -304,12 +315,14 @@ const filterPackageStatus = (taskType, unitStatus) => {
       delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
     }
     delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
+    delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
   }
   if (['RETURN', 'RETURN_TO_REPAIR'].includes(taskType)) {
     if (!['DELIVERED_BUT_UNCHECKED', 'COMPLETE_WITH_DELIVERED'].includes(unitStatus)) {
       delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
       delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
     }
+    delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
     delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
   }
   if (['MOVE'].includes(taskType)) {
@@ -357,6 +370,26 @@ const onUnitStatusChange = (unit) => {
       }
     },
   });
+};
+
+const showAccessoryReceived = (taskType, unitStatus) => {
+  if (['RETURN', 'RETURN_TO_REPAIR', 'MOVE'].includes(taskType) && unitStatus === 'COMPLETE_WITH_DELIVERED') {
+    return true;
+  }
+  if (['FULFILLMENT', 'REPLACE', 'MOVE'].includes(taskType) && unitStatus === 'COMPLETE_WITH_RETURNED') {
+    return true;
+  }
+};
+
+const receiveAccessory = (accessory, packageItem) => {
+  if (!['COMPLETE_WITH_DELIVERED', 'COMPLETE_WITH_RETURNED'].includes(accessory.status)) {
+    if (accessory.status === 'RETURNING') {
+      accessory.status = 'COMPLETE_WITH_RETURNED';
+    } else if (accessory.status === 'DELIVERING') {
+      accessory.status = 'COMPLETE_WITH_COMPLETE';
+    }
+  }
+  onAccessoryStatusChange(accessory, packageItem);
 };
 
 const onAccessoryStatusChange = ((accessory, packageItem) => {
