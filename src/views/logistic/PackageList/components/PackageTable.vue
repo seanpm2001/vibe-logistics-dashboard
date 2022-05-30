@@ -101,7 +101,7 @@
               @change="onUnitStatusChange(unit)"
             >
               <el-option
-                v-for="(status, key) in filterPackageStatus(row.task.taskType, unit.status)"
+                v-for="(status, key) in filterPackageStatus(row.task.taskType, unit.status, 'unit')"
                 :key="status"
                 :label="status"
                 :value="key"
@@ -149,7 +149,7 @@
               @change="onAccessoryStatusChange(accessory, row)"
             >
               <el-option
-                v-for="(status, key) in filterPackageStatus(row.task.taskType, accessory.status || 'DELIVERING')"
+                v-for="(status, key) in filterPackageStatus(row.task.taskType, accessory.status || 'DELIVERING', 'accessory')"
                 :key="status"
                 :label="status"
                 :value="key"
@@ -307,7 +307,7 @@ const handleSelectionChange = (_selectedArr) => {
 };
 
 
-const filterPackageStatus = (taskType, unitStatus) => {
+const filterPackageStatus = (taskType, unitStatus, productType) => {
   const packageStatusEnumCopy = JSON.parse(JSON.stringify(packageStatusEnum));
   if (['FULFILLMENT', 'REPLACE'].includes(taskType)) {
     if (!['RETURNED_BUT_UNCHECKED', 'COMPLETE_WITH_RETURNED'].includes(unitStatus)) {
@@ -315,14 +315,14 @@ const filterPackageStatus = (taskType, unitStatus) => {
       delete packageStatusEnumCopy['COMPLETE_WITH_RETURNED'];
     }
     delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
-    delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
+    productType === 'accessory' && delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
   }
   if (['RETURN', 'RETURN_TO_REPAIR'].includes(taskType)) {
     if (!['DELIVERED_BUT_UNCHECKED', 'COMPLETE_WITH_DELIVERED'].includes(unitStatus)) {
       delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
       delete packageStatusEnumCopy['COMPLETE_WITH_DELIVERED'];
     }
-    delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
+    productType === 'accessory' && delete packageStatusEnumCopy['DELIVERED_BUT_UNCHECKED'];
     delete packageStatusEnumCopy['RETURNED_BUT_UNCHECKED'];
   }
   if (['MOVE'].includes(taskType)) {
