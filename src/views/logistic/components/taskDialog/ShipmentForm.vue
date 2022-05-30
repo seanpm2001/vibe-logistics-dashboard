@@ -184,6 +184,7 @@ const emptyPackage = {
     serial: null,
     status: 'DELIVERING',
   }],
+  accessories: []
 };
 /* End Data */
 watchEffect(() => {
@@ -201,7 +202,7 @@ const disableNewPackage = computed(() => {
 
 const addPackage = () => {
   const unitSystem = taskItem.targetId !== 6 ? 'SI' : 'BS';
-  packageArr.value.push(Object.assign({}, emptyPackage, { unitSystem }));
+  packageArr.value.push(Object.assign({}, JSON.parse(JSON.stringify(emptyPackage)), { unitSystem }));
 };
 
 const handleCostChange = (key) => {

@@ -465,10 +465,12 @@ const handleSubmitPackage = (packageItem, task, createNewUnit=true) => {
 };
 
 function removeEmptyUnit (packageItem) {
-  packageItem && packageItem.units.forEach((unit, idx, arr) => {
-    if (!unit.serial)
-      arr.splice(idx--, 1);
-  });
+  if (packageItem) {
+    for (let idx = packageItem.units.length - 1; idx >= 0; idx--) {
+      if (!packageItem.units[idx].serial)
+        packageItem.units.splice(idx--, 1);
+    }
+  }
 }
 
 const onPackagesChange = (task, packages, type, idx?) => {
