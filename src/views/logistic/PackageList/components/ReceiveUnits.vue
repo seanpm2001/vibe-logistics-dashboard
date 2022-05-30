@@ -194,8 +194,6 @@ const addUnit = () => {
 
 const deleteUnit = (unitIdx) => {
   packageReceived.value.units.splice(unitIdx, 1);
-  if (packageReceived.value.units.length === 0)
-    packageReceived.value.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
 };
 
 const addAccessory = () => {
