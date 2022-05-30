@@ -7,7 +7,7 @@
     >
       <span>
         Shipment:
-      </span> 
+      </span>
     </el-row>
     <el-row
       justify="space-between"
@@ -103,7 +103,7 @@
         </el-checkbox>
       </el-form-item>
     </el-row>
-    
+
     <template v-if="!notShipmentPermission">
       <el-button
         :disabled="!taskId"
@@ -132,7 +132,7 @@
         />
       </template>
     </el-card>
-    
+
     <el-button
       v-if="taskItem.carrier"
       v-permission="['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE']"

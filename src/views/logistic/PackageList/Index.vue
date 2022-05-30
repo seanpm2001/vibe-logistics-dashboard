@@ -215,7 +215,7 @@ const getTaskAccessoriesCode = (task) => {
       });
     });
   });
-  return accessories;
+  return unique(accessories);
 };
 
 const viewUnitDescription = (unit, task) => {

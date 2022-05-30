@@ -171,7 +171,7 @@ export async function queryPackagesAPI (params?) {
   return res;
 }
 export async function createPackageAPI (taskId: number, data) {
-  const packageData = removeUnitItem(data);
+  const packageData = unitsCleanUp(data);
   const item = handleReqElMsg(
     requester.post(`/warehouse/task/${taskId}/packages`, packageData), 'Create', 'Package'
   );
@@ -190,16 +190,20 @@ function removeEmptyAccessories (units) {
   });
 }
 
-function removeUnitItem (packageItem) {
-  const temp = JSON.parse(JSON.stringify(packageItem));
+function unitsCleanUp (packageItem) {
+  const temp = jsonClone(packageItem);
   temp.units.forEach((unit, idx, arr) => {
+    // 1. remove unit.item
     delete arr[idx]['item'];
+    // 2. remove empty unit
+    if (!unit.serial)
+      arr.splice(idx--, 1);
   });
   return temp;
 }
 
 export async function updatePackageAPI (packageId: number, updates) {
-  const data = jsonClone(removeUnitItem(updates));
+  const data = unitsCleanUp(updates);
   delete data['task'];
   delete data['taskId'];
   removeEmptyAccessories(data.units);
