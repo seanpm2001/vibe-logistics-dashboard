@@ -180,7 +180,10 @@
       </el-row>
     </template>
 
-    <el-row style="margin-bottom: 20px">
+    <el-row
+      v-if="['RETURN', 'RETURN_TO_REPAIR'].includes(taskItem.taskType)"
+      style="margin-bottom: 20px"
+    >
       For return tasks, please select 'Specify Serial' in warehouse task field if neccessary, instead of adding unit in package here.
     </el-row>
 
