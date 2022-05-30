@@ -292,6 +292,10 @@ const handlePackage = (type) => {
 //     emit('editPackage', taskPackage.value?.id);
 //   }
 // };
+
+watchEffect(() => {
+  taskPackage.value && taskPackage.value.units.length === 0 && handleUnitChange(null, 'add');
+});
 </script>
 
 <style lang="sass" scoped>

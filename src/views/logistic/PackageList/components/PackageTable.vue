@@ -396,12 +396,16 @@ const calPackageProductsQuantity = (packageItem) => {
   const productsQuantity = {};
   const products = [];
   packageItem.units?.forEach((unit) => {
-    const productCode = skuCodeEnum[unit.item.sku];
-    productsQuantity[productCode] = (productsQuantity[productCode] || 0) + 1;
+    if (unit.item?.serial) {
+      const productCode = skuCodeEnum[unit.item.sku];
+      productsQuantity[productCode] = (productsQuantity[productCode] || 0) + 1;
+    }
   });
   packageItem.accessories?.forEach((accessory) => {
     const productCode = accessory.productCode;
-    productsQuantity[productCode] = (productsQuantity[productCode] || 0) + accessory.quantity;
+    if (productCode) {
+      productsQuantity[productCode] = (productsQuantity[productCode] || 0) + accessory.quantity;
+    }
   });
   for (const productCode in productsQuantity) {
     products.push({
