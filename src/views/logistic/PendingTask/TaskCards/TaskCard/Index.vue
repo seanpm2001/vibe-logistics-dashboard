@@ -20,7 +20,7 @@
         Operation
       </div>
 
-      <MetaData :task="task"/>
+      <MetaData :task="task" />
 
       <div
         ref="taskPackageArr"
@@ -375,7 +375,7 @@ const remoteMethod = (query, task, packageItem, unit) => {
 
 let focusStorage = {} as { taskIdx: number, packageIdx: number };
 const handleInputFocus = (el, taskIdx, packageIdx) => {
-  console.log('handleInputFocus')
+  console.log('handleInputFocus');
   focusStorage = { taskIdx, packageIdx };
 };
 
@@ -483,7 +483,7 @@ const onPackagesChange = (task, packages, type, idx?) => {
       return;
     }
     const unitSystem = task.targetId !== 6 ? 'SI' : 'BS';
-    console.log('push package')
+    console.log('push package');
     packages.push({
       id: null,
       taskId: task.id,
