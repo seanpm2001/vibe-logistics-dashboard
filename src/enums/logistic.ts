@@ -44,7 +44,7 @@ export enum unitSystemEnum {
   BS = 'BS(lbs/inch)'
 }
 export enum packageStatusEnum {
-  DELIVERING = 'Delivering',
+  DELIVERING = 'Fulfilling',
   DELIVERED_BUT_UNCHECKED = 'Delivered but not restocked',
   COMPLETE_WITH_DELIVERED = 'Complete with delivered',
   COMPLETE_WITH_RETURNED = 'Complete with rerouting back',
@@ -74,6 +74,10 @@ export const taskTypeEnum = {
 };
 export const inventoryTaskTypeEnum = {
   MOVE: 'Move'
+};
+export const dailyPendingTaskTypeEnum = {
+  FULFILLMENT: 'Fulfillment',
+  REPLACE:'Replace'
 };
 export const allTaskTypeEnum = Object.assign({}, taskTypeEnum, inventoryTaskTypeEnum);
 export enum taskReasonEnum {
@@ -371,6 +375,11 @@ export const fixedWarehouseEnum = {
   17: 'TPV',
   18: 'Customer'
 };
+
+export const BSUnitSystemWarehouseArr = [
+  1,  // FBA-US
+  6   // IWIN
+];
 
 export const noSerialArr = [
   '55V1ESt',

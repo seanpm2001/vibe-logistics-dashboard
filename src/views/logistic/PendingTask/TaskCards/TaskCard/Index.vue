@@ -20,7 +20,10 @@
         Operation
       </div>
 
-      <MetaData :task="task" />
+      <MetaData
+        :task="task"
+        :task-idx="taskIdx"
+      />
 
       <div
         ref="taskPackageArr"
@@ -53,7 +56,7 @@
                   class="w-200"
                   filterable
                   remote
-                  :remote-method="(query) => debounce(remoteMethod(query, task, item, unit), 500)"
+                  :remote-method="(query) => debounce(remoteMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
                   @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                 >
                   <el-option
@@ -135,6 +138,7 @@
                 v-model="item.unitSystem"
                 placeholder="Unit System"
                 default-first-option
+                :disabled="true"
               >
                 <el-option
                   v-for="(unitSys, key) in unitSystemEnum"
@@ -150,17 +154,17 @@
               v-if="item.id"
               class="mgr-5"
               type="primary"
-              :disabled="disableUpdatePackage(item, packageIdx, taskIdx) || accessoryAllocationVisible"
-              @click="handleSubmitPackage(item, task)"
+              :disabled="disableUpdatePackage(item, packageIdx, taskIdx)"
+              @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
             >
               Update
             </el-button>
             <el-button
               v-else
-              :disabled="!item.trackingNumber || accessoryAllocationVisible"
+              :disabled="disableSubmitPackage(item, task)"
               class="mgr-5"
               type="primary"
-              @click="handleSubmitPackage(item, task)"
+              @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
             >
               Submit
             </el-button>
@@ -206,8 +210,8 @@
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, toNumber } from '@/utils';
-import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr } from '@/enums/logistic';
+import { debounce, toNumber, getWarehouseUnitSystem } from '@/utils';
+import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api';
 
 const props = defineProps({
@@ -231,6 +235,9 @@ const fetchList = inject('fetchList') as any;
 const { proxy } = getCurrentInstance();
 
 const contrastTask = inject('contrastTask');
+const fulSerials = inject('fulSerials');
+const specifiedSerials = inject('specifiedSerials');
+
 
 const accessoryAllocation = ref({
   taskIdx: null,
@@ -245,10 +252,17 @@ provide('accessoryAllocationVisible', accessoryAllocationVisible);
 provide('accessoryAllocation', accessoryAllocation);
 /* End Data */
 
+const currentTaskSpecifiedSerials = computed(() => {
+  let serials = [];
+  props.task.products?.forEach(product => {
+    serials = serials.concat(product.serialNote);
+  });
+  serials = serials.concat(serials);
+
+  return serials;
+});
+
 const allocateAccessory = (product) => {
-  console.log('allocateAccessory');
-  console.log(props.task.id);
-  console.log(product.productCode);
   const quantities = props.task.packages.map((packageItem) => {
     const temp = packageItem.accessories?.find((accessory) => accessory.productCode === product.productCode);
     if (temp)
@@ -263,10 +277,9 @@ const allocateAccessory = (product) => {
     quantities: quantities
   });
   accessoryAllocationVisible.value = true;
-  console.log('accessoryAllocation', accessoryAllocation.value);
 };
 
-const onAccessoryAllocationChange = () => {
+const onAccessoryAllocationChange = (taskIdx) => {
   const productCode = accessoryAllocation.value.productCode;
   props.task.packages.forEach((packageItem, packageIdx) => {
     const accessory = packageItem.accessories.find((accessory) => accessory.productCode === productCode);
@@ -280,9 +293,8 @@ const onAccessoryAllocationChange = () => {
       });
     }
     packageItem.accessories = packageItem.accessories.filter((accessory) => accessory.quantity > 0);
-    if (!disableUpdatePackage(packageItem, packageIdx, accessoryAllocation.value.taskIdx)) {
-      focusStorage = { taskIdx: accessoryAllocation.value.taskIdx, packageIdx };
-      handleSubmitPackage(packageItem, props.task, false);
+    if (!checkPackageChanged(packageItem, packageIdx, accessoryAllocation.value.taskIdx)) {
+      handleSubmitPackage(packageItem, props.task, packageIdx, taskIdx, false);
     }
   });
   accessoryAllocationVisible.value = false;
@@ -296,12 +308,36 @@ function compareIfEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
+const checkPackageChanged = (packageItem, packageIdx, taskIdx) => {
   const tempPackage = JSON.parse(JSON.stringify(packageItem));
   removeEmptyUnit(tempPackage);
   if (!packageItem.trackingNumber || compareIfEqual(tempPackage, contrastTask.value[taskIdx].packages[packageIdx]))
     return true;
   return false;
+};
+
+const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
+  if (accessoryAllocationVisible.value)
+    return true;
+  return checkPackageChanged(packageItem, packageIdx, taskIdx);
+};
+
+const disableSubmitPackage = (packageItem, task) => {
+  if (accessoryAllocationVisible.value)
+    return true;
+  if (transportEnum[task.transportMode] === 'Truck') {
+    for (const unit of packageItem.units) {
+      if (unit.serial)
+        return false;
+    }
+    for (const accessory of packageItem.accessories) {
+      if (accessory.productCode)
+        return false;
+    }
+    return true;
+  } else {
+    return !packageItem.trackingNumber;
+  }
 };
 
 const disableNewPackage = packageArr => {
@@ -334,16 +370,20 @@ const handleUnitChange = (unitArr, idx, type, task) => {
   }
 };
 
-function checkIfRepeated (packageItem, query) {
+function checkIfRepeated (query) {
   let repeated = false;
-  packageItem.units.forEach(unit => {
-    unit.serial === query && (repeated = true);
-  });
+  fulSerials.value.includes(query) && (repeated = true);
   return repeated;
 }
 
+function checkIfSpecifiedElseWhere (query) {
+  let specified = false;
+  specifiedSerials.value.includes(query) && !currentTaskSpecifiedSerials.value.includes(query) && (specified = true);
+  return specified;
+}
+
 const unitList = shallowRef(null);
-const remoteMethod = (query, task, packageItem, unit) => {
+const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
   if (query) {
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
@@ -351,13 +391,17 @@ const remoteMethod = (query, task, packageItem, unit) => {
         ElMessage.error('Serial can\'t be found.');
         return;
       }
-      if (checkIfRepeated(packageItem, query)) {
+      if (checkIfRepeated(query)) {
         ElMessage.error('Repeated Serial.');
+        return;
+      }
+      if (checkIfSpecifiedElseWhere(query)) {
+        ElMessage.error('This serial is specified in other task.');
         return;
       }
       if (query && data.length === 1) { // 只有一个符合，直接submit
         unit.serial = query;
-        handleSubmitPackage(packageItem, task);
+        handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
       }
 
@@ -375,7 +419,6 @@ const remoteMethod = (query, task, packageItem, unit) => {
 
 let focusStorage = {} as { taskIdx: number, packageIdx: number };
 const handleInputFocus = (el, taskIdx, packageIdx) => {
-  console.log('handleInputFocus');
   focusStorage = { taskIdx, packageIdx };
 };
 
@@ -391,53 +434,17 @@ function clickNextUnitInput () {
     });
 }
 
-function removeUnitItem (packageItem) {
-  const temp = JSON.parse(JSON.stringify(packageItem));
-  temp.units.forEach((unit, idx, arr) => {
-    delete arr[idx]['item'];
-  });
-  return temp;
-}
-
 const isAccessory = (unit) => (noSerialArr.includes(unit.productCode));
 
-function isAccessoriesPackage (packageItem, orderId) {
-  console.log('packageItem: ', packageItem);
-  const products = props.orderEnum[orderId].products;
-  console.log('props.orderEnum[orderId]: ', props.orderEnum[orderId]);
-  console.log('products: ', products);
-
-  // products.forEach((product) => {
-  //   // TODO: isAccessoriesPackage
-  //   if (noSerialArr.includes(product.productCode))
-  //     console.log(product.productCode);
-  // });
-  return true;
-}
-
-const handleSubmitPackage = (packageItem, task, createNewUnit=true) => {
-  const { taskIdx, packageIdx } = focusStorage;
+const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
   const packageId = packageItem.id;
-  // 删除serial为空的unit
-  const units = packageItem.units;
-  for (let idx = units.length - 1; idx >= 0; idx--) {
-    !units[idx].serial && units.splice(idx, 1);
-  }
 
-  // if (packageItem.units.length === 0)
-  //   packageItem.units.push({ serial: null, status: 'DELIVERING' }); // 填充1个unit给被清空的units双向绑定数据
-
-  // if (isAccessoriesPackage(packageItem, task.orderId)) {
-  //   // TODO: isAccessoriesPackage
-  // }
-
+  removeEmptyUnit(packageItem);
   if (packageId)
     updatePackageAPI(packageId, packageItem)
       .then(data => {
         Object.assign(packageItem, data);
         updateContrastTask(packageItem, packageIdx, taskIdx);
-      })
-      .finally(() => {
         if (packageItem.units.length === 0) {
           createNewUnit = true;
         }
@@ -451,8 +458,6 @@ const handleSubmitPackage = (packageItem, task, createNewUnit=true) => {
       .then(data => {
         Object.assign(packageItem, data);
         updateContrastTask(packageItem, packageIdx, taskIdx);
-      })
-      .finally(() => {
         if (packageItem.units.length === 0) {
           createNewUnit = true;
         }
@@ -467,8 +472,9 @@ const handleSubmitPackage = (packageItem, task, createNewUnit=true) => {
 function removeEmptyUnit (packageItem) {
   if (packageItem) {
     for (let idx = packageItem.units.length - 1; idx >= 0; idx--) {
-      if (!packageItem.units[idx].serial)
-        packageItem.units.splice(idx--, 1);
+      if (!packageItem.units[idx].serial) {
+        packageItem.units.splice(idx, 1);
+      }
     }
   }
 }
@@ -482,8 +488,7 @@ const onPackagesChange = (task, packages, type, idx?) => {
       ElMessage.error('Exceed quantity limit');
       return;
     }
-    const unitSystem = task.targetId !== 6 ? 'SI' : 'BS';
-    console.log('push package');
+    const unitSystem = getWarehouseUnitSystem(task.sourceId);
     packages.push({
       id: null,
       taskId: task.id,

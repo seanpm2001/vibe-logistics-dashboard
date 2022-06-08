@@ -33,6 +33,7 @@
       >
         <el-select
           v-model="taskItem.carrier"
+          clearable
           :disabled="notShipmentPermission"
           placeholder="Please select"
         >
@@ -152,6 +153,7 @@ import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
+import { getWarehouseUnitSystem } from '@/utils';
 
 const props = defineProps({
   taskId: {
@@ -201,7 +203,7 @@ const disableNewPackage = computed(() => {
 });
 
 const addPackage = () => {
-  const unitSystem = taskItem.targetId !== 6 ? 'SI' : 'BS';
+  const unitSystem = getWarehouseUnitSystem(taskItem.sourceId);
   packageArr.value.push(Object.assign({}, JSON.parse(JSON.stringify(emptyPackage)), { unitSystem }));
 };
 

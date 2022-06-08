@@ -1,3 +1,5 @@
+import { BSUnitSystemWarehouseArr } from '../enums/logistic';
+
 // 合并products array为一个{productCode: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
   const result = {};
@@ -52,4 +54,15 @@ export const formatTimeString = utcTimeString => {
   const iso = localTime.toISOString();
   const ret = iso.slice(0, 19).replace('T', ' ');
   return ret;
+};
+
+export const addNullOptionInEnumObject = (obj) => {
+  return Object.assign({ '(NULL)': '(Null)' }, obj);
+};
+
+export const getWarehouseUnitSystem = (warehouseId) => {
+  if (BSUnitSystemWarehouseArr.includes(warehouseId))
+    return 'BS';
+  else
+    return 'SI';
 };

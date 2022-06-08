@@ -83,6 +83,10 @@ const props = defineProps({
   task: {
     type: Object,
     required: true
+  },
+  taskIdx: {
+    type: Number,
+    required: true
   }
 });
 
@@ -96,7 +100,7 @@ const updateAccessoryAllocation = (product) => (accessoryAllocationVisible.value
 
 const onAccessoryAllocationButtonClick = (product) => {
   if (accessoryAllocationVisible.value)
-    onAccessoryAllocationChange();
+    onAccessoryAllocationChange(props.taskIdx);
   else
     allocateAccessory(product);
 };

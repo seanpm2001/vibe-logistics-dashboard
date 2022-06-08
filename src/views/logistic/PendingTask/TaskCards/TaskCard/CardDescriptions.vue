@@ -33,6 +33,7 @@
         v-if="task.transportMode"
         v-model="taskCarrier"
         placeholder="Please select"
+        clearable
         @change="onCarrierChange(task)"
       >
         <el-option

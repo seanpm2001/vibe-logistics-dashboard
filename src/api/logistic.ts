@@ -201,6 +201,7 @@ function packageCleanUp (packageItem) {
     if (!temp.accessories[idx].productCode)
       temp.accessories.splice(idx, 1);
   }
+  removeEmptyAccessories(temp.units);
   return temp;
 }
 
@@ -208,7 +209,6 @@ export async function updatePackageAPI (packageId: number, updates) {
   const data = packageCleanUp(updates);
   delete data['task'];
   delete data['taskId'];
-  removeEmptyAccessories(data.units);
   console.log('data: ', data);
 
   const item = handleReqElMsg(
@@ -243,7 +243,11 @@ export async function updateUnitAPI (unitSerial: string, updates) {
   );
   return item;
 }
-
+export async function listUnitsAPI (params: Array<string>) {
+  return [];
+  const res = await requester.get('/units', { params });
+  return res.items;
+}
 
 /* 库存 Inventory API */
 export async function listInventoriesAPI (params?) {
