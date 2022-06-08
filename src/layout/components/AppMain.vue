@@ -6,12 +6,12 @@
         name="fade-transform"
         mode="out-in"
       >
-        <keep-alive :include="cachedViews">
-          <component
-            :is="Component"
-            :key="key"
-          />
-        </keep-alive>
+        <!-- <keep-alive :include="cachedViews"> -->
+        <component
+          :is="Component"
+          :key="key"
+        />
+        <!-- </keep-alive> -->
       </transition>
     </router-view>
   </div>
@@ -21,15 +21,15 @@
 import { useAppStore } from '@/store/app';
 
 const route = useRoute();
-const settings = computed(() => {
-  return appStore.settings;
-});
+// const settings = computed(() => {
+//   return appStore.settings;
+// });
 
 const key = computed(() => route.path);
 
-const cachedViews = computed(() => {
-  return appStore.cachedViews;
-});
+// const cachedViews = computed(() => {
+//   return appStore.cachedViews;
+// });
 
 /*listen the component name changing, then to keep-alive the page*/
 // cachePage: is true, keep-alive this Page

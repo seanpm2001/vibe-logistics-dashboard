@@ -173,10 +173,10 @@
             :remote-method="query => debounce(remoteMethod(query, taskItem.taskType), 500)"
           >
             <el-option
-              v-for="(v, index) in (taskAccessories.find(taskAaccessory => taskAaccessory.productCode === accessory.productCode)?.quantity || 0) + 1"
-              :key="index"
-              :label="index"
-              :value="index"
+              v-for="(v, idx) in (taskAccessories.find(taskAaccessory => taskAaccessory.productCode === accessory.productCode)?.quantity || 0) + 1"
+              :key="idx"
+              :label="idx"
+              :value="idx"
             />
           </el-select>
         </el-form-item>
