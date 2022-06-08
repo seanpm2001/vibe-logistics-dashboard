@@ -21,7 +21,7 @@
       :total="total"
       @fetchList="fetchList"
     />
-    
+
     <el-dialog
       v-model="dialogAssignVisible"
       width="32%"
@@ -70,6 +70,7 @@
         <el-select
           v-model="taskCarrier"
           placeholder="Please select"
+          clearable
         >
           <el-option
             v-for="(carrier, key) in transportCarrierEnum[taskTransport]"
@@ -276,7 +277,7 @@ async function submitInitTaskItem (products, assignedData, orderId) {
   }
 
   removeEmptyProducts(task); // 若products变成[{}]，删除task.products
- 
+
   let taskId = null;
 
   await createTaskAPI(task).then(data => {
@@ -321,7 +322,7 @@ const assignOrders = () => {
   }
   const pattern = assignPattern.value; // ['assign', 'assignSelected', 'combineAndAssign']
   const orderArr = [];
-  
+
   if (pattern === 'assignSelected') {
     // 单独处理批量assign，不展示warehouse task dialog
     assignSelectedOrders(assignedData, selectedArr);
@@ -409,7 +410,7 @@ const resetForm = () => {};
 .order-info
   .el-tag
     cursor: pointer
-    
+
 .el-form-item__content div
   width: 100%
 

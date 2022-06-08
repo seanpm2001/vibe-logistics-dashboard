@@ -36,6 +36,7 @@
         disabled
         placeholder="Order From"
         style="width: 130px"
+        clearable
         @change="handleFilter"
       >
         <el-option
@@ -47,7 +48,7 @@
       </el-select>
     </el-row>
     <div v-if="!showAssignedOrder">
-      <el-button 
+      <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
         :disabled="!multipleSelection?.length"
         type="primary"

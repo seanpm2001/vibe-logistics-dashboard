@@ -44,6 +44,7 @@
               v-model="taskItem.returnReason"
               :disabled="notCommonPermission"
               placeholder="Please select"
+              clearable
               filterable
               default-first-option
             >
@@ -210,6 +211,7 @@
                   v-model="product.sku"
                   :disabled="notCommonPermission"
                   placeholder="Please select"
+                  clearable
                   filterable
                   allow-create
                   default-first-option

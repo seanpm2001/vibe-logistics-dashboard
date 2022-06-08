@@ -16,7 +16,7 @@
       @visible-change="onTypeArrChange"
     >
       <el-option
-        v-for="(type, key) in allTaskTypeEnum"
+        v-for="(type, key) in dailyPendingTaskTypeEnum"
         :key="key"
         :label="type"
         :value="key"
@@ -26,6 +26,7 @@
       v-model="listQuery.transportMode"
       placeholder="Transport"
       style="width: 120px"
+      clearable
       @change="handleFilter"
     >
       <el-option
@@ -40,10 +41,11 @@
       v-model="listQuery.carrier"
       placeholder="Carrier"
       style="width: 120px"
+      clearable
       @change="handleFilter"
     >
       <el-option
-        v-for="(carrier, key) in transportCarrierEnum[listQuery.transportMode]"
+        v-for="(carrier, key) in addNullOptionInEnumObject(transportCarrierEnum[listQuery.transportMode])"
         :key="key"
         :label="carrier"
         :value="key"
@@ -79,8 +81,8 @@
 
 <script lang="ts" setup>
 import { Search, CircleClose } from '@element-plus/icons-vue';
-import { transportEnum, transportCarrierEnum, allTaskTypeEnum  } from '@/enums/logistic';
-import { parseTime, debounce } from '@/utils';
+import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum  } from '@/enums/logistic';
+import { parseTime, debounce, addNullOptionInEnumObject } from '@/utils';
 const emit = defineEmits(['fetchList']);
 
 const listQuery = inject('listQuery') as any;

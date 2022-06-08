@@ -61,6 +61,7 @@
           v-model="taskPackage.unitSystem"
           placeholder="Unit System"
           default-first-option
+          :disabled="true"
         >
           <el-option
             v-for="(unitSys, key) in unitSystemEnum"
@@ -100,6 +101,7 @@
             :disabled="notPackagePermission || disableHandleUnit"
             style="width: 260px"
             placeholder="Please select"
+            clearable
             filterable
             remote
             :allow-create="taskItem.taskType === 'RETURN'"
@@ -144,6 +146,7 @@
             :disabled="notPackagePermission || disableHandleUnit"
             style="width: 260px"
             placeholder="Please select"
+            clearable
             filterable
             remote
             :allow-create="taskItem.taskType === 'RETURN'"
