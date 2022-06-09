@@ -194,6 +194,7 @@ function packageCleanUp (packageItem) {
   const temp = jsonClone(packageItem);
   for (let idx = temp.units.length - 1; idx >= 0; idx--) {
     delete temp.units[idx]['item'];
+    delete temp.units[idx]['hasError'];
     if (!temp.units[idx].serial)
       temp.units.splice(idx, 1);
   }
