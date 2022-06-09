@@ -239,7 +239,7 @@ const fetchList = inject('fetchList') as any;
 /* Start Data */
 const { proxy } = getCurrentInstance();
 
-const contrastTask = inject('contrastTask');
+const savedTasks = inject('savedTasks');
 const fulSerials = inject('fulSerials');
 const specifiedSerials = inject('specifiedSerials');
 
@@ -312,8 +312,8 @@ const onAccessoryAllocationChange = (taskIdx) => {
   accessoryAllocationVisible.value = false;
 };
 
-const updateContrastTask = (packageItem, packageIdx, taskIdx) => {
-  contrastTask.value[taskIdx].packages[packageIdx] = Object.assign({}, JSON.parse(JSON.stringify(packageItem)));
+const updateSavedTasks = (packageItem, packageIdx, taskIdx) => {
+  savedTasks.value[taskIdx].packages[packageIdx] = Object.assign({}, JSON.parse(JSON.stringify(packageItem)));
 };
 
 function compareIfEqual(a, b) {
@@ -325,7 +325,7 @@ const checkPackageChanged = (packageItem, packageIdx, taskIdx) => {
   removeEmptyUnit(tempPackage);
   removeUnitErrorStatus(tempPackage);
 
-  return !compareIfEqual(tempPackage, contrastTask.value[taskIdx].packages[packageIdx]);
+  return !compareIfEqual(tempPackage, savedTasks.value[taskIdx].packages[packageIdx]);
 };
 
 const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
@@ -486,7 +486,7 @@ const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUn
     updatePackageAPI(packageId, packageItem)
       .then(data => {
         Object.assign(packageItem, data);
-        updateContrastTask(packageItem, packageIdx, taskIdx);
+        updateSavedTasks(packageItem, packageIdx, taskIdx);
         if (packageItem.units.length === 0) {
           createNewUnit = true;
         }
@@ -500,7 +500,7 @@ const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUn
     createPackageAPI(packageItem.taskId, packageItem)
       .then(data => {
         Object.assign(packageItem, data);
-        updateContrastTask(packageItem, packageIdx, taskIdx);
+        updateSavedTasks(packageItem, packageIdx, taskIdx);
         if (packageItem.units.length === 0) {
           createNewUnit = true;
         }

@@ -2,6 +2,14 @@
   <div class="page">
     <div class="statistics">
       <FilterHeader @fetch-list="fetchList" />
+      <el-row justify="end">
+        <el-button
+          type="primary"
+          @click="showExport"
+        >
+          Export
+        </el-button>
+      </el-row>
       <el-descriptions
         title="Fulfilling Products"
         class="unspecified-products"
@@ -84,6 +92,8 @@
       @fetchList="fetchList"
     />
 
+    <ExportTasks />
+
     <Pagination
       v-show="total > 0"
       :total="total"
@@ -96,6 +106,7 @@
 import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCards from './TaskCards/Index.vue';
+import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr } from '@/enums/logistic';
@@ -120,12 +131,15 @@ const total = ref(0);
 const dataList = ref(null);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const specifiedUnits = ref({});
-const contrastTask = ref(null); // 对比数据是否修改
+const savedTasks = ref(null); // 对比数据是否修改
+const dialogExportTasksVisible = ref(false);
 
 provide('listQuery', listQuery);
 provide('typeArr', typeArr);
 provide('dataList', dataList);
-provide('contrastTask', contrastTask);
+provide('savedTasks', savedTasks);
+provide('dialogExportTasksVisible', dialogExportTasksVisible);
+provide('orderEnum', orderEnum);
 
 const fulSerials = computed(() => {
   const serials = {};
@@ -194,14 +208,13 @@ const fulQty = computed(() => { // SKU Quantity Statistics
         const code = skuCodeEnum[sku];
         if (taskQtyBySku[sku]) {
           taskQtyBySku[sku]['ful'] = (taskQtyBySku[sku]['ful'] || 0) + 1;
-        } else { // 统计fulfillment的数量
+        } else if (taskQtyByCode[code]) { // 统计fulfillment的数量
           taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + 1;
         }
       });
       packageItem.accessories.forEach(accessory => {
         const code = accessory.productCode;
-        if (code) { // 统计fulfillment的数量
-          taskQtyByCode[code] = taskQtyByCode[code] || {};
+        if (code && taskQtyByCode[code]) { // 统计fulfillment的数量
           taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + accessory.quantity;
         }
       });
@@ -233,6 +246,10 @@ const fulQty = computed(() => { // SKU Quantity Statistics
   };
 }) as Record<string, any>;
 
+const showExport = () => {
+  dialogExportTasksVisible.value = true;
+};
+
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
@@ -248,7 +265,7 @@ function queryTask () {
 
       dataList.value = data.items;
       total.value = data.total;
-      contrastTask.value = JSON.parse(JSON.stringify(dataList.value));
+      savedTasks.value = JSON.parse(JSON.stringify(dataList.value));
       const orderIdArr = getTaskOrderIdArr(dataList.value);
       queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(async order => {
