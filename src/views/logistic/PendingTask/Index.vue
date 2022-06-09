@@ -128,12 +128,12 @@ provide('dataList', dataList);
 provide('contrastTask', contrastTask);
 
 const fulSerials = computed(() => {
-  const serials = [];
+  const serials = {};
   dataList.value?.forEach(task => {
     task.packages?.forEach(packageItem => {
       packageItem.units.forEach(unit => {
         if (unit.serial) {
-          serials.push(unit.serial);
+          serials[unit.serial] = (serials[unit.serial] || 0) + 1;
         }
       });
     });

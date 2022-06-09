@@ -42,21 +42,16 @@
                 <svg-icon
                   class="icon mgr-5"
                   icon-name="add"
-                  @click="handleUnitChange(item.units, index, 'add', task)"
-                />
-                <svg-icon
-                  class="icon mgr-5"
-                  :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
-                  icon-name="minus"
-                  @click="handleUnitChange(item.units, index, 'remove', task)"
+                  @click="handleUnitChange(item, packageIdx, index, 'add', task, taskIdx)"
                 />
                 <el-select
                   v-model="unit.serial"
                   placeholder="Please select"
-                  class="w-200"
+                  :class="'w-200' + (unit.hasError ? ' error-border-tip' : '')"
                   filterable
                   remote
                   :remote-method="(query) => debounce(remoteMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
+                  @change="remoteMethod(unit.serial, task, item, taskIdx, packageIdx, unit)"
                   @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                 >
                   <el-option
@@ -66,6 +61,12 @@
                     :value="unitOpt.serial"
                   />
                 </el-select>
+                <svg-icon
+                  class="icon mgl-5"
+                  :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
+                  icon-name="minus"
+                  @click="handleUnitChange(item, packageIdx, index, 'remove', task, taskIdx)"
+                />
               </div>
             </template>
             <template
@@ -112,27 +113,31 @@
             <el-input
               v-model="item.trackingNumber"
               placeholder="Tracking Number"
+              @input="(trackingNumber) => debounce(inputTrackingNumber(trackingNumber, item, task, packageIdx, taskIdx), 200)"
             />
-            <el-row class="dimension">
-              <el-input
-                v-model="item.weight"
-                placeholder="Weight"
-                @input="val => (item.weight = toNumber(val))"
-              />
+            <el-row
+              class="dimension"
+              style="margin-top: 20px"
+            >
               <el-input
                 v-model="item.length"
                 placeholder="Length"
-                @input="val => (item.length = toNumber(val))"
+                @input="val => (item.length = toNumber(val) || null)"
               />
               <el-input
                 v-model="item.width"
                 placeholder="Width"
-                @input="val => (item.width = toNumber(val))"
+                @input="val => (item.width = toNumber(val) || null)"
               />
               <el-input
                 v-model="item.height"
                 placeholder="Height"
-                @input="val => (item.height = toNumber(val))"
+                @input="val => (item.height = toNumber(val) || null)"
+              />
+              <el-input
+                v-model="item.weight"
+                placeholder="Weight"
+                @input="val => (item.weight = toNumber(val) || null)"
               />
               <el-select
                 v-model="item.unitSystem"
@@ -252,6 +257,13 @@ provide('accessoryAllocationVisible', accessoryAllocationVisible);
 provide('accessoryAllocation', accessoryAllocation);
 /* End Data */
 
+const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
+  if (val.endsWith(';')) {
+    packageItem.trackingNumber = val.slice(0, -1);
+    handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
+  }
+};
+
 const currentTaskSpecifiedSerials = computed(() => {
   let serials = [];
   props.task.products?.forEach(product => {
@@ -311,33 +323,27 @@ function compareIfEqual(a, b) {
 const checkPackageChanged = (packageItem, packageIdx, taskIdx) => {
   const tempPackage = JSON.parse(JSON.stringify(packageItem));
   removeEmptyUnit(tempPackage);
-  if (!packageItem.trackingNumber || compareIfEqual(tempPackage, contrastTask.value[taskIdx].packages[packageIdx]))
-    return true;
-  return false;
+  removeUnitErrorStatus(tempPackage);
+
+  return !compareIfEqual(tempPackage, contrastTask.value[taskIdx].packages[packageIdx]);
 };
 
 const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
   if (accessoryAllocationVisible.value)
     return true;
-  return checkPackageChanged(packageItem, packageIdx, taskIdx);
+  return !checkPackageChanged(packageItem, packageIdx, taskIdx);
 };
 
 const disableSubmitPackage = (packageItem, task) => {
   if (accessoryAllocationVisible.value)
     return true;
-  if (transportEnum[task.transportMode] === 'Truck') {
-    for (const unit of packageItem.units) {
-      if (unit.serial)
-        return false;
-    }
-    for (const accessory of packageItem.accessories) {
-      if (accessory.productCode)
-        return false;
-    }
-    return true;
-  } else {
-    return !packageItem.trackingNumber;
+  for (const unit of packageItem.units) {
+    if (unit.serial) return false;
   }
+  for (const accessory of packageItem.accessories) {
+    if (accessory.productCode) return false;
+  }
+  return true;
 };
 
 const disableNewPackage = packageArr => {
@@ -358,21 +364,26 @@ function checkAddAble (task) {
   return unitQty < productQty;
 }
 
-const handleUnitChange = (unitArr, idx, type, task) => {
-  if (type === 'remove')
-    unitArr.splice(idx, 1);
-  else {
+const handleUnitChange = (packageItem, packageIdx, unitIdx, type, task, taskIdx) => {
+  let hasChanged = true;
+  const unitArr = packageItem.units;
+  if (type === 'remove') {
+    unitArr.splice(unitIdx, 1);
+    handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
+  } else {
     if (!checkAddAble(task)) {
       ElMessage.error('Exceed quantity limit');
-      return;
+      hasChanged = false;
+    } else {
+      unitArr.push({ serial: null, status: 'DELIVERING' });
     }
-    unitArr.push({ serial: null, status: 'DELIVERING' });
   }
+  return hasChanged;
 };
 
 function checkIfRepeated (query) {
   let repeated = false;
-  fulSerials.value.includes(query) && (repeated = true);
+  fulSerials.value[query] > 1 && (repeated = true);
   return repeated;
 }
 
@@ -389,14 +400,6 @@ const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
     queryUnitsAPI({ serial: query }).then(data => {
       if (data.length === 0) {
         ElMessage.error('Serial can\'t be found.');
-        return;
-      }
-      if (checkIfRepeated(query)) {
-        ElMessage.error('Repeated Serial.');
-        return;
-      }
-      if (checkIfSpecifiedElseWhere(query)) {
-        ElMessage.error('This serial is specified in other task.');
         return;
       }
       if (query && data.length === 1) { // 只有一个符合，直接submit
@@ -424,9 +427,9 @@ const handleInputFocus = (el, taskIdx, packageIdx) => {
 
 function clickNextUnitInput () {
   const { taskIdx, packageIdx } = focusStorage;
-  if (taskIdx)
+  if (!isNaN(taskIdx)) // taskIdx can be 0, do not use: if (taskIdx)
     nextTick(() => {
-      const serialCell = proxy.$refs['taskPackageArr'][taskIdx].querySelectorAll('.package-row')[packageIdx].querySelector('.serial-cell');
+      const serialCell = proxy.$refs['taskPackageArr'].querySelectorAll('.serial-cell')[packageIdx];
       setTimeout(() => {
         const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');
         lastUnitInput.click();
@@ -436,11 +439,50 @@ function clickNextUnitInput () {
 
 const isAccessory = (unit) => (noSerialArr.includes(unit.productCode));
 
+function reportSerialError (serial) {
+  let hasError = false;
+  if (!serial) {
+    ElMessage.error('Please delete empty unit.'); // This actually should not be reached. Make sure empty units are removed in code before submit/update package.
+    hasError = true;
+  }
+  if (checkIfRepeated(serial)) {
+    ElMessage.error('Repeated Serial.');
+    hasError = true;
+  }
+  if (checkIfSpecifiedElseWhere(serial)) {
+    ElMessage.error('This serial is specified in other task.');
+    hasError = true;
+  }
+  return hasError;
+}
+
+function reportPackageError (packageItem) {
+  // clean up hasError status and report the first error encountered
+  let hasError = false;
+  packageItem.units.forEach(unit => {
+    unit.hasError = false;
+  });
+  for (const unitIdx in packageItem.units) {
+    const unit = packageItem.units[unitIdx];
+    if (reportSerialError(unit.serial)) {
+      unit.hasError = true;
+      hasError = true;
+      break;
+    }
+  }
+  return hasError;
+}
+
 const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
+  handleInputFocus(null, taskIdx, packageIdx);
+  removeEmptyUnit(packageItem);
+
+  if (reportPackageError(packageItem)) return;
+
   const packageId = packageItem.id;
 
-  removeEmptyUnit(packageItem);
-  if (packageId)
+  if (packageId) {
+    if (disableUpdatePackage(packageItem, packageIdx, taskIdx)) return;
     updatePackageAPI(packageId, packageItem)
       .then(data => {
         Object.assign(packageItem, data);
@@ -449,11 +491,12 @@ const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUn
           createNewUnit = true;
         }
         if (createNewUnit) {
-          handleUnitChange(packageItem.units, null, 'add', task);
-          clickNextUnitInput();
+          handleUnitChange(packageItem, packageIdx, null, 'add', task, taskIdx) && clickNextUnitInput();
         }
       });
-  else
+  }
+  else {
+    if (disableSubmitPackage(packageItem, packageIdx)) return;
     createPackageAPI(packageItem.taskId, packageItem)
       .then(data => {
         Object.assign(packageItem, data);
@@ -462,10 +505,10 @@ const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUn
           createNewUnit = true;
         }
         if (createNewUnit) {
-          handleUnitChange(packageItem.units, null, 'add', task);
-          clickNextUnitInput();
+          handleUnitChange(packageItem, packageIdx, null, 'add', task, taskIdx) && clickNextUnitInput();
         }
       });
+  }
   unitList.value = [];
 };
 
@@ -479,9 +522,15 @@ function removeEmptyUnit (packageItem) {
   }
 }
 
-const onPackagesChange = (task, packages, type, idx?) => {
+function removeUnitErrorStatus (packageItem) {
+  packageItem.units.forEach(unit => {
+    delete unit['hasError'];
+  });
+}
+
+const onPackagesChange = (task, packages, type, packageIdx?) => {
   if (type === 'remove')
-    packages.splice(idx, 1);
+    packages.splice(packageIdx, 1);
   else {
     removeEmptyUnit(packages[packages.length - 1]);
     if (!checkAddAble(task)) {
@@ -492,11 +541,17 @@ const onPackagesChange = (task, packages, type, idx?) => {
     packages.push({
       id: null,
       taskId: task.id,
-      trackingNumber: null,
+      trackingNumber: '',
+      length: null,
+      width: null,
+      height: null,
+      weight: null,
       unitSystem,
       units: [{serial: null, status: 'DELIVERING'}],
       accessories: []
     });
+    handleInputFocus(null, props.taskIdx, packages.length - 1);
+    clickNextUnitInput();
   }
 };
 
