@@ -148,7 +148,9 @@ const specifiedSerials = computed(() => {
   dataList.value?.forEach(task => {
     let taskSpecifiedSerials = [];
     task.products?.forEach(product => {
-      taskSpecifiedSerials = taskSpecifiedSerials.concat(product.serialNote);
+      if (product.serialNote) {
+        taskSpecifiedSerials = taskSpecifiedSerials.concat(product.serialNote);
+      }
     });
     serials = serials.concat(taskSpecifiedSerials);
 
