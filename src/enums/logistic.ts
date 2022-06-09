@@ -395,3 +395,7 @@ export const noSerialArr = [
   '75ProBP',
   '75ProSP'
 ];
+
+export const exportScopesEnum = {
+  CURRENT: 'Current page'
+};
