@@ -30,7 +30,10 @@
     <el-descriptions-item label="TaskType">
       {{ task.taskType }}
     </el-descriptions-item>
-    <el-descriptions-item label="Status">
+    <el-descriptions-item
+      label="Status"
+      width="20%"
+    >
       <el-tooltip
         v-if="tasksFulQty[task.id].error"
         effect="light"
@@ -39,20 +42,24 @@
           type="danger"
           size="medium"
         >
-          Not complete
+          Incomplete
         </el-button>
         <template #content>
           <el-tag
             size="large"
             type="danger"
+            style="font-size: 14px"
           >
             {{ tasksFulQty[task.id].error }}
           </el-tag>
         </template>
       </el-tooltip>
-      <span v-if="!tasksFulQty[task.id].error">
+      <el-button
+        v-if="!tasksFulQty[task.id].error"
+        type="primary"
+      >
         Complete
-      </span>
+      </el-button>
     </el-descriptions-item>
     <el-descriptions-item label="Transport & Carrier">
       {{ transportEnum[task.transportMode] }}
