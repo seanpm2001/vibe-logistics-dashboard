@@ -69,7 +69,7 @@ const getPackageItems = (task, packageIdx) => {
   if (!packageItem) return null;
   const items = packageItem.units.map(unit => unit.serial);
   packageItem.accessories.forEach(accessory => {
-    items.push(`${codeNameEnum[accessory.productCode]}: ${accessory.quantity}`);
+    items.push(`${accessory.quantity} * ${codeNameEnum[accessory.productCode]}`);
   });
   return items.join(';');
 };
@@ -89,9 +89,9 @@ const getPackageWeight = (task, packageIdx) => task.packages[packageIdx]?.weight
 const exportTasks = () => {
   const headerMapping = {
     'Order#':
-      (order, task) => order.rawOrders.map(o => o.id).join('&'),
+      (order, task) => order.rawOrders.map(o => o.id).join(' & '),
     'Item':
-      (order, task) => task.products.map(p => `${codeNameEnum[p.productCode]}: ${p.quantity}`).join(', '),
+      (order, task) => task.products.map(p => `${p.quantity} * ${codeNameEnum[p.productCode]}`).join(', '),
     'Transport Method':
       (order, task) => task.transportMode,
     'Carrier':
@@ -110,7 +110,7 @@ const exportTasks = () => {
     'Contact':
       (order, task) => order.shippingName,
     'Address':
-      (order, task) => order.shippingAddress1 + (order.shippingAddress2 ? `\n${order.shippingAddress1}` : ''),
+      (order, task) => order.shippingAddress1 + (order.shippingAddress2 ? ` ${order.shippingAddress2}` : ''),
     'City':
       (order, task) => order.shippingCity,
     'State':
@@ -120,41 +120,31 @@ const exportTasks = () => {
     'Country':
       (order, task) => order.shippingCountry,
 
-    'P1 Tracking#':
-      (order, task) => getPackageTrackingNumber(task, 0),
-    'P1 Items':
-      (order, task) => getPackageItems(task, 0),
+    // Only truck needs dim and weight and there is only one package
     'P1 Dim':
       (order, task) => getPackageDim(task, 0),
     'P1 Weight':
       (order, task) => getPackageWeight(task, 0),
 
+    'P1 Tracking#':
+      (order, task) => getPackageTrackingNumber(task, 0),
+    'P1 Items':
+      (order, task) => getPackageItems(task, 0),
+
     'P2 Tracking#':
       (order, task) => getPackageTrackingNumber(task, 1),
     'P2 Items':
       (order, task) => getPackageItems(task, 1),
-    'P2 Dim':
-      (order, task) => getPackageDim(task, 1),
-    'P2 Weight':
-      (order, task) => getPackageWeight(task, 1),
 
     'P3 Tracking#':
       (order, task) => getPackageTrackingNumber(task, 2),
     'P3 Items':
       (order, task) => getPackageItems(task, 2),
-    'P3 Dim':
-      (order, task) => getPackageDim(task, 2),
-    'P3 Weight':
-      (order, task) => getPackageWeight(task, 2),
 
     'P4 Tracking#':
       (order, task) => getPackageTrackingNumber(task, 3),
     'P4 Items':
       (order, task) => getPackageItems(task, 3),
-    'P4 Dim':
-      (order, task) => getPackageDim(task, 3),
-    'P4 Weight':
-      (order, task) => getPackageWeight(task, 3)
   };
   import('@/utils/excel').then(excel => {
     const data = savedTasks.value.map(
