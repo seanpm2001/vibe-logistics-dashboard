@@ -1,5 +1,7 @@
 <template>
-  <el-card>
+  <el-card
+    :class="tasksFulQty[task.id].error ? 'error-border-tip' : ''"
+  >
     <CardDescriptions
       :task="task"
       :order-enum="orderEnum"
@@ -109,7 +111,7 @@
               </el-select>
             </el-row>
           </div>
-          <div :class="'col3 cell w-340' + (item.trackingNumber ? '' : ' error-border-tip')">
+          <div class="col3 cell w-340">
             <el-input
               v-model="item.trackingNumber"
               placeholder="Tracking Number"
@@ -242,6 +244,7 @@ const { proxy } = getCurrentInstance();
 const savedTasks = inject('savedTasks');
 const fulSerials = inject('fulSerials');
 const specifiedSerials = inject('specifiedSerials');
+const tasksFulQty = inject('tasksFulQty');
 
 
 const accessoryAllocation = ref({
