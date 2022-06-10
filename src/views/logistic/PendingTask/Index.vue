@@ -109,7 +109,7 @@ import TaskCards from './TaskCards/Index.vue';
 import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
-import { skuCodeEnum, codeNameEnum, noSerialArr } from '@/enums/logistic';
+import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
 // import { useUserStore } from '@/store';
 
 /* Start Data */
@@ -182,16 +182,20 @@ const specifiedSerials = computed(() => {
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
-const fulQty = computed(() => { // SKU Quantity Statistics
-  // Important: For a product in a task, either all skus are specified or none
-  const qtyBySku = {};
-  const qtyByCode = {};
-  dataList.value?.forEach(task => {
+const tasksFulQty = computed(() => {
+  const qty = {};
+  savedTasks.value?.forEach(task => {
     const taskQtyBySku = {};
     const taskQtyByCode = {};
+    const error = {};
+    const unfulSpecifiedSerials = {};
+
     task.products?.forEach(product => {
       const code = product.productCode;
       const sku = product.sku;
+      product.serialNote?.forEach(serial => {
+        unfulSpecifiedSerials[serial] = true;
+      });
       if (code?.includes('EPP')) return; // 不需要追踪code为EPP相关的product
       if (sku && !noSerialArr.includes(code)) {
         taskQtyBySku[sku] = taskQtyBySku[sku] || {};
@@ -202,7 +206,11 @@ const fulQty = computed(() => { // SKU Quantity Statistics
       }
     });
     task.packages?.forEach(packageItem => {
+      if (!packageItem.trackingNumber) {
+        error[taskFulfilmentErrorEnum.MISSING_TRACKING_NUMBER] = true;
+      }
       packageItem.units.forEach(unit => {
+        unit.serial && (delete unfulSpecifiedSerials[unit.serial]);
         const sku = unit?.item?.sku;
         if (!sku) return;
         const code = skuCodeEnum[sku];
@@ -210,36 +218,70 @@ const fulQty = computed(() => { // SKU Quantity Statistics
           taskQtyBySku[sku]['ful'] = (taskQtyBySku[sku]['ful'] || 0) + 1;
         } else if (taskQtyByCode[code]) { // 统计fulfillment的数量
           taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + 1;
+        } else {
+          error[taskFulfilmentErrorEnum.UNWANTTED_PRODUCT] = true;
         }
       });
       packageItem.accessories.forEach(accessory => {
         const code = accessory.productCode;
         if (code && taskQtyByCode[code]) { // 统计fulfillment的数量
           taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + accessory.quantity;
+        } else if (code && !taskQtyByCode[code]) {
+          error[taskFulfilmentErrorEnum.UNWANTTED_PRODUCT] = true;
         }
       });
-
-      if (!packageItem.units.length) { // 空units默认填充一个unit数据双向绑定
-        packageItem.units.push({ serial: null, status: 'DELIVERING' });
-      }
     });
 
     for (const sku in taskQtyBySku) {
-      // TODO: do we need to record 'over fulfilled task'?
+      if (taskQtyBySku[sku]?.req !== taskQtyBySku[sku]?.ful) {
+        error[taskFulfilmentErrorEnum.QUANTITY_MISMATCH] = true;
+        break;
+      }
+    }
+
+    for (const code in taskQtyByCode) {
+      if (taskQtyByCode[code]?.req !== taskQtyByCode[code]?.ful) {
+        error[taskFulfilmentErrorEnum.QUANTITY_MISMATCH] = true;
+        break;
+      }
+    }
+
+    if (Object.keys(unfulSpecifiedSerials).length) {
+      error[taskFulfilmentErrorEnum.SPECIFIED_SERIAL_UNFULFILLED] = true;
+    }
+
+    qty[task.id] = {
+      taskQtyBySku,
+      taskQtyByCode,
+      error: Object.keys(error).join(' & ')
+    };
+  });
+  return qty;
+}) as Record<string, any>;
+
+provide('tasksFulQty', tasksFulQty);
+
+const fulQty = computed(() => {
+  const qtyBySku = {};
+  const qtyByCode = {};
+
+  for (const taskId in tasksFulQty.value) {
+    const { taskQtyBySku, taskQtyByCode } = tasksFulQty.value[taskId];
+    for (const sku in taskQtyBySku) {
       // Below is neccessary otherwise if there is one less fulfilled in one task and one more fulfilled in another, the overral quantity would be correct.
-      taskQtyBySku[sku]['ful'] = Math.min(taskQtyBySku[sku]['ful'] || 0, taskQtyBySku[sku]['req']);
+      const validFulQty = Math.min(taskQtyBySku[sku]['ful'] || 0, taskQtyBySku[sku]['req']);
       qtyBySku[sku] = qtyBySku[sku] || {};
       qtyBySku[sku]['req'] = (qtyBySku[sku]['req'] || 0) + taskQtyBySku[sku]['req'];
-      qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + taskQtyBySku[sku]['ful'];
+      qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + validFulQty;
     }
     for (const code in taskQtyByCode) {
       // Same as what's mentioned in sku part.
-      taskQtyByCode[code]['ful'] = Math.min(taskQtyByCode[code]['ful'] || 0, taskQtyByCode[code]['req']);
+      const validFulQty = Math.min(taskQtyByCode[code]['ful'] || 0, taskQtyByCode[code]['req']);
       qtyByCode[code] = qtyByCode[code] || {};
       qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + taskQtyByCode[code]['req'];
-      qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + taskQtyByCode[code]['ful'];
+      qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + validFulQty;
     }
-  });
+  }
   return {
     qtyBySku,
     qtyByCode

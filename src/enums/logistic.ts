@@ -399,3 +399,10 @@ export const noSerialArr = [
 export const exportScopesEnum = {
   CURRENT: 'Current page'
 };
+
+export const taskFulfilmentErrorEnum = {
+  SPECIFIED_SERIAL_UNFULFILLED: 'Specified serial unfulfilled',
+  QUANTITY_MISMATCH: 'Quantity mismatch',
+  UNWANTTED_PRODUCT: 'Unwantted product',
+  MISSING_TRACKING_NUMBER: 'Missing tracking number'
+};

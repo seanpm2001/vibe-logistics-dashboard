@@ -1,6 +1,6 @@
 <template>
   <el-descriptions
-    :column="4"
+    :column="5"
     direction="vertical"
     border
   >
@@ -16,7 +16,10 @@
         v-for="order in orderEnum[task.orderId]?.rawOrders"
         :key="order.id"
       >
-        <el-tag size="small">
+        <el-tag
+          type="danger"
+          size="small"
+        >
           {{ order?.id }}
         </el-tag>
       </template>
@@ -26,6 +29,30 @@
     </el-descriptions-item>
     <el-descriptions-item label="TaskType">
       {{ task.taskType }}
+    </el-descriptions-item>
+    <el-descriptions-item label="Status">
+      <el-tooltip
+        v-if="tasksFulQty[task.id].error"
+        effect="light"
+      >
+        <el-button
+          type="danger"
+          size="medium"
+        >
+          Not complete
+        </el-button>
+        <template #content>
+          <el-tag
+            size="large"
+            type="danger"
+          >
+            {{ tasksFulQty[task.id].error }}
+          </el-tag>
+        </template>
+      </el-tooltip>
+      <span v-if="!tasksFulQty[task.id].error">
+        Complete
+      </span>
     </el-descriptions-item>
     <el-descriptions-item label="Transport & Carrier">
       {{ transportEnum[task.transportMode] }}
@@ -67,6 +94,8 @@ const props = defineProps({
     default: () => {}
   }
 });
+
+const tasksFulQty = inject('tasksFulQty');
 
 const emit = defineEmits(['fetchList']);
 const taskCarrier = ref(props.task.carrier);
