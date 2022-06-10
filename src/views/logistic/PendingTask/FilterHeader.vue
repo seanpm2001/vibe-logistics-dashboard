@@ -132,8 +132,9 @@ watchEffect(() => {
 });
 
 function initDateFilter () {
+  const dayWindow = 1;
   dateFilter.value = [
-    parseTime(new Date().getTime() - 86400000 * 10, '{y}-{m}-{d}'), // 十天前
+    parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}'),
     parseTime(new Date(), '{y}-{m}-{d}')
   ];
 }
