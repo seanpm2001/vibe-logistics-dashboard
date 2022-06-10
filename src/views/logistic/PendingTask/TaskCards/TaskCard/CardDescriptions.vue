@@ -16,10 +16,7 @@
         v-for="order in orderEnum[task.orderId]?.rawOrders"
         :key="order.id"
       >
-        <el-tag
-          type="danger"
-          size="small"
-        >
+        <el-tag size="small">
           {{ order?.id }}
         </el-tag>
       </template>
