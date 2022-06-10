@@ -253,7 +253,7 @@ const tasksFulQty = computed(() => {
     qty[task.id] = {
       taskQtyBySku,
       taskQtyByCode,
-      error: Object.keys(error).join(' & ')
+      error: Object.keys(error).map((e, idx) => `${idx + 1}. ${e}`).join('; ')
     };
   });
   return qty;

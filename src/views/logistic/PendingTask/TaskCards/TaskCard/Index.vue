@@ -405,18 +405,26 @@ const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
         ElMessage.error('Serial can\'t be found.');
         return;
       }
-      if (query && data.length === 1) { // 只有一个符合，直接submit
+      const taskProducts = task.products;
+      unitList.value = data.filter(item => {
+        for (const idx in taskProducts) {
+          if (skuCodeEnum[item.sku] === taskProducts[idx].productCode) {
+            if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
+              return false;
+            return true;
+          }
+        }
+        return false;
+      });
+      if (unitList.value.length === 0) {
+        ElMessage.error('Serial can\'t match specified product or sku.');
+        return;
+      }
+      if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合，直接submit
         unit.serial = query;
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
       }
-
-      const taskProducts = task.products;
-      unitList.value = data.filter(item => {
-        for (const idx in taskProducts)
-          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
-            return true;
-      });
     });
   } else {
     unitList.value = [];
