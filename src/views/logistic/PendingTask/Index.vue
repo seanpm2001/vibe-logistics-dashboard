@@ -97,6 +97,7 @@
     <Pagination
       v-show="total > 0"
       :total="total"
+      :page-sizes="[20, 50, 100, 200]"
       @fetchList="fetchList"
     />
   </div>
@@ -116,7 +117,7 @@ import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from 
 // const { role } = storeToRefs(useUserStore());
 const listQuery = ref({
   page: 1,
-  perPage: 20,
+  perPage: 200,
   onHold: false,
   start: null,
   end: null,
@@ -321,6 +322,7 @@ function queryTask () {
       });
       if (specifiedSerials.value.length) { // computed value is triggered lazily but immediately when queried
         listUnitsAPI(specifiedSerials.value).then(units => {
+          console.log(units);
           units.forEach(unit => {
             specifiedUnits.value[unit.serial] = unit;
           });

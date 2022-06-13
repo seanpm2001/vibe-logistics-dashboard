@@ -244,9 +244,9 @@ export async function updateUnitAPI (unitSerial: string, updates) {
   );
   return item;
 }
-export async function listUnitsAPI (params: Array<string>) {
-  return [];
-  const res = await requester.get('/units', { params });
+export async function listUnitsAPI (serialsArr: Array<string>) {
+  const serialsStr = serialsArr.join(',');
+  const res = await requester.get('/units/batch/' + serialsStr);
   return res.items;
 }
 
