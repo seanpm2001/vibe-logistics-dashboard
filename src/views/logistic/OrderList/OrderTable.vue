@@ -14,6 +14,7 @@
       width="50"
       height="40"
       align="center"
+      :selectable="row => row.orderFrom !== 'AFN'"
     />
     <el-table-column
       class-name="order-info"
@@ -138,32 +139,37 @@
       class-name="small-padding fixed-width"
     >
       <template #default="{ row }">
-        <el-button
-          v-show="!showAssignedOrder"
-          type="primary"
-          size="small"
-          @click="showAssignDialog('assign', row.id)"
-        >
-          Assign & Add 1st WH Task
-        </el-button>
-        <el-button
-          v-show="showAssignedOrder"
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-          type="success"
-          size="small"
-          @click="addWarehouseTask(row.id)"
-        >
-          Add WH Task
-        </el-button>
-        <el-button
-          v-show="showAssignedOrder"
-          v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-          type="danger"
-          size="small"
-          @click="unassignOrders(row)"
-        >
-          unAssign
-        </el-button>
+        <div v-if="row.orderFrom === 'AFN'">
+          FBA-{{ row.marketplace }} Order
+        </div>
+        <div v-else>
+          <el-button
+            v-show="!showAssignedOrder"
+            type="primary"
+            size="small"
+            @click="showAssignDialog('assign', row.id)"
+          >
+            Assign & Add 1st WH Task
+          </el-button>
+          <el-button
+            v-show="showAssignedOrder"
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+            type="success"
+            size="small"
+            @click="addWarehouseTask(row.id)"
+          >
+            Add WH Task
+          </el-button>
+          <el-button
+            v-show="showAssignedOrder"
+            v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
+            type="danger"
+            size="small"
+            @click="unassignOrders(row)"
+          >
+            unAssign
+          </el-button>
+        </div>
       </template>
     </el-table-column>
   </el-table>
@@ -208,5 +214,5 @@ const handleSelectionChange = (selectedArr) => {
 </script>
 
 <style lang="sass" scoped>
-  
+
 </style>

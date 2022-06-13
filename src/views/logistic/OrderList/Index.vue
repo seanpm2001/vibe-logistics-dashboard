@@ -186,7 +186,7 @@ const dataList = shallowRef(null);
 const total = ref(0);
 const listQuery = ref({
   page: 1,
-  perPage: 10,
+  perPage: 20,
   search: null,
   orderFrom: null,
 });
