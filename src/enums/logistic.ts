@@ -404,5 +404,7 @@ export const taskFulfilmentErrorEnum = {
   SPECIFIED_SERIAL_UNFULFILLED: 'Specified serial unfulfilled',
   QUANTITY_MISMATCH: 'Quantity mismatch',
   UNWANTTED_PRODUCT: 'Unwantted product',
+  EXTRA_PRODUCT: 'Extra product',
+  MISSING_PRODUCT: 'Missing product',
   MISSING_TRACKING_NUMBER: 'Missing tracking number'
 };

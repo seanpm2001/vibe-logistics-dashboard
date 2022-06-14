@@ -52,7 +52,7 @@ import { updateUnitAPI, updatePackageUnitAPI } from '@/api';
 const savedTasks = inject('savedTasks');
 const orderEnum = inject('orderEnum');
 const dialogExportTasksVisible = inject('dialogExportTasksVisible');
-const tasksFulQty = inject('tasksFulQty');
+const tasksProductFulQty = inject('tasksProductFulQty');
 const exportConfig = ref({
   scope: exportScopesEnum.CURRENT
 });
@@ -92,7 +92,7 @@ const exportTasks = () => {
     'Task Id':
       (order, task) => task.id,
     'Status':
-      (order, task) => tasksFulQty.value[task.id].error ? 'Incomplete' : 'Complete',
+      (order, task) => tasksProductFulQty.value[task.id].error ? 'Incomplete' : 'Complete',
     'Order#':
       (order, task) => order.rawOrders.map(o => o.id).join(' & '),
     'Item':

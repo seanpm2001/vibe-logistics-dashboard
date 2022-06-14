@@ -17,7 +17,7 @@
         border
       >
         <template
-          v-for="(item, key) in fulQty.qtyByCode"
+          v-for="(item, key) in productsFulQty.qtyByCode"
           :key="key"
         >
           <el-descriptions-item label="Product Name">
@@ -37,7 +37,7 @@
         </template>
 
         <template
-          v-for="(item, key) in fulQty.qtyBySku"
+          v-for="(item, key) in productsFulQty.qtyBySku"
           :key="key"
         >
           <el-descriptions-item label="Product Name">
@@ -183,105 +183,106 @@ const specifiedSerials = computed(() => {
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
-const tasksFulQty = computed(() => {
+const tasksProductFulQty = computed(() => {
   const qty = {};
   savedTasks.value?.forEach(task => {
-    const taskQtyBySku = {};
-    const taskQtyByCode = {};
-    const error = {};
-    const unfulSpecifiedSerials = {};
-
+    if (task.products.length === 0) return;
+    const productsQty = [];
+    const error = [];
+    const totalUnfulSpecSerials = {};
     task.products?.forEach(product => {
-      const code = product.productCode;
-      const sku = product.sku;
+      const unfulSpecSerials = {};
       product.serialNote?.forEach(serial => {
-        unfulSpecifiedSerials[serial] = true;
+        unfulSpecSerials[serial] = true;
+        totalUnfulSpecSerials[serial] = true;
       });
-      if (code?.includes('EPP')) return; // 不需要追踪code为EPP相关的product
-      if (sku && !noSerialArr.includes(code)) {
-        taskQtyBySku[sku] = taskQtyBySku[sku] || {};
-        taskQtyBySku[sku]['req'] = (taskQtyBySku[sku]['req'] || 0) + product.quantity;
-      } else { // accessories or products without specified sku
-        taskQtyByCode[code] = taskQtyByCode[code] || {};
-        taskQtyByCode[code]['req'] = (taskQtyByCode[code]['req'] || 0) + product.quantity;
-      }
+      productsQty.push({ productCode: product.productCode, sku: product?.sku, req: product.quantity, fulExclSpec: 0, fulSpec: 0, unfulSpecSerials: unfulSpecSerials, serialNote: product.serialNote });
     });
     task.packages?.forEach(packageItem => {
       if (!packageItem.trackingNumber) {
         error[taskFulfilmentErrorEnum.MISSING_TRACKING_NUMBER] = true;
       }
       packageItem.units.forEach(unit => {
-        unit.serial && (delete unfulSpecifiedSerials[unit.serial]);
+        if (!unit.serial) return;
         const sku = unit?.item?.sku;
         if (!sku) return;
-        const code = skuCodeEnum[sku];
-        if (taskQtyBySku[sku]) {
-          taskQtyBySku[sku]['ful'] = (taskQtyBySku[sku]['ful'] || 0) + 1;
-        } else if (taskQtyByCode[code]) { // 统计fulfillment的数量
-          taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + 1;
+        let ful = false;
+        if (totalUnfulSpecSerials[unit.serial]) {
+          productsQty.forEach(product => {
+            if (product.unfulSpecSerials[unit.serial]) {
+              delete product.unfulSpecSerials[unit.serial];
+              product.fulSpec += 1;
+              ful = true;
+            }
+          });
         } else {
-          error[taskFulfilmentErrorEnum.UNWANTTED_PRODUCT] = true;
+          // Firstly search for sku match
+          for (const product of productsQty) {
+            if (product.sku && product.sku === unit.item.sku && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+              product.fulExclSpec += 1;
+              ful = true;
+            }
+          }
+          // Secondly search for product code match
+          if (!ful) {
+            for (const product of productsQty) {
+              if (product.productCode && product.productCode === skuCodeEnum[unit.item.sku] && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+                product.fulExclSpec += 1;
+                ful = true;
+              }
+            }
+          }
+        }
+        if (!ful) {
+          error[taskFulfilmentErrorEnum.EXTRA_PRODUCT] = true;
         }
       });
+
       packageItem.accessories.forEach(accessory => {
-        const code = accessory.productCode;
-        if (code && taskQtyByCode[code]) { // 统计fulfillment的数量
-          taskQtyByCode[code]['ful'] = (taskQtyByCode[code]['ful'] || 0) + accessory.quantity;
-        } else if (code && !taskQtyByCode[code]) {
-          error[taskFulfilmentErrorEnum.UNWANTTED_PRODUCT] = true;
+        if (!accessory.productCode || !accessory.quantity) return;
+        for (const product of productsQty) {
+          if (product.productCode && product.productCode === accessory.productCode && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+            product.fulExclSpec += 1;
+          }
         }
       });
     });
-
-    for (const sku in taskQtyBySku) {
-      if (taskQtyBySku[sku]?.req !== taskQtyBySku[sku]?.ful) {
-        error[taskFulfilmentErrorEnum.QUANTITY_MISMATCH] = true;
-        break;
+    productsQty.forEach(product => {
+      if (product.fulExclSpec + product.fulSpec < product.req) {
+        error[taskFulfilmentErrorEnum.MISSING_PRODUCT] = true;
       }
-    }
-
-    for (const code in taskQtyByCode) {
-      if (taskQtyByCode[code]?.req !== taskQtyByCode[code]?.ful) {
-        error[taskFulfilmentErrorEnum.QUANTITY_MISMATCH] = true;
-        break;
+      if (Object.keys(product.unfulSpecSerials || {}).length) {
+        error[taskFulfilmentErrorEnum.SPECIFIED_SERIAL_UNFULFILLED] = true;
       }
-    }
-
-    if (Object.keys(unfulSpecifiedSerials).length) {
-      error[taskFulfilmentErrorEnum.SPECIFIED_SERIAL_UNFULFILLED] = true;
-    }
-
+    });
     qty[task.id] = {
-      taskQtyBySku,
-      taskQtyByCode,
+      productsQty,
       error: Object.keys(error).map((e, idx) => `${idx + 1}. ${e}`).join('; ')
     };
   });
   return qty;
-}) as Record<string, any>;
+});
 
-provide('tasksFulQty', tasksFulQty);
+provide('tasksProductFulQty', tasksProductFulQty);
 
-const fulQty = computed(() => {
+const productsFulQty = computed(() => {
   const qtyBySku = {};
   const qtyByCode = {};
-
-  for (const taskId in tasksFulQty.value) {
-    const { taskQtyBySku, taskQtyByCode } = tasksFulQty.value[taskId];
-    for (const sku in taskQtyBySku) {
-      // Below is neccessary otherwise if there is one less fulfilled in one task and one more fulfilled in another, the overral quantity would be correct.
-      const validFulQty = Math.min(taskQtyBySku[sku]['ful'] || 0, taskQtyBySku[sku]['req']);
-      qtyBySku[sku] = qtyBySku[sku] || {};
-      qtyBySku[sku]['req'] = (qtyBySku[sku]['req'] || 0) + taskQtyBySku[sku]['req'];
-      qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + validFulQty;
-    }
-    for (const code in taskQtyByCode) {
-      // Same as what's mentioned in sku part.
-      const validFulQty = Math.min(taskQtyByCode[code]['ful'] || 0, taskQtyByCode[code]['req']);
-      qtyByCode[code] = qtyByCode[code] || {};
-      qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + taskQtyByCode[code]['req'];
-      qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + validFulQty;
-    }
+  for (const taskId in tasksProductFulQty.value) {
+    const productsQty = tasksProductFulQty.value[taskId].productsQty;
+    productsQty.forEach(product => {
+      const sku = product.sku;
+      const code = product.productCode;
+      if (sku && !noSerialArr.includes(code)) {
+        qtyBySku[sku] = qtyBySku[sku] || {};
+        qtyBySku[sku]['req'] = (qtyBySku[sku]['req'] || 0) + product.req - (product.serialNote?.length || 0);
+        qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + product.fulExclSpec;
+      } else {
+        qtyByCode[code] = qtyByCode[code] || {};
+        qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + product.req - (product.serialNote?.length || 0);
+        qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + product.fulExclSpec;
+      }
+    });
   }
   return {
     qtyBySku,

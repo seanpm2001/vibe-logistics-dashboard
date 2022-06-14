@@ -32,7 +32,7 @@
       width="20%"
     >
       <el-tooltip
-        v-if="tasksFulQty[task.id].error"
+        v-if="tasksProductFulQty[task.id].error"
         effect="light"
       >
         <el-button
@@ -47,12 +47,12 @@
             type="danger"
             style="font-size: 14px"
           >
-            {{ tasksFulQty[task.id].error }}
+            {{ tasksProductFulQty[task.id].error }}
           </el-tag>
         </template>
       </el-tooltip>
       <el-button
-        v-if="!tasksFulQty[task.id].error"
+        v-if="!tasksProductFulQty[task.id].error"
         type="primary"
       >
         Complete
@@ -99,7 +99,7 @@ const props = defineProps({
   }
 });
 
-const tasksFulQty = inject('tasksFulQty');
+const tasksProductFulQty = inject('tasksProductFulQty');
 
 const emit = defineEmits(['fetchList']);
 const taskCarrier = ref(props.task.carrier);
