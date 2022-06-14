@@ -253,7 +253,7 @@
                 </el-input>
               </el-form-item>
               <el-form-item
-                v-show="checkedSpecifySerial[0] || product.serialNote?.length"
+                v-show="(checkedSpecifySerial[0] || product.serialNote?.length) && !noSerialArr.includes(product.productCode)"
                 label="Serials"
               >
                 <el-select
@@ -266,7 +266,7 @@
                   :multiple-limit="product.quantity"
                   remote
                   :allow-create="taskItem.taskType === 'RETURN'"
-                  :remote-method="query => debounce(remoteMethod(query), 500)"
+                  :remote-method="query => debounce(remoteMethod(query, product), 500)"
                 >
                   <el-option
                     v-for="unit in unitList"
@@ -325,7 +325,7 @@ import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI, findTaskAPI } from '@/api';
 import {
-  taskTypeEnum, taskReasonEnum, skuCodeEnum,
+  taskTypeEnum, taskReasonEnum, skuCodeEnum, noSerialArr,
   unitConditionEnum, codeNameEnum, codeSkuArrEnum
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';
@@ -359,12 +359,6 @@ const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPER
 
 const unitList = shallowRef(null);
 
-// const specifySerailArr = ref([
-//   {
-//     serial: null,
-//   },
-// ]);
-
 watchEffect(() => {
   if (taskItem.value.sourceId !== 18 && taskItem.value.taskType === 'RETURN' ) {
     taskItem.value.sourceId = 18;
@@ -372,15 +366,15 @@ watchEffect(() => {
   }
 });
 
-const remoteMethod = query => {
-  const taskProducts = taskItem.value.products;
+const remoteMethod = (query, product) => {
   if (query) {
     queryUnitsAPI({ serial: query }).then(data => {
       unitList.value = data.filter(item => {
-        for (const idx in taskProducts) {
-          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
-            return true;
-        }
+        if (skuCodeEnum[item.sku] !== product.productCode) return false;
+        if (product.sku && item.sku !== product.sku) return false;
+        if ((!product.codition || product.condition === 'GOOD') && (item.condition && item.condition !== 'GOOD')) return false; // brand new (null) or almost brand new (GOOD)
+        if (product.condition && product.condition !== 'GOOD' && item.condition !== product.condition) return false; // used
+        return true;
       });
     });
   } else {

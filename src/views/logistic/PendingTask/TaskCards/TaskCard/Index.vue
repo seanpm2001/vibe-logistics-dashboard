@@ -295,6 +295,7 @@ const allocateAccessory = (product) => {
 };
 
 const onAccessoryAllocationChange = (taskIdx) => {
+  accessoryAllocationVisible.value = false;
   const productCode = accessoryAllocation.value.productCode;
   props.task.packages.forEach((packageItem, packageIdx) => {
     const accessory = packageItem.accessories.find((accessory) => accessory.productCode === productCode);
@@ -308,11 +309,10 @@ const onAccessoryAllocationChange = (taskIdx) => {
       });
     }
     packageItem.accessories = packageItem.accessories.filter((accessory) => accessory.quantity > 0);
-    if (!checkPackageChanged(packageItem, packageIdx, accessoryAllocation.value.taskIdx)) {
+    if (checkPackageChanged(packageItem, packageIdx, accessoryAllocation.value.taskIdx)) {
       handleSubmitPackage(packageItem, props.task, packageIdx, taskIdx, false);
     }
   });
-  accessoryAllocationVisible.value = false;
 };
 
 const updateSavedTasks = (packageItem, packageIdx, taskIdx) => {
@@ -411,13 +411,15 @@ const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
           if (skuCodeEnum[item.sku] === taskProducts[idx].productCode) {
             if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
               return false;
+            if (item.condition && item.condition !== 'GOOD' && !currentTaskSpecifiedSerials.value.includes(item.serial))
+              return false;
             return true;
           }
         }
         return false;
       });
       if (unitList.value.length === 0) {
-        ElMessage.error('Serial can\'t match specified product or sku.');
+        ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
         return;
       }
       if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合，直接submit
@@ -450,7 +452,10 @@ function clickNextUnitInput () {
 
 const isAccessory = (unit) => (noSerialArr.includes(unit.productCode));
 
-function reportSerialError (serial) {
+function reportUnitError (unit) {
+  console.log(unit);
+  const serial = unit.serial;
+  const condition = unit.condition;
   let hasError = false;
   if (!serial) {
     ElMessage.error('Please delete empty unit.'); // This actually should not be reached. Make sure empty units are removed in code before submit/update package.
@@ -461,7 +466,7 @@ function reportSerialError (serial) {
     hasError = true;
   }
   if (checkIfSpecifiedElseWhere(serial)) {
-    ElMessage.error('This serial is specified in other task.');
+    ElMessage.error('The serial is specified in other task.');
     hasError = true;
   }
   return hasError;
@@ -475,7 +480,7 @@ function reportPackageError (packageItem) {
   });
   for (const unitIdx in packageItem.units) {
     const unit = packageItem.units[unitIdx];
-    if (reportSerialError(unit.serial)) {
+    if (reportUnitError(unit)) {
       unit.hasError = true;
       hasError = true;
       break;
