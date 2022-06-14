@@ -1,7 +1,7 @@
 <template>
   <div class="col1 meta-data cell w-380">
     <template
-      v-for="(product, idx) in task.products"
+      v-for="(product, idx) in tasksProductFulQty[task.id].productsQty"
       :key="product.sku"
     >
       <div class="mgb-5">
@@ -18,23 +18,15 @@
         </el-tag>
         <el-divider direction="vertical" />
         req: <el-tag size="small">
-          {{ product.quantity }}
+          {{ product.req }}
         </el-tag>
         <el-divider direction="vertical" />
         ful:
         <el-tag
-          v-if="product.sku && !noSerialArr.includes(skuCodeEnum[product.sku])"
           size="small"
-          :type="product.quantity === calTaskFulQty('sku', task.packages)[product.sku] ? '' : 'danger'"
+          :type="productFulfilled(product) ? '' : 'danger'"
         >
-          {{ calTaskFulQty('sku', task.packages)[product.sku] || 0 }}
-        </el-tag>
-        <el-tag
-          v-else
-          size="small"
-          :type="product.quantity === calTaskFulQty('code', task.packages)[product.productCode] ? '' : 'danger'"
-        >
-          {{ calTaskFulQty('code', task.packages)[product.productCode] || 0 }}
+          {{ product.fulSpec + product.fulExclSpec }}
         </el-tag>
         <el-divider
           v-if="product.serialNote?.length"
@@ -94,6 +86,15 @@ const accessoryAllocation = inject('accessoryAllocation');
 const accessoryAllocationVisible = inject('accessoryAllocationVisible');
 const allocateAccessory = inject('allocateAccessory');
 const onAccessoryAllocationChange = inject('onAccessoryAllocationChange');
+const tasksProductFulQty = inject('tasksProductFulQty');
+
+watchEffect(() => {
+  if (tasksProductFulQty) {
+    console.log(tasksProductFulQty.value);
+  }
+});
+
+const productFulfilled = product => product.fulExclSpec + product.fulSpec === product.req;
 
 const disableAccessoryAllocation = (product) => ((accessoryAllocationVisible.value && product.productCode !== accessoryAllocation.value.productCode) || props.task.packages.length === 0);
 const updateAccessoryAllocation = (product) => (accessoryAllocationVisible.value && product.productCode === accessoryAllocation.value?.productCode);

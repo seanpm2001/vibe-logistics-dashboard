@@ -1,6 +1,6 @@
 <template>
   <el-card
-    :class="tasksFulQty[task.id].error ? 'error-border-tip' : ''"
+    :class="tasksProductFulQty[task.id].error ? 'error-border-tip' : ''"
   >
     <CardDescriptions
       :task="task"
@@ -244,7 +244,7 @@ const { proxy } = getCurrentInstance();
 const savedTasks = inject('savedTasks');
 const fulSerials = inject('fulSerials');
 const specifiedSerials = inject('specifiedSerials');
-const tasksFulQty = inject('tasksFulQty');
+const tasksProductFulQty = inject('tasksProductFulQty');
 
 
 const accessoryAllocation = ref({

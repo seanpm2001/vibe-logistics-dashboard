@@ -235,6 +235,7 @@
               <el-form-item label="Condition">
                 <el-select
                   v-model="product.condition"
+                  @change="onProductConditionChange(product)"
                   :disabled="notCommonPermission"
                   placeholder="Please select"
                   clearable
@@ -372,7 +373,7 @@ const remoteMethod = (query, product) => {
       unitList.value = data.filter(item => {
         if (skuCodeEnum[item.sku] !== product.productCode) return false;
         if (product.sku && item.sku !== product.sku) return false;
-        if ((!product.codition || product.condition === 'GOOD') && (item.condition && item.condition !== 'GOOD')) return false; // brand new (null) or almost brand new (GOOD)
+        if ((!product.condition || product.condition === 'GOOD') && (item.condition && item.condition !== 'GOOD')) return false; // brand new (null) or almost brand new (GOOD)
         if (product.condition && product.condition !== 'GOOD' && item.condition !== product.condition) return false; // used
         return true;
       });
@@ -397,6 +398,10 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
+const onProductConditionChange = product => {
+  product.serialNote = null;
+};
+
 function removeEmptyTask (products) {
   for (let idx = products.length - 1; idx >= 0; idx--) {
     const code = products[idx].productCode;
@@ -419,11 +424,6 @@ const handleWarehouseTask = type => {
     });
   }
 };
-
-// const onSpecifySerialChange = (idx, type) => {
-//   const serialArr = specifySerailArr.value;
-//   type === 'add' ? serialArr.push({serial: null}) : serialArr.splice(idx--, 1);
-// };
 
 const onProductChange = (idx, type) => {
   const products = taskItem.value.products;
