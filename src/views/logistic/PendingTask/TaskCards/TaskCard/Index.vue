@@ -359,7 +359,9 @@ function checkAddAble (task) {
   let productQty = 0; // Lisa指定的总数
   let unitQty = 0; // package中已有unit的总数
   task.products.forEach(product => {
-    productQty += product.quantity || 0;
+    if (!noSerialArr.includes(product.productCode)) {
+      productQty += product.quantity || 0;
+    }
   });
   task.packages.forEach(packageItem => {
     unitQty += packageItem.units?.length || 0;
@@ -453,7 +455,6 @@ function clickNextUnitInput () {
 const isAccessory = (unit) => (noSerialArr.includes(unit.productCode));
 
 function reportUnitError (unit) {
-  console.log(unit);
   const serial = unit.serial;
   const condition = unit.condition;
   let hasError = false;

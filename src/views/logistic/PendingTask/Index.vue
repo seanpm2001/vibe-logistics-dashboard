@@ -323,7 +323,6 @@ function queryTask () {
       });
       if (specifiedSerials.value.length) { // computed value is triggered lazily but immediately when queried
         listUnitsAPI(specifiedSerials.value).then(units => {
-          console.log(units);
           units.forEach(unit => {
             specifiedUnits.value[unit.serial] = unit;
           });
