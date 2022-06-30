@@ -5,7 +5,8 @@ import 'element-plus/theme-chalk/src/loading.scss';
 import { getToken, tryHideFullScreenLoading, showFullScreenLoading } from '@/utils';
 import { jsonToHump, jsonToUnderline } from '@/utils/format';
 
-const baseURL = String(import.meta.env.VITE_API_DOMAIN) || 'https://logistics.vibe.dev/beta/api';
+const baseURL = String(import.meta.env.VITE_API_DOMAIN);
+
 const requester = axios.create({
   baseURL: baseURL,
   // baseURL: '/api',

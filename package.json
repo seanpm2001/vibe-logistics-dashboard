@@ -10,7 +10,8 @@
     "build:beta": "pnpm lint && vite build --mode development",
     "build:prod": "pnpm lint && cross-env vite build --mode production",
     "build:mock": "pnpm lint && cross-env USE_MOCK=true vite build --mode production",
-    "serve": "pnpm build:beta && vite preview"
+    "serve": "pnpm build:beta && vite preview",
+    "serve:prod": "pnpm build:prod && vite preview"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
