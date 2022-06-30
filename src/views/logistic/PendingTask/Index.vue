@@ -111,10 +111,10 @@ import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
-// import { useUserStore } from '@/store';
+import { useUserStore } from '@/store';
 
 /* Start Data */
-// const { role } = storeToRefs(useUserStore());
+const { warehouseId } = storeToRefs(useUserStore());
 const listQuery = ref({
   page: 1,
   perPage: 200,
@@ -124,6 +124,7 @@ const listQuery = ref({
   search: '',
   carrier: '',
   transportMode: '',
+  warehouseId: warehouseId,
 });
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);

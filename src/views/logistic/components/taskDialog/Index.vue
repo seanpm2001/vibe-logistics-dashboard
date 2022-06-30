@@ -235,10 +235,10 @@
               <el-form-item label="Condition">
                 <el-select
                   v-model="product.condition"
-                  @change="onProductConditionChange(product)"
                   :disabled="notCommonPermission"
                   placeholder="Please select"
                   clearable
+                  @change="onProductConditionChange(product)"
                 >
                   <el-option
                     v-for="(condition, key) in unitConditionEnum"

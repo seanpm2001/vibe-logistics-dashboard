@@ -54,10 +54,11 @@ import {
 } from '@/api';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
-import { useLogisticStore } from '@/store';
+import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start Data */
 const { warehouseEnum } = storeToRefs(useLogisticStore());
+const { warehouseId } = storeToRefs(useUserStore());
 const taskOrderItem = shallowRef(null);
 
 const dialogStatus = ref('view');
@@ -99,6 +100,7 @@ const contrastData = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 10,
+  warehouseId: warehouseId
 });
 const dataList = shallowRef(null);
 const total = ref(0);

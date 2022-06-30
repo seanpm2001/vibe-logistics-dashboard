@@ -19,6 +19,7 @@ export const useUserStore = defineStore({
     avatar: '@img/common/avatar.gif',
     email: null,
     role: null,
+    warehouseId: null,
   }),
   actions: {
     M_username(username) {
@@ -29,6 +30,9 @@ export const useUserStore = defineStore({
     },
     M_email(email) {
       this.$patch((state) => state.email = email);
+    },
+    M_warehouseId(warehouseId) {
+      this.$patch((state) => state.warehouseId = warehouseId);
     },
     // user login
     login(userInfo) {
@@ -50,11 +54,12 @@ export const useUserStore = defineStore({
           if (!data)
             reject('Verification failed, please Login again.');
 
-          const { role, username, email } = data;
+          const { role, username, email, warehouseId } = data;
 
           this.M_username(username);
           this.M_role(role);
           this.M_email(email);
+          warehouseId && this.M_warehouseId(warehouseId);
           resolve(data);
         }).catch(error => {
           reject(error);
