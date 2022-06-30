@@ -50,7 +50,7 @@ jobs:
         npm i pnpm -g
         pnpm i
         pnpm build:prod
-        aws s3 sync --delete dist/ s3://logistics.vibe.dev/
+        aws s3 sync --delete dist/ s3://prod-logistics.vibe.dev/
         aws cloudfront create-invalidation \
-            --distribution-id E1QRAWF4RAJF91 \
+            --distribution-id E1661MYNNUWY7D \
             --paths "/*"
