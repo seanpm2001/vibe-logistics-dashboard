@@ -121,7 +121,7 @@ function queryFreight() {
 }
 
 const fetchList = () => {
-  setTimeout(() => queryFreight(), 200);
+  setTimeout(() => queryFreight(), 350);
 };
 
 useWarehouseEnumHook();

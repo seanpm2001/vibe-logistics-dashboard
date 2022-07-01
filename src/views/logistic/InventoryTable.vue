@@ -410,7 +410,7 @@ function queryInventory() {
 }
 
 const fetchList = () => {
-  setTimeout(() => queryInventory(), 200);
+  setTimeout(() => queryInventory(), 350);
 };
 
 useWarehouseEnumHook();

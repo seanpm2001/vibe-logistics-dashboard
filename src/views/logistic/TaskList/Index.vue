@@ -129,7 +129,7 @@ function queryTask() {
 }
 
 const fetchList = () => {
-  setTimeout(() => queryTask(), 200);
+  setTimeout(() => queryTask(), 350);
 };
 
 useWarehouseEnumHook();

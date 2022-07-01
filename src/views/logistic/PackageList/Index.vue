@@ -135,7 +135,7 @@ function queryPackage() {
 }
 
 const fetchList = () => {
-  setTimeout(() => queryPackage(), 200);
+  setTimeout(() => queryPackage(), 350);
 };
 
 useWarehouseEnumHook();

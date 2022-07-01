@@ -216,7 +216,7 @@ function queryOrders () {
 }
 
 function fetchList() {
-  setTimeout(() => queryOrders(), 200);
+  setTimeout(() => queryOrders(), 350);
 }
 
 useWarehouseEnumHook();
