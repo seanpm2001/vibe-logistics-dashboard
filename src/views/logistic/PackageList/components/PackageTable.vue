@@ -68,7 +68,7 @@
     >
       <template #default="{ row }">
         <el-tag
-          :type="taskColorEnum[row.task.taskType] || 'primary'"
+          :type="taskColorEnum[row.task.taskType] || ''" 
         >
           {{ taskTypeEnum[row.task.taskType] }}
         </el-tag>

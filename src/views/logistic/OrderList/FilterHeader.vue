@@ -19,7 +19,7 @@
         </template>
       </el-input>
       <el-select
-        v-model="showAssignedOrder"
+        v-model="listQuery.showAssignedOrder"
         placeholder="Assigned Order"
         style="width: 175px"
         @change="handleFilter"
@@ -47,7 +47,7 @@
         />
       </el-select>
     </el-row>
-    <div v-if="!showAssignedOrder">
+    <div v-if="!listQuery.showAssignedOrder">
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
         :disabled="!multipleSelection?.length"
@@ -83,7 +83,6 @@
 import { Search, Delete } from '@element-plus/icons-vue';
 
 const listQuery = inject('listQuery');
-const showAssignedOrder = inject('showAssignedOrder');
 const multipleSelection = inject('multipleSelection');
 
 const emit = defineEmits(['fetchList', 'showAssignDialog', 'unassignOrders']);

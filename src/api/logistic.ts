@@ -162,6 +162,13 @@ export async function createShipmentUnitsAPI (taskId: number, data) {
   return item;
 }
 
+// task 相关send email API
+export async function sendEmailAPI (taskId: number) {
+  const item = handleReqElMsg(
+    requester.post(`warehouse/task/${taskId}/send-email`), 'Send', 'Email', 'no'
+  );
+  return item;
+}
 
 /* 批次 Shipment Package API */
 export async function queryPackagesAPI (params?) {

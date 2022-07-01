@@ -313,12 +313,14 @@
       </template>
     </el-card>
     
-    <div class="f-row controls">
+    <div
+      v-if="!isDialogPattern('view')"
+      class="f-row controls"
+    >
       <el-button
-        v-if="!isDialogPattern('view')"
         :disabled="disableNewBatch"
         type="primary"
-        icon="el-icon-circle-plus"
+        :icon="CirclePlus"
         @click="handleAddBatch"
       >
         Add Sub-Batch
@@ -340,6 +342,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElTooltip } from 'element-plus';
+import { CirclePlus } from '@element-plus/icons-vue';
 import BatchForm from './BatchForm.vue';
 import { createFreightAPI, updateFreightAPI } from '@/api';
 import { freightStatusEnum, forwarderEnum, modeEnum, containerEnum, oriPortEnum, destPortEnum } from '@/enums/logistic';

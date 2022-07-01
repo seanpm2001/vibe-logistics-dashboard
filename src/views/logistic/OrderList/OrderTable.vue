@@ -194,7 +194,8 @@ defineProps({
 });
 
 const multipleSelection = inject('multipleSelection') as any;
-const showAssignedOrder = inject('showAssignedOrder');
+const listQuery = inject('listQuery') as any;
+const showAssignedOrder = computed(() => listQuery.value.showAssignedOrder);
 
 const tableKey = ref(0);
 const emit = defineEmits(['fetchList', 'showOrderDrawer', 'addWarehouseTask', 'editWarehouseTask', 'showAssignDialog', 'unassignOrders']);

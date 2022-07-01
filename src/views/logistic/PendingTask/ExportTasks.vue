@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogExportTasksVisible"
     title="Export Tasks"
-    style="max-width: 500px"
+    width="500px"
     :before-close="beforeCloseDialog"
   >
     <el-form

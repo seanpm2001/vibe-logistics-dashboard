@@ -19,6 +19,7 @@ export const useLogisticStore = defineStore({
       package: emptyListQuery,
       freight: emptyListQuery,
       inventory: emptyListQuery,
+      pending: emptyListQuery,
     }
   }),
   actions: {

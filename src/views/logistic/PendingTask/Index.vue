@@ -89,7 +89,6 @@
     <el-divider />
     <TaskCards
       :order-enum="orderEnum"
-      @fetchList="fetchList"
     />
 
     <ExportTasks />
@@ -98,7 +97,7 @@
       v-show="total > 0"
       :total="total"
       :page-sizes="[20, 50, 100, 200]"
-      @fetchList="fetchList"
+      @fetch-list="fetchList"
     />
   </div>
 </template>
@@ -337,6 +336,7 @@ const fetchList = () => {
   setTimeout(() => queryTask(), 200);
 };
 
+useQueryHook(listQuery, 'pending', fetchList);
 /* Provide functions */
 provide('fetchList', fetchList);
 /* End of provide function */

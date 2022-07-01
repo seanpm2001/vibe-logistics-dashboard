@@ -36,6 +36,7 @@
       <el-button
         type="primary"
         :icon="Edit"
+        :disabled="notCommonPermission"
         @click="showCreateDialog"
       >
         Add
@@ -54,7 +55,7 @@
       style="float: right"
       type="danger"
       :icon="Delete"
-      :disabled="!multipleSelection?.length"
+      :disabled="!multipleSelection?.length || notCommonPermission"
       @click="handleDelSelected"
     >
       Delete Selected Item
@@ -66,7 +67,10 @@
 import { Delete, Download, Edit, Search } from '@element-plus/icons-vue';
 import { deleteFreightAPI } from '@/api';
 // import { parseTime } from '@/utils/format';
+import { useUserStore } from '@/store';
+const { role } = storeToRefs(useUserStore());
 
+const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(role.value));
 
 const props = defineProps({
   dialogStatus: {

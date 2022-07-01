@@ -28,8 +28,8 @@
       {{ task.taskType }}
     </el-descriptions-item>
     <el-descriptions-item
-      label="Status"
-      width="20%"
+      label="Status & Action"
+      width="30%"
     >
       <el-tooltip
         v-if="tasksProductFulQty[task.id].error"
@@ -37,7 +37,7 @@
       >
         <el-button
           type="danger"
-          size="medium"
+          size="default"
         >
           Incomplete
         </el-button>
@@ -56,6 +56,20 @@
         type="primary"
       >
         Complete
+      </el-button>
+      <el-button
+        type="success"
+        :disabled="!!tasksProductFulQty[task.id].error"
+        @click="updateTaskFulfillTime"
+      >
+        {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
+      </el-button>
+      <el-button
+        type="success"
+        :disabled="!isFulfilled"
+        @click="sendEmailAPI(task.id)"
+      >
+        Send Email
       </el-button>
     </el-descriptions-item>
     <el-descriptions-item label="Transport & Carrier">
@@ -85,7 +99,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../../components/OrderShipmentInfo.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
-import { updateTaskAPI } from '@/api';
+import { updateTaskAPI, sendEmailAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
 
 const props = defineProps({
@@ -99,6 +113,7 @@ const props = defineProps({
   }
 });
 
+const isFulfilled = ref(false);
 const tasksProductFulQty = inject('tasksProductFulQty');
 
 const emit = defineEmits(['fetchList']);
@@ -114,6 +129,14 @@ const onCarrierChange = (task) => {
       else
         ElMessage.info('Update Canceled.');
     },
+  });
+};
+
+const updateTaskFulfillTime = () => {
+  const task = Object.assign({}, props.task);
+  task.fulfilledAt = new Date();
+  updateTaskAPI(task.id, task).then(() => {
+    isFulfilled.value = true;
   });
 };
 </script>

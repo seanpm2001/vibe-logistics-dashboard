@@ -141,7 +141,6 @@ const { warehouseEnum } = storeToRefs(useLogisticStore());
 const dialogAssignVisible = ref(false);
 const dialogTaskVisible = ref(false);
 
-const showAssignedOrder = ref(false);
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
@@ -189,24 +188,25 @@ const listQuery = ref({
   perPage: 20,
   search: null,
   orderFrom: null,
+  showAssignedOrder: false,
 });
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
-provide('showAssignedOrder', showAssignedOrder);
 provide('multipleSelection', multipleSelection);
 /* End data */
 
 /* Start Query Related */
 function queryOrders () {
-  (showAssignedOrder.value
+  const showAssignedOrder = listQuery.value.showAssignedOrder;
+  (showAssignedOrder
     ? queryAssignedOrdersAPI(listQuery.value)
     : queryOrdersAPI(listQuery.value)
   ).then((data) => {
     dataList.value = data.items;
-    if (showAssignedOrder.value) {
+    if (showAssignedOrder) {
       dataList.value.forEach(async item => {
         await formatAssignedOrderItem(item);
       });
