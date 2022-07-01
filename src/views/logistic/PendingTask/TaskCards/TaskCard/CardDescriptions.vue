@@ -57,13 +57,29 @@
       >
         Complete
       </el-button>
-      <el-button
-        type="success"
-        :disabled="!!tasksProductFulQty[task.id].error"
-        @click="updateTaskFulfillTime"
+      <el-tooltip
+        effect="light"
       >
-        {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
-      </el-button>
+        <el-button
+          type="success"
+          :disabled="!!tasksProductFulQty[task.id].error"
+          @click="updateTaskFulfillTime"
+        >
+          {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
+        </el-button>
+        <template #content>
+          <el-tag
+            size="large"
+          >
+            <span v-if="task.fulfilledAt">
+              {{ formatVBDate(task.fulfilledAt) }}
+            </span>
+            <span v-else>
+              empty
+            </span>
+          </el-tag>
+        </template>
+      </el-tooltip>
       <el-button
         type="success"
         :disabled="!isFulfilled"
