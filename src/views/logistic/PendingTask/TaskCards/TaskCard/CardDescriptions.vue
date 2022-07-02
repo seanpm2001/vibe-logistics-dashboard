@@ -1,15 +1,9 @@
 <template>
   <el-descriptions
-    :column="5"
+    :column="3"
     direction="vertical"
     border
   >
-    <el-descriptions-item
-      width="300px"
-      label="Create Date"
-    >
-      {{ formatVBDate(task.createdAt) }}
-    </el-descriptions-item>
     <el-descriptions-item label="Order ID">
       {{ orderEnum[task.orderId]?.id }}
       <template
@@ -28,8 +22,23 @@
       {{ task.taskType }}
     </el-descriptions-item>
     <el-descriptions-item
-      label="Status & Action"
       width="30%"
+      label="Create Date"
+    >
+      {{ formatVBDate(task.createdAt) }}
+    </el-descriptions-item>
+    <el-descriptions-item
+      width="30%"
+      label="Fulfilled Date"
+    >
+      <span v-if="task.fulfilledAt">
+        {{ formatVBDate(task.fulfilledAt) }}
+      </span>
+      <span v-else></span>
+    </el-descriptions-item>
+    <el-descriptions-item
+      label="Status & Action"
+      width="40%"
     >
       <el-tooltip
         v-if="tasksProductFulQty[task.id].error"
@@ -57,29 +66,13 @@
       >
         Complete
       </el-button>
-      <el-tooltip
-        effect="light"
+      <el-button
+        :type="task.fulfilledAt ? 'warning' : 'success'"
+        :disabled="!!tasksProductFulQty[task.id].error"
+        @click="updateTaskFulfillTime"
       >
-        <el-button
-          type="success"
-          :disabled="!!tasksProductFulQty[task.id].error"
-          @click="updateTaskFulfillTime"
-        >
-          {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
-        </el-button>
-        <template #content>
-          <el-tag
-            size="large"
-          >
-            <span v-if="task.fulfilledAt">
-              {{ formatVBDate(task.fulfilledAt) }}
-            </span>
-            <span v-else>
-              empty
-            </span>
-          </el-tag>
-        </template>
-      </el-tooltip>
+        {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
+      </el-button>
       <el-button
         type="success"
         :disabled="!isFulfilled"
