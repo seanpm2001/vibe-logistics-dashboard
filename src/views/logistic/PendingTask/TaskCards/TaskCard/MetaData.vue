@@ -57,7 +57,7 @@
       >
         <el-button
           :disabled="disableAccessoryAllocation(product)"
-          :type="updateAccessoryAllocation(product) ? 'primary' : 'plain'"
+          :type="updateAccessoryAllocation(product) ? 'primary' : ''"
           @click="onAccessoryAllocationButtonClick(product)"
         >
           {{ updateAccessoryAllocation(product) ? 'Update allocation' : 'Add accesory into existing package' }}
@@ -88,11 +88,11 @@ const allocateAccessory = inject('allocateAccessory');
 const onAccessoryAllocationChange = inject('onAccessoryAllocationChange');
 const tasksProductFulQty = inject('tasksProductFulQty');
 
-watchEffect(() => {
-  if (tasksProductFulQty) {
-    console.log(tasksProductFulQty.value);
-  }
-});
+// watchEffect(() => {
+//   if (tasksProductFulQty) {
+//     console.log(tasksProductFulQty.value);
+//   }
+// });
 
 const productFulfilled = product => product.fulExclSpec + product.fulSpec === product.req;
 
