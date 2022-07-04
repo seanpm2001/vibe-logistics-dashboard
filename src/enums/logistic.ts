@@ -243,7 +243,7 @@ export enum skuCodeEnum {
   '55ST01W' = '55S1WS',
   '55ST01B' = '55S1BS',
   'S55T01AUS' = '55S1B',
-  'CAM01A' = 'CAM01A',
+  'CA01A' = 'CAM01A',
   'P55H301US' = '55P1B'
 }
 export const codeSkuArrEnum = {
@@ -348,7 +348,7 @@ export const codeSkuArrEnum = {
     'S55T01AUS'
   ],
   'CAM01A': [
-    'CAM01A'
+    'CA01A'
   ],
   '55P1B': [
     'P55H301US'
