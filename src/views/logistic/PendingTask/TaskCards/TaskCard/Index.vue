@@ -103,7 +103,7 @@
                 default-first-option
               >
                 <el-option
-                  v-for="(v, index) in (accessoryAllocation.reqQuantity || 0 + 1)"
+                  v-for="(v, index) in ((accessoryAllocation.reqQuantity || 0) + 1)"
                   :key="index"
                   :label="index"
                   :value="index"
