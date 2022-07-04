@@ -159,7 +159,7 @@ export enum codeNameEnum {
   '55S1WS' = '55 S1 White Stand',
   '55S1BS' = '55 S1 Blue Stand',
   '55S1B' = '55 S1 Board',
-  'CA01A' = 'C1 Camera',
+  'CAM01A' = 'C1 Camera',
   '55P1B' = '55 P1 Board',
   '55V1BPB' = '55 V1 Package Box',
   '55S1BPB' = '55 S1 Package Box',
@@ -243,7 +243,7 @@ export enum skuCodeEnum {
   '55ST01W' = '55S1WS',
   '55ST01B' = '55S1BS',
   'S55T01AUS' = '55S1B',
-  'CA01A' = 'CA01A',
+  'CAM01A' = 'CAM01A',
   'P55H301US' = '55P1B'
 }
 export const codeSkuArrEnum = {
@@ -347,8 +347,8 @@ export const codeSkuArrEnum = {
   '55S1B': [
     'S55T01AUS'
   ],
-  'CA01A': [
-    'CA01A'
+  'CAM01A': [
+    'CAM01A'
   ],
   '55P1B': [
     'P55H301US'
