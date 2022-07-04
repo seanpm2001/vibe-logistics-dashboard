@@ -360,9 +360,12 @@ const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPER
 
 const unitList = shallowRef(null);
 
+const getCustomerId = () => Object.keys(props.warehouseEnum).find(key => props.warehouseEnum[key] === 'Customer');
+
 watchEffect(() => {
-  if (taskItem.value.sourceId !== 18 && taskItem.value.taskType === 'RETURN' ) {
-    taskItem.value.sourceId = 18;
+  const customerId = getCustomerId();
+  if (customerId && taskItem.value.sourceId !== customerId && taskItem.value.taskType === 'RETURN' ) {
+    taskItem.value.sourceId = customerId;
     ElMessage.warning('Source has been set to Customer!');
   }
 });

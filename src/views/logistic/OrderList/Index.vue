@@ -243,6 +243,8 @@ function removeEmptyProducts (taskItem) {
     delete taskItem['products'];
 }
 
+const getCustomerId = () => Object.keys(warehouseEnum).find(key => warehouseEnum[key] === 'Customer');
+
 async function submitInitTaskItem (products, assignedData, orderId) {
   const { sourceWHId, carrier, transportMode } = assignedData;
 
@@ -250,7 +252,7 @@ async function submitInitTaskItem (products, assignedData, orderId) {
   task.orderId = orderId;
   task.taskType = 'FULFILLMENT';
   task.sourceId = sourceWHId;
-  task.targetId = 18; // Default Customer
+  task.targetId = getCustomerId(); // Default Customer
   task.carrier = carrier;
   task.transportMode = transportMode;
   task.products = [];
