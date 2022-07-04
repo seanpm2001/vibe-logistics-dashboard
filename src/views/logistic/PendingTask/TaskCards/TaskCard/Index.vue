@@ -103,7 +103,7 @@
                 default-first-option
               >
                 <el-option
-                  v-for="(v, index) in accessoryAllocation.reqQuantity + 1"
+                  v-for="(v, index) in (accessoryAllocation.reqQuantity || 0 + 1)"
                   :key="index"
                   :label="index"
                   :value="index"
@@ -288,7 +288,7 @@ const allocateAccessory = (product) => {
   accessoryAllocation.value = Object.assign({}, {
     taskIdx: props.taskIdx,
     productCode: product.productCode,
-    reqQuantity: product.quantity,
+    reqQuantity: product.req,
     quantities: quantities
   });
   accessoryAllocationVisible.value = true;
