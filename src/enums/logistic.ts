@@ -81,12 +81,42 @@ export const dailyPendingTaskTypeEnum = {
 };
 export const allTaskTypeEnum = Object.assign({}, taskTypeEnum, inventoryTaskTypeEnum);
 export enum taskReasonEnum {
-  ITEM_UPGRADE = 'Unit Upgrade',
-  ITEM_DEGRADE = 'Unit Degrade',
-  ITEM_DEMAGED = 'Unit Damaged',
-  HARDWARE_DEFECT = 'Hardware Defect',
-  PACKAGE_LOST = 'Package Lost'
+  BOARD_HARDWARE_DEFECT = 'Board hardware defect',
+  STAND_HARDWARE_DEFECT = 'Stand hardware defect',
+  CAREMA_HARDWARE_DEFECT = 'Camera hardware defect',
+  NO_HARDWARE_DEFECT = 'No hardware defect',
 }
+export const taskReasonDetailEnum = {
+  BOARD_HARDWARE_DEFECT: {
+    'Screen': 'Screen',
+    'Touch control': 'Touch control',
+    'Crash': 'Crash',
+    'Mouse freezing': 'Mouse freezing',
+    'No power': 'No power',
+    'Can\'t connect to wifi': 'Can\'t connect to wifi',
+    'Audio & video issue': 'Audio & video issue',
+    'Other defects': 'Other defects',
+  },
+  STAND_HARDWARE_DEFECT: {
+    'Stand back hole misalign': 'Stand back hole misalign',
+    'Missing accessories': 'Missing accessories',
+    'Stand wheels don\'t fit': 'Stand wheels don\'t fit',
+    'Stand scratch': 'Stand scratch',
+  },
+  CAREMA_HARDWARE_DEFECT: {
+    'Device can\'t be identified': 'Device can\'t be identified',
+    'Lens is not clear': 'Lens is not clear',
+    'Device crash': 'Device crash',
+  },
+  NO_HARDWARE_DEFECT: {
+    'Shipping damage': 'Shipping damage',
+    'Package lost': 'Package lost',
+    'Non-delivery (product being returned back to shipper)': 'Non-delivery (product being returned back to shipper)',
+    'Product upgrade': 'Product upgrade',
+    'Accessories defects (such as OPS, styluses)': 'Accessories defects (such as OPS, styluses)',
+    'Unknown': 'Unknown',
+  },
+};
 export enum unitConditionEnum {
   GOOD = 'Good',
   FIXED_A = 'Fixed Class A',

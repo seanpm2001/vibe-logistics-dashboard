@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item
             v-if="isReturnOrRepalce"
-            label="Return/Replace reason"
+            label="Return/Replace reason category"
           >
             <el-select
               v-model="taskItem.returnReason"
@@ -50,6 +50,26 @@
             >
               <el-option
                 v-for="(item, key) in taskReasonEnum"
+                :key="item"
+                :label="item"
+                :value="key"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            v-if="isReturnOrRepalce"
+            label="Return/Replace reason detail"
+          >
+            <el-select
+              v-model="taskItem.returnDetails"
+              :disabled="notCommonPermission"
+              placeholder="Please select"
+              clearable
+              filterable
+              default-first-option
+            >
+              <el-option
+                v-for="(item, key) in taskReasonDetailEnum[taskItem.returnReason]"
                 :key="item"
                 :label="item"
                 :value="key"
@@ -326,7 +346,7 @@ import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI, findTaskAPI } from '@/api';
 import {
-  taskTypeEnum, taskReasonEnum, skuCodeEnum, noSerialArr,
+  taskTypeEnum, taskReasonEnum, taskReasonDetailEnum, skuCodeEnum, noSerialArr,
   unitConditionEnum, codeNameEnum, codeSkuArrEnum
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';

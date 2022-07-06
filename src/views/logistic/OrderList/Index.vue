@@ -154,6 +154,7 @@ const taskItem = ref({
   targetId: null,
   taskType: null,
   returnReason: null,
+  returnDetails: null,
   newAddress: null,
   note: null,
   onHold: false,
