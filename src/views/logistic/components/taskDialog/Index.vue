@@ -360,7 +360,7 @@ const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPER
 
 const unitList = shallowRef(null);
 
-const getCustomerId = () => Object.keys(props.warehouseEnum).find(key => props.warehouseEnum[key] === 'Customer');
+const getCustomerId = () => Number(Object.keys(props.warehouseEnum).find(key => props.warehouseEnum[key] === 'Customer'));
 
 watchEffect(() => {
   const customerId = getCustomerId();
