@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item
             v-if="isReturnOrRepalce"
-            label="Return/Replace reason category"
+            label="Return/Replace Reason Category"
           >
             <el-select
               v-model="taskItem.returnReason"
@@ -58,7 +58,7 @@
           </el-form-item>
           <el-form-item
             v-if="isReturnOrRepalce"
-            label="Return/Replace reason detail"
+            label="Return/Replace Reason Detail"
           >
             <el-select
               v-model="taskItem.returnDetails"
