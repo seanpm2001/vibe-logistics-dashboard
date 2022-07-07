@@ -76,7 +76,7 @@
     </el-table-column>
     <el-table-column
       label="Created At"
-      width="160px"
+      width="170px"
       align="center"
     >
       <template #default="{ row }">
