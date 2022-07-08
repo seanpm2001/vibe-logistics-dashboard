@@ -8,6 +8,7 @@
   >
     <template v-if="taskOrderItem">
       <OrderDescription
+        :task-id="taskItem.id"
         :order-item="taskOrderItem"
       />
     </template>

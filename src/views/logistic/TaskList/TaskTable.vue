@@ -53,7 +53,10 @@
           v-for="item in orderEnum[row.orderId]?.rawOrders"
           :key="item.id"
         >
-          <el-tag @click="copy(getExternalId(item.id, row.id))">
+          <el-tag
+            class="cursor-pointer"
+            @click="copy(getExternalId(item.id, row.id))"
+          >
             {{ getExternalId(item.id, row.id) }}
           </el-tag>
         </template>
@@ -216,10 +219,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus';
 import { AssignedOrderId } from '../components';
 import { taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
-import { formatTimeString } from '@/utils';
+import { formatTimeString, getExternalId, copy } from '@/utils/logistic';
 
 const props = defineProps({
   dataList: {
@@ -304,18 +306,6 @@ const calTaskStatus = (taskType, packages) => {
     res = res ? res + ' | Complete' : 'Complete';
   }
   return res;
-};
-
-const getExternalId = (orderId, taskId) => `${orderId}#${taskId}#`;
-
-const copy = (text) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      ElMessage.success('Copy success: ' + text);
-    })
-    .catch(() => {
-      ElMessage.error('Copy Failed!');
-    });
 };
 </script>
 

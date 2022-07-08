@@ -1,3 +1,4 @@
+import { ElMessage } from 'element-plus';
 import { BSUnitSystemWarehouseArr } from '../enums/logistic';
 
 // 合并products array为一个{productCode: totalQuantity}的对象
@@ -65,4 +66,16 @@ export const getWarehouseUnitSystem = (warehouseId) => {
     return 'BS';
   else
     return 'SI';
+};
+
+export const getExternalId = (orderId, taskId) => `${orderId}#${taskId}#`;
+
+export const copy = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      ElMessage.success('Copy success: ' + text);
+    })
+    .catch(() => {
+      ElMessage.error('Copy Failed!');
+    });
 };

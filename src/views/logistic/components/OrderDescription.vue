@@ -18,6 +18,25 @@
         <el-tag>{{ order.id }}</el-tag>
       </template>
     </el-descriptions-item>
+    <el-descriptions-item
+      v-if="taskId"
+      :min-width="280"
+    >
+      <template #label>
+        External ID
+      </template>
+      <template
+        v-for="item in orderItem.rawOrders"
+        :key="item.id"
+      >
+        <el-tag
+          class="cursor-pointer"
+          @click="copy(getExternalId(item.id, taskId))"
+        >
+          {{ getExternalId(item.id, taskId) }}
+        </el-tag>
+      </template>
+    </el-descriptions-item>
     <el-descriptions-item :min-width="200">
       <template #label>
         Order from
@@ -72,10 +91,14 @@
 
 <script lang="ts" setup>
 import OrderShipmentInfo from './OrderShipmentInfo.vue';
-import { formatVBDate } from '@/utils/logistic';
+import { formatVBDate, getExternalId, copy } from '@/utils/logistic';
 import { codeNameEnum, codeIconEnum, skuCodeEnum } from '@/enums/logistic';
 
 defineProps({
+  taskId: {
+    type: Number,
+    default: 0
+  },
   orderItem: {
     type: Object,
     required: true
