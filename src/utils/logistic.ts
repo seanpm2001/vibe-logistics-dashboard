@@ -68,7 +68,7 @@ export const getWarehouseUnitSystem = (warehouseId) => {
     return 'SI';
 };
 
-export const getExternalId = (orderId, taskId) => `${orderId}#${taskId}#`;
+export const getExternalId = (orderId, taskId) => `${orderId}#${taskId}#`.replace('AMA.', '').replace('SHO.', '');
 
 export const copy = (text) => {
   navigator.clipboard.writeText(text)
