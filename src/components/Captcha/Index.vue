@@ -55,12 +55,12 @@ export default {
       // eslint-disable-next-line new-cap,no-undef
       const nc = new noCaptcha(NC_Opt);
       nc.upLang('cn', {
-        _startTEXT: '请按住滑块，拖动到最右边',
-        _yesTEXT: '验证通过',
+        _startTEXT: 'Please hold down the slider and drag to the far right',
+        _yesTEXT: 'Success',
         _error300:
-          '哎呀，出错了，点击<a href="javascript:__nc.reset()">刷新</a>再来一次',
+          'Oops, error, click<a href="javascript:__nc.reset()">refresh</a>once again',
         _errorNetwork:
-          '网络不给力，请<a href="javascript:__nc.reset()">点击刷新</a>',
+          'The network is down, please <a href="javascript:__nc.reset()">click to refresh</a>',
       });
     });
   },
