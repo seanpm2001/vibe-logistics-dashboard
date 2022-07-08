@@ -44,6 +44,22 @@
       </template>
     </el-table-column>
     <el-table-column
+      label="External ID"
+      width="220px"
+      align="center"
+    >
+      <template #default="{ row }">
+        <template
+          v-for="item in orderEnum[row.orderId]?.rawOrders"
+          :key="item.id"
+        >
+          <el-tag @click="copy(getExternalId(item.id, row.id))">
+            {{ getExternalId(item.id, row.id) }}
+          </el-tag>
+        </template>
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Source"
       width="110px"
       align="center"
@@ -200,11 +216,12 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus';
 import { AssignedOrderId } from '../components';
 import { taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { formatTimeString } from '@/utils';
 
-defineProps({
+const props = defineProps({
   dataList: {
     type: Array,
     default: () => []
@@ -287,6 +304,18 @@ const calTaskStatus = (taskType, packages) => {
     res = res ? res + ' | Complete' : 'Complete';
   }
   return res;
+};
+
+const getExternalId = (orderId, taskId) => `${orderId}#${taskId}#`;
+
+const copy = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      ElMessage.success('Copy success: ' + text);
+    })
+    .catch(() => {
+      ElMessage.error('Copy Failed!');
+    });
 };
 </script>
 
