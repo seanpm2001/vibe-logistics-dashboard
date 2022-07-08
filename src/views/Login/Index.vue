@@ -8,7 +8,7 @@
         class="sign-in-form"
       >
         <h2 class="form-title">
-          登录
+          Sign In
         </h2>
         <div>
           <span class="svg-container">
@@ -17,7 +17,7 @@
           <el-input
             ref="inUsername"
             v-model="signInForm.email"
-            placeholder="用户名"
+            placeholder="username"
           />
         </div>
         <div prop="password">
@@ -29,7 +29,7 @@
             ref="inPassword"
             v-model="signInForm.password"
             :type="passwordType"
-            placeholder="密码"
+            placeholder="password"
             @keyup="checkCapslock"
             @blur="capsTooltip = false"
           />
@@ -46,7 +46,7 @@
           class="submit-btn"
           @click="handleLogin((signInPattern = true))"
         >
-          立即登录
+          Sign In
         </el-button>
       </el-form>
       <el-form
@@ -56,7 +56,7 @@
         class="sign-up-form"
       >
         <h2 class="form-title">
-          注册
+          Sign up
         </h2>
         <div>
           <span class="svg-container">
@@ -65,7 +65,7 @@
           <el-input
             ref="upUsername"
             v-model="signUpForm.email"
-            placeholder="用户名"
+            placeholder="username"
           />
         </div>
         <div>
@@ -76,7 +76,7 @@
             ref="upPassword"
             v-model="signUpForm.password"
             :type="passwordType"
-            placeholder="密码"
+            placeholder="password"
           />
           <span @click="showPwd((signInPattern = false))">
             <svg-icon
@@ -90,7 +90,7 @@
           class="submit-btn"
           @click="handleLogin((signInPattern = false))"
         >
-          立即注册
+          Sign Up Now
         </el-button>
       </el-form>
     </div>
@@ -98,7 +98,7 @@
       <div class="desc-warp-item sign-up-desc">
         <div class="content">
           <button @click="toggleSignUp(true)">
-            注册
+            Sign Up
           </button>
         </div>
         <img
@@ -109,7 +109,7 @@
       <div class="desc-warp-item sign-in-desc">
         <div class="content">
           <button @click="toggleSignUp(false)">
-            登录
+            Sign In
           </button>
         </div>
         <img
