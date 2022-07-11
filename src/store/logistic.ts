@@ -2,11 +2,7 @@ import { defineStore } from 'pinia';
 import { queryUnitsAPI, listWarehousesAPI } from '@/api';
 import { fixedWarehouseEnum } from '@/enums/logistic';
 
-const emptyListQuery = {
-  page: 1,
-  perPage: 10,
-  search: '',
-};
+const emptyListQuery = {};
 
 export const useLogisticStore = defineStore({
   id: 'logistic',
