@@ -1,10 +1,10 @@
 import { useLogisticStore } from '@/store';
 
 export const useQueryHook = (listQuery, pageName, fetchListFn) => {
-  console.log('listQuery: ', listQuery);
   const logisticStore = useLogisticStore();
   onMounted(() => {
-    Object.assign(listQuery.value, logisticStore.listQuery[pageName]);
+    const perPage = listQuery.value.perPage; // 保留原设置的perPage
+    Object.assign( listQuery.value, logisticStore.listQuery[pageName], { perPage });
     fetchListFn();
   });
   onBeforeUnmount(() => {
