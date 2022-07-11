@@ -2,20 +2,18 @@ import { defineStore } from 'pinia';
 import { queryUnitsAPI, listWarehousesAPI } from '@/api';
 import { fixedWarehouseEnum } from '@/enums/logistic';
 
-const emptyListQuery = {};
-
 export const useLogisticStore = defineStore({
   id: 'logistic',
   state: () => ({
     unitList: [],
     warehouseEnum: {},
     listQuery: {
-      order: emptyListQuery,
-      task: emptyListQuery,
-      package: emptyListQuery,
-      freight: emptyListQuery,
-      inventory: emptyListQuery,
-      pending: emptyListQuery,
+      order: {},
+      task: {},
+      package: {},
+      freight: {},
+      inventory: {},
+      pending: {},
     }
   }),
   actions: {
