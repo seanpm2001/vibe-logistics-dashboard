@@ -256,7 +256,7 @@ const IWINID = 6;
 
 const checkUPSLabelSynced = (row) =>
   (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID)
-    ? row.trackingNumberNote?.match(/;/g).length || 0
+    ? row.trackingNumberNote?.match(/;/g)?.length || 0
     : null);
 
 const calTaskStatus = (taskType, packages) => {
