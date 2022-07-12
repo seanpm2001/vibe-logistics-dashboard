@@ -603,7 +603,7 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
     grid-column-end: 5
 
   .serial-cell, .serial-label
-    width: 220px
+    width: 290px
   .w-180
     width: 185px
   .w-200
