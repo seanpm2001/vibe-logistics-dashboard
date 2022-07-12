@@ -127,10 +127,10 @@
     >
       <template #default="{ row }">
         <el-tag
-          v-if="checkUPSLabelSynced(row)"
-          :type="checkUPSLabelSynced(row) === 'Yes' ? '' : 'danger'"
+          v-if="checkUPSLabelSynced(row) !== null"
+          :type="!!checkUPSLabelSynced(row) ? '' : 'danger'"
         >
-          {{ checkUPSLabelSynced(row) }}
+          {{ checkUPSLabelSynced(row) }} label(s)
         </el-tag>
       </template>
     </el-table-column>
@@ -254,7 +254,10 @@ const handleSelectionChange = (selectedArr) => {
 
 const IWINID = 6;
 
-const checkUPSLabelSynced = (row) => (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID) ? (row.trackingNumberNote?.replace(' ', '') ? 'Yes' : 'No') : null);
+const checkUPSLabelSynced = (row) =>
+  (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID)
+    ? row.trackingNumberNote?.match(/;/g).length || 0
+    : null);
 
 const calTaskStatus = (taskType, packages) => {
   const statusSet = {};
