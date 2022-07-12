@@ -333,7 +333,7 @@ export const codeSkuArrEnum = {
     'ST02H'
   ],
   '75ProESt': [
-    'VTS003'
+    '75PS01'
   ],
   '75ProASt': [
     'VTS004'
