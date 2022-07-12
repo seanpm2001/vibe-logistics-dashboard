@@ -255,7 +255,7 @@ export enum skuCodeEnum {
   'N75H301US' = '75ProB',
   'N75H301USR' = '75ProUB',
   'ST02H' = '75ProS',
-  'VTS003' = '75ProESt',
+  '75PS01' = '75ProESt',
   'VTS004' = '75ProASt',
   'ST02HR' = '75ProUS',
   'WB5W810W' = '75ProOPS',
@@ -274,6 +274,7 @@ export enum skuCodeEnum {
   '55ST01B' = '55S1BS',
   'S55T01AUS' = '55S1B',
   'CA01A' = 'CAM01A',
+  '55AS01' = '55S1AS',
   'P55H301US' = '55P1B'
 }
 export const codeSkuArrEnum = {
@@ -379,6 +380,9 @@ export const codeSkuArrEnum = {
   ],
   'CAM01A': [
     'CA01A'
+  ],
+  '55S1AS': [
+    '55AS01'
   ],
   '55P1B': [
     'P55H301US'
