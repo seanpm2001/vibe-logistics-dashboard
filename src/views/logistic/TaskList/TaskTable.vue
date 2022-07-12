@@ -256,7 +256,7 @@ const IWINID = 6;
 
 const checkUPSLabelSynced = (row) => {
   if (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID)) {
-    const note = row.trackingNumberNote;
+    const note = row.trackingNumberNote.trim();
     if (note) {
       let len = note.match(/;/g)?.length || 0;
       !note.endsWith(';') && len++;
