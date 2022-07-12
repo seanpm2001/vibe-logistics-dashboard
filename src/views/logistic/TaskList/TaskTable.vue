@@ -254,10 +254,18 @@ const handleSelectionChange = (selectedArr) => {
 
 const IWINID = 6;
 
-const checkUPSLabelSynced = (row) =>
-  (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID)
-    ? row.trackingNumberNote?.match(/;/g)?.length || 0
-    : null);
+const checkUPSLabelSynced = (row) => {
+  if (row.carrier === 'UPS' && (row.sourceId === IWINID || row.targetId === IWINID)) {
+    const note = row.trackingNumberNote;
+    if (note) {
+      let len = note.match(/;/g)?.length;
+      !note.endsWith(';') && len++;
+      return len;
+    }
+    return 0;
+  }
+  return null;
+};
 
 const calTaskStatus = (taskType, packages) => {
   const statusSet = {};
