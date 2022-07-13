@@ -149,6 +149,7 @@ export const transportCarrierEnum = {
     PILOT: 'PILOT',
     SAIA: 'SAIA',
     RL: 'R&L',
+    ABF: 'ABF',
   },
   EXPRESS: {
     UPS: 'UPS',
