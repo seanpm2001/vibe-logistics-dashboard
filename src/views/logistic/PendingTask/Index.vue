@@ -241,8 +241,8 @@ const tasksProductFulQty = computed(() => {
       packageItem.accessories.forEach(accessory => {
         if (!accessory.productCode || !accessory.quantity) return;
         for (const product of productsQty) {
-          if (product.productCode && product.productCode === accessory.productCode && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
-            product.fulExclSpec += 1;
+          if (product.productCode && product.productCode === accessory.productCode) {
+            product.fulExclSpec += accessory.quantity;
           }
         }
       });
@@ -250,6 +250,9 @@ const tasksProductFulQty = computed(() => {
     productsQty.forEach(product => {
       if (product.fulExclSpec + product.fulSpec < product.req) {
         error[taskFulfilmentErrorEnum.MISSING_PRODUCT] = true;
+      }
+      if (product.fulExclSpec + product.fulSpec > product.req) {
+        error[taskFulfilmentErrorEnum.QUANTITY_MISMATCH] = true;
       }
       if (Object.keys(product.unfulSpecSerials || {}).length) {
         error[taskFulfilmentErrorEnum.SPECIFIED_SERIAL_UNFULFILLED] = true;
