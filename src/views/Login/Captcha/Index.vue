@@ -31,7 +31,7 @@ export default {
         trans: { key1: 'code0' },
         elementID: ['usernameID'],
         is_Opt: 0,
-        language: 'cn',
+        language: 'en',
         isEnabled: true,
         timeout: 3000,
         times: 5,
@@ -46,22 +46,19 @@ export default {
           // 'umid_serUrl': 'https://g.com/service/um.json'
         },
         callback: function (data) {
-          window.console && console.log(nc_token);
-          window.console && console.log(data.csessionid);
-          window.console && console.log(data.sig);
           data.csessionid && context.emit('sliderValidation');
         },
       };
       // eslint-disable-next-line new-cap,no-undef
       const nc = new noCaptcha(NC_Opt);
-      nc.upLang('cn', {
-        _startTEXT: 'Please drag the slider to the far right',
-        _yesTEXT: 'Success',
-        _error300:
-          'Oops, error, click<a href="javascript:__nc.reset()">refresh</a>once again',
-        _errorNetwork:
-          'The network is down, please <a href="javascript:__nc.reset()">click to refresh</a>',
-      });
+      // nc.upLang('en', {
+      //   _startTEXT: 'Please drag the slider to the far right',
+      //   _yesTEXT: 'Success',
+      //   _error300:
+      //     'Oops, error, click<a href="javascript:__nc.reset()">refresh</a>once again',
+      //   _errorNetwork:
+      //     'The network is down, please <a href="javascript:__nc.reset()">click to refresh</a>',
+      // });
     });
   },
 };

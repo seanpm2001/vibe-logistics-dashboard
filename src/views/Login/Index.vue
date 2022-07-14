@@ -8,7 +8,7 @@
         class="sign-in-form"
       >
         <h2 class="form-title">
-          Sign In
+          Vibe Logistic
         </h2>
         <div>
           <span class="svg-container">
@@ -56,7 +56,7 @@
         class="sign-up-form"
       >
         <h2 class="form-title">
-          Sign up
+          Vibe Logistic
         </h2>
         <div>
           <span class="svg-container">
@@ -90,7 +90,7 @@
           class="submit-btn"
           @click="handleLogin((signInPattern = false))"
         >
-          Sign Up Now
+          Sign Up
         </el-button>
       </el-form>
     </div>
