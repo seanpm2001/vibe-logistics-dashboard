@@ -44,7 +44,7 @@
                 <svg-icon
                   class="icon mgr-5"
                   icon-name="add"
-                  @click="handleUnitChange(item, packageIdx, index, 'add', task, taskIdx)"
+                  @click="handleUnitChange(item, packageIdx, index, 'add', task, taskIdx, true)"
                 />
                 <el-select
                   v-model="unit.serial"
@@ -67,7 +67,7 @@
                   class="icon mgl-5"
                   :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
                   icon-name="minus"
-                  @click="handleUnitChange(item, packageIdx, index, 'remove', task, taskIdx)"
+                  @click="handleUnitChange(item, packageIdx, index, 'remove', task, taskIdx, true)"
                 />
               </div>
             </template>
@@ -217,7 +217,7 @@
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, toNumber, getWarehouseUnitSystem } from '@/utils';
+import { debounce, toNumber, getWarehouseUnitSystem, jsonClone } from '@/utils';
 import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api';
 
@@ -316,7 +316,7 @@ const onAccessoryAllocationChange = (taskIdx) => {
 };
 
 const updateSavedTasks = (packageItem, packageIdx, taskIdx) => {
-  savedTasks.value[taskIdx].packages[packageIdx] = Object.assign({}, JSON.parse(JSON.stringify(packageItem)));
+  savedTasks.value[taskIdx].packages[packageIdx] = Object.assign({}, jsonClone(packageItem));
 };
 
 function compareIfEqual(a, b) {
@@ -324,7 +324,7 @@ function compareIfEqual(a, b) {
 }
 
 const checkPackageChanged = (packageItem, packageIdx, taskIdx) => {
-  const tempPackage = JSON.parse(JSON.stringify(packageItem));
+  const tempPackage = jsonClone(packageItem);
   removeEmptyUnit(tempPackage);
   removeUnitErrorStatus(tempPackage);
 
@@ -340,13 +340,6 @@ const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
 const disableSubmitPackage = (packageItem, task) => {
   if (accessoryAllocationVisible.value)
     return true;
-  for (const unit of packageItem.units) {
-    if (unit.serial) return false;
-  }
-  for (const accessory of packageItem.accessories) {
-    if (accessory.productCode) return false;
-  }
-  return true;
 };
 
 const disableNewPackage = packageArr => {
@@ -355,29 +348,35 @@ const disableNewPackage = packageArr => {
   return true;
 };
 
-function checkAddAble (task) {
+function checkAddable (task, type) {
   let productQty = 0; // Lisa指定的总数
-  let unitQty = 0; // package中已有unit的总数
-  task.products.forEach(product => {
-    if (!noSerialArr.includes(product.productCode)) {
-      productQty += product.quantity || 0;
+  let fulQty = 0; // package中已有unit的总数
+
+  tasksProductFulQty.value[task.id]?.productsQty.forEach(product => {
+    if (type === 'unit' && !noSerialArr.includes(product.productCode)) {
+      productQty += product.req;
+      fulQty += Math.min(product.fulSpec + product.fulExclSpec);
+    } else if (type === 'accessory' && noSerialArr.includes(product.productCode)) {
+      productQty += product.req;
+      fulQty += Math.min(product.fulSpec + product.fulExclSpec);
+    } else if (type === 'package') {
+      productQty += product.req;
+      fulQty += Math.min(product.fulSpec + product.fulExclSpec);
     }
   });
-  task.packages.forEach(packageItem => {
-    unitQty += packageItem.units?.length || 0;
-  });
-  return unitQty < productQty;
+
+  return fulQty < productQty;
 }
 
-const handleUnitChange = (packageItem, packageIdx, unitIdx, type, task, taskIdx) => {
+const handleUnitChange = (packageItem, packageIdx, unitIdx, type, task, taskIdx, warning=false) => {
   let hasChanged = true;
   const unitArr = packageItem.units;
   if (type === 'remove') {
     unitArr.splice(unitIdx, 1);
     handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
   } else {
-    if (!checkAddAble(task)) {
-      ElMessage.error('Exceed quantity limit');
+    if (!checkAddable(task, 'unit')) {
+      warning && ElMessage.error('Exceed quantity limit');
       hasChanged = false;
     } else {
       unitArr.push({ serial: null, status: 'DELIVERING' });
@@ -492,15 +491,19 @@ function reportPackageError (packageItem) {
 
 const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
   handleInputFocus(null, taskIdx, packageIdx);
-  removeEmptyUnit(packageItem);
+  const packageItemForSubmission = jsonClone(packageItem);
+  removeEmptyUnit(packageItemForSubmission);
 
-  if (reportPackageError(packageItem)) return;
+  if (reportPackageError(packageItemForSubmission)) {
+    Object.assign(packageItem, packageItemForSubmission);
+    return;
+  }
 
   const packageId = packageItem.id;
 
   if (packageId) {
-    if (disableUpdatePackage(packageItem, packageIdx, taskIdx)) return;
-    updatePackageAPI(packageId, packageItem)
+    if (disableUpdatePackage(packageItemForSubmission, packageIdx, taskIdx)) return;
+    updatePackageAPI(packageId, packageItemForSubmission)
       .then(data => {
         Object.assign(packageItem, data);
         updateSavedTasks(packageItem, packageIdx, taskIdx);
@@ -513,8 +516,8 @@ const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUn
       });
   }
   else {
-    if (disableSubmitPackage(packageItem, packageIdx)) return;
-    createPackageAPI(packageItem.taskId, packageItem)
+    if (disableSubmitPackage(packageItemForSubmission, packageIdx)) return;
+    createPackageAPI(packageItem.taskId, packageItemForSubmission)
       .then(data => {
         Object.assign(packageItem, data);
         updateSavedTasks(packageItem, packageIdx, taskIdx);
@@ -550,7 +553,10 @@ const onPackagesChange = (task, packages, type, packageIdx?) => {
     packages.splice(packageIdx, 1);
   else {
     removeEmptyUnit(packages[packages.length - 1]);
-    if (!checkAddAble(task)) {
+    if (packages[packages.length - 1] && !packages[packages.length - 1].units.length) {
+      packages[packages.length - 1].units.push({ serial: null, status: 'DELIVERING'});
+    }
+    if (!checkAddable(task, 'package')) {
       ElMessage.error('Exceed quantity limit');
       return;
     }

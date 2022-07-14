@@ -79,3 +79,5 @@ export const copy = (text) => {
       ElMessage.error('Copy Failed!');
     });
 };
+
+export const jsonClone = (obj) :any => JSON.parse(JSON.stringify(obj));
