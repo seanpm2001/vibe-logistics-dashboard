@@ -294,6 +294,18 @@ const showExport = () => {
   dialogExportTasksVisible.value = true;
 };
 
+function preprocessTasks(originalTasks) {
+  const tasks = JSON.parse(JSON.stringify(originalTasks));
+  tasks.forEach(task => {
+    task?.packages.forEach(packageItem => {
+      if (!packageItem.units.length) {
+        packageItem.units.push({serial: null, status: 'DELIVERING'});
+      }
+    });
+  });
+  return tasks;
+}
+
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
@@ -307,9 +319,9 @@ function queryTask () {
         return;
       }
 
-      dataList.value = data.items;
       total.value = data.total;
-      savedTasks.value = JSON.parse(JSON.stringify(dataList.value));
+      savedTasks.value = JSON.parse(JSON.stringify(data.items));
+      dataList.value = preprocessTasks(data.items);
       const orderIdArr = getTaskOrderIdArr(dataList.value);
       queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(async order => {
