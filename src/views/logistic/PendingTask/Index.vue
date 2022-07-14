@@ -20,41 +20,45 @@
           v-for="(item, key) in productsFulQty.qtyByCode"
           :key="key"
         >
-          <el-descriptions-item label="Product Name">
-            {{ codeNameEnum[key] || '' }}
-          </el-descriptions-item>
-          <el-descriptions-item label="SKU">
-          </el-descriptions-item>
-          <el-descriptions-item label="Req QTY">
-            {{ item.req }}
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="Fulfilled QTY"
-            :class-name="item.req === item.ful ? '' : 'error-border-tip'"
-          >
-            {{ item.ful || 0 }}
-          </el-descriptions-item>
+          <div v-if="item.req">
+            <el-descriptions-item label="Product Name">
+              {{ codeNameEnum[key] || '' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="SKU">
+            </el-descriptions-item>
+            <el-descriptions-item label="Req QTY">
+              {{ item.req }}
+            </el-descriptions-item>
+            <el-descriptions-item
+              label="Fulfilled QTY"
+              :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+            >
+              {{ item.ful || 0 }}
+            </el-descriptions-item>
+          </div>
         </template>
 
         <template
           v-for="(item, key) in productsFulQty.qtyBySku"
           :key="key"
         >
-          <el-descriptions-item label="Product Name">
-            {{ codeNameEnum[skuCodeEnum[key]] || '' }}
-          </el-descriptions-item>
-          <el-descriptions-item label="SKU">
-            {{ key }}
-          </el-descriptions-item>
-          <el-descriptions-item label="Req QTY">
-            {{ item.req }}
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="Fulfilled QTY"
-            :class-name="item.req === item.ful ? '' : 'error-border-tip'"
-          >
-            {{ item.ful || 0 }}
-          </el-descriptions-item>
+          <div v-if="item.req">
+            <el-descriptions-item label="Product Name">
+              {{ codeNameEnum[skuCodeEnum[key]] || '' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="SKU">
+              {{ key }}
+            </el-descriptions-item>
+            <el-descriptions-item label="Req QTY">
+              {{ item.req }}
+            </el-descriptions-item>
+            <el-descriptions-item
+              label="Fulfilled QTY"
+              :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+            >
+              {{ item.ful || 0 }}
+            </el-descriptions-item>
+          </div>
         </template>
       </el-descriptions>
 
@@ -69,7 +73,7 @@
           :key="serial"
         >
           <el-descriptions-item label="Product Name">
-            {{ skuCodeEnum[specifiedUnits[serial]?.sku] }}
+            {{ codeNameEnum[skuCodeEnum[specifiedUnits[serial]?.sku]] || skuCodeEnum[specifiedUnits[serial]?.sku] }}
           </el-descriptions-item>
           <el-descriptions-item label="SKU">
             {{ specifiedUnits[serial]?.sku }}
