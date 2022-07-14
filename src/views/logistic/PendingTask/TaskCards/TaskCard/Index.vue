@@ -375,7 +375,7 @@ const handleUnitChange = (packageItem, packageIdx, unitIdx, type, task, taskIdx,
     unitArr.splice(unitIdx, 1);
     handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
   } else {
-    if (!checkAddable(task, 'unit')) {
+    if (!checkAddable(task, 'unit') && packageItem.units.length > 0) {
       warning && ElMessage.error('Exceed quantity limit');
       hasChanged = false;
     } else {
