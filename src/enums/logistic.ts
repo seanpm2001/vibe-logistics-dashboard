@@ -409,7 +409,7 @@ export const fixedWarehouseEnum = {
 
 export const BSUnitSystemWarehouseArr = [
   1,  // FBA-US
-  6   // IWIN
+  6   // IWIN 
 ];
 
 export const noSerialArr = [
