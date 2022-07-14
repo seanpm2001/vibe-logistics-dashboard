@@ -150,6 +150,7 @@ export const transportCarrierEnum = {
     SAIA: 'SAIA',
     RL: 'R&L',
     ABF: 'ABF',
+    ESTES: 'ESTES',
   },
   EXPRESS: {
     UPS: 'UPS',
