@@ -101,6 +101,9 @@
     <el-descriptions-item label="Shipment Info">
       <OrderShipmentInfo :order-item="orderEnum[task.orderId] || {}" />
     </el-descriptions-item>
+    <el-descriptions-item label="Note">
+      {{ task.note }}
+    </el-descriptions-item>
   </el-descriptions>
 </template>
 
