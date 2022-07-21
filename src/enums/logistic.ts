@@ -414,7 +414,7 @@ export const fixedWarehouseEnum = {
 
 export const BSUnitSystemWarehouseArr = [
   1,  // FBA-US
-  6   // IWIN 
+  6   // IWIN
 ];
 
 export const noSerialArr = [
@@ -442,5 +442,6 @@ export const taskFulfilmentErrorEnum = {
   UNWANTTED_PRODUCT: 'Unwantted product',
   EXTRA_PRODUCT: 'Extra product',
   MISSING_PRODUCT: 'Missing product',
-  MISSING_TRACKING_NUMBER: 'Missing tracking number'
+  MISSING_TRACKING_NUMBER: 'Missing tracking number',
+  MISSING_CARRIER: 'Missing carrier'
 };

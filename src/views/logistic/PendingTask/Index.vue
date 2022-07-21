@@ -190,9 +190,10 @@ provide('specifiedSerials', specifiedSerials);
 const tasksProductFulQty = computed(() => {
   const qty = {};
   savedTasks.value?.forEach(task => {
+    const error = [];
+    if (!task.carrier) error[taskFulfilmentErrorEnum.MISSING_CARRIER] = true;
     if (task.products.length === 0) return;
     const productsQty = [];
-    const error = [];
     const totalUnfulSpecSerials = {};
     task.products?.forEach(product => {
       const unfulSpecSerials = {};
@@ -213,7 +214,7 @@ const tasksProductFulQty = computed(() => {
         let ful = false;
         if (totalUnfulSpecSerials[unit.serial]) {
           productsQty.forEach(product => {
-            if (product.unfulSpecSerials[unit.serial]) {
+            if (!ful && product.unfulSpecSerials[unit.serial]) {
               delete product.unfulSpecSerials[unit.serial];
               product.fulSpec += 1;
               ful = true;
@@ -222,7 +223,7 @@ const tasksProductFulQty = computed(() => {
         } else {
           // Firstly search for sku match
           for (const product of productsQty) {
-            if (product.sku && product.sku === unit.item.sku && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+            if (!ful && product.sku && product.sku === unit.item.sku && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
               product.fulExclSpec += 1;
               ful = true;
             }
@@ -230,7 +231,7 @@ const tasksProductFulQty = computed(() => {
           // Secondly search for product code match
           if (!ful) {
             for (const product of productsQty) {
-              if (product.productCode && product.productCode === skuCodeEnum[unit.item.sku] && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+              if (!ful && product.productCode && product.productCode === skuCodeEnum[unit.item.sku] && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
                 product.fulExclSpec += 1;
                 ful = true;
               }

@@ -20,6 +20,8 @@ const obj2Arr = obj => {
   });
 };
 
+export const combineSameProductQuantityArr = arr => obj2Arr(combineSameProductQuantity(arr));
+
 export const formatAssignedOrderItem = orderItem => {
   const raws = orderItem.rawOrders;
   const originId = orderItem.id;
