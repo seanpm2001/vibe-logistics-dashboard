@@ -64,7 +64,7 @@
           </template>
           <template v-else>
             <template
-              v-for="product in row.items"
+              v-for="product in combineSameProductQuantityArr(row.items)"
               :key="product"
             >
               <div align="left">
@@ -177,7 +177,7 @@
 
 <script lang="ts" setup>
 import { AssignedOrderId, OrderShipmentInfo } from '../components';
-import { formatVBDate } from '@/utils/logistic';
+import { formatVBDate, combineSameProductQuantityArr } from '@/utils/logistic';
 import { deleteTaskAPI } from '@/api';
 import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 
