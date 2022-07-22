@@ -4,6 +4,7 @@
       v-model="listQuery.search"
       placeholder="Package Info"
       style="width: 220px"
+      @keyup.enter="handleFilter"
     >
       <template #append>
         <el-button

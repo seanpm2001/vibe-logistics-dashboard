@@ -8,6 +8,7 @@
         v-model="listQuery.search"
         placeholder="Order Info"
         style="width: 150px"
+        @keyup.enter="handleFilter"
       >
         <template #append>
           <el-button
