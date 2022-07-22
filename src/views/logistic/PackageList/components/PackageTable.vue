@@ -416,7 +416,7 @@ const carrierUrlEnum = {
   DAYLIGHT: (trackNum: string) => `https://mydaylight.dylt.com/external/shipment?probill=${trackNum}`,
   USPS: (trackNum: string) => `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackNum}`,
   TNT: (trackNum: string) => `https://www.tnt.com/express/en_us/site/tracking.html?searchType=con&cons=${trackNum}`,
-  R_AND_L: (trackNum: string) => `https://www2.rlcarriers.com/freight/shipping/shipment-tracing?pro=${trackNum}&docType=PRO&source=web`,
+  RL: (trackNum: string) => `https://www2.rlcarriers.com/freight/shipping/shipment-tracing?pro=${trackNum}&docType=PRO&source=web`,
   DAYANDROSS: (trackNum: string) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
   KUEHNE_NAGEL: (trackNum: string) => `https://onlineservices.kuehne-nagel.com/public-tracking/shipments?query=${trackNum}`,
   SAIA: (trackNum: string) => `https://www.saia.com/track/details;pro=${trackNum}`,
