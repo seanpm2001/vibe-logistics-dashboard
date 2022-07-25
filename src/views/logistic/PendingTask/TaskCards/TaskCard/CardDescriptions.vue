@@ -101,8 +101,23 @@
     <el-descriptions-item label="Shipment Info">
       <OrderShipmentInfo :order-item="orderEnum[task.orderId] || {}" />
     </el-descriptions-item>
-    <el-descriptions-item label="Note">
-      {{ task.note }}
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          Note
+          <el-button
+            :type="isEditTaskNote ? 'success' : 'primary'"
+            @click="editTaskNote"
+          >
+            {{ isEditTaskNote ? 'save' : 'edit' }}
+          </el-button>
+        </div>
+      </template>
+      <el-input
+        v-model="taskNote"
+        type="textarea"
+        :disabled="!isEditTaskNote"
+      ></el-input>
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -126,7 +141,9 @@ const props = defineProps({
 });
 
 const isFulfilled = ref(false);
+const isEditTaskNote = ref(false);
 const tasksProductFulQty = inject('tasksProductFulQty');
+const taskNote = ref(props.task.note);
 
 const emit = defineEmits(['fetchList']);
 const taskCarrier = ref(props.task.carrier);
@@ -151,8 +168,23 @@ const updateTaskFulfillTime = () => {
     isFulfilled.value = true;
   });
 };
+
+const editTaskNote = () => {
+  if (isEditTaskNote.value) {
+    const task = Object.assign({}, props.task, { note: taskNote.value });
+    updateTaskAPI(task.id, task).then(() => {
+      isEditTaskNote.value = false;
+      emit('fetchList');
+    });
+  } else {
+    isEditTaskNote.value = true;
+  }
+};
 </script>
 
 <style lang="sass" scoped>
-
+.cell-item
+  display: flex
+  justify-content: space-between
+  align-items: center
 </style>

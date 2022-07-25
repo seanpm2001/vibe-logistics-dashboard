@@ -639,4 +639,7 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
     width: 120px
     .el-input
       width: 120px
+
+.el-card
+  overflow: scroll
 </style>
