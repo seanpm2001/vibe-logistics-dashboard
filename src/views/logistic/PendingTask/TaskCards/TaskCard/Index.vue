@@ -450,21 +450,23 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
     const isScanned = !!~query.indexOf(';');
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
-      // 找不到任何数据
-      if (data.length === 0 && !isScanned) {
-        ElMessage.error('Serial can\'t be found.');
-        return;
-      }
-      unitList.value = filterUnitList(data, task);
-      if (unitList.value.length === 0 && !isScanned) {
-        ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
-        return;
-      }
-      if (isScanned && (data.length === 0 || unitList.value.length === 0)) {
-        packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`;
-        ElMessage.error('Mismatched Scanned Serials: ' + query);
-        handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
-        return;
+      if (isScanned) {
+        if (data.length === 0) {
+          packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`;
+          ElMessage.error('Mismatched Scanned Serials: ' + query);
+          handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
+          return;
+        }
+      } else {
+        if (data.length === 0) {
+          ElMessage.error('Serial can\'t be found.');
+          return;
+        }
+        unitList.value = filterUnitList(data, task);
+        if (unitList.value.length === 0) {
+          ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
+          return;
+        }
       }
 
       if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合
@@ -473,7 +475,7 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
           unit.serial = uniqueSerial;
         } else {
           isScanned &&
-            (packageItem.scannedSerials = packageItem.scannedSerials || '' + `${query};`);
+            (packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`);
           ElMessage.error('Mismatched Scanned Serials: ' + query);
         }
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
