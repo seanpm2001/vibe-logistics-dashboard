@@ -110,6 +110,25 @@
                 />
               </el-select>
             </el-row>
+            <div class="mgt-10" v-if="item.scannedSerials">
+              <el-tooltip
+                effect="light"
+              >
+                <el-tag type="danger">
+                  Mismatched Scanned Serials
+                </el-tag>
+                <template #content>
+                  <template v-for="(serial, idx) in item.scannedSerials.split(';')" :key="idx">
+                    <el-tag
+                      v-if="serial"
+                      type="danger"
+                    >
+                      {{ serial }};
+                    </el-tag>
+                  </template>
+                </template>
+              </el-tooltip>
+            </div>
           </div>
           <div class="col3 cell w-340">
             <el-input
@@ -400,6 +419,7 @@ function checkIfSpecifiedElseWhere (query) {
 const unitList = shallowRef(null);
 const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
   if (query) {
+    const isScanned = !!~query.indexOf(';');
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
       if (data.length === 0) {
@@ -424,7 +444,14 @@ const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
         return;
       }
       if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合，直接submit
-        unit.serial = query;
+        const uniqueSerial = data[0].serial;
+        if (query === uniqueSerial) {
+          unit.serial = uniqueSerial;
+        } else {
+          isScanned &&
+            (packageItem.scannedSerials = packageItem.scannedSerials || '' + `${query};`);
+          ElMessage.error('Mismatched Scanned Serials: ' + query);
+        }
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
       }
@@ -490,6 +517,7 @@ function reportPackageError (packageItem) {
 }
 
 const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
+  console.log('packageItem: ', packageItem);
   handleInputFocus(null, taskIdx, packageIdx);
   const packageItemForSubmission = jsonClone(packageItem);
   removeEmptyUnit(packageItemForSubmission);
