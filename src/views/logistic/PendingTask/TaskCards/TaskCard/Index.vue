@@ -128,7 +128,7 @@
                     <el-tag
                       type="danger"
                     >
-                      {{ serial }};
+                      {{ serial }}
                     </el-tag>
                     <svg-icon
                       class="cursor-pointer"
@@ -495,9 +495,13 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
 };
 
 const removeScannedSerial = (packageItem, removedIdx) => {
-  const newScannedSerials = packageItem.scannedSerials.split(';').splice(removedIdx, 1).join(';');
+  let scannedSerialsArr = packageItem.scannedSerials.split(';');
+  if (scannedSerialsArr.length === 1) {
+    scannedSerialsArr = [];
+  } else
+    scannedSerialsArr = scannedSerialsArr.splice(removedIdx, 1);
 
-  const newPackage = Object.assign({}, packageItem, { scannedSerials: newScannedSerials });
+  const newPackage = Object.assign({}, packageItem, { scannedSerials: scannedSerialsArr.join(';') });
   updatePackageAPI(newPackage.id, newPackage).then(() => fetchList());
 };
 
