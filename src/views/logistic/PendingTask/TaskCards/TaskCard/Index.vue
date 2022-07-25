@@ -125,12 +125,17 @@
                     v-for="(serial, idx) in item.scannedSerials.split(';')"
                     :key="idx"
                   >
-                    <el-tag
-                      v-if="serial"
-                      type="danger"
-                    >
-                      {{ serial }};
-                    </el-tag>
+                    <template v-if="serial">
+                      <el-tag
+                        type="danger"
+                      >
+                        {{ serial }};
+                      </el-tag>
+                      <svg-icon
+                        icon-name="close"
+                        @click="removeScannedSerial(item, idx)"
+                      />
+                    </template>
                   </template>
                 </template>
               </el-tooltip>
@@ -457,7 +462,6 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
       }
       if (isScanned && (data.length === 0 || unitList.value.length === 0)) {
         packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`;
-        console.log('packageItem.scannedSerials: ', packageItem.scannedSerials);
         ElMessage.error('Mismatched Scanned Serials: ' + query);
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
@@ -479,6 +483,13 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
   } else {
     unitList.value = [];
   }
+};
+
+const removeScannedSerial = (packageItem, removedIdx) => {
+  const newScannedSerials = packageItem.scannedSerials.split(';').splice(removedIdx, 1).join(';');
+
+  const newPackage = Object.assign({}, packageItem, { scannedSerials: newScannedSerials });
+  updatePackageAPI(newPackage.id, newPackage).then(() => fetchList());
 };
 
 let focusStorage = {} as { taskIdx: number, packageIdx: number };
@@ -537,7 +548,6 @@ function reportPackageError (packageItem) {
 }
 
 const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
-  console.log('packageItem: ', packageItem);
   handleInputFocus(null, taskIdx, packageIdx);
   const packageItemForSubmission = jsonClone(packageItem);
   removeEmptyUnit(packageItemForSubmission);
