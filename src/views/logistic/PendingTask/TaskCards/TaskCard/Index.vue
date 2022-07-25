@@ -125,18 +125,16 @@
                     v-for="(serial, idx) in item.scannedSerials.split(';')"
                     :key="idx"
                   >
-                    <template v-if="serial">
-                      <el-tag
-                        type="danger"
-                      >
-                        {{ serial }};
-                      </el-tag>
-                      <svg-icon
-                        class="cursor-pointer"
-                        icon-name="close"
-                        @click="removeScannedSerial(item, idx)"
-                      />
-                    </template>
+                    <el-tag
+                      type="danger"
+                    >
+                      {{ serial }};
+                    </el-tag>
+                    <svg-icon
+                      class="cursor-pointer"
+                      icon-name="close"
+                      @click="removeScannedSerial(item, idx)"
+                    />
                   </template>
                 </template>
               </el-tooltip>
@@ -447,13 +445,14 @@ function filterUnitList (unitList, task) {
 
 const unitList = shallowRef(null);
 const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
+  console.log('query: ', query);
   if (query) {
     const isScanned = !!~query.indexOf(';');
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
       if (isScanned) {
-        if (data.length === 0) {
-          packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`;
+        if (data.length !== 1) {
+          packageItem.scannedSerials = (packageItem.scannedSerials || '') + `;${query}`;
           ElMessage.error('Mismatched Scanned Serials: ' + query);
           handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
           return;
@@ -476,7 +475,7 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
           unit.serial = uniqueSerial;
         } else {
           isScanned &&
-            (packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`);
+            (packageItem.scannedSerials = (packageItem.scannedSerials || '') + `;${query}`);
           ElMessage.error('Mismatched Scanned Serials: ' + query);
         }
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
