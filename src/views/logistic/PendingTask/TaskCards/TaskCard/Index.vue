@@ -132,6 +132,7 @@
                         {{ serial }};
                       </el-tag>
                       <svg-icon
+                        class="cursor-pointer"
                         icon-name="close"
                         @click="removeScannedSerial(item, idx)"
                       />
