@@ -452,7 +452,10 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
     queryUnitsAPI({ serial: query }).then(data => {
       if (isScanned) {
         if (data.length !== 1) {
-          packageItem.scannedSerials = (packageItem.scannedSerials || '') + `;${query}`;
+          const scannedSerials = packageItem.scannedSerials;
+          packageItem.scannedSerials = scannedSerials
+            ? `${scannedSerials};${query}`
+            : `${query}`;
           ElMessage.error('Mismatched Scanned Serials: ' + query);
           handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
           return;
@@ -474,9 +477,13 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
         if (query === uniqueSerial) {
           unit.serial = uniqueSerial;
         } else {
-          isScanned &&
-            (packageItem.scannedSerials = (packageItem.scannedSerials || '') + `;${query}`);
-          ElMessage.error('Mismatched Scanned Serials: ' + query);
+          if (isScanned) {
+            const scannedSerials = packageItem.scannedSerials;
+            packageItem.scannedSerials = scannedSerials
+              ? `${scannedSerials};${query}`
+              : `${query}`;
+            ElMessage.error('Mismatched Scanned Serials: ' + query);
+          }
         }
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
