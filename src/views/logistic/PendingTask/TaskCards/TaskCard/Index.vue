@@ -52,8 +52,8 @@
                   :class="'w-200' + (unit.hasError ? ' error-border-tip' : '')"
                   filterable
                   remote
-                  :remote-method="(query) => debounce(remoteMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
-                  @change="remoteMethod(unit.serial, task, item, taskIdx, packageIdx, unit)"
+                  :remote-method="(query) => debounce(remoteSerialMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
+                  @change="remoteSerialMethod(unit.serial, task, item, taskIdx, packageIdx, unit)"
                   @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                 >
                   <el-option
@@ -110,7 +110,10 @@
                 />
               </el-select>
             </el-row>
-            <div class="mgt-10" v-if="item.scannedSerials">
+            <div
+              v-if="item.scannedSerials"
+              class="mgt-10"
+            >
               <el-tooltip
                 effect="light"
               >
@@ -118,7 +121,10 @@
                   Mismatched Scanned Serials
                 </el-tag>
                 <template #content>
-                  <template v-for="(serial, idx) in item.scannedSerials.split(';')" :key="idx">
+                  <template
+                    v-for="(serial, idx) in item.scannedSerials.split(';')"
+                    :key="idx"
+                  >
                     <el-tag
                       v-if="serial"
                       type="danger"
@@ -416,34 +422,48 @@ function checkIfSpecifiedElseWhere (query) {
   return specified;
 }
 
+function filterUnitList (unitList, task) {
+  const taskProducts = task.products;
+
+  return unitList.filter(item => {
+    for (const idx in taskProducts) {
+      if (skuCodeEnum[item.sku] === taskProducts[idx].productCode) {
+        if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
+          return false;
+        if (item.condition && item.condition !== 'GOOD' && !currentTaskSpecifiedSerials.value.includes(item.serial))
+          return false;
+        return true;
+      }
+    }
+    return false;
+  });
+}
+
 const unitList = shallowRef(null);
-const remoteMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
+const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
   if (query) {
     const isScanned = !!~query.indexOf(';');
     query = query.replace(';', '');
     queryUnitsAPI({ serial: query }).then(data => {
-      if (data.length === 0) {
+      // 找不到任何数据
+      if (data.length === 0 && !isScanned) {
         ElMessage.error('Serial can\'t be found.');
         return;
       }
-      const taskProducts = task.products;
-      unitList.value = data.filter(item => {
-        for (const idx in taskProducts) {
-          if (skuCodeEnum[item.sku] === taskProducts[idx].productCode) {
-            if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
-              return false;
-            if (item.condition && item.condition !== 'GOOD' && !currentTaskSpecifiedSerials.value.includes(item.serial))
-              return false;
-            return true;
-          }
-        }
-        return false;
-      });
-      if (unitList.value.length === 0) {
+      unitList.value = filterUnitList(data, task);
+      if (unitList.value.length === 0 && !isScanned) {
         ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
         return;
       }
-      if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合，直接submit
+      if (isScanned && (data.length === 0 || unitList.value.length === 0)) {
+        packageItem.scannedSerials = (packageItem.scannedSerials || '') + `${query};`;
+        console.log('packageItem.scannedSerials: ', packageItem.scannedSerials);
+        ElMessage.error('Mismatched Scanned Serials: ' + query);
+        handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
+        return;
+      }
+
+      if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合
         const uniqueSerial = data[0].serial;
         if (query === uniqueSerial) {
           unit.serial = uniqueSerial;
