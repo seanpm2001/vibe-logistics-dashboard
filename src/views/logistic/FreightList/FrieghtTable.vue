@@ -26,7 +26,7 @@
     />
     <el-table-column
       label="Batch Number"
-      width="120px"
+      width="130px"
       align="center"
     >
       <template #default="{ row }">
@@ -106,7 +106,7 @@
           :key="item"
         >
           <div>
-            <svg-icon :icon-name="codeIconEnum[key]" />
+            <svg-icon :icon-name="codeIconEnum[key] || 'product-other'" />
             <span class="mgl-5">{{ codeNameEnum[key] }}:<el-tag
               class="mgl-5"
               size="small"
