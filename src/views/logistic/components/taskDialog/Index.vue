@@ -108,6 +108,7 @@
         </el-row>
         <el-row
           justify="space-between"
+          align="middle"
           :gutter="3"
         >
           <el-form-item label="New Address">
@@ -120,6 +121,7 @@
           <el-form-item label="Note">
             <el-input
               v-model="taskItem.note"
+              type="textarea"
               :disabled="notCommonPermission"
               placeholder="Note"
             />

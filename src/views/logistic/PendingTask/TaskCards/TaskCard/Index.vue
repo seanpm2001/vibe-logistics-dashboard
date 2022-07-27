@@ -496,9 +496,9 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
 
 const removeScannedSerial = (packageItem, removedIdx) => {
   let scannedSerialsArr = packageItem.scannedSerials.split(';');
-  if (scannedSerialsArr.length === 1) {
+  if (scannedSerialsArr.length === 1)
     scannedSerialsArr = [];
-  } else
+  else
     scannedSerialsArr = scannedSerialsArr.splice(removedIdx, 1);
 
   const newPackage = Object.assign({}, packageItem, { scannedSerials: scannedSerialsArr.join(';') });
