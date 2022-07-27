@@ -181,9 +181,9 @@ const multipleSelection = inject('multipleSelection') as any;
 
 const statusTypeDict = {
   'Picked Up': 'success',
-  'In Transit': 'info',
-  Delivered: 'info',
-  Cancelled: 'danger',
+  'IN_TRANSIT': 'warning',
+  DELIVERED: 'info',
+  CANCELLED: 'danger',
 };
 
 const tableKey = ref(0);
