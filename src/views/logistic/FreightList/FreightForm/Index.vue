@@ -40,6 +40,30 @@
       justify="space-between"
       :gutter="3"
     >
+    <el-form-item
+        label="Container No."
+        prop="containerNum"
+      >
+        <el-input
+          v-model="freightItem.containerNum"
+          :disabled="isDialogPattern('view')"
+        />
+      </el-form-item>
+      
+      <el-form-item
+        label="Ocean Freight Cost"
+        prop="cost"
+      >
+        <el-input
+          v-model="freightItem.cost"
+          :disabled="isDialogPattern('view')"
+        />
+      </el-form-item>
+    </el-row>
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item
         label="Status"
         prop="status"
@@ -58,20 +82,6 @@
         </el-select>
       </el-form-item>
       <el-form-item
-        label="Ocean Freight Cost"
-        prop="cost"
-      >
-        <el-input
-          v-model="freightItem.cost"
-          :disabled="isDialogPattern('view')"
-        />
-      </el-form-item>
-    </el-row>
-    <el-row
-      justify="space-between"
-      :gutter="3"
-    >
-      <el-form-item
         label="Mode"
         prop="mode"
       >
@@ -88,6 +98,11 @@
           />
         </el-select>
       </el-form-item>
+    </el-row>
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item
         label="Ocean Forwarder"
         prop="oceanForwarder"
@@ -105,11 +120,6 @@
           />
         </el-select>
       </el-form-item>
-    </el-row>
-    <el-row
-      justify="space-between"
-      :gutter="3"
-    >
       <el-form-item
         label="Origin Port"
         prop="oriPort"
@@ -127,6 +137,11 @@
           />
         </el-select>
       </el-form-item>
+    </el-row>
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item
         label="Destination Port"
         prop="destPort"
@@ -144,11 +159,6 @@
           />
         </el-select>
       </el-form-item>
-    </el-row>
-    <el-row
-      justify="space-between"
-      :gutter="3"
-    >
       <el-form-item
         label="Container Type"
         prop="container"
@@ -166,6 +176,8 @@
           />
         </el-select>
       </el-form-item>
+    </el-row>
+    <el-row justify="space-between">
       <el-form-item
         label="Pick Up"
         prop="pickup"
@@ -177,8 +189,6 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
-    </el-row>
-    <el-row justify="space-between">
       <el-form-item
         label="ETD Origin Port"
         prop="etdOp"
@@ -190,6 +200,8 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
+    </el-row>
+    <el-row justify="space-between">
       <el-form-item
         label="ATD Origin Port"
         prop="atdOp"
@@ -201,8 +213,6 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
-    </el-row>
-    <el-row justify="space-between">
       <el-form-item
         label="ETA Destination Port"
         prop="etaDp"
@@ -214,6 +224,8 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
+    </el-row>
+    <el-row justify="space-between">
       <el-form-item
         label="ATA Destination Port"
         prop="ataDp"
@@ -225,8 +237,6 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
-    </el-row>
-    <el-row justify="space-between">
       <el-form-item
         label="ETA Warehouse"
         prop="etaWh"
@@ -238,6 +248,11 @@
           placeholder="Please pick a date"
         />
       </el-form-item>
+    </el-row>
+    <el-row
+      justify="space-between"
+      :gutter="3"
+    >
       <el-form-item
         label="ATA Warehouse"
         prop="ataWh"
@@ -254,13 +269,6 @@
       justify="space-between"
       :gutter="3"
     >
-      <el-form-item label="Transit Time">
-        <el-input
-          v-model="transitTime"
-          disabled
-          placeholder=""
-        />
-      </el-form-item>
       <el-form-item label="Transit Enum">
         <el-select
           v-model="transitTimeBase"
@@ -275,6 +283,13 @@
             :value="item.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="Transit Time">
+        <el-input
+          v-model="transitTime"
+          disabled
+          placeholder=""
+        />
       </el-form-item>
     </el-row>
     <template v-if="!isDialogPattern('view')">

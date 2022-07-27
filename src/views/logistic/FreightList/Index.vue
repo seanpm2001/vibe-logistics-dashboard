@@ -84,6 +84,7 @@ const freightItem = ref({
   container: null,
   cost: null,
   oceanForwarder: null,
+  containerNum: null,
 });
 const emptyFreightForm = JSON.parse(JSON.stringify(freightItem))._value;
 
