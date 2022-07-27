@@ -40,7 +40,7 @@
       justify="space-between"
       :gutter="3"
     >
-    <el-form-item
+      <el-form-item
         label="Container No."
         prop="containerNum"
       >
