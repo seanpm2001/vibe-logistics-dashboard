@@ -127,14 +127,11 @@
                   >
                     <el-tag
                       type="danger"
+                      closable
+                      @close="removeScannedSerial(item, idx)"
                     >
                       {{ serial }}
                     </el-tag>
-                    <svg-icon
-                      class="cursor-pointer"
-                      icon-name="close"
-                      @click="removeScannedSerial(item, idx)"
-                    />
                   </template>
                 </template>
               </el-tooltip>
