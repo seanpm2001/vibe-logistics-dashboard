@@ -114,6 +114,7 @@ export const taskReasonDetailEnum = {
     'Non-delivery (product being returned back to shipper)': 'Non-delivery (product being returned back to shipper)',
     'Product upgrade': 'Product upgrade',
     'Accessories defects (such as OPS, styluses)': 'Accessories defects (such as OPS, styluses)',
+    'Customer change mind': 'Customer changes mind',
     'Unknown': 'Unknown',
   },
 };
