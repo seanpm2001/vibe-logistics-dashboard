@@ -116,6 +116,7 @@
       <el-input
         v-model="taskNote"
         type="textarea"
+        :autosize="{ minRows: 4 }"
         :disabled="!isEditTaskNote"
       ></el-input>
     </el-descriptions-item>
@@ -187,4 +188,6 @@ const editTaskNote = () => {
   display: flex
   justify-content: space-between
   align-items: center
+.el-textarea
+  display: block
 </style>
