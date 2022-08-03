@@ -138,6 +138,7 @@
 
         <el-row
           justify="space-between"
+          align="middle"
           :gutter="1"
         >
           <el-form-item label="Tracking Number Note">

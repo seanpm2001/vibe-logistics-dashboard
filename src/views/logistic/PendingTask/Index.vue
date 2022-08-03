@@ -93,6 +93,8 @@
     <el-divider />
     <TaskCards
       :order-enum="orderEnum"
+      :warehouse-enum="warehouseEnum"
+      :role="role"
     />
 
     <ExportTasks />
@@ -114,10 +116,12 @@ import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
-import { useUserStore } from '@/store';
+import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start Data */
-const { warehouseId } = storeToRefs(useUserStore());
+const { warehouseId, role } = storeToRefs(useUserStore());
+const { warehouseEnum } = storeToRefs(useLogisticStore());
+
 const listQuery = ref({
   page: 1,
   perPage: 200,
@@ -356,6 +360,7 @@ const fetchList = () => {
   setTimeout(() => queryTask(), 350);
 };
 
+useWarehouseEnumHook();
 useQueryHook(listQuery, 'pending', fetchList);
 /* Provide functions */
 provide('fetchList', fetchList);

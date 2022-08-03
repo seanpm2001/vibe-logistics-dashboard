@@ -170,6 +170,13 @@ export async function sendEmailAPI (taskId: number) {
   return item;
 }
 
+export async function syncLightningAPI (taskId: number) {
+  const item = handleReqElMsg(
+    requester.post(`warehouse/task/${taskId}/sync-lightning`), 'Sync', 'Lightning', 'no'
+  );
+  return item;
+}
+
 /* 批次 Shipment Package API */
 export async function queryPackagesAPI (params?) {
   const res = await requester.get('/warehouse/packages', {

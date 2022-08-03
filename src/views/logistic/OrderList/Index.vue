@@ -134,7 +134,6 @@ import { useUserStore, useLogisticStore } from '@/store';
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 
 /* Start data */
-const router = useRouter();
 const { role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
 

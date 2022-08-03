@@ -80,6 +80,14 @@
       >
         Send Email
       </el-button>
+      <el-button
+        v-if="warehouseEnum[task.sourceId] !== 'Lightning'"
+        type="success"
+        :disabled="notHighPermission"
+        @click="syncLightningAPI(task.id)"
+      >
+        Sync Lightning
+      </el-button>
     </el-descriptions-item>
     <el-descriptions-item label="Transport & Carrier">
       {{ transportEnum[task.transportMode] }}
@@ -125,9 +133,9 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus';
-import OrderShipmentInfo from '../../../components/OrderShipmentInfo.vue';
+import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
-import { updateTaskAPI, sendEmailAPI } from '@/api';
+import { updateTaskAPI, sendEmailAPI, syncLightningAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
 
 const props = defineProps({
@@ -138,8 +146,18 @@ const props = defineProps({
   orderEnum: {
     type: Object,
     default: () => {}
+  },
+  warehouseEnum: {
+    type: Object,
+    default: () => {}
+  },
+  role: {
+    type: String,
+    required: true
   }
 });
+
+const notHighPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(props.role));
 
 const isFulfilled = ref(false);
 const isEditTaskNote = ref(false);
