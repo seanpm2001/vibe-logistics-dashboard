@@ -77,7 +77,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="Source Warehouse">
+          <el-form-item>
             <el-select
               v-model="taskItem.sourceId"
               :disabled="notCommonPermission"
@@ -195,7 +195,7 @@
             </el-checkbox-group>
           </el-form-item>
           <template
-            v-for="(product, index) in taskItem.products"
+            v-for="(product, productIdx) in taskItem.products"
             :key="product.sku"
           >
             <el-row
@@ -205,13 +205,13 @@
               <svg-icon
                 class="icon"
                 icon-name="add"
-                @click="onProductChange(index, 'add')"
+                @click="onProductChange(productIdx, 'add')"
               />
               <svg-icon
                 class="icon"
                 :style="taskItem.products.length <=1 ? 'visibility: hidden;':''"
                 icon-name="minus"
-                @click="onProductChange(index, 'minus')"
+                @click="onProductChange(productIdx, 'minus')"
               />
               <el-form-item label="*Product Name">
                 <el-select
@@ -230,7 +230,11 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="Sku">
+              <el-form-item
+                label="Sku"
+                :prop="'products.' + productIdx + '.sku'"
+                :rules="[{ required: warehouseEnum[taskItem.sourceId] === 'Lightning', trigger: 'blur', message: 'Sku required for Lightning' }]"
+              >
                 <el-select
                   v-model="product.sku"
                   :disabled="notCommonPermission"
@@ -248,7 +252,7 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="*Quantity">
+              <el-form-item label="*Quantity" :prop="'products.' + productIdx + '.quantity'">
                 <el-input-number
                   v-model="product.quantity"
                   :min="1"
@@ -309,6 +313,7 @@
           <el-button
             v-if="taskItem.id"
             type="primary"
+            :disabled="checkLightingTaskWrong"
             @click="handleWarehouseTask('update')"
           >
             Update Warehouse Task
@@ -316,6 +321,7 @@
           <el-button
             v-else
             type="primary"
+            :disabled="checkLightingTaskWrong"
             @click="handleWarehouseTask('create')"
           >
             Submit Warehouse Task
@@ -424,6 +430,21 @@ const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.valu
 provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
+
+const checkLightingTaskWrong = computed(() => {
+  const sourceId = taskItem.value.sourceId;
+  console.log('sourceId: ', sourceId);
+  const source = props.warehouseEnum[sourceId];
+  if (source !== 'Lightning')
+    return false;
+  
+  let flag = false;
+  const products = taskItem.value.products;
+  flag = products.some(product => !product.sku || noSerialArr.includes(product.productCode));
+  console.log('flag: ', flag);
+
+  return flag;
+});
 
 const onProductConditionChange = product => {
   product.serialNote = null;
