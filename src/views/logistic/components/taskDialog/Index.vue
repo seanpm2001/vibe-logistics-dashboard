@@ -155,11 +155,12 @@
           v-if="associatedTaskVisible"
           align="middle"
         >
-          Associated {{ taskItem.taskType === 'REPLACE' ? 'return task' : 'replace task' }}:
+          Associated
+          {{ taskItem.taskType === "REPLACE" ? "return task" : "replace task" }}:
           <el-tag
             v-if="taskItem.refTaskId"
             class="cursor-pointer mgr-5"
-            :type="taskItem.taskType === 'REPLACE'? 'danger' : 'warning'"
+            :type="taskItem.taskType === 'REPLACE' ? 'danger' : 'warning'"
             style="margin-left: 10px"
             @click="showAssociatedTask"
           >
@@ -209,7 +210,7 @@
               />
               <svg-icon
                 class="icon"
-                :style="taskItem.products.length <=1 ? 'visibility: hidden;':''"
+                :style="taskItem.products.length <= 1 ? 'visibility: hidden;' : ''"
                 icon-name="minus"
                 @click="onProductChange(productIdx, 'minus')"
               />
@@ -233,7 +234,13 @@
               <el-form-item
                 label="Sku"
                 :prop="'products.' + productIdx + '.sku'"
-                :rules="[{ required: warehouseEnum[taskItem.sourceId] === 'Lightning', trigger: 'blur', message: 'Sku required for Lightning' }]"
+                :rules="[
+                  {
+                    required: warehouseEnum[taskItem.sourceId] === 'Lightning',
+                    trigger: 'blur',
+                    message: 'Sku required for Lightning',
+                  },
+                ]"
               >
                 <el-select
                   v-model="product.sku"
@@ -252,7 +259,10 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="*Quantity" :prop="'products.' + productIdx + '.quantity'">
+              <el-form-item
+                label="*Quantity"
+                :prop="'products.' + productIdx + '.quantity'"
+              >
                 <el-input-number
                   v-model="product.quantity"
                   :min="1"
@@ -282,7 +292,10 @@
                 </el-input>
               </el-form-item>
               <el-form-item
-                v-show="(checkedSpecifySerial[0] || product.serialNote?.length) && !noSerialArr.includes(product.productCode)"
+                v-show="
+                  (checkedSpecifySerial[0] || product.serialNote?.length) &&
+                    !noSerialArr.includes(product.productCode)
+                "
                 label="Serials"
               >
                 <el-select
@@ -295,7 +308,7 @@
                   :multiple-limit="product.quantity"
                   remote
                   :allow-create="taskItem.taskType === 'RETURN'"
-                  :remote-method="query => debounce(remoteMethod(query, product), 500)"
+                  :remote-method="(query) => debounce(remoteMethod(query, product), 500)"
                 >
                   <el-option
                     v-for="unit in unitList"
@@ -356,23 +369,29 @@ import ShipmentForm from './ShipmentForm.vue';
 import OrderDescription from '../OrderDescription.vue';
 import { createTaskAPI, updateTaskAPI, queryUnitsAPI, findTaskAPI } from '@/api';
 import {
-  taskTypeEnum, taskReasonEnum, taskReasonDetailEnum, skuCodeEnum, noSerialArr,
-  unitConditionEnum, codeNameEnum, codeSkuArrEnum
+  taskTypeEnum,
+  taskReasonEnum,
+  taskReasonDetailEnum,
+  skuCodeEnum,
+  noSerialArr,
+  unitConditionEnum,
+  codeNameEnum,
+  codeSkuArrEnum,
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
 const props = defineProps({
   emptyTaskItem: {
     type: Object,
-    required: true
+    required: true,
   },
   warehouseEnum: {
     type: Object,
-    required: true
+    required: true,
   },
   dialogStatus: {
     type: String,
-    required: true
+    required: true,
   },
 });
 
@@ -386,15 +405,26 @@ const taskOrderItem = inject('taskOrderItem') as any;
 
 const { proxy } = getCurrentInstance();
 const { role } = storeToRefs(useUserStore());
-const notCommonPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value));
+const notCommonPermission = computed(
+  () => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value)
+);
 
 const unitList = shallowRef(null);
 
-const getCustomerId = () => Number(Object.keys(props.warehouseEnum).find(key => props.warehouseEnum[key] === 'Customer'));
+const getCustomerId = () =>
+  Number(
+    Object.keys(props.warehouseEnum).find(
+      (key) => props.warehouseEnum[key] === 'Customer'
+    )
+  );
 
 watchEffect(() => {
   const customerId = getCustomerId();
-  if (customerId && taskItem.value.sourceId !== customerId && taskItem.value.taskType === 'RETURN' ) {
+  if (
+    customerId &&
+    taskItem.value.sourceId !== customerId &&
+    taskItem.value.taskType === 'RETURN'
+  ) {
     taskItem.value.sourceId = customerId;
     ElMessage.warning('Source has been set to Customer!');
   }
@@ -402,12 +432,22 @@ watchEffect(() => {
 
 const remoteMethod = (query, product) => {
   if (query) {
-    queryUnitsAPI({ serial: query }).then(data => {
-      unitList.value = data.filter(item => {
+    queryUnitsAPI({ serial: query }).then((data) => {
+      unitList.value = data.filter((item) => {
         if (skuCodeEnum[item.sku] !== product.productCode) return false;
         if (product.sku && item.sku !== product.sku) return false;
-        if ((!product.condition || product.condition === 'GOOD') && (item.condition && item.condition !== 'GOOD')) return false; // brand new (null) or almost brand new (GOOD)
-        if (product.condition && product.condition !== 'GOOD' && item.condition !== product.condition) return false; // used
+        if (
+          (!product.condition || product.condition === 'GOOD') &&
+          item.condition &&
+          item.condition !== 'GOOD'
+        )
+          return false; // brand new (null) or almost brand new (GOOD)
+        if (
+          product.condition &&
+          product.condition !== 'GOOD' &&
+          item.condition !== product.condition
+        )
+          return false; // used
         return true;
       });
     });
@@ -424,7 +464,9 @@ const disableNewShipment = ref(false);
 
 const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
 const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
-const isReturnOrRepalce = computed(() => returnReplaceArr.includes(taskItem.value.taskType));
+const isReturnOrRepalce = computed(() =>
+  returnReplaceArr.includes(taskItem.value.taskType)
+);
 // const isMoveOrReturn = computed(() => returnMoveArr.includes(taskItem.value.taskType));
 
 provide('packageArr', packageArr);
@@ -435,38 +477,39 @@ const checkLightingTaskWrong = computed(() => {
   const sourceId = taskItem.value.sourceId;
   console.log('sourceId: ', sourceId);
   const source = props.warehouseEnum[sourceId];
-  if (source !== 'Lightning')
-    return false;
-  
+  if (source !== 'Lightning') return false;
+
   let flag = false;
   const products = taskItem.value.products;
-  flag = products.some(product => !product.sku || noSerialArr.includes(product.productCode));
-  console.log('flag: ', flag);
+  flag = products.some(
+    (product) => !product.sku || noSerialArr.includes(product.productCode)
+  );
+  if (flag)
+    ElMessage.error('Lightning Task Products can\'t be accessories and must have SKU.');
 
   return flag;
 });
 
-const onProductConditionChange = product => {
+const onProductConditionChange = (product) => {
   product.serialNote = null;
 };
 
-function removeEmptyTask (products) {
+function removeEmptyTask(products) {
   for (let idx = products.length - 1; idx >= 0; idx--) {
     const code = products[idx].productCode;
-    if (!code)
-      products[idx].splice(idx, 1);
+    if (!code) products[idx].splice(idx, 1);
   }
 }
 
-const handleWarehouseTask = type => {
+const handleWarehouseTask = (type) => {
   removeEmptyTask(taskItem.value.products);
   if (type === 'create') {
-    createTaskAPI(taskItem.value).then(data => {
+    createTaskAPI(taskItem.value).then((data) => {
       taskItem.value = data;
       fetchList();
     });
   } else {
-    updateTaskAPI(taskItem.value.id, taskItem.value).then(data => {
+    updateTaskAPI(taskItem.value.id, taskItem.value).then((data) => {
       taskItem.value = data || taskItem.value;
       fetchList();
     });
@@ -476,7 +519,7 @@ const handleWarehouseTask = type => {
 const onProductChange = (idx, type) => {
   const products = taskItem.value.products;
   type === 'add'
-    ? products.push({sku: null, condition: null, quantity: null})
+    ? products.push({ sku: null, condition: null, quantity: null })
     : products.splice(idx--, 1);
 };
 
@@ -524,14 +567,18 @@ const associatedTaskVisible = computed(() => {
 
 const addAssociatedReturnTask = () => {
   // TODO: need to check if there is any unsaved changes for current replace task
-  ElMessageBox.confirm('Are you sure to add a return associated return task? Please make sure save current task first.', 'Warning', {
-    type: 'warning',
-    callback: (action) => {
-      if (action === 'confirm') {
-        initializeAssociatedReturnTask();
-      }
-    },
-  });
+  ElMessageBox.confirm(
+    'Are you sure to add a return associated return task? Please make sure save current task first.',
+    'Warning',
+    {
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          initializeAssociatedReturnTask();
+        }
+      },
+    }
+  );
 };
 
 const initializeAssociatedReturnTask = () => {
@@ -540,7 +587,7 @@ const initializeAssociatedReturnTask = () => {
   const products = taskItem.value.products.map((product) => ({
     productCode: product.productCode,
     sku: product.sku,
-    quantity: product.quantity
+    quantity: product.quantity,
   }));
   resetForm();
   setTimeout(() => {
@@ -552,20 +599,23 @@ const initializeAssociatedReturnTask = () => {
 };
 
 const showAssociatedTask = () => {
-  ElMessageBox.confirm('Are you sure to go to associated task? Please make sure save current task first.', 'Warning', {
-    type: 'warning',
-    callback: (action) => {
-      if (action === 'confirm') {
-        const taskId = taskItem.value.refTaskId;
-        resetForm();
-        findTaskAPI(taskId).then(data => {
-          taskItem.value = data;
-        });
-      }
-    },
-  });
+  ElMessageBox.confirm(
+    'Are you sure to go to associated task? Please make sure save current task first.',
+    'Warning',
+    {
+      type: 'warning',
+      callback: (action) => {
+        if (action === 'confirm') {
+          const taskId = taskItem.value.refTaskId;
+          resetForm();
+          findTaskAPI(taskId).then((data) => {
+            taskItem.value = data;
+          });
+        }
+      },
+    }
+  );
 };
-
 </script>
 
 <style lang="sass" scoped>
