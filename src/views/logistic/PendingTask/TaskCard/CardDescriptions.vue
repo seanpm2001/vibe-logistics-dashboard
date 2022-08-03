@@ -81,7 +81,7 @@
         Send Email
       </el-button>
       <el-button
-        v-if="warehouseEnum[task.sourceId] !== 'Lightning'"
+        v-if="warehouseEnum[task.sourceId] === 'Lightning'"
         type="success"
         :disabled="notHighPermission"
         @click="syncLightningAPI(task.id)"

@@ -91,11 +91,20 @@
       </el-descriptions>
     </div>
     <el-divider />
-    <TaskCards
-      :order-enum="orderEnum"
-      :warehouse-enum="warehouseEnum"
-      :role="role"
-    />
+
+    <template
+      v-for="(task, taskIdx) in dataList"
+      :key="task.id"
+    >
+      <TaskCard
+        :task="task"
+        :task-idx="taskIdx"
+        :order-enum="orderEnum"
+        :warehouse-enum="warehouseEnum"
+        :role="role"
+      />
+    </template>
+    
 
     <ExportTasks />
 
@@ -111,7 +120,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
-import TaskCards from './TaskCards/Index.vue';
+import TaskCard from './TaskCard/Index.vue';
 import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';

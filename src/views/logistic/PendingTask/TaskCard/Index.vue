@@ -1,249 +1,244 @@
 <template>
-  <template
-    v-for="(task, taskIdx) in dataList"
-    :key="task.id"
+  <el-card
+    :class="tasksProductFulQty[task.id].error ? 'error-border-tip' : ''"
   >
-    <el-card
-      :class="tasksProductFulQty[task.id].error ? 'error-border-tip' : ''"
-    >
-      <CardDescriptions
+    <CardDescriptions
+      :task="task"
+      :order-enum="orderEnum"
+      :warehouse-enum="warehouseEnum"
+      :role="role"
+      @fetch-list="fetchList"
+    />
+    <div class="package-wrapper">
+      <div class="col1 meta-data label w-380">
+        Meta Data
+      </div>
+      <div class="col2 serial-label label">
+        Package Serials
+      </div>
+      <div class="col3 label w-340">
+        Package Tracking Number &
+        Weight & Dimension & Unit System
+      </div>
+      <div class="col4 label w-180">
+        Operation
+      </div>
+
+      <MetaData
         :task="task"
-        :order-enum="orderEnum"
-        :warehouse-enum="warehouseEnum"
-        :role="role"
-        @fetch-list="fetchList"
+        :task-idx="taskIdx"
       />
-      <div class="package-wrapper">
-        <div class="col1 meta-data label w-380">
-          Meta Data
-        </div>
-        <div class="col2 serial-label label">
-          Package Serials
-        </div>
-        <div class="col3 label w-340">
-          Package Tracking Number &
-          Weight & Dimension & Unit System
-        </div>
-        <div class="col4 label w-180">
-          Operation
-        </div>
 
-        <MetaData
-          :task="task"
-          :task-idx="taskIdx"
-        />
-
-        <div
-          ref="taskPackageArr"
-          class="col2 package-info"
+      <div
+        ref="taskPackageArr"
+        class="col2 package-info"
+      >
+        <template
+          v-for="(item, packageIdx) in task.packages"
+          :key="item.id"
         >
-          <template
-            v-for="(item, packageIdx) in task.packages"
-            :key="item.id"
-          >
-            <div class="col2 serial-cell cell">
-              <template
-                v-for="(unit, index) in item.units"
-                :key="unit.serial"
-              >
-                <div class="f-row col-center">
-                  <svg-icon
-                    class="icon mgr-5"
-                    icon-name="add"
-                    @click="handleUnitChange(item, packageIdx, index, 'add', task, taskIdx, true)"
-                  />
-                  <el-select
-                    v-model="unit.serial"
-                    placeholder="Please select"
-                    :class="'w-200' + (unit.hasError ? ' error-border-tip' : '')"
-                    filterable
-                    remote
-                    :remote-method="(query) => debounce(remoteSerialMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
-                    @change="remoteSerialMethod(unit.serial, task, item, taskIdx, packageIdx, unit)"
-                    @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
-                  >
-                    <el-option
-                      v-for="unitOpt in unitList"
-                      :key="unitOpt.serial"
-                      :label="unitOpt.serial"
-                      :value="unitOpt.serial"
-                    />
-                  </el-select>
-                  <svg-icon
-                    class="icon mgl-5"
-                    :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
-                    icon-name="minus"
-                    @click="handleUnitChange(item, packageIdx, index, 'remove', task, taskIdx, true)"
-                  />
-                </div>
-              </template>
-              <template
-                v-for="accessory in item.accessories"
-                :key="accessory.productCode"
-              >
-                <div
-                  v-if="!accessoryAllocationVisible || accessory.productCode != accessoryAllocation.productCode"
-                  class="f-row col-center"
-                  style="margin-top: 10px"
+          <div class="col2 serial-cell cell">
+            <template
+              v-for="(unit, index) in item.units"
+              :key="unit.serial"
+            >
+              <div class="f-row col-center">
+                <svg-icon
+                  class="icon mgr-5"
+                  icon-name="add"
+                  @click="handleUnitChange(item, packageIdx, index, 'add', task, taskIdx, true)"
+                />
+                <el-select
+                  v-model="unit.serial"
+                  placeholder="Please select"
+                  :class="'w-200' + (unit.hasError ? ' error-border-tip' : '')"
+                  filterable
+                  remote
+                  :remote-method="(query) => debounce(remoteSerialMethod(query, task, item, taskIdx, packageIdx, unit), 500)"
+                  @change="remoteSerialMethod(unit.serial, task, item, taskIdx, packageIdx, unit)"
+                  @focus="event => handleInputFocus(event, taskIdx, packageIdx)"
                 >
-                  <el-tag size="small">
-                    {{ codeNameEnum[accessory.productCode] || accessory.productCode }}
-                  </el-tag>
-                  <el-divider direction="vertical" />
-                  ful:
-                  <el-tag size="small">
-                    {{ accessory.quantity }}
-                  </el-tag>
-                </div>
-              </template>
-              <el-row
-                v-if="accessoryAllocationVisible"
-                :style="'margin-top: 10px;'"
+                  <el-option
+                    v-for="unitOpt in unitList"
+                    :key="unitOpt.serial"
+                    :label="unitOpt.serial"
+                    :value="unitOpt.serial"
+                  />
+                </el-select>
+                <svg-icon
+                  class="icon mgl-5"
+                  :style="item.units.length <= 1 ? 'visibility: hidden;' : ''"
+                  icon-name="minus"
+                  @click="handleUnitChange(item, packageIdx, index, 'remove', task, taskIdx, true)"
+                />
+              </div>
+            </template>
+            <template
+              v-for="accessory in item.accessories"
+              :key="accessory.productCode"
+            >
+              <div
+                v-if="!accessoryAllocationVisible || accessory.productCode != accessoryAllocation.productCode"
+                class="f-row col-center"
+                style="margin-top: 10px"
               >
                 <el-tag size="small">
-                  {{ codeNameEnum[accessoryAllocation.productCode] }}
+                  {{ codeNameEnum[accessory.productCode] || accessory.productCode }}
                 </el-tag>
-                <el-select
-                  v-model="accessoryAllocation.quantities[packageIdx]"
-                  placeholder="Quantity"
-                  default-first-option
-                >
-                  <el-option
-                    v-for="(v, index) in ((accessoryAllocation.reqQuantity || 0) + 1)"
-                    :key="index"
-                    :label="index"
-                    :value="index"
-                  />
-                </el-select>
-              </el-row>
-              <div
-                v-if="item.scannedSerials"
-                class="mgt-10"
-              >
-                <el-tooltip
-                  effect="light"
-                >
-                  <el-tag type="danger">
-                    Mismatched Scanned Serials
-                  </el-tag>
-                  <template #content>
-                    <template
-                      v-for="(serial, idx) in item.scannedSerials.split(';')"
-                      :key="idx"
-                    >
-                      <el-tag
-                        type="danger"
-                        closable
-                        @close="removeScannedSerial(item, idx)"
-                      >
-                        {{ serial }}
-                      </el-tag>
-                    </template>
-                  </template>
-                </el-tooltip>
+                <el-divider direction="vertical" />
+                ful:
+                <el-tag size="small">
+                  {{ accessory.quantity }}
+                </el-tag>
               </div>
-            </div>
-            <div class="col3 cell w-340">
-              <el-input
-                v-model="item.trackingNumber"
-                placeholder="Tracking Number"
-                @input="(trackingNumber) => debounce(inputTrackingNumber(trackingNumber, item, task, packageIdx, taskIdx), 200)"
-              />
-              <el-row
-                class="dimension"
-                style="margin-top: 20px"
+            </template>
+            <el-row
+              v-if="accessoryAllocationVisible"
+              :style="'margin-top: 10px;'"
+            >
+              <el-tag size="small">
+                {{ codeNameEnum[accessoryAllocation.productCode] }}
+              </el-tag>
+              <el-select
+                v-model="accessoryAllocation.quantities[packageIdx]"
+                placeholder="Quantity"
+                default-first-option
               >
-                <el-input
-                  v-model="item.length"
-                  placeholder="Length"
-                  @input="val => (item.length = toNumber(val) || null)"
+                <el-option
+                  v-for="(v, index) in ((accessoryAllocation.reqQuantity || 0) + 1)"
+                  :key="index"
+                  :label="index"
+                  :value="index"
                 />
-                <el-input
-                  v-model="item.width"
-                  placeholder="Width"
-                  @input="val => (item.width = toNumber(val) || null)"
-                />
-                <el-input
-                  v-model="item.height"
-                  placeholder="Height"
-                  @input="val => (item.height = toNumber(val) || null)"
-                />
-                <el-input
-                  v-model="item.weight"
-                  placeholder="Weight"
-                  @input="val => (item.weight = toNumber(val) || null)"
-                />
-                <el-select
-                  v-model="item.unitSystem"
-                  placeholder="Unit System"
-                  default-first-option
-                  :disabled="true"
-                >
-                  <el-option
-                    v-for="(unitSys, key) in unitSystemEnum"
-                    :key="key"
-                    :label="unitSys"
-                    :value="key"
-                  />
-                </el-select>
-              </el-row>
-            </div>
-            <div class="col4 cell w-180">
-              <el-button
-                v-if="item.id"
-                class="mgr-5"
-                type="primary"
-                :disabled="disableUpdatePackage(item, packageIdx, taskIdx)"
-                @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
+              </el-select>
+            </el-row>
+            <div
+              v-if="item.scannedSerials"
+              class="mgt-10"
+            >
+              <el-tooltip
+                effect="light"
               >
-                Update
-              </el-button>
-              <el-button
-                v-else
-                :disabled="disableSubmitPackage(item, task)"
-                class="mgr-5"
-                type="primary"
-                @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
-              >
-                Submit
-              </el-button>
-              <el-popconfirm
-                v-if="item?.id"
-                confirm-button-text="OK"
-                cancel-button-text="No, Thanks"
-                icon-color="red"
-                title="Are you sure to delete this?"
-                @confirm="handleDeletePackage(item?.id)"
-              >
-                <template #reference>
-                  <el-button
-                    :disabled="accessoryAllocationVisible"
-                    type="danger"
+                <el-tag type="danger">
+                  Mismatched Scanned Serials
+                </el-tag>
+                <template #content>
+                  <template
+                    v-for="(serial, idx) in item.scannedSerials.split(';')"
+                    :key="idx"
                   >
-                    Delete
-                  </el-button>
+                    <el-tag
+                      type="danger"
+                      closable
+                      @close="removeScannedSerial(item, idx)"
+                    >
+                      {{ serial }}
+                    </el-tag>
+                  </template>
                 </template>
-              </el-popconfirm>
-              <el-button
-                v-else
-                :disabled="accessoryAllocationVisible"
-                type="danger"
-                @click="onPackagesChange(null, task.packages, 'remove', packageIdx)"
-              >
-                Remove
-              </el-button>
+              </el-tooltip>
             </div>
-          </template>
-        </div>
+          </div>
+          <div class="col3 cell w-340">
+            <el-input
+              v-model="item.trackingNumber"
+              placeholder="Tracking Number"
+              @input="(trackingNumber) => debounce(inputTrackingNumber(trackingNumber, item, task, packageIdx, taskIdx), 200)"
+            />
+            <el-row
+              class="dimension"
+              style="margin-top: 20px"
+            >
+              <el-input
+                v-model="item.length"
+                placeholder="Length"
+                @input="val => (item.length = toNumber(val) || null)"
+              />
+              <el-input
+                v-model="item.width"
+                placeholder="Width"
+                @input="val => (item.width = toNumber(val) || null)"
+              />
+              <el-input
+                v-model="item.height"
+                placeholder="Height"
+                @input="val => (item.height = toNumber(val) || null)"
+              />
+              <el-input
+                v-model="item.weight"
+                placeholder="Weight"
+                @input="val => (item.weight = toNumber(val) || null)"
+              />
+              <el-select
+                v-model="item.unitSystem"
+                placeholder="Unit System"
+                default-first-option
+                :disabled="true"
+              >
+                <el-option
+                  v-for="(unitSys, key) in unitSystemEnum"
+                  :key="key"
+                  :label="unitSys"
+                  :value="key"
+                />
+              </el-select>
+            </el-row>
+          </div>
+          <div class="col4 cell w-180">
+            <el-button
+              v-if="item.id"
+              class="mgr-5"
+              type="primary"
+              :disabled="disableUpdatePackage(item, packageIdx, taskIdx)"
+              @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
+            >
+              Update
+            </el-button>
+            <el-button
+              v-else
+              :disabled="disableSubmitPackage(item, task)"
+              class="mgr-5"
+              type="primary"
+              @click="handleSubmitPackage(item, task, packageIdx, taskIdx)"
+            >
+              Submit
+            </el-button>
+            <el-popconfirm
+              v-if="item?.id"
+              confirm-button-text="OK"
+              cancel-button-text="No, Thanks"
+              icon-color="red"
+              title="Are you sure to delete this?"
+              @confirm="handleDeletePackage(item?.id)"
+            >
+              <template #reference>
+                <el-button
+                  :disabled="accessoryAllocationVisible"
+                  type="danger"
+                >
+                  Delete
+                </el-button>
+              </template>
+            </el-popconfirm>
+            <el-button
+              v-else
+              :disabled="accessoryAllocationVisible"
+              type="danger"
+              @click="onPackagesChange(null, task.packages, 'remove', packageIdx)"
+            >
+              Remove
+            </el-button>
+          </div>
+        </template>
       </div>
-      <el-button
-        :disabled="disableNewPackage(task.packages)"
-        @click="onPackagesChange(task, task.packages, 'add')"
-      >
-        Add Package
-      </el-button>
-    </el-card>
-  </template>
+    </div>
+    <el-button
+      :disabled="disableNewPackage(task.packages)"
+      @click="onPackagesChange(task, task.packages, 'add')"
+    >
+      Add Package
+    </el-button>
+  </el-card>
 </template>
 
 <script lang="ts" setup>
@@ -256,6 +251,14 @@ import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } f
 
 
 const props = defineProps({
+  task: {
+    type: Object,
+    default: () => {}
+  },
+  taskIdx: {
+    type: Number,
+    required: true
+  },
   orderEnum: {
     type: Object,
     default: () => {}
