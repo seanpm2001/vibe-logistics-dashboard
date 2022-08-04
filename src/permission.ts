@@ -8,7 +8,7 @@ import { getPageTitle, tryHideFullScreenLoading, showFullScreenLoading } from '@
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 // no redirect whitelist
-const whiteList = ['/login', '/auth-redirect', '/easy-quote', '/supply', '/test-png'];
+const whiteList = ['/login', '/auth-redirect', '/easy-quote', '/supply', '/test-form'];
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar

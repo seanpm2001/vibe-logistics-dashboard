@@ -10,8 +10,8 @@ export const vibeToolRouter = [
     hidden: true
   },
   {
-    path: '/test-png',
-    component: () => import('@/views/vibe-tool/TestPng.vue'),
+    path: '/test-form',
+    component: () => import('@/views/vibe-tool/TestForm.vue'),
     hidden: true
   },
 ];
