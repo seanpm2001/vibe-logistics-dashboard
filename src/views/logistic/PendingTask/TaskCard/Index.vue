@@ -454,10 +454,9 @@ function filterUnitList (unitList, task) {
 
 const unitList = shallowRef(null);
 const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
-  console.log('query: ', query);
   if (query) {
     const isScanned = !!~query.indexOf(';');
-    query = query.replace(';', '');
+    query = query.replace(';', '').toUpperCase();
     queryUnitsAPI({ serial: query }).then(data => {
       if (isScanned) {
         if (data.length !== 1) {
