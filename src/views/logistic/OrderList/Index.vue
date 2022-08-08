@@ -284,6 +284,8 @@ async function submitInitTaskItem (products, assignedData, orderId) {
 
   await createTaskAPI(task).then(data => {
     taskId = data.id;
+  }).catch(error => {
+    unassignOrdersAPI(orderId).then(() => fetchList());
   });
   return taskId;
 }
