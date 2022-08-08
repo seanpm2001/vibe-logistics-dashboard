@@ -14,6 +14,7 @@
       multiple
       clearable
       @visible-change="onTypeArrChange"
+      @remove-tag="fetchList"
     >
       <el-option
         v-for="(type, key) in dailyPendingTaskTypeEnum"

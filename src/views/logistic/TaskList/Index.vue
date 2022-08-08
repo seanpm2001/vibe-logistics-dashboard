@@ -98,11 +98,13 @@ const taskItem = ref({
 const emptyTaskItem = JSON.parse(JSON.stringify(taskItem))._value;
 const contrastData = ref(null);
 
+
 const listQuery = ref({
   page: 1,
   perPage: 10,
   warehouseId: warehouseId
 });
+const typeArr = ref(['FULFILLMENT', 'REPLACE', 'RETURN']);
 const dataList = shallowRef(null);
 const total = ref(0);
 
@@ -110,13 +112,19 @@ provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
+provide('typeArr', typeArr);
 provide('multipleSelection', multipleSelection);
 /* End Data */
 
 
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryTask() {
-  queryTasksAPI(listQuery.value).then((data) => {
+  const params = new URLSearchParams(listQuery.value);
+  typeArr.value.forEach(type => {
+    params.append('taskType', type);
+  });
+
+  queryTasksAPI(params).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
 

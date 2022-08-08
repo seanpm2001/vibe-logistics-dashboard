@@ -1,19 +1,37 @@
 <template>
   <div class="filter-container">
-    <el-select
-      v-model="showTaskPattern"
-      placeholder="Task type"
-      style="width: 155px"
-      @change="handleFilter"
-    >
-      <el-option
-        v-for="(item, key) in taskPatternEnum"
-        :key="item"
-        :label="item"
-        :value="key"
-      />
-    </el-select>
-
+    <el-row>
+      <el-select
+        v-model="showTaskPattern"
+        placeholder="Task type"
+        style="width: 155px"
+        disabled
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="(item, key) in taskPatternEnum"
+          :key="item"
+          :label="item"
+          :value="key"
+        />
+      </el-select>
+      <el-select
+        v-model="typeArr"
+        placeholder="Task Type"
+        multiple
+        clearable
+        @visible-change="onTypeArrChange"
+        @remove-tag="fetchList"
+      >
+        <el-option
+          v-for="(type, key) in taskTypeEnum"
+          :key="key"
+          :label="type"
+          :value="key"
+        />
+      </el-select>
+    </el-row>
+    
     <div class="right-subcontainer">
       <el-button
         v-if="false"
@@ -39,8 +57,11 @@
 <script lang="ts" setup>
 import { Delete } from '@element-plus/icons-vue';
 import { deleteTaskAPI } from '@/api';
+import { taskTypeEnum } from '@/enums/logistic';
+import { debounce } from '@/utils';
 
 const listQuery = inject('listQuery') as any;
+const typeArr = inject('typeArr');
 const multipleSelection = inject('multipleSelection') as any;
 const showTaskPattern = ref(null);
 
@@ -51,6 +72,11 @@ const taskPatternEnum = {
 
 const emit = defineEmits(['fetchList']);
 const fetchList = () => emit('fetchList');
+
+const onTypeArrChange = (visible: boolean) => {
+  if (!visible)
+    fetchList();
+};
 
 const handleFilter = () => {
   listQuery.value.page = 1;
