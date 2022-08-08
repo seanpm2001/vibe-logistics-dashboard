@@ -207,11 +207,18 @@
     </el-table-column>
     <el-table-column
       label="Fulfilled At"
-      width="180px"
+      width="260px"
       align="center"
     >
       <template #default="{ row }">
-        {{ formatVBDate(row.createdAt) }}
+        <el-date-picker
+          v-model="row.createdAt"
+          :disabled="notCommonPermission"
+          type="date"
+          placeholder="Please pick a date"
+          value-format="YYYY-MM-DD"
+          @change="onPackageItemDateChange(row)"
+        />
       </template>
     </el-table-column>
     <el-table-column
@@ -226,7 +233,7 @@
           type="date"
           placeholder="Please pick a date"
           value-format="YYYY-MM-DD"
-          @change="onDeliveredAtChange(row)"
+          @change="onPackageItemDateChange(row)"
         />
       </template>
     </el-table-column>
@@ -441,7 +448,7 @@ const getTrackingUrl = (carrier, trackingNumber) => {
   return '#/logistic/package';
 };
 
-const onDeliveredAtChange = (packageItem) => {
+const onPackageItemDateChange = (packageItem) => {
   ElMessageBox.confirm('Update it?', 'Warning', {
     type: 'warning',
     callback: (action) => {
