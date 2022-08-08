@@ -84,7 +84,7 @@
         v-if="warehouseEnum[task.sourceId] === 'Lightning'"
         type="success"
         :disabled="notHighPermission"
-        @click="syncLightningAPI(task.id)"
+        @click="syncLightning(task.id)"
       >
         Sync Lightning
       </el-button>
@@ -198,6 +198,10 @@ const editTaskNote = () => {
   } else {
     isEditTaskNote.value = true;
   }
+};
+
+const syncLightning = (taskId) => {
+  syncLightningAPI(taskId).then(() => emit('fetchList'));
 };
 </script>
 

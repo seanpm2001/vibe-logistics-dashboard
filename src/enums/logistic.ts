@@ -446,3 +446,8 @@ export const taskFulfilmentErrorEnum = {
   MISSING_TRACKING_NUMBER: 'Missing tracking number',
   MISSING_CARRIER: 'Missing carrier'
 };
+
+export const packageErrorEnum = {
+  EDITING_OUTBOUND_TASK: 'Editing outbound task',
+  UNIT_ERROR: 'Unit error'
+};

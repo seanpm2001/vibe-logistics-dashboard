@@ -246,7 +246,7 @@ import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber, getWarehouseUnitSystem, jsonClone } from '@/utils';
-import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, transportEnum } from '@/enums/logistic';
+import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api';
 
 
@@ -304,6 +304,11 @@ const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
     handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
   }
 };
+
+const disableEditOutboundTask = computed(() => {
+  console.log('task', props.task.id, props.warehouseEnum[props.task.sourceId] === 'Lightning');
+  return props.warehouseEnum[props.task.sourceId] === 'Lightning';
+});
 
 const currentTaskSpecifiedSerials = computed(() => {
   let serials = [];
@@ -553,7 +558,11 @@ function reportUnitError (unit) {
 
 function reportPackageError (packageItem) {
   // clean up hasError status and report the first error encountered
-  let hasError = false;
+  if (disableEditOutboundTask.value) {
+    ElMessage.error('You can\'t edit outbound task');
+    return packageErrorEnum.EDITING_OUTBOUND_TASK;
+  }
+  let unitError = false;
   packageItem.units.forEach(unit => {
     unit.hasError = false;
   });
@@ -561,19 +570,24 @@ function reportPackageError (packageItem) {
     const unit = packageItem.units[unitIdx];
     if (reportUnitError(unit)) {
       unit.hasError = true;
-      hasError = true;
+      unitError = true;
       break;
     }
   }
-  return hasError;
+  return unitError ? packageErrorEnum.UNIT_ERROR : null;
 }
 
 const handleSubmitPackage = (packageItem, task, packageIdx, taskIdx, createNewUnit=true) => {
   handleInputFocus(null, taskIdx, packageIdx);
   const packageItemForSubmission = jsonClone(packageItem);
+  const savedTask = jsonClone(savedTasks.value[taskIdx]);
   removeEmptyUnit(packageItemForSubmission);
 
-  if (reportPackageError(packageItemForSubmission)) {
+  const packageError = reportPackageError(packageItemForSubmission);
+  if (packageError === packageErrorEnum.EDITING_OUTBOUND_TASK) {
+    Object.assign(task, savedTask);
+    return;
+  } else if (packageError === packageErrorEnum.UNIT_ERROR) {
     Object.assign(packageItem, packageItemForSubmission);
     return;
   }
@@ -658,6 +672,10 @@ const onPackagesChange = (task, packages, type, packageIdx?) => {
 };
 
 const handleDeletePackage = (packageId) => {
+  if (disableEditOutboundTask.value) {
+    ElMessage.error('You can\'t edit outbound task');
+    return;
+  }
   packageId && deletePackageAPI(packageId).then(() => {
     fetchList();
   });
