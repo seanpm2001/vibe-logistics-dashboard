@@ -87,7 +87,6 @@ onMounted(() => {
   // eslint-disable-next-line no-undef
   // card3.addEventListener("tiltChange", callback);
 });
-
 </script>
 
 <style lang="sass" scoped>

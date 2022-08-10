@@ -245,7 +245,7 @@ function removeEmptyProducts (taskItem) {
 
 const getCustomerId = () => Number(Object.keys(warehouseEnum.value).find(key => warehouseEnum.value[key] === 'Customer'));
 
-async function submitInitTaskItem (products, assignedData, orderId) {
+async function submitInitTaskItem (products, assignedData, orderId, ifSubmit = true) {
   const { sourceWHId, carrier, transportMode } = assignedData;
 
   const task = {} as any;
@@ -282,12 +282,17 @@ async function submitInitTaskItem (products, assignedData, orderId) {
 
   let taskId = null;
 
-  await createTaskAPI(task).then(data => {
-    taskId = data.id;
-  }).catch(error => {
-    unassignOrdersAPI(orderId).then(() => fetchList());
-  });
-  return taskId;
+  if (ifSubmit) {
+    await createTaskAPI(task).then(data => {
+      taskId = data.id;
+    }).catch(error => {
+      unassignOrdersAPI(orderId).then(() => fetchList());
+    });
+
+    return taskId;
+  } else {
+    taskItem.value = Object.assign({}, task);
+  }
 }
 
 function assignSelectedOrders(assignedData, selectedArr) {
@@ -348,8 +353,12 @@ const assignOrders = () => {
     .then(async (data: any) => {
       dialogAssignVisible.value = false;
       const products = await formatAssignedOrderItem(data)?.items;
-      const taskId = await submitInitTaskItem(products, assignedData, data.id);
-      taskId && editWarehouseTask(data.id, taskId);
+      await submitInitTaskItem(products, assignedData, data.id, false);
+      // taskId && editWarehouseTask(data.id, taskId);
+      taskOrderItem.value = await formatAssignedOrderItem(data);
+      dialogStatus.value = 'update';
+      dialogTaskVisible.value = true;
+      ElMessage.warning('Please Submit yourself');
     })
     .finally(() => {
       dialogAssignVisible.value = false;
