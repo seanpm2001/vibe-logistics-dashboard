@@ -233,6 +233,10 @@ const showOrderDrawer = async order => {
 };
 
 const showAssignDialog = (type, orderId) => {
+  sourceId.value = null;
+  taskTransport.value = null;
+  taskCarrier.value = null;
+
   assignPattern.value = type;
   assignOrderId.value = orderId || null;
   dialogAssignVisible.value = true;
