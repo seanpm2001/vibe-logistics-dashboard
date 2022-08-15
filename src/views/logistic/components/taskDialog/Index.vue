@@ -64,16 +64,16 @@
             <el-select
               v-model="taskItem.returnDetails"
               :disabled="notCommonPermission"
-              placeholder="Please select"
+              placeholder="Please select category"
               clearable
               filterable
               default-first-option
             >
               <el-option
-                v-for="(item, key) in taskReasonDetailEnum[taskItem.returnReason]"
+                v-for="(item) in taskReasonDetailEnum[taskItem.returnReason]"
                 :key="item"
                 :label="item"
-                :value="key"
+                :value="item"
               />
             </el-select>
           </el-form-item>
