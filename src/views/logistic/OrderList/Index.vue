@@ -191,8 +191,17 @@ const listQuery = ref({
   showAssignedOrder: false,
 });
 
+const contrastTask = ref(null);
+
+const disableUnchangedTask = computed(() => {
+  if (JSON.stringify(taskItem.value) !== contrastTask.value) // changed
+    return false;
+  return true;
+});
+
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
+provide('disableUnchangedTask', disableUnchangedTask);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 provide('multipleSelection', multipleSelection);
@@ -361,7 +370,7 @@ const assignOrders = () => {
       // taskId && editWarehouseTask(data.id, taskId);
       taskOrderItem.value = await formatAssignedOrderItem(data);
       dialogStatus.value = 'update';
-      dialogTaskVisible.value = true;
+      showTaskDialog();
       ElMessage.warning('Please Submit yourself');
     })
     .finally(() => {
@@ -379,6 +388,14 @@ const unassignOrders = (order) => {
     .then(() => fetchList());
 };
 
+function recordContrastTask () {
+  contrastTask.value = JSON.stringify(taskItem.value);
+}
+
+function showTaskDialog () {
+  recordContrastTask();
+  dialogTaskVisible.value = true;
+}
 
 const addWarehouseTask = (orderId: number) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
@@ -386,7 +403,8 @@ const addWarehouseTask = (orderId: number) => {
     taskItem.value.orderId = orderId;
     taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
-    dialogTaskVisible.value = true;
+
+    showTaskDialog();
   });
 };
 
@@ -400,7 +418,7 @@ const editWarehouseTask = (orderId, taskId) => {
     findTaskAPI(taskId).then(data => {
       taskItem.value = data;
       dialogStatus.value = 'update';
-      dialogTaskVisible.value = true;
+      showTaskDialog();
     });
   });
 };

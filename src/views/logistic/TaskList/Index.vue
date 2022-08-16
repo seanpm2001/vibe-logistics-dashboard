@@ -108,8 +108,17 @@ const typeArr = ref(['FULFILLMENT', 'REPLACE', 'RETURN']);
 const dataList = shallowRef(null);
 const total = ref(0);
 
+const contrastTask = ref(null);
+
+const disableUnchangedTask = computed(() => {
+  if (JSON.stringify(taskItem.value) !== contrastTask.value) // changed
+    return false;
+  return true;
+});
+
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
+provide('disableUnchangedTask', disableUnchangedTask);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 provide('typeArr', typeArr);
@@ -153,6 +162,15 @@ const showOrderDrawer = async order => {
   tryHideFullScreenLoading();
 };
 
+function recordContrastTask () {
+  contrastTask.value = JSON.stringify(taskItem.value);
+}
+
+function showTaskDialog () {
+  recordContrastTask();
+  dialogTaskVisible.value = true;
+}
+
 const handleDetailRow = (task, type) => {
   const taskId = task.id;
   if (type === 'remove') {
@@ -167,7 +185,7 @@ const handleDetailRow = (task, type) => {
   findAssignedOrderAPI(orderId).then(async data => {
     taskOrderItem.value = await formatAssignedOrderItem(data);
     type === 'edit' && (dialogStatus.value = 'update');
-    dialogTaskVisible.value = true;
+    showTaskDialog();
   });
 };
 </script>

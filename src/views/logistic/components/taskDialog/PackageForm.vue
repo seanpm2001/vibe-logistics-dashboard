@@ -196,7 +196,7 @@
     >
       <el-button
         v-if="taskPackage?.id"
-        :disabled="!taskId"
+        :disabled="!taskId || !ifPackageChanged"
         type="primary"
         @click="handlePackage('update')"
       >
@@ -265,6 +265,16 @@ const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
 
 const taskPackage = ref(props.packageItem);
+const ifPackageChanged =  ref(false);
+let firstLoad = true;
+// const contrastPackage = JSON.stringify(props.packageItem); // 比较这个行不通，打印出来值一样，返回不一样
+watch(taskPackage.value, () => {
+  if (firstLoad && taskPackage.value) {
+    firstLoad = false;
+    return;
+  }
+  ifPackageChanged.value = true;
+});
 
 const quantityNum = computed(() => {
   const taskProducts = taskItem.value.products;
@@ -307,6 +317,7 @@ const remoteMethod = (query, taskType) => {
 const dialogExcelVisible = ref(false);
 
 const xmlFileList = ref([]);
+
 
 const taskAccessories = computed(() => {
   const arr = [];

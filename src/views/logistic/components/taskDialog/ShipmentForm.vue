@@ -107,7 +107,7 @@
 
     <template v-if="!notShipmentPermission">
       <el-button
-        :disabled="!taskId"
+        :disabled="!taskId || disableUnchangedTask"
         type="primary"
         @click="handleShipment('update')"
       >
@@ -175,6 +175,7 @@ const emit = defineEmits(['fetchList']);
 /* Start Data */
 const taskItem = inject('taskItem');
 const packageArr = inject('packageArr');
+const disableUnchangedTask = inject('disableUnchangedTask');
 
 const { role } = storeToRefs(useUserStore());
 const notShipmentPermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));

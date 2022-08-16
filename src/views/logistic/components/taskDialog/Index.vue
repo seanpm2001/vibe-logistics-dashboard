@@ -326,7 +326,7 @@
           <el-button
             v-if="taskItem.id"
             type="primary"
-            :disabled="checkLightingTaskWrong"
+            :disabled="checkLightingTaskWrong || disableUnchangedTask"
             @click="handleWarehouseTask('update')"
           >
             Update Warehouse Task
@@ -401,6 +401,7 @@ const fetchList = () => emit['fetchList'];
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible') as boolean;
 const taskItem = inject('taskItem') as any;
+const disableUnchangedTask = inject('disableUnchangedTask');
 const taskOrderItem = inject('taskOrderItem') as any;
 
 const { proxy } = getCurrentInstance();
@@ -473,9 +474,14 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
+// const disableUnchangedTask = computed(() => {
+//   if (JSON.stringify(taskItem.value) !== contrastTask.value)
+//     return false;
+//   return true;
+// });
+
 const checkLightingTaskWrong = computed(() => {
   const sourceId = taskItem.value.sourceId;
-  console.log('sourceId: ', sourceId);
   const source = props.warehouseEnum[sourceId];
   if (source !== 'Lightning') return false;
 
