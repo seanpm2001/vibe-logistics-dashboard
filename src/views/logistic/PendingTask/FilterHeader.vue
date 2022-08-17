@@ -6,6 +6,7 @@
       type="daterange"
       value-format="YYYY-MM-DD"
       placeholder="Please pick a date"
+      @change="changeDateFilter"
     />
     <span class="mgl-5 mgr-5"> before 11.30 am</span>
     <el-select
@@ -20,6 +21,20 @@
         v-for="(type, key) in dailyPendingTaskTypeEnum"
         :key="key"
         :label="type"
+        :value="key"
+      />
+    </el-select>
+    <el-select
+      v-model="listQuery.fulfilled"
+      placeholder="Completion"
+      style="width: 140px"
+      clearable
+      @change="handleFilter"
+    >
+      <el-option
+        v-for="(completion, key) in completionEnum"
+        :key="key"
+        :label="completion"
         :value="key"
       />
     </el-select>
@@ -82,7 +97,7 @@
 
 <script lang="ts" setup>
 import { Search, CircleClose } from '@element-plus/icons-vue';
-import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum  } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum, completionEnum  } from '@/enums/logistic';
 import { parseTime, debounce, addNullOptionInEnumObject } from '@/utils';
 const emit = defineEmits(['fetchList']);
 
@@ -124,20 +139,29 @@ const onTypeArrChange = (visible: boolean) => {
 };
 
 const dateFilter = ref(null);
-watchEffect(() => {
+function changeDateFilter () {
   if (dateFilter.value) {
     listQuery.value.start = dateFilter.value[0] + 'T11:30:00';
     listQuery.value.end = dateFilter.value[1] + 'T11:30:00';
     fetchList();
   }
-});
+}
 
 function initDateFilter () {
   const dayWindow = 1;
-  dateFilter.value = [
-    parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}'),
-    parseTime(new Date(), '{y}-{m}-{d}')
-  ];
+  if (!listQuery.value.start) {
+    dateFilter.value = [
+      parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}'),
+      parseTime(new Date(), '{y}-{m}-{d}')
+    ];
+  } else {
+    dateFilter.value = [
+      listQuery.value.start,
+      listQuery.value.end,
+    ];
+  }
+ 
+  changeDateFilter();
 }
 
 onMounted(() => {

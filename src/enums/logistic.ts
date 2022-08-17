@@ -145,8 +145,8 @@ export const transportEnum = {
   EXPRESS: 'Express'
 };
 export const completionEnum = {
-  COMPLETE: 'Complete',
-  INCOMPLETE: 'Incomplete',
+  true: 'Complete',
+  false: 'Incomplete',
 };
 export const transportCarrierEnum = {
   TRUCK: {

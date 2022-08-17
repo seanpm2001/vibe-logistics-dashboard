@@ -141,6 +141,7 @@ const listQuery = ref({
   carrier: '',
   transportMode: '',
   warehouseId: warehouseId,
+  fulfilled: 'false',
 });
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);

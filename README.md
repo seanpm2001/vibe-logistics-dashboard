@@ -43,14 +43,14 @@ pnpm lint
 
 _____
 ## Technology stack
-* CLI:
+* CLI: 
   * vite (run and build faster)
   * vue-cli3 (easier)
 * MVVM framework:
   * vue3 (virtual dom)
   * vuex(state management), maybe pinia later (vuex5 for vue3 & vite)
 * Router:
-  * vue-router (history pattern)
+  * vue-router (hash pattern)
 * UI framework:
   * element-plus (sass and less dependence, import indemand)
 * API simulation:

@@ -2,7 +2,7 @@ import { useLogisticStore } from '@/store';
 
 export const useQueryHook = (listQuery, pageName, fetchListFn) => {
   const logisticStore = useLogisticStore();
-  onMounted(() => {
+  onBeforeMount(() => {
     Object.assign(listQuery.value, logisticStore.listQuery[pageName]);
     fetchListFn();
   });
