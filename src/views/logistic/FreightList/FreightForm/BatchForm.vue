@@ -6,7 +6,7 @@
     >
       <span>
         Sub-Batch <span v-if="batch?.id">{{ batch?.id }} [Database]</span>:
-      </span> 
+      </span>
       <svg-icon
         class="icon close-icon"
         icon-name="close"
@@ -217,7 +217,7 @@ const totalCost = computed(() => {
     for (const key in costs) {
       total += +costs[key];
     }
-  } 
+  }
   return total;
 });
 const totalCostNew = computed(() => {
@@ -263,7 +263,7 @@ const updateBatchProducts = (type, file) => {
         // 文件max limit暂时为1
         if (type === 'add') {
           tempArr = tempArr.concat(item.sheet);
-          item.sheet.length && (products.value[sku] ? 
+          item.sheet.length && (products.value[sku] ?
             products.value[sku].quantityCount += item.sheet.length :
             products.value[sku] = {sku, quantityCount: item.sheet.length, cost: ''});
         } else {
@@ -272,7 +272,7 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
-        batch.value.items.push({serial: item['Serial Number'] || ' ', sku: item['SKU']});
+        batch.value.items.push({serial: item['Serial Number'].trim() || ' ', sku: item['SKU']});
       });
     }
   });
