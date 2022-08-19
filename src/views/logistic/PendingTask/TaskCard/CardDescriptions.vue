@@ -183,7 +183,7 @@ const onCarrierChange = (task) => {
 const updateTaskFulfillTime = () => {
   const task = Object.assign({}, props.task);
   task.fulfilledAt = new Date();
-  updateTaskAPI(task.id, task).then(() => {
+  updateTaskAPI(task.id, task, { syncLightning: false }).then(() => {
     isFulfilled.value = true;
   });
 };
@@ -191,7 +191,7 @@ const updateTaskFulfillTime = () => {
 const editTaskNote = () => {
   if (isEditTaskNote.value) {
     const task = Object.assign({}, props.task, { note: taskNote.value });
-    updateTaskAPI(task.id, task).then(() => {
+    updateTaskAPI(task.id, task, { syncLightning: false }).then(() => {
       isEditTaskNote.value = false;
       emit('fetchList');
     });

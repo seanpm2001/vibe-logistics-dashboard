@@ -141,12 +141,12 @@ export async function findTaskAPI (taskId: number) {
   const { item } = await requester.get(`/warehouse/task/${taskId}`);
   return item;
 }
-export async function updateTaskAPI (taskId: number, updates) {
+export async function updateTaskAPI (taskId: number, updates, params?) {
   const data = jsonClone(updates);
   delete data['packages'];
 
   const item = handleReqElMsg(
-    requester.put(`/warehouse/task/${taskId}`, data), 'Update', 'Warehouse Task', taskId
+    requester.put(`/warehouse/task/${taskId}`, data, { params }), 'Update', 'Warehouse Task', taskId
   );
   return item;
 }
