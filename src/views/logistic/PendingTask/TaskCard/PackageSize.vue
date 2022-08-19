@@ -94,7 +94,7 @@ const handleSizeArrChange = (type, sizeIdx) => {
   if (type === 'remove') {
     sizeArr.value.splice(sizeIdx, 1);
   } else {
-    sizeArr.value.push({ length: null, width: null, height: null, weight: null, unitSystem: null });
+    sizeArr.value.push({ length: null, width: null, height: null, weight: null, unitSystem: 'BS' });
   }
 };
 
