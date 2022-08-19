@@ -141,8 +141,12 @@ const onTypeArrChange = (visible: boolean) => {
 const dateFilter = ref(null);
 function changeDateFilter () {
   if (dateFilter.value) {
-    listQuery.value.start = dateFilter.value[0] + 'T11:30:00';
-    listQuery.value.end = dateFilter.value[1] + 'T11:30:00';
+    const start = dateFilter.value[0];
+    const end = dateFilter.value[1];
+    listQuery.value.start = 
+      start.includes('T11:30:00') ? start : start + 'T11:30:00';
+    listQuery.value.end = 
+      end.includes('T11:30:00') ? end : end + 'T11:30:00';
     fetchList();
   }
 }
