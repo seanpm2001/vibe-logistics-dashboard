@@ -145,44 +145,11 @@
               placeholder="Tracking Number"
               @input="(trackingNumber) => debounce(inputTrackingNumber(trackingNumber, item, task, packageIdx, taskIdx), 200)"
             />
-            <el-row
-              class="dimension"
-              style="margin-top: 20px"
-            >
-              <el-input
-                v-model="item.length"
-                placeholder="Length"
-                @input="val => (item.length = toNumber(val) || null)"
-              />
-              <el-input
-                v-model="item.width"
-                placeholder="Width"
-                @input="val => (item.width = toNumber(val) || null)"
-              />
-              <el-input
-                v-model="item.height"
-                placeholder="Height"
-                @input="val => (item.height = toNumber(val) || null)"
-              />
-              <el-input
-                v-model="item.weight"
-                placeholder="Weight"
-                @input="val => (item.weight = toNumber(val) || null)"
-              />
-              <el-select
-                v-model="item.unitSystem"
-                placeholder="Unit System"
-                default-first-option
-                :disabled="true"
-              >
-                <el-option
-                  v-for="(unitSys, key) in unitSystemEnum"
-                  :key="key"
-                  :label="unitSys"
-                  :value="key"
-                />
-              </el-select>
-            </el-row>
+            <PackageSize
+              :task-idx="taskIdx"
+              :package-idx="packageIdx"
+              :unit-system-enum="unitSystemEnum"
+            />
           </div>
           <div class="col4 cell w-180">
             <el-button
@@ -244,6 +211,7 @@
 <script lang="ts" setup>
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
+import PackageSize from './PackageSize.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber, getWarehouseUnitSystem, jsonClone } from '@/utils';
 import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
@@ -273,7 +241,7 @@ const props = defineProps({
   }
 });
 
-const dataList = inject('dataList') as any;
+// const dataList = inject('dataList') as any;
 const fetchList = inject('fetchList') as any;
 
 /* Start Data */
@@ -306,7 +274,6 @@ const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
 };
 
 const disableEditOutboundTask = computed(() => {
-  console.log('task', props.task.id, props.warehouseEnum[props.task.sourceId] === 'Lightning');
   return props.warehouseEnum[props.task.sourceId] === 'Lightning';
 });
 
@@ -713,7 +680,7 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
   .w-200
     width: 240px
   .w-340
-    width: 360px
+    width: 405px
   .w-380
     width: 350px
     @media (max-width: 1420px)
