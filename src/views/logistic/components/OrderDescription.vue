@@ -20,11 +20,9 @@
     </el-descriptions-item>
     <el-descriptions-item
       v-if="taskId"
+      label="External ID"
       :min-width="280"
     >
-      <template #label>
-        External ID
-      </template>
       <template
         v-for="item in orderItem.rawOrders"
         :key="item.id"
@@ -37,28 +35,22 @@
         </el-tag>
       </template>
     </el-descriptions-item>
-    <el-descriptions-item :min-width="200">
-      <template #label>
-        Order from
-      </template>
+    <el-descriptions-item
+      label="Order from"
+      :min-width="200"
+    >
       {{ (orderItem?.orderFrom) }}
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        Marketplace
-      </template>
+    <el-descriptions-item label="Marketplace">
       {{ (orderItem?.marketplace) }}
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        Created At
-      </template>
+    <el-descriptions-item label="Created At">
       {{ formatVBDate(orderItem?.createdAt) }}
     </el-descriptions-item>
-    <el-descriptions-item :min-width="200">
-      <template #label>
-        Products
-      </template>
+    <el-descriptions-item
+      label="Products"
+      :min-width="200"
+    >
       <template
         v-for="(quantity, code) in orderItem.productsQty"
         :key="code"
@@ -75,16 +67,10 @@
         </div>
       </template>
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        Shipment Info
-      </template>
+    <el-descriptions-item label="Shipment Info">
       <OrderShipmentInfo :order-item="orderItem" />
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        History Task
-      </template>
+    <el-descriptions-item label="History Task">
     </el-descriptions-item>
   </el-descriptions>
 </template>

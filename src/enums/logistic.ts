@@ -116,7 +116,6 @@ export const taskReasonDetailEnum = {
     'Accessories defects (such as OPS, styluses)',
     'Customer changes mind',
     'Unknown',
-    'Customer change mind',
   ],
 };
 export enum unitConditionEnum {
