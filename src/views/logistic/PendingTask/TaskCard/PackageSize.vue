@@ -103,7 +103,7 @@ const syncSizes = () => {
 };
 
 const initSizes = () => {
-  const sizes = JSON.parse(packageItem.sizes);
+  const sizes = JSON.parse(packageItem.sizes || '[]');
   if (sizes.length > 1) {
     sizeArr.value = sizes;
   }
