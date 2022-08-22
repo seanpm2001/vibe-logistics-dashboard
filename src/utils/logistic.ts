@@ -24,6 +24,8 @@ export const combineSameProductQuantityArr = arr => obj2Arr(combineSameProductQu
 
 export const formatAssignedOrderItem = orderItem => {
   const raws = orderItem.rawOrders;
+  if (!raws) return orderItem;
+
   const originId = orderItem.id;
   const createdAt = orderItem.createdAt;
   let productsArr = [];
