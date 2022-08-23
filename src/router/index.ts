@@ -93,7 +93,6 @@ export const constantRoutes = [
   },
   {
     path: '/:pathMatch(.*)',
-    //访问主页的时候 重定向到index页面
     redirect: '/404',
   },
   // {

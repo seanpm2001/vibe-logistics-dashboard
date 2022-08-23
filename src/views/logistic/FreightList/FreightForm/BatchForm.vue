@@ -14,7 +14,7 @@
       />
     </el-row>
     <el-row justify="space-between">
-      <el-form-item label="Source">
+      <el-form-item label="*Source">
         <el-select
           v-model="batch.sourceId"
           :disabled="isDialogPattern('view')"
@@ -186,8 +186,7 @@ const props = defineProps({
 });
 
 const batch = ref(props.batchItem);
-console.log('batch: ', batch);
-const previewExcelArr = [].concat(batch.value?.items);
+const previewExcelArr = ref([].concat(batch.value?.items));
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['deleteBatch', 'createBatch', 'editBatch']);
@@ -259,6 +258,7 @@ const updateBatchProducts = (type, file) => {
       let tempArr= [];
       products.value = {};
       dataArr.forEach(item => {
+        console.log('item: ', item);
         const sku = item.sheetName;
         // 文件max limit暂时为1
         if (type === 'add') {
@@ -274,6 +274,7 @@ const updateBatchProducts = (type, file) => {
       tempArr.forEach(item => {
         batch.value.items.push({serial: item['Serial Number'].trim() || ' ', sku: item['SKU']});
       });
+      previewExcelArr.value = [].concat(batch.value?.items);
     }
   });
 };

@@ -45,7 +45,7 @@
 //   'oceanForwarder|1': ['Full Power Logistics', 'FLEXPORT', 'LIGHTNING', 'AGL', 'SF'],
 //   // 'freight_products|1-5': [
 //   //   {
-//   //     'sku|1': ['V55N201W/WOS', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W/WOS'],
+//   //     'sku|1': ['V55N201W', 'V55N203W', 'V55N205W', 'V55N203WR', 'V55N205WR', 'V55N201EU', 'V55N203EU', 'V55N205EU', 'V55N203EUR', 'V55N205EUR', 'V55N201W'],
 //   //     'quantity': '@integer(1, 40)',
 //   //     'purchase_cost'
 //   //   },

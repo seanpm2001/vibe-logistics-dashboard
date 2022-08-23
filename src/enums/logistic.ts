@@ -232,7 +232,7 @@ export enum codeIconEnum {
 }
 
 export enum skuCodeEnum {
-  'V55N201W/WOS' = '55V1B',
+  'V55N201W' = '55V1B',
   'V55N203W' = '55V1B',
   'V55N205W' = '55V1B',
   'V55N201EU' = '55V1B',
@@ -292,7 +292,7 @@ export const codeSkuArrEnum = {
     'V55N201EU',
     'V55N205W',
     'V55N203W',
-    'V55N201W/WOS'
+    'V55N201W'
   ],
   '55V1WS': [
     '55WSTAND301',
