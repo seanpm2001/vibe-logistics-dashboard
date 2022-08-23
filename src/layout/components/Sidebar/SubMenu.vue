@@ -42,7 +42,7 @@
   </template>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import path from 'path';
 import Link from './Link.vue';
 import MenuItem from './MenuItem.vue';

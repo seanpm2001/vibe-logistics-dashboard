@@ -114,7 +114,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import FilterHeader from './FilterHeader.vue';
 import OrderTable from './OrderTable.vue';
 import { ElMessage } from 'element-plus';
@@ -261,7 +261,7 @@ const getCustomerId = () => Number(Object.keys(warehouseEnum.value).find(key => 
 async function submitInitTaskItem (products, assignedData, orderId, ifSubmit = true) {
   const { sourceWHId, carrier, transportMode } = assignedData;
 
-  const task = {} as any;
+  const task = {} ;
   task.orderId = orderId;
   task.taskType = 'FULFILLMENT';
   task.sourceId = sourceWHId;
@@ -363,7 +363,7 @@ const assignOrders = () => {
 
   // 调用batch assign orders API
   assignOrdersAPI(sourceWHId, orderArr)
-    .then(async (data: any) => {
+    .then(async (data) => {
       dialogAssignVisible.value = false;
       const products = await formatAssignedOrderItem(data)?.items;
       await submitInitTaskItem(products, assignedData, data.id, false);
@@ -397,7 +397,7 @@ function showTaskDialog () {
   dialogTaskVisible.value = true;
 }
 
-const addWarehouseTask = (orderId: number) => {
+const addWarehouseTask = (orderId) => {
   taskItem.value = Object.assign({}, emptyTaskItem);
   findAssignedOrderAPI(orderId).then(async data => {
     taskItem.value.orderId = orderId;

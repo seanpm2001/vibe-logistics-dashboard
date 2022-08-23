@@ -17,10 +17,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { scrollTo } from '@/utils/scroll-to';
 
-const listQuery = inject('listQuery') as any;
+const listQuery = inject('listQuery') ;
 
 const props = defineProps({
   total: {

@@ -155,7 +155,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';

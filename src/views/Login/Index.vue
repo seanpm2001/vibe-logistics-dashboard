@@ -121,7 +121,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 // 局部组件（导入）
 import Captcha from './Captcha/Index.vue';
 import { ElMessage } from 'element-plus';

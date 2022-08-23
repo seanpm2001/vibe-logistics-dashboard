@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import screenfull from 'screenfull';
 import { ElMessage } from 'element-plus';
 

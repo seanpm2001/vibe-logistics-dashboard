@@ -354,7 +354,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Search } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import { parseTime } from '@/utils/format';

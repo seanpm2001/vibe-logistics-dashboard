@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import SubMenu from './SubMenu.vue';
 import { useAppStore, usePermissionStore } from '@/store';
 

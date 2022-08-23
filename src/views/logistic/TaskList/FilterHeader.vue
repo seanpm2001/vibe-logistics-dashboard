@@ -54,15 +54,15 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Delete } from '@element-plus/icons-vue';
 import { deleteTaskAPI } from '@/api';
 import { taskTypeEnum } from '@/enums/logistic';
 import { debounce } from '@/utils';
 
-const listQuery = inject('listQuery') as any;
+const listQuery = inject('listQuery') ;
 const typeArr = inject('typeArr');
-const multipleSelection = inject('multipleSelection') as any;
+const multipleSelection = inject('multipleSelection') ;
 const showTaskPattern = ref(null);
 
 const taskPatternEnum = {
@@ -73,7 +73,7 @@ const taskPatternEnum = {
 const emit = defineEmits(['fetchList']);
 const fetchList = () => emit('fetchList');
 
-const onTypeArrChange = (visible: boolean) => {
+const onTypeArrChange = (visible) => {
   if (!visible)
     fetchList();
 };

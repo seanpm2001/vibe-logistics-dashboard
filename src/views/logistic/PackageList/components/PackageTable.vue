@@ -276,7 +276,7 @@
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
 import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
@@ -418,26 +418,26 @@ const deletePackage = (packageId) => {
 };
 
 const carrierUrlEnum = {
-  UPS: (trackNum: string) => `https://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1=${trackNum}&requester=ST/trackdetails`,
-  GLS: (trackNum: string) => `https://www.gso.com/Trackshipment?TrackingNumbers=${trackNum}`,
-  DAYLIGHT: (trackNum: string) => `https://mydaylight.dylt.com/external/shipment?probill=${trackNum}`,
-  USPS: (trackNum: string) => `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackNum}`,
-  TNT: (trackNum: string) => `https://www.tnt.com/express/en_us/site/tracking.html?searchType=con&cons=${trackNum}`,
-  RL: (trackNum: string) => `https://www2.rlcarriers.com/freight/shipping/shipment-tracing?pro=${trackNum}&docType=PRO&source=web`,
-  DAYANDROSS: (trackNum: string) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
-  KUEHNE_NAGEL: (trackNum: string) => `https://onlineservices.kuehne-nagel.com/public-tracking/shipments?query=${trackNum}`,
-  SAIA: (trackNum: string) => `https://www.saia.com/track/details;pro=${trackNum}`,
-  FASTFRATE: (trackNum: string) => `https://www.fastfrate.com/fastnet/fastnet.aspx?ProbillNo=${trackNum}`,
-  SF: (trackNum: string) => `https://www.sf-express.com/cn/en/dynamic_function/waybill/#search/bill-number/${trackNum}`,
-  ESTES: (trackNum: string) => `https://www.estes-express.com/myestes/shipment-tracking/?type=PRO&query=${trackNum}`,
-  ABF: (trackNum: string) => `https://arcb.com/tools/tracking.html#/${trackNum}`,
-  FEDEX: (trackNum: string) => `https://www.fedex.com/fedextrack/?trknbr=${trackNum}`,
-  XPO: (trackNum: string) => `https://track.xpoweb.com/ltl-shipment/${trackNum}/`,
-  TOLL: (trackNum: string) => `https://www.mytoll.com/?externalSearchQuery=${trackNum}&op=Search`,
-  ROSENAU: (trackNum: string) => `https://www.rosenau.ca/track-shipment/?probillNumber=${trackNum}`,
-  RRTS: (trackNum: string) => `https://tools.rrts.com/LTLTrack/?searchValues=${trackNum}`,
-  KINDERSLEY: (trackNum: string) => `https://tnt.kindersleytransport.com/tnt.php?SEARCH_CRITERIA=${trackNum}`,
-  PILOT: (trackNum: string) => `https://www.pilotdelivers.com/pilot-shipment-detail/?Pro=${trackNum}`,
+  UPS: (trackNum) => `https://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1=${trackNum}&requester=ST/trackdetails`,
+  GLS: (trackNum) => `https://www.gso.com/Trackshipment?TrackingNumbers=${trackNum}`,
+  DAYLIGHT: (trackNum) => `https://mydaylight.dylt.com/external/shipment?probill=${trackNum}`,
+  USPS: (trackNum) => `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackNum}`,
+  TNT: (trackNum) => `https://www.tnt.com/express/en_us/site/tracking.html?searchType=con&cons=${trackNum}`,
+  RL: (trackNum) => `https://www2.rlcarriers.com/freight/shipping/shipment-tracing?pro=${trackNum}&docType=PRO&source=web`,
+  DAYANDROSS: (trackNum) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
+  KUEHNE_NAGEL: (trackNum) => `https://onlineservices.kuehne-nagel.com/public-tracking/shipments?query=${trackNum}`,
+  SAIA: (trackNum) => `https://www.saia.com/track/details;pro=${trackNum}`,
+  FASTFRATE: (trackNum) => `https://www.fastfrate.com/fastnet/fastnet.aspx?ProbillNo=${trackNum}`,
+  SF: (trackNum) => `https://www.sf-express.com/cn/en/dynamic_function/waybill/#search/bill-number/${trackNum}`,
+  ESTES: (trackNum) => `https://www.estes-express.com/myestes/shipment-tracking/?type=PRO&query=${trackNum}`,
+  ABF: (trackNum) => `https://arcb.com/tools/tracking.html#/${trackNum}`,
+  FEDEX: (trackNum) => `https://www.fedex.com/fedextrack/?trknbr=${trackNum}`,
+  XPO: (trackNum) => `https://track.xpoweb.com/ltl-shipment/${trackNum}/`,
+  TOLL: (trackNum) => `https://www.mytoll.com/?externalSearchQuery=${trackNum}&op=Search`,
+  ROSENAU: (trackNum) => `https://www.rosenau.ca/track-shipment/?probillNumber=${trackNum}`,
+  RRTS: (trackNum) => `https://tools.rrts.com/LTLTrack/?searchValues=${trackNum}`,
+  KINDERSLEY: (trackNum) => `https://tnt.kindersleytransport.com/tnt.php?SEARCH_CRITERIA=${trackNum}`,
+  PILOT: (trackNum) => `https://www.pilotdelivers.com/pilot-shipment-detail/?Pro=${trackNum}`,
   AUK: '',
   CAP_TRANS: '',
 };

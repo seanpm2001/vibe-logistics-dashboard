@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import PanThumb from './components/PanThumb.vue';
 import GithubCorner from './components/GithubCorner.vue';
 import { useUserStore } from '@/store';

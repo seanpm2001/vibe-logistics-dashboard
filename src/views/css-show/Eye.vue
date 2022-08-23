@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 const { proxy } = getCurrentInstance();
 const refs = computed(() => proxy.$refs);

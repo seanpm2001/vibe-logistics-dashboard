@@ -208,7 +208,7 @@
   </el-card>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import PackageSize from './PackageSize.vue';
@@ -241,8 +241,8 @@ const props = defineProps({
   }
 });
 
-// const dataList = inject('dataList') as any;
-const fetchList = inject('fetchList') as any;
+// const dataList = inject('dataList') ;
+const fetchList = inject('fetchList') ;
 
 /* Start Data */
 const { proxy } = getCurrentInstance();
@@ -485,7 +485,7 @@ const removeScannedSerial = (packageItem, removedIdx) => {
   updatePackageAPI(newPackage.id, newPackage).then(() => fetchList());
 };
 
-let focusStorage = {} as { taskIdx: number, packageIdx: number };
+let focusStorage = {};
 const handleInputFocus = (el, taskIdx, packageIdx) => {
   focusStorage = { taskIdx, packageIdx };
 };
@@ -608,7 +608,7 @@ function removeUnitErrorStatus (packageItem) {
   });
 }
 
-const onPackagesChange = (task, packages, type, packageIdx?) => {
+const onPackagesChange = (task, packages, type, packageIdx) => {
   if (type === 'remove')
     packages.splice(packageIdx, 1);
   else {

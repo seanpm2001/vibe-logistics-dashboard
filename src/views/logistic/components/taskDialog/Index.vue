@@ -362,7 +362,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
@@ -399,10 +399,10 @@ const emit = defineEmits(['fetchList']);
 const fetchList = () => emit['fetchList'];
 
 /* Start data */
-const dialogTaskVisible = inject('dialogTaskVisible') as boolean;
-const taskItem = inject('taskItem') as any;
+const dialogTaskVisible = inject('dialogTaskVisible');
+const taskItem = inject('taskItem') ;
 const disableUnchangedTask = inject('disableUnchangedTask');
-const taskOrderItem = inject('taskOrderItem') as any;
+const taskOrderItem = inject('taskOrderItem') ;
 
 const { proxy } = getCurrentInstance();
 const { role } = storeToRefs(useUserStore());

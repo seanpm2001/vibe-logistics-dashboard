@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { useAppStore } from '@/store';
 import { Sidebar, Navbar, AppMain, TagsView } from './components';
 

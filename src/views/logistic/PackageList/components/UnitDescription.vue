@@ -78,16 +78,16 @@
   </el-descriptions>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessageBox } from 'element-plus';
 import { updatePackageUnitAPI } from '@/api';
 import { packageStatusEnum, packageConditionEnum } from '@/enums/logistic';
 
-const taskSerialsAndSkus = inject('taskSerialsAndSkus') as any;
+const taskSerialsAndSkus = inject('taskSerialsAndSkus') ;
 
 const emit = defineEmits(['fetchList']);
 
-const unitItem = inject('unitItem') as any;
+const unitItem = inject('unitItem') ;
 
 const updateSerial = () => {
   const unit = unitItem.value;

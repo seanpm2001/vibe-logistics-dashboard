@@ -75,7 +75,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 import buddha1 from '@img/css-show/buddha1.jpeg';
 import buddha2 from '@img/css-show/buddha2.jpeg';

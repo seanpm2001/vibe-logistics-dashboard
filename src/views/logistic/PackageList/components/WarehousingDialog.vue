@@ -150,7 +150,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { taskTypeEnum, unitConditionEnum, packageConditionEnum } from '@/enums/logistic';
 import { updateUnitAPI, updatePackageUnitAPI } from '@/api';

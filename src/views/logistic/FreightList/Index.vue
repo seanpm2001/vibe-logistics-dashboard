@@ -46,7 +46,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessageBox } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import FreightForm from './FreightForm/Index.vue';

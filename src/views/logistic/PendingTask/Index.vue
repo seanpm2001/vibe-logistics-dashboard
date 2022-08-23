@@ -117,7 +117,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
@@ -310,7 +310,7 @@ const productsFulQty = computed(() => {
     qtyBySku,
     qtyByCode
   };
-}) as Record<string, any>;
+});
 
 const showExport = () => {
   dialogExportTasksVisible.value = true;

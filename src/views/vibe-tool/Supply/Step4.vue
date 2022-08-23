@@ -119,7 +119,7 @@
   <slot name="btn" />
 </template>
 
-<script lang="ts" setup>
+<script setup>
 const emit = defineEmits(['onStep4Change']);
 const props = defineProps({
   timeUnitEnum: {

@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { useAppStore } from '@/store/app';
 
 const route = useRoute();

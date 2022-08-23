@@ -131,7 +131,7 @@
   </el-descriptions>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';

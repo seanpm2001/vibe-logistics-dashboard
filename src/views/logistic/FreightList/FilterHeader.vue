@@ -63,7 +63,7 @@
   </el-row>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Delete, Download, Edit, Search } from '@element-plus/icons-vue';
 import { deleteFreightAPI } from '@/api';
 // import { parseTime } from '@/utils/format';
@@ -79,8 +79,8 @@ const props = defineProps({
   },
 });
 
-const listQuery = inject('listQuery') as any;
-const multipleSelection = inject('multipleSelection') as any;
+const listQuery = inject('listQuery') ;
+const multipleSelection = inject('multipleSelection') ;
 
 const sortEnum = [
   { label: 'ID Ascending', key: '+id' },

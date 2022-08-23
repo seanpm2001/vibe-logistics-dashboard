@@ -73,7 +73,7 @@
   </el-row>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 const props = defineProps({
   timeUnitEnum: {
     type: Object,

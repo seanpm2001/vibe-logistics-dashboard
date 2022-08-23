@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Close } from '@element-plus/icons-vue';
 import { resolve } from 'path';
 import { useAppStore, useTagsViewStore, usePermissionStore } from '@/store';

@@ -147,7 +147,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { CirclePlus } from '@element-plus/icons-vue';
 import PackageForm from './PackageForm.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api';

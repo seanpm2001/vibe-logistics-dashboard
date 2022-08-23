@@ -1,7 +1,7 @@
 import { ElLoading } from 'element-plus';
 
 /* start 将同一时刻的请求合并。*/
-let loadingInstance = null as any;
+let loadingInstance = null ;
 let needLoadingRequestCount = 0;
 const startLoading = () => loadingInstance = ElLoading.service({fullscreen: true});
 const endLoading = () => loadingInstance.close();

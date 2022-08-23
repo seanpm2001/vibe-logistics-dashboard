@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 // $(function () {
 //   $('#iphone-se').height($(window).height());
 // });

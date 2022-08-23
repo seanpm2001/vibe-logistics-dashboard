@@ -89,7 +89,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 import '@/assets/js/parallax.min';
 onMounted(() => {

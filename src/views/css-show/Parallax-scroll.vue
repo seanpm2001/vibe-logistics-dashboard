@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 // import onMounted  from "vue"
 // import "@/assets/js/jarallax"
 // import "@/assets/js/jarallax-element"

@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Breadcrumb, Dropdown, Hamburger, ScreenFull} from './components';
 import { useAppStore } from '@/store';
 

@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { useUserStore } from '@/store';
 
 const { proxy } = getCurrentInstance();

@@ -225,7 +225,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { debounce, toNumber } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import {
@@ -258,8 +258,8 @@ const props = defineProps({
 });
 
 /* Start Data */
-const taskItem = inject('taskItem') as any;
-const taskOrderItem = inject('taskOrderItem') as any;
+const taskItem = inject('taskItem') ;
+const taskOrderItem = inject('taskOrderItem') ;
 
 const { role } = storeToRefs(useUserStore());
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));

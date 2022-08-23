@@ -15,7 +15,7 @@ const requester = axios.create({
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
   }
-}) as any;
+}) ;
 
 // request interceptor
 requester.interceptors.request.use(

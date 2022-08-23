@@ -175,7 +175,7 @@
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { AssignedOrderId, OrderShipmentInfo } from '../components';
 import { formatVBDate, combineSameProductQuantityArr } from '@/utils/logistic';
 import { deleteTaskAPI } from '@/api';
@@ -193,8 +193,8 @@ defineProps({
   },
 });
 
-const multipleSelection = inject('multipleSelection') as any;
-const listQuery = inject('listQuery') as any;
+const multipleSelection = inject('multipleSelection') ;
+const listQuery = inject('listQuery') ;
 const showAssignedOrder = computed(() => listQuery.value.showAssignedOrder);
 
 const tableKey = ref(0);

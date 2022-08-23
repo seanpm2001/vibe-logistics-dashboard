@@ -218,7 +218,7 @@
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { AssignedOrderId } from '../components';
 import { taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 import { formatTimeString, getExternalId, copy } from '@/utils/logistic';
@@ -238,7 +238,7 @@ const props = defineProps({
   }
 });
 
-const multipleSelection = inject('multipleSelection') as any;
+const multipleSelection = inject('multipleSelection') ;
 
 const tableKey = ref(0);
 const emit = defineEmits(['fetchList', 'showOrderDrawer', 'handleDetailRow']);

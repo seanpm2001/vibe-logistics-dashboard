@@ -42,7 +42,8 @@ export const logisticRouter = [
         path: 'inventory',
         component: () => import('@/views/logistic/InventoryTable.vue'),
         name: 'Inventory',
-        meta: { title: 'Inventory', icon: 'sidebar-warehouse' }
+        meta: { title: 'Inventory', icon: 'sidebar-warehouse' },
+        hidden: true
       },
     ]
   },

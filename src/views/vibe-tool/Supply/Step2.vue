@@ -52,7 +52,7 @@
   </template>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 const step2 = inject('step2');
 
 const emit = defineEmits(['onStep2Change']);

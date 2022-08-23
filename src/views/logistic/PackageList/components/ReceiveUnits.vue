@@ -165,16 +165,16 @@
   </el-row>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessageBox } from 'element-plus';
 import { updatePackageUnitAPI, updatePackageAPI } from '@/api';
 import { packageStatusEnum, packageConditionEnum, skuCodeEnum, codeNameEnum } from '@/enums/logistic';
 
 const emit = defineEmits(['fetchList']);
 
-const packageReceived = inject('packageReceived') as any;
-const taskSerialsAndSkus = inject('taskSerialsAndSkus') as any;
-const taskAccessoriesCode = inject('taskAccessoriesCode') as any;
+const packageReceived = inject('packageReceived') ;
+const taskSerialsAndSkus = inject('taskSerialsAndSkus') ;
+const taskAccessoriesCode = inject('taskAccessoriesCode') ;
 
 const availableTaskSerials = computed(() => (
   taskSerialsAndSkus.value.filter((taskUnit) => !packageReceived.value.units.find(unit => unit.serial === taskUnit.serial))

@@ -65,7 +65,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { UnitDescription, WarehousingDialog, FilterHeader, PackageTable, ReceiveUnits } from './components';
 import { OrderDescription } from '../components';
 import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';

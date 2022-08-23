@@ -18,7 +18,7 @@
   </svg>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { isExternal } from '@/utils/validate';
 
 const props = defineProps({

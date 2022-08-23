@@ -114,7 +114,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 // import { resolve } from '@/utils/path';
 // import { deepClone } from '@/utils/index';

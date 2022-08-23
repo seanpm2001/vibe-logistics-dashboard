@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 const formData = ref({
   a: null,
   arr1: [0,1,2],

@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage } from'element-plus';
 import { timeUnitEnum, monthDaysEnum, monthAbbrEnum } from '@/enums/supply';
 import { checkRequiredData, calTableEnum } from './util';

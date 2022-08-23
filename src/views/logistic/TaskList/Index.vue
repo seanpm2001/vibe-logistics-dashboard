@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import TaskTable from './TaskTable.vue';
 import FilterHeader from './FilterHeader.vue';
 import { TaskDialog, OrderDescription } from '../components';

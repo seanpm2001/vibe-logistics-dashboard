@@ -43,7 +43,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { taskTypeEnum, exportScopesEnum, codeNameEnum } from '@/enums/logistic';
 import { updateUnitAPI, updatePackageUnitAPI } from '@/api';

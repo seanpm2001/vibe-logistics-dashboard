@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import throttle from 'lodash/throttle';
 
 const { proxy } = getCurrentInstance();

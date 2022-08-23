@@ -95,13 +95,13 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { Search, CircleClose } from '@element-plus/icons-vue';
 import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum, completionEnum  } from '@/enums/logistic';
 import { parseTime, debounce, addNullOptionInEnumObject } from '@/utils';
 const emit = defineEmits(['fetchList']);
 
-const listQuery = inject('listQuery') as any;
+const listQuery = inject('listQuery') ;
 const typeArr = inject('typeArr');
 
 const scannedTrackingNumber = ref('');
@@ -133,7 +133,7 @@ const handleFilter = () => {
   fetchList();
 };
 
-const onTypeArrChange = (visible: boolean) => {
+const onTypeArrChange = (visible) => {
   if (!visible)
     fetchList();
 };

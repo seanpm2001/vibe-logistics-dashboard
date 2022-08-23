@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 // eslint-disable-next-line no-undef
 const props = defineProps({
   meta: {

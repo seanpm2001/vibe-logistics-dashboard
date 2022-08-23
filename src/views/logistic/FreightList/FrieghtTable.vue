@@ -163,7 +163,7 @@
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { freightStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 defineProps({
   dataList: {
@@ -176,8 +176,8 @@ defineProps({
   },
 });
 
-const listQuery = inject('listQuery') as any;
-const multipleSelection = inject('multipleSelection') as any;
+const listQuery = inject('listQuery') ;
+const multipleSelection = inject('multipleSelection') ;
 
 const statusTypeDict = {
   'Picked Up': 'success',

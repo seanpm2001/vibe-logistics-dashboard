@@ -51,7 +51,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 const props = defineProps({
   orderItem: {
     type: Object,

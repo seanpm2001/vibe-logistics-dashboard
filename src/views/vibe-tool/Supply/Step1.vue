@@ -62,7 +62,7 @@
   </el-row>  
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { skuCodeEnum, fixedWarehouseEnum } from '@/enums/logistic';
 /* Start Data */
 const step1 = inject('step1');

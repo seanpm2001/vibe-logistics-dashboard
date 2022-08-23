@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import avatarUrl from '@img/common/avatar.gif';
 // eslint-disable-next-line no-undef
 const props = defineProps({

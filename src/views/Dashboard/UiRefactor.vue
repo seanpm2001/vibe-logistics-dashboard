@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 
 const centerDialogVisible = ref(false);

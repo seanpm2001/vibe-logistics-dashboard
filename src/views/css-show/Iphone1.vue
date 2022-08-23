@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 
 onMounted(() => {
   const rows = document.querySelectorAll('#ui ul li');

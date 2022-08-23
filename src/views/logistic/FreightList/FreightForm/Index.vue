@@ -355,7 +355,7 @@
   </el-form>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ElMessage, ElTooltip } from 'element-plus';
 import { CirclePlus } from '@element-plus/icons-vue';
 import BatchForm from './BatchForm.vue';
@@ -386,6 +386,7 @@ const { proxy } = getCurrentInstance();
 
 const disableNewBatch = computed(() => {
   const arr = batchArr.value;
+  console.log('arr: ', arr);
   if (arr.length === 0) return false;
   return !arr[arr.length - 1]?.id;
 });
@@ -448,10 +449,13 @@ const handleAddBatch = () => {
 };
 
 const submitBatch = (batch, freightId, batchIdx) => {
+  const arr = batchArr.value;
+  arr[arr.length - 1] = batch;
   emit('fetchList');
 };
 
 const updateBatch = (data, batchIdx) => {
+  batchArr.value[batchIdx] = data;
   emit('fetchList');
 };
 

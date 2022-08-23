@@ -7,7 +7,7 @@
   </component>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { isExternal } from '@/utils';
 const props = defineProps({
   to: {
