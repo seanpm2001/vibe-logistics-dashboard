@@ -81,6 +81,21 @@ export const constantRoutes = [
     component: () => import('@/views/Login/Index.vue'),
     hidden: true
   },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404.vue'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401.vue'),
+    hidden: true
+  },
+  {
+    path: '/:pathMatch(.*)',
+    //访问主页的时候 重定向到index页面
+    redirect: '/404',
+  },
   // {
   //   path: '/auth-redirect',
   //   component: () => import('@/views/login/Auth-Redirect.vue'),
