@@ -13,6 +13,7 @@
         @click="handleDeletePackage"
       />
     </el-row>
+    
     <el-row
       justify="space-between"
       :gutter="3"
@@ -24,54 +25,12 @@
           placeholder="Tracking Number"
         />
       </el-form-item>
-      <el-form-item label="Weight">
-        <el-input
-          v-model="taskPackage.weight"
-          :disabled="notPackagePermission"
-          placeholder="Weight"
-          @input="val => (taskPackage.weight = toNumber(val))"
-        />
-      </el-form-item>
-      <el-form-item label="Length">
-        <el-input
-          v-model="taskPackage.length"
-          :disabled="notPackagePermission"
-          placeholder="Length"
-          @input="val => (taskPackage.length = toNumber(val))"
-        />
-      </el-form-item>
-      <el-form-item label="Width">
-        <el-input
-          v-model="taskPackage.width"
-          :disabled="notPackagePermission"
-          placeholder="Width"
-          @input="val => (taskPackage.width = toNumber(val))"
-        />
-      </el-form-item>
-      <el-form-item label="Height">
-        <el-input
-          v-model="taskPackage.height"
-          :disabled="notPackagePermission"
-          placeholder="Height"
-          @input="val => (taskPackage.height = toNumber(val))"
-        />
-      </el-form-item>
-      <el-form-item label="Unit">
-        <el-select
-          v-model="taskPackage.unitSystem"
-          placeholder="Unit System"
-          default-first-option
-          :disabled="true"
-        >
-          <el-option
-            v-for="(unitSys, key) in unitSystemEnum"
-            :key="key"
-            :label="unitSys"
-            :value="key"
-          />
-        </el-select>
-      </el-form-item>
+      <PackageSize
+        :package-item="taskPackage"
+        :unit-system-enum="unitSystemEnum"
+      />
     </el-row>
+   
 
     <template
       v-for="(item, index) in taskPackage.units"
@@ -99,7 +58,7 @@
           <el-select
             v-model="item.serial"
             :disabled="notPackagePermission || disableHandleUnit"
-            style="width: 260px"
+            style="width: 360px"
             placeholder="Please select"
             clearable
             filterable
@@ -228,6 +187,7 @@
 <script setup>
 import { debounce, toNumber } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
+import PackageSize from './PackageSize.vue';
 import {
   createPackageAPI,
   deletePackageAPI,
@@ -284,6 +244,8 @@ const quantityNum = computed(() => {
   }
   return sum;
 });
+
+provide('taskPackage', taskPackage);
 /* End Data */
 
 const emit = defineEmits(['deletePackage', 'createPackage', 'editPackage']);
@@ -313,10 +275,6 @@ const remoteMethod = (query, taskType) => {
     unitList.value = [];
   }
 };
-
-const dialogExcelVisible = ref(false);
-
-const xmlFileList = ref([]);
 
 
 const taskAccessories = computed(() => {

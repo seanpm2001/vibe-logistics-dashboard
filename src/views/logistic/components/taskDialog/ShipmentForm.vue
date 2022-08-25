@@ -149,7 +149,7 @@
 
 <script setup>
 import { CirclePlus } from '@element-plus/icons-vue';
-import PackageForm from './PackageForm.vue';
+import PackageForm from './PackageForm/Index.vue';
 import { updateTaskAPI, listTaskPackagesAPI } from '@/api';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';

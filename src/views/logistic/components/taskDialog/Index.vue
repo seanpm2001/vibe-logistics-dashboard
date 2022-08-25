@@ -458,13 +458,10 @@ const remoteMethod = (query, product) => {
 };
 
 const packageArr = ref([]);
-const isOnHold = ref(false);
-const showUsedUnits = ref(false);
 const checkedSpecifySerial = ref([]);
-const disableNewShipment = ref(false);
 
 const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
-const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
+// const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
 const isReturnOrRepalce = computed(() =>
   returnReplaceArr.includes(taskItem.value.taskType)
 );
