@@ -156,7 +156,7 @@
             v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
             type="success"
             size="small"
-            @click="addWarehouseTask(row.id)"
+            @click="showTaskTypeDialog(row.id)"
           >
             Add WH Task
           </el-button>
@@ -195,23 +195,24 @@ defineProps({
 
 const multipleSelection = inject('multipleSelection') ;
 const listQuery = inject('listQuery') ;
+
 const showAssignedOrder = computed(() => listQuery.value.showAssignedOrder);
 
 const tableKey = ref(0);
-const emit = defineEmits(['fetchList', 'showOrderDrawer', 'addWarehouseTask', 'editWarehouseTask', 'showAssignDialog', 'unassignOrders']);
+const emit = defineEmits(['fetchList', 'showOrderDrawer', 'editWarehouseTask', 'showAssignDialog', 'unassignOrders', 'showTaskTypeDialog']);
 const fetchList = () => emit('fetchList');
-const addWarehouseTask = (orderId) => emit('addWarehouseTask', orderId);
+// const addWarehouseTask = (orderId) => emit('addWarehouseTask', orderId);
 const editWarehouseTask = (orderId, taskId) => emit('editWarehouseTask', orderId, taskId);
 const showOrderDrawer = (order) => emit('showOrderDrawer', order);
 const showAssignDialog = (type, orderId) => emit('showAssignDialog', type, orderId);
 const unassignOrders = order => emit('unassignOrders', order);
+const showTaskTypeDialog = (orderId) => emit('showTaskTypeDialog', orderId);
 
 const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt).getTime() - new Date(next.createdAt).getTime()
   );
 };
-
 </script>
 
 <style lang="sass" scoped>

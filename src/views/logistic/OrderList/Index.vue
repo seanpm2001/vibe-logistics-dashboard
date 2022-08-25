@@ -10,9 +10,9 @@
       :warehouse-enum="warehouseEnum"
       @fetch-list="fetchList"
       @show-order-drawer="showOrderDrawer"
-      @add-warehouse-task="addWarehouseTask"
       @edit-warehouse-task="editWarehouseTask"
       @show-assign-dialog="showAssignDialog"
+      @show-task-type-dialog="showTasktypeDialog"
       @unassign-orders="unassignOrders"
     />
 
@@ -28,54 +28,37 @@
       title="Assign Warehouse"
       :close-on-click-modal="false"
     >
+      <AssignOrderForm
+        :show-assigned-order="showAssignedOrder"
+      />
+      <template #footer>
+        <el-button
+          type="primary"
+          @click="assignOrders()"
+        >
+          submit
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="dialogTasktypeVisible"
+      width="32%"
+      title="Assign Warehouse"
+      :close-on-click-modal="false"
+    >
       <el-row
-        class="mgb-5"
         align="middle"
       >
-        Please select Warehouse:  &ensp;*
+        Please select task type:  &ensp;*
         <el-select
-          v-model="sourceId"
+          v-model="dialogTaskType"
           placeholder="Please select"
         >
           <el-option
-            v-for="(item, key) in warehouseEnum"
-            :key="item"
-            :label="item"
-            :value="Number(key)"
-          />
-        </el-select>
-      </el-row>
-      <el-row
-        class="mgb-5"
-        align="middle"
-      >
-        Please select Transport: &ensp;*
-        <el-select
-          v-model="taskTransport"
-          placeholder="Please select"
-        >
-          <el-option
-            v-for="(transport, key) in transportEnum"
-            :key="key"
-            :label="transport"
-            :value="key"
-          />
-        </el-select>
-      </el-row>
-      <el-row
-        v-if="taskTransport"
-        align="middle"
-      >
-        Please select Carrier: &ensp;
-        <el-select
-          v-model="taskCarrier"
-          placeholder="Please select"
-          clearable
-        >
-          <el-option
-            v-for="(carrier, key) in transportCarrierEnum[taskTransport]"
-            :key="key"
-            :label="carrier"
+            v-for="(type, key) in taskTypeEnum"
+            :key="type"
+            :label="type"
             :value="key"
           />
         </el-select>
@@ -83,7 +66,7 @@
       <template #footer>
         <el-button
           type="primary"
-          @click="assignOrders()"
+          @click="addWarehouseTask()"
         >
           submit
         </el-button>
@@ -117,6 +100,7 @@
 <script setup>
 import FilterHeader from './FilterHeader.vue';
 import OrderTable from './OrderTable.vue';
+import AssignOrderForm from './AssignOrderForm.vue';
 import { ElMessage } from 'element-plus';
 import { TaskDialog, OrderDescription } from '../components';
 import {
@@ -128,8 +112,8 @@ import {
   findTaskAPI,
   createTaskAPI,
 } from '@/api';
-import { formatAssignedOrderItem, formatVBDate } from '@/utils/logistic';
-import { transportEnum, transportCarrierEnum, codeSkuArrEnum } from '@/enums/logistic';
+import { formatAssignedOrderItem } from '@/utils/logistic';
+import { codeSkuArrEnum, taskTypeEnum } from '@/enums';
 import { useUserStore, useLogisticStore } from '@/store';
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading';
 
@@ -138,11 +122,15 @@ const { role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
 
 const dialogAssignVisible = ref(false);
+const dialogTasktypeVisible = ref(false);
 const dialogTaskVisible = ref(false);
 
 const assignPattern = ref('');
 const assignOrderId = ref(null);
 const dialogStatus = ref('view'); // 点开Warehouse Task默认为view pattern
+
+const dialogTaskType = ref(null);
+let dialogOrderId = ref(null);
 
 const multipleSelection = ref([]);
 const taskOrderItem = shallowRef(null);
@@ -205,6 +193,14 @@ provide('disableUnchangedTask', disableUnchangedTask);
 provide('taskOrderItem', taskOrderItem);
 provide('listQuery', listQuery);
 provide('multipleSelection', multipleSelection);
+
+const sourceId = ref(null);
+const taskTransport = ref(null);
+const taskCarrier = ref(null);
+// AssignOrderForm
+provide('sourceId', sourceId);
+provide('taskCarrier', taskCarrier);
+provide('taskTransport', taskTransport);
 /* End data */
 
 /* Start Query Related */
@@ -256,10 +252,15 @@ function removeEmptyProducts (taskItem) {
     delete taskItem['products'];
 }
 
+const showTasktypeDialog = (orderId) => {
+  dialogTasktypeVisible.value = true;
+  dialogOrderId = orderId;
+};
+
 const getCustomerId = () => Number(Object.keys(warehouseEnum.value).find(key => warehouseEnum.value[key] === 'Customer'));
 
 async function submitInitTaskItem (products, assignedData, orderId, ifSubmit = true) {
-  const { sourceWHId, carrier, transportMode } = assignedData;
+  const { sourceWHId = null, carrier = null, transportMode = null } = assignedData;
 
   const task = {} ;
   task.orderId = orderId;
@@ -327,9 +328,6 @@ function assignSelectedOrders(assignedData, selectedArr) {
   Promise.allSettled(promiseArr).then(() => fetchList());
 }
 
-const sourceId = ref(null);
-const taskTransport = ref(null);
-const taskCarrier = ref(null);
 const assignOrders = () => {
   const sourceWHId = sourceId.value;
   const assignedData = {
@@ -397,16 +395,30 @@ function showTaskDialog () {
   dialogTaskVisible.value = true;
 }
 
-const addWarehouseTask = (orderId) => {
+const addWarehouseTask = () => {
+  const orderId = dialogOrderId;
   taskItem.value = Object.assign({}, emptyTaskItem);
   findAssignedOrderAPI(orderId).then(async data => {
     taskItem.value.orderId = orderId;
+    taskItem.value.taskType = dialogTaskType;
     taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
+
+    initProductsDifferType();
 
     showTaskDialog();
   });
 };
+
+function initProductsDifferType () {
+  const type = dialogTaskType.value;
+  if (type === 'FULFILLMENT') {
+    const products = taskOrderItem.value.items;
+    submitInitTaskItem(products, {}, dialogOrderId, false);
+  } else if (type === 'REPLACE') {
+
+  }
+}
 
 const editWarehouseTask = (orderId, taskId) => {
   if (!taskPermissionArr.includes(role.value)) {

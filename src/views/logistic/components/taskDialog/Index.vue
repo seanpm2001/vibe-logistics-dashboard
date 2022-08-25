@@ -26,7 +26,7 @@
           <el-form-item label="Type">
             <el-select
               v-model="taskItem.taskType"
-              :disabled="notCommonPermission || taskItem.refTaskId"
+              disabled
               placeholder="Please select"
             >
               <el-option
