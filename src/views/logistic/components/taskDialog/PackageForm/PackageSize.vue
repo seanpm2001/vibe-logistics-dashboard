@@ -14,7 +14,7 @@
         @click="handleSizeArrChange('add', idx)"
       />
       <el-form-item label="Length/Width/Height/Weight/Unit System">
-      <el-input
+        <el-input
           v-model="size.length"
           placeholder="Length"
           @input="val => (size.length = toNumber(val) || null)"
