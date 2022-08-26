@@ -12,7 +12,7 @@
       @show-order-drawer="showOrderDrawer"
       @edit-warehouse-task="editWarehouseTask"
       @show-assign-dialog="showAssignDialog"
-      @show-task-type-dialog="showTasktypeDialog"
+      @show-task-type-dialog="showTaskTypeDialog"
       @unassign-orders="unassignOrders"
     />
 
@@ -29,7 +29,7 @@
       :close-on-click-modal="false"
     >
       <AssignOrderForm
-        :show-assigned-order="showAssignedOrder"
+        :warehouse-enum="warehouseEnum"
       />
       <template #footer>
         <el-button
@@ -252,7 +252,7 @@ function removeEmptyProducts (taskItem) {
     delete taskItem['products'];
 }
 
-const showTasktypeDialog = (orderId) => {
+const showTaskTypeDialog = (orderId) => {
   dialogTasktypeVisible.value = true;
   dialogOrderId = orderId;
 };
@@ -393,6 +393,8 @@ function recordContrastTask () {
 function showTaskDialog () {
   recordContrastTask();
   dialogTaskVisible.value = true;
+  dialogTasktypeVisible.value = false;
+  dialogTaskType.value = null;
 }
 
 const addWarehouseTask = () => {
@@ -400,7 +402,8 @@ const addWarehouseTask = () => {
   taskItem.value = Object.assign({}, emptyTaskItem);
   findAssignedOrderAPI(orderId).then(async data => {
     taskItem.value.orderId = orderId;
-    taskItem.value.taskType = dialogTaskType;
+    taskItem.value.taskType = dialogTaskType.value;
+    console.log('taskItem: ', taskItem);
     taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
 
@@ -415,8 +418,6 @@ function initProductsDifferType () {
   if (type === 'FULFILLMENT') {
     const products = taskOrderItem.value.items;
     submitInitTaskItem(products, {}, dialogOrderId, false);
-  } else if (type === 'REPLACE') {
-
   }
 }
 

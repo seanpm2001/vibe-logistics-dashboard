@@ -56,8 +56,8 @@
 <script setup>
 import { transportEnum, transportCarrierEnum } from '@/enums';
 defineProps({
-  showAssignedOrder: {
-    type: Boolean,
+  warehouseEnum: {
+    type: Object,
     required: true,
   }
 });

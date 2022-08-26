@@ -23,7 +23,7 @@
           justify="space-between"
           :gutter="3"
         >
-          <el-form-item label="Type">
+          <el-form-item label="*Type">
             <el-select
               v-model="taskItem.taskType"
               disabled
@@ -77,7 +77,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="Source Warehouse">
+          <el-form-item label="*Source Warehouse">
             <el-select
               v-model="taskItem.sourceId"
               :disabled="notCommonPermission"
@@ -91,7 +91,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="Target Warehouse">
+          <el-form-item label="*Target Warehouse">
             <el-select
               v-model="taskItem.targetId"
               :disabled="notCommonPermission"
@@ -177,150 +177,10 @@
           </el-button>
         </el-row>
 
-        <el-card>
-          Product:
-          <el-form-item
-            v-if="!notCommonPermission"
-            label="Specify Serial"
-          >
-            <el-checkbox-group
-              v-model="checkedSpecifySerial"
-              :max="1"
-            >
-              <el-checkbox
-                :key="true"
-                :label="true"
-              >
-                true
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <template
-            v-for="(product, productIdx) in taskItem.products"
-            :key="product.sku"
-          >
-            <el-row
-              align="middle"
-              class="add-minus-row"
-            >
-              <svg-icon
-                class="icon"
-                icon-name="add"
-                @click="onProductChange(productIdx, 'add')"
-              />
-              <svg-icon
-                class="icon"
-                :style="taskItem.products.length <= 1 ? 'visibility: hidden;' : ''"
-                icon-name="minus"
-                @click="onProductChange(productIdx, 'minus')"
-              />
-              <el-form-item label="*Product Name">
-                <el-select
-                  v-model="product.productCode"
-                  :disabled="notCommonPermission"
-                  placeholder="Please select"
-                  filterable
-                  allow-create
-                  default-first-option
-                >
-                  <el-option
-                    v-for="(item, key) in taskOrderItem.items"
-                    :key="key"
-                    :label="codeNameEnum[item.productCode]"
-                    :value="item.productCode"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="Sku"
-                :prop="'products.' + productIdx + '.sku'"
-                :rules="[
-                  {
-                    required: warehouseEnum[taskItem.sourceId] === 'Lightning',
-                    trigger: 'blur',
-                    message: 'Sku required for Lightning',
-                  },
-                ]"
-              >
-                <el-select
-                  v-model="product.sku"
-                  :disabled="notCommonPermission"
-                  placeholder="Please select"
-                  clearable
-                  filterable
-                  allow-create
-                  default-first-option
-                >
-                  <el-option
-                    v-for="sku in codeSkuArrEnum[product.productCode]"
-                    :key="sku"
-                    :label="sku"
-                    :value="sku"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="*Quantity"
-                :prop="'products.' + productIdx + '.quantity'"
-              >
-                <el-input-number
-                  v-model="product.quantity"
-                  :min="1"
-                  :disabled="notCommonPermission"
-                  placeholder="Quantity"
-                />
-              </el-form-item>
-              <el-form-item label="Condition">
-                <el-select
-                  v-model="product.condition"
-                  :disabled="notCommonPermission"
-                  placeholder="Please select"
-                  clearable
-                  @change="onProductConditionChange(product)"
-                >
-                  <el-option
-                    v-for="(condition, key) in unitConditionEnum"
-                    :key="condition"
-                    :label="condition"
-                    :value="key"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Available">
-                <el-input disabled>
-                  999
-                </el-input>
-              </el-form-item>
-              <el-form-item
-                v-show="
-                  (checkedSpecifySerial[0] || product.serialNote?.length) &&
-                    !noSerialArr.includes(product.productCode)
-                "
-                label="Serials"
-              >
-                <el-select
-                  v-model="product.serialNote"
-                  :disabled="notCommonPermission"
-                  placeholder="Please select"
-                  filterable
-                  style="width: 260px"
-                  multiple
-                  :multiple-limit="product.quantity"
-                  remote
-                  :allow-create="taskItem.taskType === 'RETURN'"
-                  :remote-method="(query) => debounce(remoteMethod(query, product), 500)"
-                >
-                  <el-option
-                    v-for="unit in unitList"
-                    :key="unit.serial"
-                    :label="unit.serial + ' : ' + unit.sku"
-                    :value="unit.serial"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-row>
-          </template>
-        </el-card>
+        <ProductCard
+          :not-common-permission="notCommonPermission"
+          :warehouse-enum="warehouseEnum"
+        />
 
         <template v-if="!notCommonPermission">
           <el-button
@@ -364,19 +224,15 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { debounce } from '@/utils';
 import ShipmentForm from './ShipmentForm.vue';
+import ProductCard from './ProductCard.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI, queryUnitsAPI, findTaskAPI } from '@/api';
+import { createTaskAPI, updateTaskAPI, findTaskAPI } from '@/api';
 import {
   taskTypeEnum,
   taskReasonEnum,
   taskReasonDetailEnum,
-  skuCodeEnum,
   noSerialArr,
-  unitConditionEnum,
-  codeNameEnum,
-  codeSkuArrEnum,
 } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
@@ -410,7 +266,6 @@ const notCommonPermission = computed(
   () => !['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR'].includes(role.value)
 );
 
-const unitList = shallowRef(null);
 
 const getCustomerId = () =>
   Number(
@@ -431,34 +286,9 @@ watchEffect(() => {
   }
 });
 
-const remoteMethod = (query, product) => {
-  if (query) {
-    queryUnitsAPI({ serial: query }).then((data) => {
-      unitList.value = data.filter((item) => {
-        if (skuCodeEnum[item.sku] !== product.productCode) return false;
-        if (product.sku && item.sku !== product.sku) return false;
-        if (
-          (!product.condition || product.condition === 'GOOD') &&
-          item.condition &&
-          item.condition !== 'GOOD'
-        )
-          return false; // brand new (null) or almost brand new (GOOD)
-        if (
-          product.condition &&
-          product.condition !== 'GOOD' &&
-          item.condition !== product.condition
-        )
-          return false; // used
-        return true;
-      });
-    });
-  } else {
-    unitList.value = [];
-  }
-};
+
 
 const packageArr = ref([]);
-const checkedSpecifySerial = ref([]);
 
 const returnReplaceArr = ['REPLACE', 'RETURN', 'RETURN_TO_REPAIR'];
 // const returnMoveArr = ['MOVE', 'RETURN', 'RETURN_TO_REPAIR'];
@@ -493,10 +323,6 @@ const checkLightingTaskWrong = computed(() => {
   return flag;
 });
 
-const onProductConditionChange = (product) => {
-  product.serialNote = null;
-};
-
 function removeEmptyTask(products) {
   for (let idx = products.length - 1; idx >= 0; idx--) {
     const code = products[idx].productCode;
@@ -505,6 +331,8 @@ function removeEmptyTask(products) {
 }
 
 const handleWarehouseTask = (type) => {
+  if (!checkRequiredFilled())
+    return;
   removeEmptyTask(taskItem.value.products);
   if (type === 'create') {
     createTaskAPI(taskItem.value).then((data) => {
@@ -519,12 +347,14 @@ const handleWarehouseTask = (type) => {
   }
 };
 
-const onProductChange = (idx, type) => {
-  const products = taskItem.value.products;
-  type === 'add'
-    ? products.push({ sku: null, condition: null, quantity: null })
-    : products.splice(idx--, 1);
-};
+function checkRequiredFilled () {
+  const task = taskItem.value;
+  if (!task.sourceId || !task.targetId) {
+    ElMessage.error('Please fill all required data!');
+    return false;
+  }
+  return true;
+}
 
 const resetForm = () => {
   nextTick(() => {
