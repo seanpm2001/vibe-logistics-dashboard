@@ -238,11 +238,7 @@ watch(taskPackage.value, () => {
 
 const quantityNum = computed(() => {
   const taskProducts = taskItem.value.products;
-  let sum=0;
-  for (const i in taskProducts) {
-    sum += taskProducts[i].quantity;
-  }
-  return sum;
+  return taskProducts.reduce((sum, item) => sum + item.quantity, 0);
 });
 
 provide('taskPackage', taskPackage);
