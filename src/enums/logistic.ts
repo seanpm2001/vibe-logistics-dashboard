@@ -102,6 +102,7 @@ export const taskReasonDetailEnum = {
     'Missing accessories',
     'Stand wheels don\'t fit',
     'Stand scratch',
+    'Rust',
   ],
   CAREMA_HARDWARE_DEFECT: [
     'Device can\'t be identified',
