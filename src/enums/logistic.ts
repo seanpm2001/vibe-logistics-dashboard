@@ -37,7 +37,9 @@ export enum destPortEnum {
   FUZHOU = 'Fuzhou',
   HAMBURG = 'Hamburg',
   LA_LB = 'LA/LB',
-  MELBOURNE = 'Melbourne'
+  MELBOURNE = 'Melbourne',
+  // BALTIMORE = 'Baltimore',
+  // NEW_YORK = 'New York'
 }
 export enum unitSystemEnum {
   SI = 'SI(kg/cm)',
@@ -157,6 +159,7 @@ export const transportCarrierEnum = {
     RL: 'R&L',
     ABF: 'ABF',
     ESTES: 'ESTES',
+    'C.H.ROBINSON': 'C.H.ROBINSON',
   },
   EXPRESS: {
     UPS: 'UPS',
