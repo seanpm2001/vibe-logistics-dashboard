@@ -93,10 +93,10 @@
       {{ transportEnum[task.transportMode] }}
       <el-select
         v-if="task.transportMode"
-        v-model="taskCarrier"
+        v-model="task.carrier"
         placeholder="Please select"
         clearable
-        @change="onCarrierChange(task)"
+        @change="onCarrierChange()"
       >
         <el-option
           v-for="(item, key) in transportCarrierEnum[task.transportMode]"
@@ -122,7 +122,7 @@
         </div>
       </template>
       <el-input
-        v-model="taskNote"
+        v-model="task.note"
         type="textarea"
         :autosize="{ minRows: 4 }"
         :disabled="!isEditTaskNote"
@@ -139,8 +139,8 @@ import { updateTaskAPI, sendEmailAPI, syncLightningAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
 
 const props = defineProps({
-  task: {
-    type: Object,
+  taskIdx: {
+    type: Number,
     required: true
   },
   orderEnum: {
@@ -162,36 +162,45 @@ const notHighPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(pro
 const isFulfilled = ref(false);
 const isEditTaskNote = ref(false);
 const tasksProductFulQty = inject('tasksProductFulQty');
-const taskNote = ref(props.task.note);
+const dataList = inject('dataList');
+const task = ref(dataList.value[props.taskIdx]);
+
+watch(
+  () => dataList.value,
+  () => {
+    task.value = dataList.value[props.taskIdx];
+  }
+);
 
 const emit = defineEmits(['fetchList']);
-const taskCarrier = ref(props.task.carrier);
 
-const onCarrierChange = (task) => {
-  task.carrier = taskCarrier.value;
+const onCarrierChange = () => {
+  const taskItem = task.value;
   ElMessageBox.confirm('Update it?', 'Warning', {
     type: 'warning',
     callback: (action) => {
       if (action === 'confirm')
-        updateTaskAPI(task.id, task, { syncLightning: false }).then(() => emit('fetchList'));
-      else
+        updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => emit('fetchList'));
+      else {
         ElMessage.info('Update Canceled.');
+        emit('fetchList');
+      }
     },
   });
 };
 
 const updateTaskFulfillTime = () => {
-  const task = Object.assign({}, props.task);
-  task.fulfilledAt = new Date();
-  updateTaskAPI(task.id, task, { syncLightning: false }).then(() => {
+  const taskItem = task.value;
+  taskItem.fulfilledAt = new Date();
+  updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => {
     isFulfilled.value = true;
   });
 };
 
 const editTaskNote = () => {
   if (isEditTaskNote.value) {
-    const task = Object.assign({}, props.task, { note: taskNote.value });
-    updateTaskAPI(task.id, task, { syncLightning: false }).then(() => {
+    const taskItem = task.value;
+    updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => {
       isEditTaskNote.value = false;
       emit('fetchList');
     });

@@ -3,7 +3,7 @@
     :class="tasksProductFulQty[task.id].error ? 'error-border-tip' : ''"
   >
     <CardDescriptions
-      :task="task"
+      :task-idx="taskIdx"
       :order-enum="orderEnum"
       :warehouse-enum="warehouseEnum"
       :role="role"

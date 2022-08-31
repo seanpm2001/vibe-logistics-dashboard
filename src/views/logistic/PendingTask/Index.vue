@@ -147,7 +147,7 @@ const listQuery = ref({
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
 const total = ref(0);
-const dataList = ref(null);
+const dataList = shallowRef(null);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const specifiedUnits = ref({});
 const savedTasks = ref(null); // 对比数据是否修改
