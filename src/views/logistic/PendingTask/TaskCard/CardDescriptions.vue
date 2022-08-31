@@ -173,7 +173,7 @@ const onCarrierChange = (task) => {
     type: 'warning',
     callback: (action) => {
       if (action === 'confirm')
-        updateTaskAPI(task.id, task).then(() => emit('fetchList'));
+        updateTaskAPI(task.id, task, { syncLightning: false }).then(() => emit('fetchList'));
       else
         ElMessage.info('Update Canceled.');
     },
