@@ -219,10 +219,6 @@ import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } f
 
 
 const props = defineProps({
-  task: {
-    type: Object,
-    default: () => {}
-  },
   taskIdx: {
     type: Number,
     required: true
@@ -241,8 +237,9 @@ const props = defineProps({
   }
 });
 
-// const dataList = inject('dataList') ;
+const dataList = inject('dataList') ;
 const fetchList = inject('fetchList') ;
+const task = ref(dataList.value[props.taskIdx]);
 
 /* Start Data */
 const { proxy } = getCurrentInstance();
@@ -274,12 +271,12 @@ const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
 };
 
 const disableEditOutboundTask = computed(() => {
-  return props.warehouseEnum[props.task.sourceId] === 'Lightning';
+  return props.warehouseEnum[task.value.sourceId] === 'Lightning';
 });
 
 const currentTaskSpecifiedSerials = computed(() => {
   let serials = [];
-  props.task.products?.forEach(product => {
+  task.value.products?.forEach(product => {
     serials = serials.concat(product.serialNote);
   });
   serials = serials.concat(serials);
@@ -288,7 +285,7 @@ const currentTaskSpecifiedSerials = computed(() => {
 });
 
 const allocateAccessory = (product) => {
-  const quantities = props.task.packages.map((packageItem) => {
+  const quantities = task.value.packages.map((packageItem) => {
     const temp = packageItem.accessories?.find((accessory) => accessory.productCode === product.productCode);
     if (temp)
       return temp.quantity;
@@ -307,7 +304,7 @@ const allocateAccessory = (product) => {
 const onAccessoryAllocationChange = (taskIdx) => {
   accessoryAllocationVisible.value = false;
   const productCode = accessoryAllocation.value.productCode;
-  props.task.packages.forEach((packageItem, packageIdx) => {
+  task.value.packages.forEach((packageItem, packageIdx) => {
     const accessory = packageItem.accessories.find((accessory) => accessory.productCode === productCode);
     if (accessory) {
       accessory.quantity = accessoryAllocation.value.quantities[packageIdx];
@@ -496,8 +493,8 @@ function clickNextUnitInput () {
     nextTick(() => {
       const serialCell = proxy.$refs['taskPackageArr'].querySelectorAll('.serial-cell')[packageIdx];
       setTimeout(() => {
-        const lastUnitInput = serialCell.lastElementChild.querySelector('.el-input__inner');
-        lastUnitInput.click();
+        const lastUnitInput = serialCell?.lastElementChild.querySelector('.el-input__inner');
+        lastUnitInput && lastUnitInput.click();
       }, 500);
     });
 }
@@ -633,6 +630,8 @@ const onPackagesChange = (task, packages, type, packageIdx) => {
       units: [{serial: null, status: 'DELIVERING'}],
       accessories: []
     });
+    console.log('packages: ', packages);
+
     handleInputFocus(null, props.taskIdx, packages.length - 1);
     clickNextUnitInput();
   }
