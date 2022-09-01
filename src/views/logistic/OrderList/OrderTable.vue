@@ -239,12 +239,12 @@ const isReviewedOrder = order => {
   const attachment = order?.attachment;
   if (!attachment)
     return false;
+  
   if (order.businessVerificationRequired || order.financeVerificationRequired) {
-    if (attachment.businessVerified !== order.businessVerificationRequired)
-      return false;
-    if (attachment.financeVerified !== order.financeVerificationRequired)
-      return false;
-    return true;
+    if (
+      attachment.businessVerified === order.businessVerificationRequired
+        && attachment.financeVerified === order.financeVerificationRequired
+    ) return true;
   }
   return false;
 };
