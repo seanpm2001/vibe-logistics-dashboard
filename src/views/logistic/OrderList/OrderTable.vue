@@ -40,6 +40,22 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="!showAssignedOrder"
+      label="Review Status"
+      min-width="280px"
+      align="center"
+    >
+      <template #default="{ row }">
+        <el-tag
+          v-if="!notFraudOrder(row)"
+          size="large"
+          :type="isReviewedOrder(row) ? 'success' : 'danger'"
+        >
+          {{ isReviewedOrder(row) ? 'Reviewed' : 'Reviewing' }}
+        </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column
       label="Products"
       width="255px"
       align="center"
@@ -147,6 +163,7 @@
             v-show="!showAssignedOrder"
             type="primary"
             size="small"
+            :disabled="!isReviewedOrder(row) && !notFraudOrder(row)"
             @click="showAssignDialog('assign', row.id)"
           >
             Assign & Add 1st WH Task
@@ -212,6 +229,24 @@ const handleSelectionChange = (selectedArr) => {
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt).getTime() - new Date(next.createdAt).getTime()
   );
+};
+
+const notFraudOrder = order => !(
+  order.businessVerificationRequired || order.financeVerificationRequired
+);
+
+const isReviewedOrder = order => {
+  const attachment = order?.attachment;
+  if (!attachment)
+    return false;
+  if (order.businessVerificationRequired || order.financeVerificationRequired) {
+    if (attachment.businessVerified !== order.businessVerificationRequired)
+      return false;
+    if (attachment.financeVerified !== order.financeVerificationRequired)
+      return false;
+    return true;
+  }
+  return false;
 };
 </script>
 
