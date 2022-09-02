@@ -64,7 +64,7 @@
         <div class="product-row">
           <template v-if="showAssignedOrder">
             <template
-              v-for="(quantity, code) in row.productsQty"
+              v-for="(quantity, code) in row?.productsQty"
               :key="code"
             >
               <div align="left">

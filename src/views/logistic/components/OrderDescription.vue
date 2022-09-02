@@ -52,7 +52,7 @@
       :min-width="200"
     >
       <template
-        v-for="(quantity, code) in orderItem.productsQty"
+        v-for="(quantity, code) in orderItem?.productsQty"
         :key="code"
       >
         <div>

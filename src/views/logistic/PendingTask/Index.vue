@@ -291,7 +291,7 @@ const productsFulQty = computed(() => {
   const qtyBySku = {};
   const qtyByCode = {};
   for (const taskId in tasksProductFulQty.value) {
-    const productsQty = tasksProductFulQty.value[taskId].productsQty;
+    const productsQty = tasksProductFulQty.value[taskId]?.productsQty;
     productsQty?.forEach(product => {
       const sku = product.sku;
       const code = product.productCode;

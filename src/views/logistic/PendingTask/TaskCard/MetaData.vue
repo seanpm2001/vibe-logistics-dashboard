@@ -1,7 +1,7 @@
 <template>
   <div class="col1 meta-data cell w-380">
     <template
-      v-for="(product, idx) in tasksProductFulQty[task.id].productsQty"
+      v-for="(product, idx) in tasksProductFulQty[task.id]?.productsQty"
       :key="product.sku"
     >
       <div class="mgb-5">
