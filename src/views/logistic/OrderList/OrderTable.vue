@@ -235,11 +235,17 @@ const notFraudOrder = order => !(
   order.businessVerificationRequired || order.financeVerificationRequired
 );
 
+const REVIEWED_ORDER_TIMESTAMP = 1661990400000;
 const isReviewedOrder = order => {
+  // 9.1 号前订单默认reviewed
+  const createdTimestamp = +new Date(order.createdAt).getTime();
+  if (createdTimestamp < REVIEWED_ORDER_TIMESTAMP)
+    return true;
+
   const attachment = order?.attachment;
   if (!attachment)
     return false;
-  
+
   if (order.businessVerificationRequired || order.financeVerificationRequired) {
     if (
       attachment.businessVerified === order.businessVerificationRequired
