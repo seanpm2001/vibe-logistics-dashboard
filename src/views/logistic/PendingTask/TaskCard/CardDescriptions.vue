@@ -168,9 +168,12 @@ const task = ref(dataList.value[props.taskIdx]);
 watch(
   () => dataList.value,
   () => {
-    task.value = dataList.value[props.taskIdx];
+    setTimeout(() => { // 防止task突变引起的undefined err
+      task.value = dataList.value[props.taskIdx];
+    }, 300);
   }
 );
+
 
 const emit = defineEmits(['fetchList']);
 
