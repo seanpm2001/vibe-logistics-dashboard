@@ -227,7 +227,7 @@ const tasksProductFulQty = computed(() => {
         if (!sku) return;
         let ful = false;
         if (totalUnfulSpecSerials[unit.serial]) {
-          productsQty.forEach(product => {
+          productsQty?.forEach(product => {
             if (!ful && product.unfulSpecSerials[unit.serial]) {
               delete product.unfulSpecSerials[unit.serial];
               product.fulSpec += 1;
@@ -266,7 +266,7 @@ const tasksProductFulQty = computed(() => {
         }
       });
     });
-    productsQty.forEach(product => {
+    productsQty?.forEach(product => {
       if (product.fulExclSpec + product.fulSpec < product.req) {
         error[taskFulfilmentErrorEnum.MISSING_PRODUCT] = true;
       }
@@ -292,7 +292,7 @@ const productsFulQty = computed(() => {
   const qtyByCode = {};
   for (const taskId in tasksProductFulQty.value) {
     const productsQty = tasksProductFulQty.value[taskId].productsQty;
-    productsQty.forEach(product => {
+    productsQty?.forEach(product => {
       const sku = product.sku;
       const code = product.productCode;
       if (sku && !noSerialArr.includes(code)) {

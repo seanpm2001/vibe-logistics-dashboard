@@ -41,7 +41,7 @@
       width="40%"
     >
       <el-tooltip
-        v-if="tasksProductFulQty[task.id].error"
+        v-if="tasksProductFulQty[task.id]?.error"
         effect="light"
       >
         <el-button
@@ -56,19 +56,19 @@
             type="danger"
             style="font-size: 14px"
           >
-            {{ tasksProductFulQty[task.id].error }}
+            {{ tasksProductFulQty[task.id]?.error }}
           </el-tag>
         </template>
       </el-tooltip>
       <el-button
-        v-if="!tasksProductFulQty[task.id].error"
+        v-if="!tasksProductFulQty[task.id]?.error"
         type="primary"
       >
         Complete
       </el-button>
       <el-button
         :type="task.fulfilledAt ? 'warning' : 'success'"
-        :disabled="!!tasksProductFulQty[task.id].error"
+        :disabled="!!tasksProductFulQty[task.id]?.error"
         @click="updateTaskFulfillTime"
       >
         {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}

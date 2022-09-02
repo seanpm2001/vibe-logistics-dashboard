@@ -92,7 +92,7 @@ const exportTasks = () => {
     'Task Id':
       (order, task) => task.id,
     'Status':
-      (order, task) => tasksProductFulQty.value[task.id].error ? 'Incomplete' : 'Complete',
+      (order, task) => tasksProductFulQty.value[task.id]?.error ? 'Incomplete' : 'Complete',
     'Order#':
       (order, task) => order.rawOrders.map(o => o.id).join(' & '),
     'Item':

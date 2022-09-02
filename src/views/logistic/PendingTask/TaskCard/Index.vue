@@ -359,7 +359,8 @@ function checkAddable (task, type) {
   let productQty = 0; // Lisa指定的总数
   let fulQty = 0; // package中已有unit的总数
 
-  tasksProductFulQty.value[task.id]?.productsQty.forEach(product => {
+  const productsQty = tasksProductFulQty.value[task.id]?.productsQty;
+  productsQty?.forEach(product => {
     if (type === 'unit' && !noSerialArr.includes(product.productCode)) {
       productQty += product.req;
       fulQty += Math.min(product.fulSpec + product.fulExclSpec);
