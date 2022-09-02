@@ -1,6 +1,6 @@
 <template>
   <el-card
-    :class="tasksProductFulQty[task.id].error ? 'error-border-tip' : ''"
+    :class="tasksProductFulQty[task.id]?.error ? 'error-border-tip' : ''"
   >
     <CardDescriptions
       :task-idx="taskIdx"

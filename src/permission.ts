@@ -32,19 +32,20 @@ router.beforeEach(async(to, from, next) => {
         next();
       } else {
         try {
-          let accessRoutes = [];
+          const accessRoutes = [];
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { role } = await userStore.getInfo();
-          accessRoutes = await permissionStore.generateRoutes(role);
+          console.log('role: ', role);
+          // accessRoutes = await permissionStore.generateRoutes(role);
        
           // setting constRouters and accessRoutes to vuex , in order to sideBar for using
           permissionStore.M_routes(accessRoutes);
           // dynamically add accessible routes
           //router4 addRoutes destroyed
-          accessRoutes.forEach((route) => {
-            router.addRoute(route);
-          });
+          // accessRoutes.forEach((route) => {
+          //   router.addRoute(route);
+          // });
           //already get userInfo
           permissionStore.M_isGetUserInfo(true);
           // hack method to ensure that addRoutes is complete
