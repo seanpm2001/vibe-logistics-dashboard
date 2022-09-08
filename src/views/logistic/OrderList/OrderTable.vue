@@ -236,9 +236,7 @@ const handleSelectionChange = (selectedArr) => {
   );
 };
 
-const notFraudOrder = order => !(
-  order.businessVerificationRequired || order.financeVerificationRequired
-);
+const notFraudOrder = order => !(order.businessVerificationRequired || order.financeVerificationRequired || order.csReviewRequired);
 
 const REVIEWED_ORDER_TIMESTAMP = 1661990400000;
 const isReviewedOrder = order => {
