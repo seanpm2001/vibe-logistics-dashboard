@@ -212,6 +212,7 @@ defineProps({
 
 const multipleSelection = inject('multipleSelection') ;
 const listQuery = inject('listQuery') ;
+const disableAssign = inject('disableAssign');
 
 const showAssignedOrder = computed(() => listQuery.value.showAssignedOrder);
 
@@ -226,6 +227,10 @@ const unassignOrders = order => emit('unassignOrders', order);
 const showTaskTypeDialog = (orderId) => emit('showTaskTypeDialog', orderId);
 
 const handleSelectionChange = (selectedArr) => {
+  disableAssign.value = selectedArr.some(order => (!isReviewedOrder(order) && !notFraudOrder(order)));
+  if (disableAssign.value) {
+    return;
+  }
   multipleSelection.value = selectedArr.sort(
     (pre, next) => new Date(pre.createdAt).getTime() - new Date(next.createdAt).getTime()
   );

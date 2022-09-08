@@ -51,7 +51,7 @@
     <div v-if="!listQuery.showAssignedOrder">
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-        :disabled="!multipleSelection?.length"
+        :disabled="!multipleSelection?.length || disableAssign"
         type="primary"
         @click="showAssignDialog('assignSelected')"
       >
@@ -59,7 +59,7 @@
       </el-button>
       <el-button
         v-permission="['ADMIN', 'VIBE_MANAGER', 'VIBE_OPERATOR']"
-        :disabled="!multipleSelection?.length"
+        :disabled="!multipleSelection?.length || disableAssign"
         type="primary"
         @click="showAssignDialog('combineAndAssign')"
       >
@@ -85,6 +85,7 @@ import { Search, Delete } from '@element-plus/icons-vue';
 
 const listQuery = inject('listQuery');
 const multipleSelection = inject('multipleSelection');
+const disableAssign = inject('disableAssign');
 
 const emit = defineEmits(['fetchList', 'showAssignDialog', 'unassignOrders']);
 const fetchList = () => emit('fetchList');
