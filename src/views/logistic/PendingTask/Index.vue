@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <div class="statistics">
-      <FilterHeader @fetch-list="fetchList" />
+      <FilterHeader
+        :warehouse-enum="warehouseEnum"
+        @fetch-list="fetchList"
+      />
       <el-row justify="end">
         <el-button
           type="primary"

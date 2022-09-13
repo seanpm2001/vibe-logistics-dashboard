@@ -38,6 +38,8 @@
         :value="key"
       />
     </el-select>
+  </div>
+  <div class="f-row col-center filter-header mgt-10">  
     <el-select
       v-model="listQuery.transportMode"
       placeholder="Transport"
@@ -92,6 +94,20 @@
       @input="(() => debounce(findTaskByTrackingNumber, 200))()"
     >
     </el-input>
+    <el-select
+      v-model="listQuery.warehouseId"
+      v-permission="['ADMIN', 'VIBE_MANAGER']"
+      placeholder="Source Warehouse"
+      clearable
+      @change="handleFilter"
+    >
+      <el-option
+        v-for="(warehouse, key) in warehouseEnum"
+        :key="key"
+        :label="warehouse"
+        :value="key"
+      />
+    </el-select>
   </div>
 </template>
 
@@ -99,6 +115,14 @@
 import { Search, CircleClose } from '@element-plus/icons-vue';
 import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum, completionEnum  } from '@/enums/logistic';
 import { parseTime, debounce, addNullOptionInEnumObject } from '@/utils';
+
+defineProps({
+  warehouseEnum: {
+    type: Object,
+    required: true
+  }
+});
+
 const emit = defineEmits(['fetchList']);
 
 const listQuery = inject('listQuery') ;

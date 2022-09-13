@@ -188,7 +188,7 @@ const disableUnchangedTask = computed(() => {
 });
 
 const disableAssign = ref(false);
-provide('disableAssign', disableAssign)
+provide('disableAssign', disableAssign);
 
 provide('dialogTaskVisible', dialogTaskVisible);
 provide('taskItem', taskItem);
