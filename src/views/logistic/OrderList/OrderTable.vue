@@ -253,7 +253,7 @@ const isReviewedOrder = order => {
     if (
       attachment.businessVerified === order.businessVerificationRequired
         && attachment.financeVerified === order.financeVerificationRequired
-          && attachment.csVerified === order.csVerified
+          && attachment.csVerified === order.csReviewRequired
     ) return true;
   }
   return false;
