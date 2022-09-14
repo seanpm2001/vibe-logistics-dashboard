@@ -144,7 +144,9 @@ export enum packageConditionEnum {
 // }
 export const transportEnum = {
   TRUCK: 'Truck',
-  EXPRESS: 'Express'
+  EXPRESS: 'Express',
+  CUSTOMER_PICKUP: 'Customer Pick-up',
+  FBA: 'FBA',
 };
 export const completionEnum = {
   true: 'Complete',
@@ -165,6 +167,12 @@ export const transportCarrierEnum = {
     UPS: 'UPS',
     USPS: 'USPS',
     FEDEX: 'FedEx',
+  },
+  CUSTOMER_PICKUP: {
+    CUSTOMER_PICKUP: 'Customer Pick-up'
+  },
+  FBA: {
+    FBA: 'FBA',
   }
 };
 export enum codeNameEnum {
