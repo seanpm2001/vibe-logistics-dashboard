@@ -55,7 +55,7 @@
         v-for="(quantity, code) in orderItem?.productsQty"
         :key="code"
       >
-        <div>
+        <div v-if="quantity">
           <svg-icon :icon-name="codeIconEnum[code] || 'product-other'" />
           <span class="mgl-5">
             {{ codeNameEnum[code] || code }}:

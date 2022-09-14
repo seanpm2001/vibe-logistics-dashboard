@@ -67,7 +67,10 @@
               v-for="(quantity, code) in row?.productsQty"
               :key="code"
             >
-              <div align="left">
+              <div
+                v-if="quantity"
+                align="left"
+              >
                 <svg-icon :icon-name="codeIconEnum[code] || 'product-other'" />
                 <span class="mgl-5">{{ codeNameEnum[code] || code }}:
                   <el-tag
@@ -83,7 +86,10 @@
               v-for="product in combineSameProductQuantityArr(row.items)"
               :key="product"
             >
-              <div align="left">
+              <div
+                v-if="product.quantity"
+                align="left"
+              >
                 <svg-icon :icon-name="codeIconEnum[product.productCode] || 'product-other'" />
                 <span class="mgl-5">{{ codeNameEnum[product.productCode] || product.productCode }}:<el-tag
                   class="mgl-5"
