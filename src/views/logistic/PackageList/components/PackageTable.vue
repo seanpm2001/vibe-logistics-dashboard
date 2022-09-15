@@ -440,6 +440,9 @@ const carrierUrlEnum = {
   PILOT: (trackNum) => `https://www.pilotdelivers.com/pilot-shipment-detail/?Pro=${trackNum}`,
   AUK: '',
   CAP_TRANS: '',
+  'C.H.ROBINSON': (trackNum) => `https://www.freightquote.com/track-shipment/?bol=${trackNum}`,
+  DAY_ROSS: (trackNum) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
+  DHL: (trackNum) => `https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id=${trackNum}`,
 };
 
 const getTrackingUrl = (carrier, trackingNumber) => {
