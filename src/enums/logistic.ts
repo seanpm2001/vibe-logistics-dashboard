@@ -38,8 +38,8 @@ export enum destPortEnum {
   HAMBURG = 'Hamburg',
   LA_LB = 'LA/LB',
   MELBOURNE = 'Melbourne',
-  // BALTIMORE = 'Baltimore',
-  // NEW_YORK = 'New York'
+  BALTIMORE = 'Baltimore',
+  NEW_YORK = 'New York'
 }
 export enum unitSystemEnum {
   SI = 'SI(kg/cm)',
