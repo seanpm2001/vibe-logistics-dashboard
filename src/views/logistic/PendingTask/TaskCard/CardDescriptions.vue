@@ -194,7 +194,7 @@ const onCarrierChange = () => {
 
 const updateTaskFulfillTime = () => {
   const taskItem = task.value;
-  taskItem.fulfilledAt = new Date();
+  taskItem.fulfilledAt = taskItem.fulfilledAt || new Date();
   updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => {
     isFulfilled.value = true;
   });
