@@ -38,13 +38,15 @@
         <OrderDescription :order-item="order" />
       </template>
     </el-drawer>
+
+    <UploadTaskFileDialog />
   </div>
 </template>
 
 <script setup>
 import TaskTable from './TaskTable.vue';
 import FilterHeader from './FilterHeader.vue';
-import { TaskDialog, OrderDescription } from '../components';
+import { TaskDialog, OrderDescription, UploadTaskFileDialog } from '../components';
 import {
   queryTasksAPI,
   findTaskAPI,
@@ -63,6 +65,7 @@ const taskOrderItem = shallowRef(null);
 
 const dialogStatus = ref('view');
 const dialogTaskVisible = ref(false);
+const dialogUploadVisible = ref(false);
 
 const multipleSelection = ref([]);
 const taskItem = ref({
@@ -85,6 +88,7 @@ const taskItem = ref({
     quantity: null,
     serialNote: null,
   }],
+  files: [],
   // shipment info
   carrier: null,
   deliveryCost: null,
@@ -117,6 +121,8 @@ const disableUnchangedTask = computed(() => {
 });
 
 provide('dialogTaskVisible', dialogTaskVisible);
+provide('dialogUploadVisible', dialogUploadVisible);
+
 provide('taskItem', taskItem);
 provide('disableUnchangedTask', disableUnchangedTask);
 provide('taskOrderItem', taskOrderItem);

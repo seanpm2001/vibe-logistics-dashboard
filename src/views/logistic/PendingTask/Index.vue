@@ -5,12 +5,18 @@
         :warehouse-enum="warehouseEnum"
         @fetch-list="fetchList"
       />
-      <el-row justify="end">
+      <el-row justify="end" class="mgt-10">
         <el-button
           type="primary"
           @click="showExport"
         >
           Export
+        </el-button>
+        <el-button
+          type="primary"
+          @click="downloadListedTaskFiles"
+        >
+          Download Listed Task Shipping Labels
         </el-button>
       </el-row>
       <el-descriptions
@@ -117,6 +123,8 @@
       :page-sizes="[20, 50, 100, 200]"
       @fetch-list="fetchList"
     />
+
+    <UploadTaskFileDialog />
   </div>
 </template>
 
@@ -125,8 +133,9 @@ import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
 import ExportTasks from './ExportTasks.vue';
+import { UploadTaskFileDialog } from '../components';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
-import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI } from '@/api';
+import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI, findTaskFileAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
 
@@ -150,17 +159,19 @@ const listQuery = ref({
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
 const total = ref(0);
-const dataList = shallowRef(null);
+const dataList = shallowRef([]);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const specifiedUnits = ref({});
 const savedTasks = ref(null); // 对比数据是否修改
 const dialogExportTasksVisible = ref(false);
+const dialogUploadVisible = ref(false);
 
 provide('listQuery', listQuery);
 provide('typeArr', typeArr);
 provide('dataList', dataList);
 provide('savedTasks', savedTasks);
 provide('dialogExportTasksVisible', dialogExportTasksVisible);
+provide('dialogUploadVisible', dialogUploadVisible);
 provide('orderEnum', orderEnum);
 
 const fulSerials = computed(() => {
@@ -314,6 +325,28 @@ const productsFulQty = computed(() => {
     qtyByCode
   };
 });
+
+const downloadFile = file => {
+  const taskId = file.fileName.split('#')[1];
+  findTaskFileAPI(taskId, file.fileId).then(data => {
+    window.open(data.downloadUrl);
+  });
+};
+const downloadListedTaskFiles = () => {
+  const promiseArr = [];
+  const files = dataList.value?.reduce((arr, task) => {
+    return arr.concat(task.files);
+  }, []);
+
+  if (files.length) {
+    files.forEach(file => {
+      promiseArr.push(downloadFile(file));
+    });
+    Promise.allSettled(promiseArr);
+  } else {
+    ElMessage.error('None file under listed tasks or unknown err');
+  }
+}
 
 const showExport = () => {
   dialogExportTasksVisible.value = true;

@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf node_modules dist",
     "lint": "eslint --fix --ext .js,.ts,.vue ./src",
-    "dev": "pnpm lint && vite",
+    "dev": "pnpm lint && vite --port=3010",
     "dev:mock": "pnpm lint && cross-env USE_MOCK=true vite",
     "build:beta": "pnpm lint && vite build --mode development",
     "build:prod": "pnpm lint && cross-env vite build --mode production",

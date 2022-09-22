@@ -13,7 +13,7 @@ const handleReqElMsg = (fn, action: string, name: string, identifier?) => {
     const isCreation = action === 'Create';
     fn
       .then((data) => {
-        item = data?.item;
+        item = data?.item || data;
         resolve(item);
         ElMessage.success(`${action} ${name} (ID: ${isCreation ? item.id : identifier}) successfully.`);
       })
@@ -160,6 +160,21 @@ export async function createShipmentUnitsAPI (taskId: number, data) {
     requester.post(`/warehouse/task/${taskId}/units`, data), 'Create', 'Package'
   );
   return item;
+}
+export async function findTaskFileAPI(taskId: number, fileId: number) {
+  const res = await requester.get(`/warehouse/task/${taskId}/file/${fileId}`);
+  return res;
+}
+export async function createTaskFileAPI(taskId: number, data) {
+  const res = handleReqElMsg(
+    requester.post(`/warehouse/task/${taskId}/files`, data), 'Create', 'File for Task', taskId
+  );
+  return res;
+}
+export async function deleteTaskFileAPI (taskId: number, fileId: number) {
+  handleReqElMsg(
+    requester.delete(`/warehouse/task/${taskId}/file/${fileId}`), 'Delete', 'Task PDF File', fileId
+  );
 }
 
 // task 相关send email API

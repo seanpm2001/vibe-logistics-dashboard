@@ -34,6 +34,12 @@
     
     <div class="right-subcontainer">
       <el-button
+        type="primary"
+        @click="showUploadFileDialog"
+      >
+        Upload Shipping Labels
+      </el-button>
+      <el-button
         v-if="false"
         v-permission="['ADMIN', 'VIBE_MANAGER']"
         type="primary"
@@ -58,11 +64,12 @@
 import { Delete } from '@element-plus/icons-vue';
 import { deleteTaskAPI } from '@/api';
 import { taskTypeEnum } from '@/enums/logistic';
-import { debounce } from '@/utils';
 
 const listQuery = inject('listQuery') ;
 const typeArr = inject('typeArr');
 const multipleSelection = inject('multipleSelection') ;
+const dialogUploadVisible = inject('dialogUploadVisible') ;
+
 const showTaskPattern = ref(null);
 
 const taskPatternEnum = {
@@ -70,8 +77,12 @@ const taskPatternEnum = {
   ALL: 'All tasks',
 };
 
-const emit = defineEmits(['fetchList']);
+const emit = defineEmits('fetchList');
 const fetchList = () => emit('fetchList');
+
+const showUploadFileDialog = () => {
+  dialogUploadVisible.value = true;
+};
 
 const onTypeArrChange = (visible) => {
   if (!visible)

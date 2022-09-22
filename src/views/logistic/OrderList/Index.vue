@@ -94,6 +94,8 @@
         <OrderDescription :order-item="order" />
       </template>
     </el-drawer>
+
+    <UploadTaskFileDialog />
   </div>
 </template>
 
@@ -102,7 +104,7 @@ import FilterHeader from './FilterHeader.vue';
 import OrderTable from './OrderTable.vue';
 import AssignOrderForm from './AssignOrderForm.vue';
 import { ElMessage } from 'element-plus';
-import { TaskDialog, OrderDescription } from '../components';
+import { TaskDialog, OrderDescription, UploadTaskFileDialog } from '../components';
 import {
   queryOrdersAPI,
   queryAssignedOrdersAPI,
@@ -124,6 +126,7 @@ const { warehouseEnum } = storeToRefs(useLogisticStore());
 const dialogAssignVisible = ref(false);
 const dialogTasktypeVisible = ref(false);
 const dialogTaskVisible = ref(false);
+const dialogUploadVisible = ref(false);
 
 const assignPattern = ref('');
 const assignOrderId = ref(null);
@@ -153,6 +156,7 @@ const taskItem = ref({
     quantity: null,
     serialNote: null,
   }],
+  files: [],
   // shipment info
   carrier: null,
   transportMode: null,
@@ -191,6 +195,7 @@ const disableAssign = ref(false);
 provide('disableAssign', disableAssign);
 
 provide('dialogTaskVisible', dialogTaskVisible);
+provide('dialogUploadVisible', dialogUploadVisible);
 provide('taskItem', taskItem);
 provide('disableUnchangedTask', disableUnchangedTask);
 provide('taskOrderItem', taskOrderItem);

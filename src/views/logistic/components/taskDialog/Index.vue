@@ -149,7 +149,21 @@
               placeholder="Tracking Number Note"
             />
           </el-form-item>
+          <el-button
+            type="primary"
+            @click="showUploadFileDialog"
+          >
+            Upload Shipping Labels
+          </el-button>
+          <el-button
+            v-if="taskItem.files?.length"
+            type="primary"
+            @click="downloadAllFiles"
+          >
+            Download All Shipping Labels
+          </el-button>
         </el-row>
+        <DownloadFileList :task-item="taskItem" />
 
         <el-row
           v-if="associatedTaskVisible"
@@ -224,10 +238,11 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
+import DownloadFileList from '../DownloadFileList.vue';
 import ShipmentForm from './ShipmentForm.vue';
 import ProductCard from './ProductCard.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI, findTaskAPI } from '@/api';
+import { createTaskAPI, updateTaskAPI, findTaskAPI, findTaskFileAPI } from '@/api';
 import {
   taskTypeEnum,
   taskReasonEnum,
@@ -256,9 +271,11 @@ const fetchList = () => emit['fetchList'];
 
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
+const dialogUploadVisible = inject('dialogUploadVisible');
 const taskItem = inject('taskItem') ;
 const disableUnchangedTask = inject('disableUnchangedTask');
 const taskOrderItem = inject('taskOrderItem') ;
+
 
 const { proxy } = getCurrentInstance();
 const { role } = storeToRefs(useUserStore());
@@ -286,7 +303,17 @@ watchEffect(() => {
   }
 });
 
-
+const showUploadFileDialog = () => {
+  dialogUploadVisible.value = true;
+};
+const downloadAllFiles = () => {
+  const files = taskItem.value.files || [];
+  const promiseArr = [];
+  files.forEach(file => {
+    promiseArr.push(downloadFile(file));
+  });
+  Promise.allSettled(promiseArr);
+};
 
 const packageArr = ref([]);
 
@@ -306,6 +333,13 @@ provide('taskItem', taskItem);
 //     return false;
 //   return true;
 // });
+
+const downloadFile = file => {
+  const taskId = file.fileName.split('#')[1];
+  findTaskFileAPI(taskId, file.fileId).then(data => {
+    window.open(data.downloadUrl);
+  });
+};
 
 const checkLightingTaskWrong = computed(() => {
   const sourceId = taskItem.value.sourceId;
@@ -452,6 +486,9 @@ const showAssociatedTask = () => {
 </script>
 
 <style lang="sass" scoped>
-.el-form .el-row
-  padding: 0 1rem
+.el-form
+  .el-form-item
+    margin-bottom: 0
+  .el-row
+    padding: 0 1rem 1rem
 </style>

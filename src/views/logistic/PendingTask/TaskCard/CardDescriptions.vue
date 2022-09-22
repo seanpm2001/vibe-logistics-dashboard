@@ -126,7 +126,15 @@
         type="textarea"
         :autosize="{ minRows: 4 }"
         :disabled="!isEditTaskNote"
-      ></el-input>
+      />
+      <DownloadFileList :task-item="task" />
+      <el-button
+        v-if="task.files.length"
+        type="primary"
+        @click="downloadTaskFiles(task.files)"
+      >
+        Download Task Shipping Labels
+      </el-button>
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -134,8 +142,9 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
+import DownloadFileList from '../../components/DownloadFileList.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
-import { updateTaskAPI, sendEmailAPI, syncLightningAPI } from '@/api';
+import { updateTaskAPI, sendEmailAPI, syncLightningAPI, findTaskFileAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
 
 const props = defineProps({
@@ -161,8 +170,11 @@ const notHighPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(pro
 
 const isFulfilled = ref(false);
 const isEditTaskNote = ref(false);
+
 const tasksProductFulQty = inject('tasksProductFulQty');
 const dataList = inject('dataList');
+const dialogUploadVisible = inject('dialogUploadVisible') ;
+
 const task = ref(dataList.value[props.taskIdx]);
 
 watch(
@@ -215,6 +227,21 @@ const editTaskNote = () => {
 const syncLightning = (taskId) => {
   syncLightningAPI(taskId).then(() => emit('fetchList'));
 };
+
+const downloadFile = file => {
+  const taskId = file.fileName.split('#')[1];
+  findTaskFileAPI(taskId, file.fileId).then(data => {
+    window.open(data.downloadUrl);
+  });
+};
+
+const downloadTaskFiles = (files) => {
+  const promiseArr = [];
+  files.forEach(file => {
+    promiseArr.push(downloadFile(file));
+  });
+  Promise.allSettled(promiseArr);
+};
 </script>
 
 <style lang="sass" scoped>
@@ -224,4 +251,5 @@ const syncLightning = (taskId) => {
   align-items: center
 .el-textarea
   display: block
+
 </style>
