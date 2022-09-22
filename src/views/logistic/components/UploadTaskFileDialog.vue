@@ -6,7 +6,7 @@
     :before-close="beforeCloseUploadDialog"
   >
     <el-row :gutter="40">
-      <el-col :span="11">
+      <el-col :span="12">
         <el-upload
           action=""
           class="upload-serial"
@@ -35,7 +35,7 @@
           </el-button>
         </el-row> -->
       </el-col>
-      <el-col :span="11">
+      <el-col :span="12">
         <strong>Saved in Database:</strong>
         <template
           v-for="(file, idx) in successfulList"

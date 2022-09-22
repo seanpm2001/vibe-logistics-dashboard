@@ -48,7 +48,7 @@
     </el-row>
     <div class="form-upload-row">
       <el-row :gutter="40">
-        <el-col :span="11">
+        <el-col :span="12">
           <el-upload
             v-if="isDialogPattern('edit')"
             action=""
@@ -95,7 +95,7 @@
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="11">
+        <el-col :span="12">
           <div
             v-for="(item, key) in products"
             :key="key"
