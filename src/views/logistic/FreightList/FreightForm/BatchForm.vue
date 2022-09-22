@@ -272,7 +272,10 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
-        batch.value.items.push({serial: item['Serial Number']?.trim() || ' ', sku: item['SKU']});
+        batch.value.items.push({
+          serial: (item['Serial Number'] || item['Serial number'] || item['serial number'])?.trim() || ' ',
+          sku: item['SKU']
+        });
       });
       previewExcelArr.value = [].concat(batch.value?.items);
     }
