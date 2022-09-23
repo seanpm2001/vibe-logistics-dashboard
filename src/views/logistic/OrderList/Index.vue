@@ -95,7 +95,7 @@
       </template>
     </el-drawer>
 
-    <UploadTaskFileDialog />
+    <UploadTaskFileDialog @update-task-item="updateTaskItem" />
   </div>
 </template>
 
@@ -445,6 +445,12 @@ const editWarehouseTask = (orderId, taskId) => {
 };
 
 const resetForm = () => {};
+const updateTaskItem = () => {
+  const taskId = taskItem.value.id;
+  taskId && findTaskAPI(taskId).then(data => {
+    taskItem.value = data;
+  });
+};
 </script>
 
 <style lang="sass" scoped>

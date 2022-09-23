@@ -109,7 +109,6 @@
       @input="(() => debounce(findTaskByTrackingNumber, 200))()"
     >
     </el-input>
-    
   </div>
 </template>
 

@@ -39,7 +39,7 @@
       </template>
     </el-drawer>
 
-    <UploadTaskFileDialog />
+    <UploadTaskFileDialog @update-task-item="updateTaskItem" />
   </div>
 </template>
 
@@ -192,6 +192,13 @@ const handleDetailRow = (task, type) => {
     taskOrderItem.value = await formatAssignedOrderItem(data);
     type === 'edit' && (dialogStatus.value = 'update');
     showTaskDialog();
+  });
+};
+
+const updateTaskItem = () => {
+  const taskId = taskItem.value.id;
+  taskId && findTaskAPI(taskId).then(data => {
+    taskItem.value = data;
   });
 };
 </script>

@@ -78,6 +78,8 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 import { findTaskAPI, createTaskFileAPI, deleteTaskFileAPI, findTaskFileAPI } from '@/api';
 
+const emit = defineEmits(['updateTaskItem']);
+
 const dialogUploadVisible= inject('dialogUploadVisible') ;
 
 const pdfFileList = ref([]);
@@ -122,8 +124,8 @@ const handleUpdate = async (file, fileList) => {
   const formData = new FormData();
   formData.append('file', file.raw);
   createTaskFileAPI(taskId, formData).then(data => {
-    console.log('data: ', data);
     successfulList.value.push(data);
+    emit('updateTaskItem');
   });
 };
 
@@ -153,6 +155,7 @@ const handleDeleteFile = (file, fileIdx) => {
         const taskId = fileName.split('#')[1];
         deleteTaskFileAPI(taskId, file.fileId).then(() => {
           successfulList.value.splice(fileIdx, 1);
+          emit('updateTaskItem');
         });
       } else if (action === 'cancel') {
         ElMessage.info('Delete canceled');
@@ -167,11 +170,8 @@ const beforeRemove = (file, fileList) => {
       type: 'warning',
       callback: (action) => {
         if (action === 'confirm') {
-          // 移除文件时重置sub batch products
-          
           resolve(action);
         } else if (action === 'cancel') {
-          reject();
           ElMessage.info('Delete canceled');
         }
       },

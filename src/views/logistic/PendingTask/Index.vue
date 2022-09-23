@@ -5,7 +5,10 @@
         :warehouse-enum="warehouseEnum"
         @fetch-list="fetchList"
       />
-      <el-row justify="end" class="mgt-10">
+      <el-row
+        justify="end"
+        class="mgt-10"
+      >
         <el-button
           type="primary"
           @click="showExport"
@@ -123,8 +126,6 @@
       :page-sizes="[20, 50, 100, 200]"
       @fetch-list="fetchList"
     />
-
-    <UploadTaskFileDialog />
   </div>
 </template>
 
@@ -133,7 +134,6 @@ import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
 import ExportTasks from './ExportTasks.vue';
-import { UploadTaskFileDialog } from '../components';
 import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI, findTaskFileAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
@@ -164,14 +164,12 @@ const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const specifiedUnits = ref({});
 const savedTasks = ref(null); // 对比数据是否修改
 const dialogExportTasksVisible = ref(false);
-const dialogUploadVisible = ref(false);
 
 provide('listQuery', listQuery);
 provide('typeArr', typeArr);
 provide('dataList', dataList);
 provide('savedTasks', savedTasks);
 provide('dialogExportTasksVisible', dialogExportTasksVisible);
-provide('dialogUploadVisible', dialogUploadVisible);
 provide('orderEnum', orderEnum);
 
 const fulSerials = computed(() => {
@@ -346,7 +344,7 @@ const downloadListedTaskFiles = () => {
   } else {
     ElMessage.error('None file under listed tasks or unknown err');
   }
-}
+};
 
 const showExport = () => {
   dialogExportTasksVisible.value = true;

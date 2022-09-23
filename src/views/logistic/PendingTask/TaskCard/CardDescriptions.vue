@@ -127,7 +127,23 @@
         :autosize="{ minRows: 4 }"
         :disabled="!isEditTaskNote"
       />
-      <DownloadFileList :task-item="task" />
+      <div class="download-file-list">
+        <strong>Files:</strong>
+        <template
+          v-for="file in taskItem?.files"
+          :key="file.fileId"
+        >
+          <div>
+            <el-tag
+              class="cursor-pointer"
+              @click="downloadFile(file)"
+            >
+              {{ file.fileName }}
+            </el-tag>
+          </div>
+        </template>
+      </div>
+      {{task}}
       <el-button
         v-if="task.files.length"
         type="primary"
@@ -142,7 +158,6 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
-import DownloadFileList from '../../components/DownloadFileList.vue';
 import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
 import { updateTaskAPI, sendEmailAPI, syncLightningAPI, findTaskFileAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
@@ -188,6 +203,7 @@ watch(
 
 
 const emit = defineEmits(['fetchList']);
+const fetchList = () => emit('fetchList');
 
 const onCarrierChange = () => {
   const taskItem = task.value;

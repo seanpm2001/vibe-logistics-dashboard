@@ -163,7 +163,22 @@
             Download All Shipping Labels
           </el-button>
         </el-row>
-        <DownloadFileList :task-item="taskItem" />
+        <div class="download-file-list">
+          <strong>Files:</strong>
+          <template
+            v-for="file in taskItem?.files"
+            :key="file.fileId"
+          >
+            <div>
+              <el-tag
+                class="cursor-pointer"
+                @click="downloadFile(file)"
+              >
+                {{ file.fileName }}
+              </el-tag>
+            </div>
+          </template>
+        </div>
 
         <el-row
           v-if="associatedTaskVisible"
@@ -238,7 +253,6 @@
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
-import DownloadFileList from '../DownloadFileList.vue';
 import ShipmentForm from './ShipmentForm.vue';
 import ProductCard from './ProductCard.vue';
 import OrderDescription from '../OrderDescription.vue';
@@ -267,7 +281,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['fetchList']);
-const fetchList = () => emit['fetchList'];
+const fetchList = () => emit('fetchList');
 
 /* Start data */
 const dialogTaskVisible = inject('dialogTaskVisible');
