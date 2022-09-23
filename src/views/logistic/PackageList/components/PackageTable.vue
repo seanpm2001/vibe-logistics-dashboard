@@ -443,6 +443,7 @@ const carrierUrlEnum = {
   'C.H.ROBINSON': (trackNum) => `https://www.freightquote.com/track-shipment/?bol=${trackNum}`,
   DAY_ROSS: (trackNum) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
   DHL: (trackNum) => `https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id=${trackNum}`,
+  YRC_FREIGHT: (trackNum) => `https://my.yrc.com/tools/track/shipments?referenceNumber=${trackNum}`
 };
 
 const getTrackingUrl = (carrier, trackingNumber) => {
