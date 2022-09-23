@@ -127,30 +127,31 @@
         :autosize="{ minRows: 4 }"
         :disabled="!isEditTaskNote"
       />
-      <div class="download-file-list">
+      <div
+        v-if="task.files.length"
+        class="download-file-list"
+      >
         <strong>Files:</strong>
         <template
-          v-for="file in taskItem?.files"
+          v-for="file in task.files"
           :key="file.fileId"
         >
           <div>
             <el-tag
-              class="cursor-pointer"
+              class="cursor-pointer mgb-5"
               @click="downloadFile(file)"
             >
               {{ file.fileName }}
             </el-tag>
           </div>
         </template>
+        <el-button
+          type="primary"
+          @click="downloadTaskFiles(task.files)"
+        >
+          Download {{ task.files.length }} Task Shipping Labels
+        </el-button>
       </div>
-      {{ task }}
-      <el-button
-        v-if="task.files.length"
-        type="primary"
-        @click="downloadTaskFiles(task.files)"
-      >
-        Download Task Shipping Labels
-      </el-button>
     </el-descriptions-item>
   </el-descriptions>
 </template>

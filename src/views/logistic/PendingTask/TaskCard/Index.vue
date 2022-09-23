@@ -686,7 +686,7 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
   .w-380
     width: 350px
     @media (max-width: 1420px)
-      width: 220px
+      width: 260px
   .el-input
     max-width: 360px
   .label, .cell
