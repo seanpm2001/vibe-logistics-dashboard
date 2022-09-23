@@ -78,6 +78,7 @@
       :warehouse-enum="warehouseEnum"
       :empty-task-item="emptyTaskItem"
       :dialog-status="dialogStatus"
+      @update-task-item="updateTaskItem"
     />
 
     <el-drawer

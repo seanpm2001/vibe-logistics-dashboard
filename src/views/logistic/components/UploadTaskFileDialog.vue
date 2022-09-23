@@ -49,11 +49,6 @@
             >
               {{ file.fileName }}
             </el-tag>
-            <svg-icon
-              class="icon close-icon mgl-5"
-              icon-name="close"
-              @click="handleDeleteFile(file, idx)"
-            />
           </div>
         </template>
       </el-col>
@@ -76,7 +71,7 @@
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
-import { findTaskAPI, createTaskFileAPI, deleteTaskFileAPI, findTaskFileAPI } from '@/api';
+import { findTaskAPI, createTaskFileAPI, findTaskFileAPI } from '@/api';
 
 const emit = defineEmits(['updateTaskItem']);
 
@@ -143,24 +138,6 @@ const downloadFile = file => {
   const taskId = file.fileName.split('#')[1];
   findTaskFileAPI(taskId, file.fileId).then(data => {
     window.open(data.downloadUrl);
-  });
-};
-
-const handleDeleteFile = (file, fileIdx) => {
-  const fileName = file.fileName;
-  ElMessageBox.confirm(`Delete the file of ${fileName} ?`, 'Warning', {
-    type: 'warning',
-    callback: (action) => {
-      if (action === 'confirm') {
-        const taskId = fileName.split('#')[1];
-        deleteTaskFileAPI(taskId, file.fileId).then(() => {
-          successfulList.value.splice(fileIdx, 1);
-          emit('updateTaskItem');
-        });
-      } else if (action === 'cancel') {
-        ElMessage.info('Delete canceled');
-      }
-    },
   });
 };
 

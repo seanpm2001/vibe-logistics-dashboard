@@ -176,6 +176,11 @@
               >
                 {{ file.fileName }}
               </el-tag>
+              <svg-icon
+                class="icon close-icon mgl-5"
+                icon-name="close"
+                @click="handleDeleteFile(file)"
+              />
             </div>
           </template>
         </div>
@@ -256,7 +261,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import ShipmentForm from './ShipmentForm.vue';
 import ProductCard from './ProductCard.vue';
 import OrderDescription from '../OrderDescription.vue';
-import { createTaskAPI, updateTaskAPI, findTaskAPI, findTaskFileAPI } from '@/api';
+import { createTaskAPI, updateTaskAPI, findTaskAPI, findTaskFileAPI, deleteTaskFileAPI, } from '@/api';
 import {
   taskTypeEnum,
   taskReasonEnum,
@@ -280,7 +285,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['fetchList']);
+const emit = defineEmits(['fetchList', 'updateTaskItem']);
 const fetchList = () => emit('fetchList');
 
 /* Start data */
@@ -341,12 +346,6 @@ const isReturnOrRepalce = computed(() =>
 provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
-
-// const disableUnchangedTask = computed(() => {
-//   if (JSON.stringify(taskItem.value) !== contrastTask.value)
-//     return false;
-//   return true;
-// });
 
 const downloadFile = file => {
   const taskId = file.fileName.split('#')[1];
@@ -496,6 +495,23 @@ const showAssociatedTask = () => {
       },
     }
   );
+};
+
+const handleDeleteFile = (file) => {
+  const fileName = file.fileName;
+  ElMessageBox.confirm(`Delete the file of ${fileName} ?`, 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        const taskId = fileName.split('#')[1];
+        deleteTaskFileAPI(taskId, file.fileId).then(() => {
+          emit('updateTaskItem');
+        });
+      } else if (action === 'cancel') {
+        ElMessage.info('Delete canceled');
+      }
+    },
+  });
 };
 </script>
 

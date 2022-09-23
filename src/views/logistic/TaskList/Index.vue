@@ -22,6 +22,7 @@
       :empty-task-item="emptyTaskItem"
       :warehouse-enum="warehouseEnum"
       :dialog-status="dialogStatus"
+      @update-task-item="updateTaskItem"
     />
 
     <el-drawer
@@ -196,10 +197,12 @@ const handleDetailRow = (task, type) => {
 };
 
 const updateTaskItem = () => {
-  const taskId = taskItem.value.id;
-  taskId && findTaskAPI(taskId).then(data => {
-    taskItem.value = data;
-  });
+  setTimeout(() => {
+    const taskId = taskItem.value.id;
+    taskId && findTaskAPI(taskId).then(data => {
+      taskItem.value = data;
+    });
+  }, 200);
 };
 </script>
 
