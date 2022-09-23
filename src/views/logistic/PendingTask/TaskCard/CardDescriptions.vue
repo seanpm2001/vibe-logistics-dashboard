@@ -143,7 +143,7 @@
           </div>
         </template>
       </div>
-      {{task}}
+      {{ task }}
       <el-button
         v-if="task.files.length"
         type="primary"
