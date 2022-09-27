@@ -71,7 +71,7 @@
         :disabled="!!tasksProductFulQty[task.id]?.error"
         @click="updateTaskFulfillTime"
       >
-        {{ isFulfilled ? 'Fulfilled' : 'Fulfill' }}
+        {{ task.fulfilledAt ? 'Fulfilled' : 'Fulfill' }}
       </el-button>
       <el-button
         type="success"
