@@ -432,7 +432,6 @@ export const noSerialArr = [
   '55V1ESt',
   '55V1ASt',
   '55V1PC',
-  '55S1AS',
   '55BP',
   '55SP',
   '75ProESt',
