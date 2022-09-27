@@ -80,7 +80,7 @@ const props = defineProps({
 const emit = defineEmits(['update:item']);
 
 const dataList = inject('dataList');
-const packageItem = dataList.value[props.taskIdx]?.packages[props.packageIdx];
+const packageItem = dataList.value[props.taskIdx]?.packages[props.packageIdx] || {};
 
 const sizeArr = ref([{
   length: packageItem.length || null,

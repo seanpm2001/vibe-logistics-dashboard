@@ -189,7 +189,6 @@ const isEditTaskNote = ref(false);
 
 const tasksProductFulQty = inject('tasksProductFulQty');
 const dataList = inject('dataList');
-const dialogUploadVisible = inject('dialogUploadVisible') ;
 
 const task = ref(dataList.value[props.taskIdx]);
 

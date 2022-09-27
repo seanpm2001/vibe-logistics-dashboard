@@ -431,7 +431,8 @@ export const fixedWarehouseEnum = {
   15: 'HH',
   16: 'Zhongao',
   17: 'TPV',
-  18: 'Customer'
+  18: 'Customer',
+  19: 'Customer Scrap'
 };
 
 export const BSUnitSystemWarehouseArr = [
