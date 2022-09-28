@@ -118,7 +118,7 @@
     <el-card v-if="packageArr.length > 0">
       <template
         v-for="(item, index) in packageArr"
-        :key="index"
+        :key="item.id"
       >
         <PackageForm
           :ref="`package-${index}`"
