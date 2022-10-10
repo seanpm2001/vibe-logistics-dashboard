@@ -169,13 +169,18 @@ const unitList = shallowRef(null);
 
 const productNameScope = computed(() => {
   const type = taskItem.value.taskType;
-  if (type === 'FULFILLMENT') {
-    return taskOrderItem.value.items;
-  } else if (type === 'REPLACE') {
+  if (type === 'FULFILLMENT') { // 返回order里所有products
+    return taskOrderItem.value.items?.map(item => {
+      if (item.productCode === '55V1B') { // 55V1B废弃统一改成55V1UB
+        item.productCode = '55V1UB';
+      }
+      return item;
+    });
+  } else if (type === 'REPLACE') { // 返回所有product code
     return Object.keys(codeNameEnum).map(code => {
       return { productCode: code };
     });
-  } else if (type === 'RETURN' || type === 'RETURN_TO_REPAIR') {
+  } else if (type === 'RETURN' || type === 'RETURN_TO_REPAIR') { // 返回order下所有task的历史所有products
     const set = new Set();
     taskOrderItem.value.tasks.forEach(task => {
       task.products.forEach(product => set.add(product.productCode));

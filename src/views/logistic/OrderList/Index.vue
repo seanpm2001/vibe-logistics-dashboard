@@ -281,11 +281,14 @@ async function submitInitTaskItem (products, assignedData, orderId, ifSubmit = t
   task.products = [];
 
   // 初始化products的内容, 若product_code对应的sku只有一个，赋该值
+  // 若product_code === 55V1B, 替换为 55V1UB
   for (let idx = products.length - 1; idx >= 0; idx--) {
-    const productCode = products[idx].productCode;
+    let productCode = products[idx].productCode;
     if (productCode.includes('EPP')) {
       products.splice(idx, 1);
       continue;
+    } else if (productCode === '55V1B') {
+      productCode = '55V1UB';
     }
 
     let sku = null;
@@ -445,7 +448,7 @@ const editWarehouseTask = (orderId, taskId) => {
   });
 };
 
-const resetForm = () => {};
+// const resetForm = () => {};
 const updateTaskItem = () => {
   const taskId = taskItem.value.id;
   taskId && findTaskAPI(taskId).then(data => {
