@@ -429,11 +429,12 @@ const checkExceedProductLimit = (sku, taskId) => {
     let req = 0;
     const ful = qty.reduce((total, cur) => {
       if (cur.productCode === code) {
-        req = cur.req;
-        return total + cur.fulSpec + cur.fulExclSpec;
+        req += cur.req;
+        return total + ((cur.fulSpec + cur.fulExclSpec) || 1);
       }
       return total;
     }, 0);
+    console.log(ful, req);
     if (ful >= req) // 新增serial所属的product超出该task所需要的quantity
       return true;
   }
