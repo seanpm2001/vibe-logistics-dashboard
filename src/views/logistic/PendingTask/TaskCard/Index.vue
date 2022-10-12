@@ -125,7 +125,7 @@
                 <template #content>
                   <template
                     v-for="(serial, idx) in item.scannedSerials.split(';')"
-                    :key="idx"
+                    :key="serial"
                   >
                     <el-tag
                       type="danger"
@@ -215,7 +215,7 @@ import PackageSize from './PackageSize.vue';
 import { ElMessage } from 'element-plus';
 import { debounce, toNumber, getWarehouseUnitSystem, jsonClone } from '@/utils';
 import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
-import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI } from '@/api';
+import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI, findPackageAPI } from '@/api';
 
 
 const props = defineProps({
@@ -472,6 +472,10 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
         const uniqueSerial = data[0].serial;
         if (checkExceedProductLimit(data[0].sku, task.id)) {
           ElMessage.error('Exceeding the limit of product quantity: ' + query);
+          findPackageAPI(packageItem.id).then(data => {
+            packageItem.units = data.units;
+            unitList.value = [];
+          });
           return;
         }
 

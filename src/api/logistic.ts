@@ -199,6 +199,10 @@ export async function queryPackagesAPI (params?) {
   });
   return res;
 }
+export async function findPackageAPI(packageId: number) {
+  const { item } = await requester.get(`/warehouse/package/${packageId}`);
+  return item;
+}
 export async function createPackageAPI (taskId: number, data) {
   const packageData = packageCleanUp(data);
   const item = handleReqElMsg(
