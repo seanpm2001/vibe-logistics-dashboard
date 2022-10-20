@@ -184,6 +184,7 @@ export enum codeNameEnum {
   '55V1RS' = '55 V1 Red Stand',
   '55V1ESt' = '55 V1 Extra Stylus',
   '55V1ASt' = '55 V1 Active Stylus',
+  '55V1UBSH' = '55 V1 Unboxed Board (Second Hand)',
   '55V1UB' = '55 V1 Unboxed Board',
   '55V1PC' = '55 V1 Power Cord',
   '55S1AS' = '55 S1 Active Stylus',
@@ -212,6 +213,9 @@ export enum codeNameEnum {
   '55S1WS' = '55 S1 White Stand',
   '55S1BS' = '55 S1 Blue Stand',
   '55S1B' = '55 S1 Board',
+  '55S1UB' = '55 S1 Refurbished Board',
+  '55S1UBSH' = '55 S1 Second Hand Board',
+  '55S1UBSB' = '55 S1 Sample Board',
   'CAM01A' = 'C1 Camera',
   '55P1B' = '55 P1 Board',
   '55V1BPB' = '55 V1 Package Box',
@@ -226,6 +230,7 @@ export enum codeIconEnum {
   '55V1ASt' = 'product-stylus',
   '55S1AS' = 'product-stylus',
   '55V1UB' = 'product-board',
+  '55V1UBSH' = 'product-board',
   '55V1PC' = '55 V1 Power Cord',
   '55BP' = '55 Board Pallet',
   '55SP' = '55 Stand Pallet',
@@ -242,6 +247,9 @@ export enum codeIconEnum {
   '75ProBP' = '75 Board Pallet',
   '75ProSP' = '75 Stand Pallet',
   '55S1B' = 'product-board',
+  '55S1UB' = 'product-board',
+  '55S1UBSH' = 'product-board',
+  '55S1UBSB' = 'product-board',
   '55P1B' = 'product-board',
   '55V1BPB' = '55 V1 Package Box',
   '55S1BPB' = '55 S1 Package Box',
@@ -332,7 +340,12 @@ export const codeSkuArrEnum = {
     'V55N205EUR',
     'V55N203EUR',
     'V55N205WR',
-    'V55N203WR'
+    'V55N203WR',
+    'V55N201W',
+  ],
+  '55V1UBSH': [
+    'V55N201W',
+    'V55N203W'
   ],
   '55V1PC': [
     'V55NEWPC',
@@ -346,6 +359,15 @@ export const codeSkuArrEnum = {
     '55STAND301PL',
     '55STAND201PL',
     '55STAND101PL'
+  ],
+  '55S1UB': [
+    'S55T01AUS',
+  ],
+  '55S1UBSH': [
+    'S55T01AUS'
+  ],
+  '55S1UBSB': [
+    'S55T01AUS'
   ],
   '75ProB': [
     'N75H301US'
