@@ -136,7 +136,6 @@
         border
         fit
         highlight-current-row
-        style="width: 80%; margin: 0 auto;"
       >
         <el-table-column
           type="index"
@@ -149,6 +148,10 @@
         <el-table-column
           prop="serial"
           label="Serial Number"
+        />
+        <el-table-column
+          prop="batchCondition"
+          label="Batch Condition"
         />
       </el-table>
     </el-dialog>
@@ -258,7 +261,6 @@ const updateBatchProducts = (type, file) => {
       let tempArr= [];
       products.value = {};
       dataArr.forEach(item => {
-        console.log('item: ', item);
         const sku = item.sheetName;
         // 文件max limit暂时为1
         if (type === 'add') {
@@ -272,11 +274,14 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
+        const batchCondition = (item['Batch Condition'] || item['Batch condition'] || item['batch condition'] || '').trim() || '';
         batch.value.items.push({
-          serial: (item['Serial Number'] || item['Serial number'] || item['serial number'])?.trim() || ' ',
-          sku: item['SKU']
+          serial: (item['Serial Number'] || item['Serial number'] || item['serial number'] || '').trim() || ' ',
+          sku: item['SKU'],
+          batchCondition: batchCondition.toUpperCase(),
         });
       });
+
       previewExcelArr.value = [].concat(batch.value?.items);
     }
   });
