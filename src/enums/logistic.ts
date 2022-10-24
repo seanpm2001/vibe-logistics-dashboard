@@ -198,6 +198,8 @@ export enum codeNameEnum {
   'EPP3_850' = 'Extend Protection Plan 3 year',
   '75ProB' = '75 Board',
   '75ProUB' = '75 Unboxed Board',
+  '75ProUBSH' = '75 Second Hand Board',
+  '75ProUBSB' = '75 Sample Board',
   '75ProS' = '75 Stand',
   '75ProESt' = '75 Extra Stylus',
   '75ProASt' = '75 Active Stylus',
@@ -236,6 +238,8 @@ export enum codeIconEnum {
   '55SP' = '55 Stand Pallet',
   '75ProB' = 'product-board',
   '75ProUB' = 'product-board',
+  '75ProUBSH' = 'product-board',
+  '75ProUBSB' = 'product-board',
   '75ProS' = 'product-stand',
   '75ProESt' = 'product-stylus',
   '75ProASt' = 'product-stylus',
@@ -345,7 +349,8 @@ export const codeSkuArrEnum = {
   ],
   '55V1UBSH': [
     'V55N201W',
-    'V55N203W'
+    'V55N203W',
+    'V55N205W'
   ],
   '55V1PC': [
     'V55NEWPC',
@@ -373,7 +378,13 @@ export const codeSkuArrEnum = {
     'N75H301US'
   ],
   '75ProUB': [
-    'N75H301USR'
+    'N75H301US'
+  ],
+  '75ProUBSH': [
+    'N75H301US'
+  ],
+  '75ProUBSB': [
+    'N75H301US'
   ],
   '75ProS': [
     'ST02H'
