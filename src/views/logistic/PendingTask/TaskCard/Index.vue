@@ -422,24 +422,24 @@ function filterUnitList (unitList, task) {
   });
 }
 
-const checkExceedProductLimit = (sku, taskId) => {
-  const qty = tasksProductFulQty.value[taskId]?.productsQty;
-  const code = skuCodeEnum[sku];
-  if (code) {
-    let req = 0;
-    const ful = qty.reduce((total, cur) => {
-      if (cur.productCode === code) {
-        req += cur.req;
-        return total + ((cur.fulSpec + cur.fulExclSpec) || 1);
-      }
-      return total;
-    }, 0);
-    console.log(ful, req);
-    if (ful >= req) // 新增serial所属的product超出该task所需要的quantity
-      return true;
-  }
-  return false;
-};
+// const checkExceedProductLimit = (sku, taskId) => {
+//   const qty = tasksProductFulQty.value[taskId]?.productsQty;
+//   const code = skuCodeEnum[sku];
+//   if (code) {
+//     let req = 0;
+//     const ful = qty.reduce((total, cur) => {
+//       if (cur.productCode === code) {
+//         req += cur.req;
+//         return total + ((cur.fulSpec + cur.fulExclSpec) || 1);
+//       }
+//       return total;
+//     }, 0);
+//     console.log(ful, req);
+//     if (ful >= req) // 新增serial所属的product超出该task所需要的quantity
+//       return true;
+//   }
+//   return false;
+// };
 
 const unitList = shallowRef(null);
 const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit) => {
@@ -471,14 +471,14 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
 
       if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合
         const uniqueSerial = data[0].serial;
-        if (checkExceedProductLimit(data[0].sku, task.id)) {
-          ElMessage.error('Exceeding the limit of product quantity: ' + query);
-          findPackageAPI(packageItem.id).then(data => {
-            packageItem.units = data.units;
-            unitList.value = [];
-          });
-          return;
-        }
+        // if (checkExceedProductLimit(data[0].sku, task.id)) {
+        //   ElMessage.error('Exceeding the limit of product quantity: ' + query);
+        //   findPackageAPI(packageItem.id).then(data => {
+        //     packageItem.units = data.units;
+        //     unitList.value = [];
+        //   });
+        //   return;
+        // }
 
         if (query === uniqueSerial) {
           unit.serial = uniqueSerial;
