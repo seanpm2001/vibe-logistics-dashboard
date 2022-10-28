@@ -310,11 +310,13 @@ const productsFulQty = computed(() => {
       const condition = product.condition;
       if (sku && !noSerialArr.includes(code)) {
         qtyBySku[sku] = qtyBySku[sku] || {};
+        qtyBySku[sku]['sku'] = sku;
         qtyBySku[sku]['condition'] = condition;
         qtyBySku[sku]['req'] = (qtyBySku[sku]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + product.fulExclSpec;
       } else {
         qtyByCode[code] = qtyByCode[code] || {};
+        console.log('code: ', code);
         // qtyByCode[code]['condition'] = condition;
         qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + product.fulExclSpec;
