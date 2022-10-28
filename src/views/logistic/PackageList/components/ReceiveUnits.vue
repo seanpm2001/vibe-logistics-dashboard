@@ -35,7 +35,7 @@
         <template #label>
           Product
         </template>
-        {{ codeNameEnum[skuCodeEnum[findTaskUnit(unit.serial)?.sku]] }}
+        {{ codeNameEnum[getUnitCode(findTaskUnit(unit.serial))] }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
@@ -166,9 +166,8 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from 'element-plus';
-import { updatePackageUnitAPI, updatePackageAPI } from '@/api';
-import { packageStatusEnum, packageConditionEnum, skuCodeEnum, codeNameEnum } from '@/enums/logistic';
+import { updatePackageAPI } from '@/api';
+import { packageStatusEnum, codeNameEnum } from '@/enums/logistic';
 
 const emit = defineEmits(['fetchList']);
 

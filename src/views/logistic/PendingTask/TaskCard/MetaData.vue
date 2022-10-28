@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { codeNameEnum, skuCodeEnum, noSerialArr } from '@/enums/logistic';
+import { codeNameEnum, noSerialArr } from '@/enums/logistic';
 
 const props = defineProps({
   task: {
@@ -105,25 +105,6 @@ const onAccessoryAllocationButtonClick = (product) => {
   else
     allocateAccessory(product);
 };
-
-// const calTaskFulQty = (type, packageArr) => {
-//   // Important: for a single product (unique product code) in a task, either specify sku or not.
-//   // It is not allowed for both.
-//   return packageArr?.reduce((temp, packageItem) => {
-//     packageItem.units.forEach(unit => {
-//       const sku = unit.item?.sku;
-//       if (type === 'sku')
-//         temp[sku] = (temp[sku] || 0) + 1;
-//       else
-//         temp[skuCodeEnum[sku]] = (temp[skuCodeEnum[sku]] || 0) + 1;
-//     });
-//     if (type === 'code') {
-//       packageItem.accessories.forEach(accessory => {
-//         temp[accessory.productCode] = (temp[accessory.productCode] || 0) + accessory.quantity;
-//       });
-//     }
-//   }, {});
-// };
 
 </script>
 

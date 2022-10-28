@@ -1,5 +1,5 @@
 import { ElMessage } from 'element-plus';
-import { BSUnitSystemWarehouseArr } from '../enums/logistic';
+import { BSUnitSystemWarehouseArr, skuCodeEnum } from '../enums/logistic';
 
 // 合并products array为一个{productCode: totalQuantity}的对象
 const combineSameProductQuantity = (arr => {
@@ -83,3 +83,12 @@ export const copy = (text) => {
 };
 
 export const jsonClone = (obj) :any => JSON.parse(JSON.stringify(obj));
+
+const isObj = target => Object.prototype.toString.call(target) === '[object Object]';
+export const getUnitCode = (unit) => {
+  let temp = skuCodeEnum[unit.sku];
+  if (isObj(temp)) { // true说明为 { condition: code }
+    temp = temp[unit.condition];
+  }
+  return temp || null;
+};

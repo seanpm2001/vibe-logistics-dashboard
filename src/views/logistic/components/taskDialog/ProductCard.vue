@@ -146,8 +146,8 @@
 </template>
 
 <script setup>
-import { debounce } from '@/utils';
-import { noSerialArr, unitConditionEnum, codeNameEnum, skuCodeEnum, codeSkuArrEnum } from '@/enums/logistic';
+import { debounce, getUnitCode } from '@/utils';
+import { noSerialArr, unitConditionEnum, codeNameEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { queryUnitsAPI } from '@/api';
 
 defineProps({
@@ -195,7 +195,7 @@ const remoteMethod = (query, product) => {
   if (query) {
     queryUnitsAPI({ serial: query }).then((data) => {
       unitList.value = data.filter((item) => {
-        if (skuCodeEnum[item.sku] !== product.productCode) return false;
+        if (getUnitCode(item) !== product.productCode) return false;
         if (product.sku && item.sku !== product.sku) return false;
         if (
           (!product.condition || product.condition === 'GOOD') &&

@@ -78,7 +78,7 @@
 <script setup>
 import OrderShipmentInfo from './OrderShipmentInfo.vue';
 import { formatVBDate, getExternalId, copy } from '@/utils/logistic';
-import { codeNameEnum, codeIconEnum, skuCodeEnum } from '@/enums/logistic';
+import { codeNameEnum, codeIconEnum } from '@/enums/logistic';
 
 defineProps({
   taskId: {

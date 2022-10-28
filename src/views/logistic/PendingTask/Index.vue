@@ -56,7 +56,7 @@
         >
           <div v-if="item.req">
             <el-descriptions-item label="Product Name">
-              {{ codeNameEnum[skuCodeEnum[key]] || '' }}
+              {{ codeNameEnum[getCodeBySkuAndCondition(item.sku, item.condition)] || '' }}
             </el-descriptions-item>
             <el-descriptions-item label="SKU">
               {{ key }}
@@ -85,7 +85,7 @@
           :key="serial"
         >
           <el-descriptions-item label="Product Name">
-            {{ codeNameEnum[skuCodeEnum[specifiedUnits[serial]?.sku]] || skuCodeEnum[specifiedUnits[serial]?.sku] }}
+            {{ codeNameEnum[getUnitCode(specifiedUnits[serial])] || getUnitCode(specifiedUnits[serial]) }}
           </el-descriptions-item>
           <el-descriptions-item label="SKU">
             {{ specifiedUnits[serial]?.sku }}
@@ -134,7 +134,7 @@ import { ElMessage } from 'element-plus';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
 import ExportTasks from './ExportTasks.vue';
-import { formatAssignedOrderItem, getTaskOrderIdArr } from '@/utils/logistic';
+import { formatAssignedOrderItem, getTaskOrderIdArr, getUnitCode } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI, findTaskFileAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
 import { useUserStore, useLogisticStore } from '@/store';
@@ -227,7 +227,7 @@ const tasksProductFulQty = computed(() => {
         unfulSpecSerials[serial] = true;
         totalUnfulSpecSerials[serial] = true;
       });
-      productsQty.push({ productCode: product.productCode, sku: product?.sku, req: product.quantity, fulExclSpec: 0, fulSpec: 0, unfulSpecSerials: unfulSpecSerials, serialNote: product.serialNote });
+      productsQty.push({ productCode: product.productCode, sku: product?.sku, condition: product?.condition, req: product.quantity, fulExclSpec: 0, fulSpec: 0, unfulSpecSerials: unfulSpecSerials, serialNote: product.serialNote });
     });
     task.packages?.forEach(packageItem => {
       if (!packageItem.trackingNumber) {
@@ -257,7 +257,7 @@ const tasksProductFulQty = computed(() => {
           // Secondly search for product code match
           if (!ful) {
             for (const product of productsQty) {
-              if (!ful && product.productCode && product.productCode === skuCodeEnum[unit.item.sku] && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+              if (!ful && product.productCode && product.productCode === getUnitCode(unit.item) && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
                 product.fulExclSpec += 1;
                 ful = true;
               }
@@ -307,12 +307,15 @@ const productsFulQty = computed(() => {
     productsQty?.forEach(product => {
       const sku = product.sku;
       const code = product.productCode;
+      const condition = product.condition;
       if (sku && !noSerialArr.includes(code)) {
         qtyBySku[sku] = qtyBySku[sku] || {};
+        qtyBySku[sku]['condition'] = condition;
         qtyBySku[sku]['req'] = (qtyBySku[sku]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + product.fulExclSpec;
       } else {
         qtyByCode[code] = qtyByCode[code] || {};
+        // qtyByCode[code]['condition'] = condition;
         qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + product.fulExclSpec;
       }
@@ -344,6 +347,16 @@ const downloadListedTaskFiles = () => {
   } else {
     ElMessage.error('None file under listed tasks or unknown err');
   }
+};
+
+
+const isObj = target => Object.prototype.toString.call(target) === '[object Object]';
+const getCodeBySkuAndCondition = (sku, condition) => {
+  let temp = skuCodeEnum[sku];
+  if (isObj(temp)) { // true说明为 { condition: code }
+    temp = temp[condition];
+  }
+  return temp || null;
 };
 
 const showExport = () => {

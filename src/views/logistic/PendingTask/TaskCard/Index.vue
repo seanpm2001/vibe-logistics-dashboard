@@ -213,8 +213,8 @@ import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import PackageSize from './PackageSize.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, toNumber, getWarehouseUnitSystem, jsonClone } from '@/utils';
-import { codeNameEnum, skuCodeEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
+import { debounce, getWarehouseUnitSystem, jsonClone } from '@/utils';
+import { codeNameEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI, findPackageAPI } from '@/api';
 
 
@@ -410,7 +410,7 @@ function filterUnitList (unitList, task) {
 
   return unitList.filter(item => {
     for (const idx in taskProducts) {
-      if (skuCodeEnum[item.sku] === taskProducts[idx].productCode) {
+      if (getUnitCode(item) === taskProducts[idx].productCode) {
         if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
           return false;
         if (item.condition && item.condition !== 'GOOD' && !currentTaskSpecifiedSerials.value.includes(item.serial))

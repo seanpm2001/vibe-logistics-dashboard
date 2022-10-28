@@ -185,7 +185,7 @@
 </template>
 
 <script setup>
-import { debounce, toNumber } from '@/utils';
+import { debounce, getUnitCode } from '@/utils';
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus';
 import PackageSize from './PackageSize.vue';
 import {
@@ -194,7 +194,7 @@ import {
   updatePackageAPI,
   queryUnitsAPI,
 } from '@/api';
-import { noSerialArr, skuCodeEnum, unitSystemEnum, codeNameEnum } from '@/enums/logistic';
+import { noSerialArr, unitSystemEnum, codeNameEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
 
 // eslint-disable-next-line no-undef
@@ -253,7 +253,7 @@ const remoteMethod = (query, taskType) => {
     queryUnitsAPI({ serial: query }).then(data => {
       unitList.value = data.filter(item => {
         for (const idx in taskProducts) {
-          if (item.sku === taskProducts[idx].sku || skuCodeEnum[item.sku] === taskProducts[idx].productCode)
+          if (item.sku === taskProducts[idx].sku || getUnitCode(item) === taskProducts[idx].productCode)
             return true;
         }
       });

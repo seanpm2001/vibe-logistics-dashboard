@@ -280,9 +280,9 @@
 import { ElMessageBox } from 'element-plus';
 import { AssignedOrderId } from '../../components';
 import { updatePackageUnitAPI, updatePackageAPI, deletePackageAPI } from '@/api';
-import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, skuCodeEnum, codeIconEnum, packageConditionEnum } from '@/enums/logistic';
+import { packageStatusEnum, taskTypeEnum, taskColorEnum, codeNameEnum, codeIconEnum, packageConditionEnum } from '@/enums/logistic';
 import { useUserStore } from '@/store';
-import { formatVBDate } from '@/utils';
+import { getUnitCode } from '@/utils';
 
 defineProps({
   dataList: {
@@ -469,7 +469,7 @@ const calPackageProductsQuantity = (packageItem) => {
   const products = [];
   packageItem.units?.forEach((unit) => {
     if (unit.item?.serial) {
-      const productCode = skuCodeEnum[unit.item.sku];
+      const productCode = getUnitCode(unit.item);
       productsQuantity[productCode] = (productsQuantity[productCode] || 0) + 1;
     }
   });
