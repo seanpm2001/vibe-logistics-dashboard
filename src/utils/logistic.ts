@@ -88,7 +88,7 @@ const isObj = target => Object.prototype.toString.call(target) === '[object Obje
 export const getUnitCode = (unit) => {
   let temp = skuCodeEnum[unit.sku];
   if (isObj(temp)) { // true说明为 { condition: code }
-    temp = temp[unit.condition];
+    temp = temp[unit.condition || 'GOOD'];
   }
   return temp || null;
 };
