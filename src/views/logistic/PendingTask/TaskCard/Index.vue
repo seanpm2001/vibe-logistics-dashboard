@@ -213,7 +213,7 @@ import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import PackageSize from './PackageSize.vue';
 import { ElMessage } from 'element-plus';
-import { debounce, getWarehouseUnitSystem, jsonClone } from '@/utils';
+import { debounce, getWarehouseUnitSystem, jsonClone, getUnitCode } from '@/utils';
 import { codeNameEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI, findPackageAPI } from '@/api';
 
