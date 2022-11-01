@@ -34,7 +34,7 @@
         >
           <div v-if="item.req">
             <el-descriptions-item label="Product Name">
-              {{ codeNameEnum[key] || '' }}
+              {{ codeNameEnum[key] || key }}
             </el-descriptions-item>
             <el-descriptions-item label="SKU">
             </el-descriptions-item>
