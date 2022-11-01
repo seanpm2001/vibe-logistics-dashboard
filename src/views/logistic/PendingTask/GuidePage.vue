@@ -158,7 +158,9 @@ const calRemainingTasks = () => {
   });
 
   setTaskParams(1);
-  const todayParams = jsonClone(listQuery.value);
+  const todayParams = new URLSearchParams(jsonClone(listQuery.value));
+  todayParams.append('taskType', 'FULFILLMENT');
+  todayParams.append('taskType', 'REPLACE');
   queryTasksAPI(todayParams).then(data => {
     const tasks = data?.items || [];
     todayFulfillCount.value = tasks.filter(task => !task.fulfilledAt).length;

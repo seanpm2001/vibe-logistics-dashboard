@@ -33,7 +33,10 @@
         />
       </el-select>
       <span style="color: #606266">
-        Only Need Restock Packages: <el-switch v-model="listQuery.onlyRestock" @change="fetchList" />
+        Only Need Restock Packages: <el-switch
+          v-model="listQuery.onlyRestock"
+          @change="fetchList"
+        />
       </span>
     </div>
     
