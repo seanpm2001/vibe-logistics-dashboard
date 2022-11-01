@@ -128,6 +128,7 @@ const emit = defineEmits(['fetchList']);
 
 const listQuery = inject('listQuery') ;
 const typeArr = inject('typeArr');
+const dateFilter = inject('dateFilter');
 
 const scannedTrackingNumber = ref('');
 
@@ -163,7 +164,6 @@ const onTypeArrChange = (visible) => {
     fetchList();
 };
 
-const dateFilter = ref(null);
 function changeDateFilter () {
   if (dateFilter.value) {
     const start = dateFilter.value[0];
