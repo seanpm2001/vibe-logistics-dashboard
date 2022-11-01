@@ -1,136 +1,151 @@
 <template>
   <div class="page">
-    <div class="statistics">
-      <FilterHeader
-        :warehouse-enum="warehouseEnum"
-        @fetch-list="fetchList"
-      />
-      <el-row
-        justify="end"
-        class="mgt-10"
-      >
-        <el-button
-          type="primary"
-          @click="showExport"
-        >
-          Export
-        </el-button>
-        <el-button
-          type="primary"
-          @click="downloadListedTaskFiles"
-        >
-          Download Listed Task Shipping Labels
-        </el-button>
-      </el-row>
-      <el-descriptions
-        title="Fulfilling Products"
-        class="unspecified-products"
-        :column="4"
-        border
-      >
-        <template
-          v-for="(item, key) in productsFulQty.qtyByCode"
-          :key="key"
-        >
-          <div v-if="item.req">
-            <el-descriptions-item label="Product Name">
-              {{ codeNameEnum[key] || key }}
-            </el-descriptions-item>
-            <el-descriptions-item label="SKU">
-            </el-descriptions-item>
-            <el-descriptions-item label="Req QTY">
-              {{ item.req }}
-            </el-descriptions-item>
-            <el-descriptions-item
-              label="Fulfilled QTY"
-              :class-name="item.req === item.ful ? '' : 'error-border-tip'"
-            >
-              {{ item.ful || 0 }}
-            </el-descriptions-item>
-          </div>
-        </template>
-
-        <template
-          v-for="(item, key) in productsFulQty.qtyBySku"
-          :key="key"
-        >
-          <div v-if="item.req">
-            <el-descriptions-item label="Product Name">
-              {{ codeNameEnum[getCodeBySkuAndCondition(item.sku, item.condition)] || '' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="SKU">
-              {{ key }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Req QTY">
-              {{ item.req }}
-            </el-descriptions-item>
-            <el-descriptions-item
-              label="Fulfilled QTY"
-              :class-name="item.req === item.ful ? '' : 'error-border-tip'"
-            >
-              {{ item.ful || 0 }}
-            </el-descriptions-item>
-          </div>
-        </template>
-      </el-descriptions>
-
-      <el-descriptions
-        title="Fulfilling Products with Specified Serial"
-        class="specified-products"
-        :column="4"
-        border
-      >
-        <template
-          v-for="serial in specifiedSerials"
-          :key="serial"
-        >
-          <el-descriptions-item label="Product Name">
-            {{ codeNameEnum[getUnitCode(specifiedUnits[serial])] || getUnitCode(specifiedUnits[serial]) }}
-          </el-descriptions-item>
-          <el-descriptions-item label="SKU">
-            {{ specifiedUnits[serial]?.sku }}
-          </el-descriptions-item>
-          <el-descriptions-item label="Serial">
-            {{ serial }}
-          </el-descriptions-item>
-          <el-descriptions-item
-            label="Fulfilled QTY"
-            :class-name="specifiedUnits[serial]?.ful ? '' : 'error-border-tip'"
-          >
-            {{ specifiedUnits[serial]?.ful ? 1 : 0 }}
-          </el-descriptions-item>
-        </template>
-      </el-descriptions>
-    </div>
-    <el-divider />
-
-    <template
-      v-for="(task, taskIdx) in dataList"
-      :key="task.id"
+    <el-button
+      v-if="!guidePageVisible"
+      @click="backGuidePage"
     >
-      <TaskCard
-        :task="task"
-        :task-idx="taskIdx"
-        :order-enum="orderEnum"
-        :warehouse-enum="warehouseEnum"
-        :role="role"
-      />
-    </template>
-    
-
-    <ExportTasks />
-
-    <Pagination
-      v-show="total > 0"
-      :total="total"
-      :page-sizes="[20, 50, 100, 200]"
+      Back Guide Page
+    </el-button>
+    <GuidePage
+      v-if="guidePageVisible"
+      v-model:guidePageVisible="guidePageVisible"
       @fetch-list="fetchList"
     />
+
+    <template v-else>
+      <div class="statistics">
+        <FilterHeader
+          :warehouse-enum="warehouseEnum"
+          @fetch-list="fetchList"
+        />
+        <el-row
+          justify="end"
+          class="mgt-10"
+        >
+          <el-button
+            type="primary"
+            @click="showExport"
+          >
+            Export
+          </el-button>
+          <el-button
+            type="primary"
+            @click="downloadListedTaskFiles"
+          >
+            Download Listed Task Shipping Labels
+          </el-button>
+        </el-row>
+        <el-descriptions
+          title="Fulfilling Products"
+          class="unspecified-products"
+          :column="4"
+          border
+        >
+          <template
+            v-for="(item, key) in productsFulQty.qtyByCode"
+            :key="key"
+          >
+            <div v-if="item.req">
+              <el-descriptions-item label="Product Name">
+                {{ codeNameEnum[key] || key }}
+              </el-descriptions-item>
+              <el-descriptions-item label="SKU">
+              </el-descriptions-item>
+              <el-descriptions-item label="Req QTY">
+                {{ item.req }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                label="Fulfilled QTY"
+                :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+              >
+                {{ item.ful || 0 }}
+              </el-descriptions-item>
+            </div>
+          </template>
+
+          <template
+            v-for="(item, key) in productsFulQty.qtyBySku"
+            :key="key"
+          >
+            <div v-if="item.req">
+              <el-descriptions-item label="Product Name">
+                {{ codeNameEnum[getCodeBySkuAndCondition(item.sku, item.condition)] || '' }}
+              </el-descriptions-item>
+              <el-descriptions-item label="SKU">
+                {{ key }}
+              </el-descriptions-item>
+              <el-descriptions-item label="Req QTY">
+                {{ item.req }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                label="Fulfilled QTY"
+                :class-name="item.req === item.ful ? '' : 'error-border-tip'"
+              >
+                {{ item.ful || 0 }}
+              </el-descriptions-item>
+            </div>
+          </template>
+        </el-descriptions>
+
+        <el-descriptions
+          title="Fulfilling Products with Specified Serial"
+          class="specified-products"
+          :column="4"
+          border
+        >
+          <template
+            v-for="serial in specifiedSerials"
+            :key="serial"
+          >
+            <el-descriptions-item label="Product Name">
+              {{ codeNameEnum[getUnitCode(specifiedUnits[serial])] || getUnitCode(specifiedUnits[serial]) }}
+            </el-descriptions-item>
+            <el-descriptions-item label="SKU">
+              {{ specifiedUnits[serial]?.sku }}
+            </el-descriptions-item>
+            <el-descriptions-item label="Serial">
+              {{ serial }}
+            </el-descriptions-item>
+            <el-descriptions-item
+              label="Fulfilled QTY"
+              :class-name="specifiedUnits[serial]?.ful ? '' : 'error-border-tip'"
+            >
+              {{ specifiedUnits[serial]?.ful ? 1 : 0 }}
+            </el-descriptions-item>
+          </template>
+        </el-descriptions>
+      </div>
+      <el-divider />
+
+      <template
+        v-for="(task, taskIdx) in dataList"
+        :key="task.id"
+      >
+        <TaskCard
+          :task="task"
+          :task-idx="taskIdx"
+          :order-enum="orderEnum"
+          :warehouse-enum="warehouseEnum"
+          :role="role"
+        />
+      </template>
+      
+
+      <ExportTasks />
+
+      <Pagination
+        v-show="total > 0"
+        :total="total"
+        :page-sizes="[20, 50, 100, 200]"
+        @fetch-list="fetchList"
+      />
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ElMessage } from 'element-plus';
+import GuidePage from './GuidePage.vue';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
 import ExportTasks from './ExportTasks.vue';
@@ -142,6 +157,10 @@ import { useUserStore, useLogisticStore } from '@/store';
 /* Start Data */
 const { warehouseId, role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
+const router = useRouter();
+
+const guidePageVisible = ref(true);
+const dateFilter = ref(null);
 
 const listQuery = ref({
   page: 1,
@@ -171,6 +190,8 @@ provide('dataList', dataList);
 provide('savedTasks', savedTasks);
 provide('dialogExportTasksVisible', dialogExportTasksVisible);
 provide('orderEnum', orderEnum);
+
+provide('dateFilter', dateFilter);
 
 const fulSerials = computed(() => {
   const serials = {};
@@ -212,6 +233,14 @@ const specifiedSerials = computed(() => {
 
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
+
+const backGuidePage = () => {
+  nextTick(() => {
+    router.replace({
+      path: '/redirect/logistic/pending-task'
+    });
+  });
+};
 
 const tasksProductFulQty = computed(() => {
   const qty = {};
@@ -316,7 +345,6 @@ const productsFulQty = computed(() => {
         qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + product.fulExclSpec;
       } else {
         qtyByCode[code] = qtyByCode[code] || {};
-        console.log('code: ', code);
         // qtyByCode[code]['condition'] = condition;
         qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + product.fulExclSpec;
@@ -377,24 +405,23 @@ function preprocessTasks(originalTasks) {
   return tasks;
 }
 
-function queryTask () {
+function queryTask (newParams) {
   if (listQuery.value.end) {
-    const params = new URLSearchParams(listQuery.value);
+    const params = new URLSearchParams(newParams || listQuery.value);
     typeArr.value.forEach(type => {
       params.append('taskType', type);
     });
     queryTasksAPI(params).then(data => {
       if (!data.items.length) { // 找不到对应filter的task
         listQuery.value.search = '';
-        ElMessage.error('Can\'t find related.');
-        return;
+        ElMessage.warning('0 tasks found!');
       }
 
       total.value = data.total;
       savedTasks.value = JSON.parse(JSON.stringify(data.items));
       dataList.value = preprocessTasks(data.items);
       const orderIdArr = getTaskOrderIdArr(dataList.value);
-      queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(async order => {
           orderEnum.value[order.id] = await formatAssignedOrderItem(order);
         });
@@ -415,12 +442,12 @@ function queryTask () {
   }
 }
 
-const fetchList = () => {
-  setTimeout(() => queryTask(), 350);
+const fetchList = (newParams) => {
+  setTimeout(() => queryTask(newParams), 350);
 };
 
 useWarehouseEnumHook();
-useQueryHook(listQuery, 'pending', fetchList);
+// useQueryHook(listQuery, 'pending', fetchList);
 /* Provide functions */
 provide('fetchList', fetchList);
 /* End of provide function */

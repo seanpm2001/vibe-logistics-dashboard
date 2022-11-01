@@ -1,29 +1,42 @@
 <template>
   <div class="filter-container">
-    <el-input
-      v-model="listQuery.search"
-      placeholder="Package Info"
-      style="width: 220px"
-      @keyup.enter="handleFilter"
-    >
-      <template #append>
-        <el-button
-          class="mgl-5"
-          type="primary"
-          :icon="Search"
-          @click="handleFilter"
+    <div>
+      <el-input
+        v-model="listQuery.search"
+        placeholder="Package Info"
+        style="width: 220px"
+        @keyup.enter="handleFilter"
+      >
+        <template #append>
+          <el-button
+            class="mgl-5"
+            type="primary"
+            :icon="Search"
+            @click="handleFilter"
+          />
+        </template>
+      </el-input>
+
+      <el-select
+        v-model="typeArr"
+        placeholder="Task Type"
+        multiple
+        clearable
+        @visible-change="onTypeArrChange"
+        @remove-tag="fetchList"
+      >
+        <el-option
+          v-for="(type, key) in taskTypeEnum"
+          :key="key"
+          :label="type"
+          :value="key"
         />
-      </template>
-    </el-input>
-    <el-button
-      v-wave
-      disabled
-      type="primary"
-      :icon="Filter"
-      @click="handleFilter"
-    >
-      Filter Warehousing List
-    </el-button>
+      </el-select>
+      <span style="color: #606266">
+        Only Need Restock Packages: <el-switch v-model="listQuery.onlyRestock" @change="fetchList" />
+      </span>
+    </div>
+    
     <el-button
       v-permission="['ADMIN', 'VIBE_MANAGER']"
       v-wave
@@ -41,10 +54,12 @@
 <script setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { deletePackageAPI } from '@/api';
+import { taskTypeEnum } from '@/enums';
 
 const multipleSelection = inject('multipleSelection');
 
 const listQuery = inject('listQuery');
+const typeArr = inject('typeArr');
 
 const emit = defineEmits(['fetchList', 'handleDelSelected']);
 const fetchList = () => emit('fetchList');
@@ -62,10 +77,18 @@ const handleDelSelected = () => {
   multipleSelection.value = [];
   fetchList();
 };
+
+const onTypeArrChange = (visible) => {
+  if (!visible)
+    fetchList();
+};
 </script>
 
 <style lang="sass" scoped>
 .filter-container
+  display: flex
+  justify-content: space-between
+  align-items: center
   margin-bottom: .5rem
   > .el-button
     margin-left: .5rem

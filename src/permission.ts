@@ -36,7 +36,6 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { role } = await userStore.getInfo();
-          console.log('role: ', role);
           // accessRoutes = await permissionStore.generateRoutes(role);
        
           // setting constRouters and accessRoutes to vuex , in order to sideBar for using

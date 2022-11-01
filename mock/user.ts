@@ -68,7 +68,6 @@ export default [
     response: config => {
       // const token = "admin-token"; // test
       const info = users['admin-token'];
-      console.log('info: ', info);
 
       // mock error
       if (!info) {

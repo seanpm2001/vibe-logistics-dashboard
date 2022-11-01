@@ -371,9 +371,10 @@ const checkLightingTaskWrong = computed(() => {
 });
 
 function removeEmptyTask(products) {
+  console.log('products: ', products);
   for (let idx = products.length - 1; idx >= 0; idx--) {
     const code = products[idx].productCode;
-    if (!code) products[idx].splice(idx, 1);
+    if (!code && idx !== 0) products.splice(idx, 1);
   }
 }
 
