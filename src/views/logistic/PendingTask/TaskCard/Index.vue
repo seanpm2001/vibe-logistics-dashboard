@@ -413,8 +413,6 @@ function filterUnitList (unitList, task) {
       if (getUnitCode(item) === taskProducts[idx].productCode) {
         if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
           return false;
-        if (item.condition && item.condition !== 'GOOD' && !currentTaskSpecifiedSerials.value.includes(item.serial))
-          return false;
         return true;
       }
     }
@@ -463,6 +461,7 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
           return;
         }
         unitList.value = filterUnitList(data, task);
+        console.log('unitList.value: ', unitList.value);
         if (unitList.value.length === 0) {
           ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
           return;
