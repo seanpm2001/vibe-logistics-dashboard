@@ -67,6 +67,9 @@
 import { ElMessage } from 'element-plus';
 import { parseTime, jsonClone } from '@/utils';
 import { queryTasksAPI } from '@/api';
+import { useLogisticStore } from '@/store';
+
+const logisticStore = useLogisticStore();
 const router = useRouter();
 
 const props = defineProps({
@@ -116,7 +119,7 @@ const handleClickChoice = (pattern) => {
     emit('fetchList');
     ElMessage.warning('Default show past 15 days\'s tasks!');
   } else if (pattern === '2') {
-    
+    setPackagePageListQuery();
     router.push('package');
   } else if (pattern === '3') {
     setTaskParams(1);
@@ -147,7 +150,6 @@ const calRemainingTasks = () => {
   historyParams.taskType = 'RETURN';
   queryTasksAPI(historyParams).then(data => {
     const tasks = data?.items || [];
-
     historyRestockCount.value = tasks.filter(task => {
       return task.packages.some(packageItem => {
         return packageItem.units.some(unit => !unit.restocked);
@@ -162,6 +164,19 @@ const calRemainingTasks = () => {
     todayFulfillCount.value = tasks.filter(task => !task.fulfilledAt).length;
   });
 };
+
+function setPackagePageListQuery () {
+  logisticStore.setListQuery({
+    query: {
+      page: 1,
+      perPage: 10,
+      search: '',
+      onlyShowReturnTask: true,
+      onlyRestock: true
+    },
+    pageName: 'package',
+  });
+}
 
 onMounted(() => {
   calRemainingTasks();

@@ -101,7 +101,9 @@ const listQuery = ref({
   page: 1,
   perPage: 10,
   search: '',
+  onlyRestock: true
 });
+
 const dataList = shallowRef(null);
 const total = ref(0);
 
@@ -123,6 +125,11 @@ const unitItem = ref({});
 provide('unitItem', unitItem);
 /* End data */
 
+const filterNeedStockPackages = (packages) => {
+  return packages.filter(packageItem => {
+    return packageItem.units.some(unit => !unit.restocked);
+  });
+};
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryPackage() {
   const params = new URLSearchParams(listQuery.value);
@@ -130,8 +137,8 @@ function queryPackage() {
     params.append('taskType', type);
   });
   queryPackagesAPI(params).then((data) => {
-    dataList.value = data.items;
-    total.value = data.total;
+    dataList.value = listQuery.value.onlyRestock ? filterNeedStockPackages(data.items) : data.items;
+    total.value = listQuery.value.onlyRestock ? dataList.value.length : data.total;
 
     const orderIdArr = dataList.value.map(item => item.task.orderId);
     queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
@@ -238,6 +245,12 @@ const receiveUnits = (packageItem) => {
   packageReceived.value = JSON.parse(JSON.stringify(packageItem));
   drawerReceiveUnitsVisible.value = true;
 };
+
+onMounted(() => {
+  console.log('listQuery: ', listQuery);
+  if (listQuery.value.onlyShowReturnTask)
+    typeArr.value = ['RETURN'];
+});
 </script>
 
 <style lang="sass" scoped>
