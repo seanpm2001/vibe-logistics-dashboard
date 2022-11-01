@@ -6,8 +6,7 @@
       @click="handleClickChoice('1')"
     >
       <span>
-        <span class="red">
-          tasks</span>to fulfill
+        <span class="red">{{ taskFulfilmentErrorCount.historyFulfillCount }} tasks</span> to fulfill
       </span> 
       <svg-icon icon-name="right-arrow" />
     </div>
@@ -17,7 +16,7 @@
     >
       <span>
         <span class="red">
-          tasks
+          {{ taskFulfilmentErrorCount.historyShipmentCount }} tasks
         </span> need shipment info
       </span>
       
@@ -29,7 +28,7 @@
     >
       <span>
         <span class="red">
-          tasks
+          {{ taskFulfilmentErrorCount.historyLackSerialCount }} tasks
         </span> lack serials
       </span>
       <svg-icon icon-name="right-arrow" />
@@ -40,7 +39,7 @@
     >
       <span>
         <span class="red">
-          return tasks
+          {{ historyRestockCount }} return tasks
         </span> need to restock
       </span>
       <svg-icon icon-name="right-arrow" />
@@ -55,7 +54,7 @@
     >
       <span>
         <span class="red">
-          new tasks
+          {{ todayFulfillCount }} new tasks
         </span> to fulfill
       </span>
       
@@ -65,6 +64,7 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus';
 import { parseTime, jsonClone } from '@/utils';
 import { queryTasksAPI } from '@/api';
 const router = useRouter();
@@ -79,25 +79,56 @@ const props = defineProps({
 const emit = defineEmits(['update:guidePageVisible', 'fetchList']);
 
 const listQuery = inject('listQuery');
+const dataList = inject('dataList') ;
 const dateFilter = inject('dateFilter') ;
+const tasksProductFulQty = inject('tasksProductFulQty');
+
+const todayFulfillCount = ref(0);
+const historyRestockCount = ref(0);
+
+const taskFulfilmentErrorCount = computed(() => {
+  const historyFulfillCount = dataList.value.filter(task => !task.fulfilledAt).length;
+  let historyShipmentCount = 0;
+  let historyLackSerialCount = 0;
+  for (const taskId in tasksProductFulQty.value) {
+    const error = tasksProductFulQty.value[taskId]?.error;
+    if (_includes(error, ['Missing tracking number', 'Missing carrier']))
+      historyShipmentCount++;
+    if (_includes(error, ['Specified serial unfulfilled', 'Quantity mismatch', 'Unwantted product', 'Extra product', 'Missing product']))
+      historyLackSerialCount++;
+    
+  }
+
+  return {
+    historyFulfillCount,
+    historyShipmentCount,
+    historyLackSerialCount,
+  };
+});
+
+function _includes(str, targetArr) {
+  return targetArr.some(target => !!~str.indexOf(target));
+}
 
 const handleClickChoice = (pattern) => {
-  console.log('pattern: ', pattern);
   if (pattern === '1') {
+    setTaskParams(15);
     emit('fetchList');
+    ElMessage.warning('Default show past 15 days\'s tasks!');
   } else if (pattern === '2') {
+    
     router.push('package');
   } else if (pattern === '3') {
-    setTodayTaskParams();
+    setTaskParams(1);
     emit('fetchList');
   }
-  emit('update:guidePageVisible', false);
+  setTimeout(() => emit('update:guidePageVisible', false), 1000);
 };
 
-function setTodayTaskParams() {
+function setTaskParams(dayWindow) {
   listQuery.value.fulfilled = 'false';
   dateFilter.value = [
-    parseTime(new Date().getTime() - 86400000 * 1, '{y}-{m}-{d}'),
+    parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}'),
     parseTime(new Date(), '{y}-{m}-{d}')
   ];
   const [start, end] = dateFilter.value;
@@ -110,22 +141,31 @@ function setTodayTaskParams() {
 const calRemainingTasks = () => {
   const historyParams = jsonClone(listQuery.value);
   historyParams.perPage = 99999; // 拉取所有数据
-  queryTasksAPI(historyParams).then(data => {
-    console.log('data: ', data);
+  emit('fetchList', historyParams);
 
+  // query return tasks
+  historyParams.taskType = 'RETURN';
+  queryTasksAPI(historyParams).then(data => {
+    const tasks = data?.items || [];
+
+    historyRestockCount.value = tasks.filter(task => {
+      return task.packages.some(packageItem => {
+        return packageItem.units.some(unit => !unit.restocked);
+      });
+    }).length;
   });
 
-  setTodayTaskParams();
+  setTaskParams(1);
   const todayParams = jsonClone(listQuery.value);
   queryTasksAPI(todayParams).then(data => {
-    console.log('data: ', data);
-
+    const tasks = data?.items || [];
+    todayFulfillCount.value = tasks.filter(task => !task.fulfilledAt).length;
   });
 };
 
 onMounted(() => {
   calRemainingTasks();
-})
+});
 </script>
 
 <style lang="sass" scoped>

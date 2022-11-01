@@ -87,6 +87,8 @@ const warehousingTaskInfo = ref({
   taskType: null,
 });
 
+const typeArr = ref(['FULFILLMENT', 'REPLACE', 'RETURN']);
+
 const dialogHousingVisible = ref(false);
 const dialogCheckUnitVisible = ref(false);
 
@@ -114,6 +116,8 @@ provide('dataList', dataList);
 provide('taskSerialsAndSkus', taskSerialsAndSkus);
 provide('taskAccessoriesCode', taskAccessoriesCode);
 
+// Filter Header
+provide('typeArr', typeArr);
 // Unit Description
 const unitItem = ref({});
 provide('unitItem', unitItem);
@@ -121,7 +125,11 @@ provide('unitItem', unitItem);
 
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryPackage() {
-  queryPackagesAPI(listQuery.value).then((data) => {
+  const params = new URLSearchParams(listQuery.value);
+  typeArr.value.forEach(type => {
+    params.append('taskType', type);
+  });
+  queryPackagesAPI(params).then((data) => {
     dataList.value = data.items;
     total.value = data.total;
 

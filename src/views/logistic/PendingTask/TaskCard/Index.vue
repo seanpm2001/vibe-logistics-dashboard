@@ -461,7 +461,6 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
           return;
         }
         unitList.value = filterUnitList(data, task);
-        console.log('unitList.value: ', unitList.value);
         if (unitList.value.length === 0) {
           ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
           return;

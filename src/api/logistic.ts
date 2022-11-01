@@ -243,7 +243,6 @@ export async function updatePackageAPI (packageId: number, updates) {
   const data = packageCleanUp(updates);
   delete data['task'];
   delete data['taskId'];
-  console.log('data: ', data);
 
   const item = handleReqElMsg(
     requester.put(`/warehouse/package/${packageId}`, data), 'Update', 'Package', packageId
@@ -296,7 +295,6 @@ export async function loginAPI(formInfo) {
   let res = null;
   await requester.post('/login', formInfo)
     .then((data) => {
-      console.log('data: ', data);
       res = data;
       ElMessage.success('Welcome to Vibe Logisitc System.');
     })

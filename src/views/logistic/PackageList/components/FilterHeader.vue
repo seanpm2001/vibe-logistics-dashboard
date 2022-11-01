@@ -15,6 +15,22 @@
         />
       </template>
     </el-input>
+
+    <el-select
+      v-model="typeArr"
+      placeholder="Task Type"
+      multiple
+      clearable
+      @visible-change="onTypeArrChange"
+      @remove-tag="fetchList"
+    >
+      <el-option
+        v-for="(type, key) in taskTypeEnum"
+        :key="key"
+        :label="type"
+        :value="key"
+      />
+    </el-select>
     <el-button
       v-wave
       disabled
@@ -41,10 +57,12 @@
 <script setup>
 import { Delete, Search, Filter } from '@element-plus/icons-vue';
 import { deletePackageAPI } from '@/api';
+import { taskTypeEnum } from '@/enums';
 
 const multipleSelection = inject('multipleSelection');
 
 const listQuery = inject('listQuery');
+const typeArr = inject('typeArr');
 
 const emit = defineEmits(['fetchList', 'handleDelSelected']);
 const fetchList = () => emit('fetchList');
@@ -61,6 +79,11 @@ const handleDelSelected = () => {
   });
   multipleSelection.value = [];
   fetchList();
+};
+
+const onTypeArrChange = (visible) => {
+  if (!visible)
+    fetchList();
 };
 </script>
 

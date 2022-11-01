@@ -2,7 +2,7 @@
   <div class="page">
     <el-button
       v-if="!guidePageVisible"
-      @click="showGuidePage"
+      @click="backGuidePage"
     >
       Back Guide Page
     </el-button>
@@ -157,6 +157,7 @@ import { useUserStore, useLogisticStore } from '@/store';
 /* Start Data */
 const { warehouseId, role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
+const router = useRouter();
 
 const guidePageVisible = ref(true);
 const dateFilter = ref(null);
@@ -233,7 +234,13 @@ const specifiedSerials = computed(() => {
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
-const showGuidePage = () => guidePageVisible.value = true;
+const backGuidePage = () => {
+  nextTick(() => {
+    router.replace({
+      path: '/redirect/logistic/pending-task'
+    });
+  });
+};
 
 const tasksProductFulQty = computed(() => {
   const qty = {};
@@ -338,7 +345,6 @@ const productsFulQty = computed(() => {
         qtyBySku[sku]['ful'] = (qtyBySku[sku]['ful'] || 0) + product.fulExclSpec;
       } else {
         qtyByCode[code] = qtyByCode[code] || {};
-        console.log('code: ', code);
         // qtyByCode[code]['condition'] = condition;
         qtyByCode[code]['req'] = (qtyByCode[code]['req'] || 0) + product.req - (product.serialNote?.length || 0);
         qtyByCode[code]['ful'] = (qtyByCode[code]['ful'] || 0) + product.fulExclSpec;
@@ -399,24 +405,23 @@ function preprocessTasks(originalTasks) {
   return tasks;
 }
 
-function queryTask () {
+function queryTask (newParams) {
   if (listQuery.value.end) {
-    const params = new URLSearchParams(listQuery.value);
+    const params = new URLSearchParams(newParams || listQuery.value);
     typeArr.value.forEach(type => {
       params.append('taskType', type);
     });
     queryTasksAPI(params).then(data => {
       if (!data.items.length) { // 找不到对应filter的task
         listQuery.value.search = '';
-        ElMessage.error('Can\'t find related.');
-        return;
+        ElMessage.warning('0 tasks found!');
       }
 
       total.value = data.total;
       savedTasks.value = JSON.parse(JSON.stringify(data.items));
       dataList.value = preprocessTasks(data.items);
       const orderIdArr = getTaskOrderIdArr(dataList.value);
-      queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(async order => {
           orderEnum.value[order.id] = await formatAssignedOrderItem(order);
         });
@@ -437,8 +442,8 @@ function queryTask () {
   }
 }
 
-const fetchList = () => {
-  setTimeout(() => queryTask(), 350);
+const fetchList = (newParams) => {
+  setTimeout(() => queryTask(newParams), 350);
 };
 
 useWarehouseEnumHook();

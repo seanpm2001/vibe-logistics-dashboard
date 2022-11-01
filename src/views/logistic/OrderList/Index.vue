@@ -415,7 +415,6 @@ const addWarehouseTask = () => {
   findAssignedOrderAPI(orderId).then(async data => {
     taskItem.value.orderId = orderId;
     taskItem.value.taskType = dialogTaskType.value;
-    console.log('taskItem: ', taskItem);
     taskOrderItem.value = await formatAssignedOrderItem(data);
     dialogStatus.value = 'create';
 
