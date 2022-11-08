@@ -2,9 +2,17 @@
   <div class="page">
     <el-button
       v-if="!guidePageVisible"
+      class="sticky-btn"
       @click="backGuidePage"
     >
       Back Guide Page
+    </el-button>
+    <el-button
+      v-if="!guidePageVisible"
+      class="sticky-btn"
+      @click="scrollToTop"
+    >
+      Back Top
     </el-button>
     <GuidePage
       v-if="guidePageVisible"
@@ -452,6 +460,10 @@ const fetchList = (newParams) => {
   setTimeout(() => queryTask(newParams), 350);
 };
 
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 useWarehouseEnumHook();
 // useQueryHook(listQuery, 'pending', fetchList);
 /* Provide functions */
@@ -478,4 +490,9 @@ provide('fetchList', fetchList);
 <style lang="sass">
 .error-border-tip
   border: 2px solid red !important
+
+.sticky-btn
+  position: sticky
+  top: 0
+  z-index: 999
 </style>
