@@ -250,6 +250,7 @@ const tasksProductFulQty = computed(() => {
     if (task.products.length === 0) return;
     const productsQty = [];
     const totalUnfulSpecSerials = {};
+
     task.products?.forEach(product => {
       const unfulSpecSerials = {};
       product.serialNote?.forEach(serial => {
@@ -258,55 +259,60 @@ const tasksProductFulQty = computed(() => {
       });
       productsQty.push({ productCode: product.productCode, sku: product?.sku, condition: product?.condition, req: product.quantity, fulExclSpec: 0, fulSpec: 0, unfulSpecSerials: unfulSpecSerials, serialNote: product.serialNote });
     });
-    task.packages?.forEach(packageItem => {
-      if (!packageItem.trackingNumber) {
-        error[taskFulfilmentErrorEnum.MISSING_TRACKING_NUMBER] = true;
-      }
-      packageItem.units.forEach(unit => {
-        if (!unit.serial) return;
-        const sku = unit?.item?.sku;
-        if (!sku) return;
-        let ful = false;
-        if (totalUnfulSpecSerials[unit.serial]) {
-          productsQty?.forEach(product => {
-            if (!ful && product.unfulSpecSerials[unit.serial]) {
-              delete product.unfulSpecSerials[unit.serial];
-              product.fulSpec += 1;
-              ful = true;
-            }
-          });
-        } else {
-          // Firstly search for sku match
-          for (const product of productsQty) {
-            if (!ful && product.sku && product.sku === unit.item.sku && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
-              product.fulExclSpec += 1;
-              ful = true;
-            }
-          }
-          // Secondly search for product code match
-          if (!ful) {
+    if (!task.packages?.length) {
+      error[taskFulfilmentErrorEnum.MISSING_TRACKING_NUMBER] = true;
+    } else {
+      task.packages?.forEach(packageItem => {
+        if (!packageItem.trackingNumber) {
+          error[taskFulfilmentErrorEnum.MISSING_TRACKING_NUMBER] = true;
+        }
+        packageItem.units.forEach(unit => {
+          if (!unit.serial) return;
+          const sku = unit?.item?.sku;
+          if (!sku) return;
+          let ful = false;
+          if (totalUnfulSpecSerials[unit.serial]) {
+            productsQty?.forEach(product => {
+              if (!ful && product.unfulSpecSerials[unit.serial]) {
+                delete product.unfulSpecSerials[unit.serial];
+                product.fulSpec += 1;
+                ful = true;
+              }
+            });
+          } else {
+            // Firstly search for sku match
             for (const product of productsQty) {
-              if (!ful && product.productCode && product.productCode === getUnitCode(unit.item) && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+              if (!ful && product.sku && product.sku === unit.item.sku && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
                 product.fulExclSpec += 1;
                 ful = true;
               }
             }
+            // Secondly search for product code match
+            if (!ful) {
+              for (const product of productsQty) {
+                if (!ful && product.productCode && product.productCode === getUnitCode(unit.item) && product.fulExclSpec + product.fulSpec + Object.keys(product.unfulSpecSerials || {}).length < product.req) {
+                  product.fulExclSpec += 1;
+                  ful = true;
+                }
+              }
+            }
           }
-        }
-        if (!ful) {
-          error[taskFulfilmentErrorEnum.EXTRA_PRODUCT] = true;
-        }
-      });
+          if (!ful) {
+            error[taskFulfilmentErrorEnum.EXTRA_PRODUCT] = true;
+          }
+        });
 
-      packageItem.accessories.forEach(accessory => {
-        if (!accessory.productCode || !accessory.quantity) return;
-        for (const product of productsQty) {
-          if (product.productCode && product.productCode === accessory.productCode) {
-            product.fulExclSpec += accessory.quantity;
+        packageItem.accessories.forEach(accessory => {
+          if (!accessory.productCode || !accessory.quantity) return;
+          for (const product of productsQty) {
+            if (product.productCode && product.productCode === accessory.productCode) {
+              product.fulExclSpec += accessory.quantity;
+            }
           }
-        }
+        });
       });
-    });
+    }
+ 
     productsQty?.forEach(product => {
       if (product.fulExclSpec + product.fulSpec < product.req) {
         error[taskFulfilmentErrorEnum.MISSING_PRODUCT] = true;
