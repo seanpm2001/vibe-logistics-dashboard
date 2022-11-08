@@ -32,12 +32,32 @@
           :value="key"
         />
       </el-select>
-      <span style="color: #606266">
-        Only Need Restock Packages: <el-switch
-          v-model="listQuery.onlyRestock"
-          @change="fetchList"
+      <el-select
+        v-model="listQuery.onlyNeedReceive"
+        placeholder="Need Receive Packages"
+        style="width: 240px"
+        @change="fetchList"
+      >
+        <el-option
+          v-for="(item, key) in { 'Only Need Receive Packages': true, 'All Packages': false }"
+          :key="item"
+          :label="key"
+          :value="item"
         />
-      </span>
+      </el-select>
+      <el-select
+        v-model="listQuery.onlyNeedRestock"
+        placeholder="Only Need Restock Packages"
+        style="width: 240px"
+        @change="fetchList"
+      >
+        <el-option
+          v-for="(item, key) in { 'Only Need Restock Packages': true, 'All Packages': false }"
+          :key="item"
+          :label="key"
+          :value="item"
+        />
+      </el-select>
     </div>
     
     <el-button

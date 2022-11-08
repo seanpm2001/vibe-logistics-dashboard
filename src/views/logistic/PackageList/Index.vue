@@ -99,9 +99,10 @@ const taskAccessoriesCode = ref([]);
 
 const listQuery = ref({
   page: 1,
-  perPage: 10,
+  perPage: 20,
   search: '',
-  onlyRestock: true
+  onlyNeedRestock: false,
+  onlyNeedReceive: false,
 });
 
 const dataList = shallowRef(null);
@@ -127,9 +128,33 @@ provide('unitItem', unitItem);
 
 const filterNeedStockPackages = (packages) => {
   return packages.filter(packageItem => {
+    console.log('packageItem: ', packageItem);
     return packageItem.units.some(unit => !unit.restocked);
   });
 };
+
+const ifMeetWarehousingCondition = (taskType, unitStatus) => {
+  if (unitStatus === 'RETURNING') {
+    const meetTaskArr = ['FULFILLMENT', 'REPLACE', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  } else if (unitStatus === 'DELIVERING') {
+    const meetTaskArr = ['RETURN', 'MOVE', 'RETURN_TO_REPAIR'];
+    if (meetTaskArr.includes(taskType))
+      return true;
+  }
+  return false;
+};
+const filterNeedReceivePackages = (packages) => {
+  return packages.filter(packageItem => {
+    const taskType = packageItem.task.taskType;
+    console.log('taskType: ', taskType);
+    if (taskType !== 'RETURN')
+      return false;
+    return !packageItem.units.length;
+  });
+};
+
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 function queryPackage() {
   const params = new URLSearchParams(listQuery.value);
@@ -137,11 +162,21 @@ function queryPackage() {
     params.append('taskType', type);
   });
   queryPackagesAPI(params).then((data) => {
-    dataList.value = listQuery.value.onlyRestock ? filterNeedStockPackages(data.items) : data.items;
-    total.value = listQuery.value.onlyRestock ? dataList.value.length : data.total;
+    dataList.value = data.items;
+    total.value = data.total;
+
+    if (listQuery.value.onlyNeedRestock) {
+      dataList.value = filterNeedStockPackages(dataList.value);
+      total.value = dataList.value.length;
+    }
+    if (listQuery.value.onlyNeedReceive) {
+      dataList.value = filterNeedReceivePackages(dataList.value);
+      total.value = dataList.value.length;
+    }
+
 
     const orderIdArr = dataList.value.map(item => item.task.orderId);
-    queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+    orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
       data.forEach(async order => {
         orderEnum.value[order.id] = await formatAssignedOrderItem(order);
       });

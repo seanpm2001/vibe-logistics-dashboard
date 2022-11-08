@@ -44,13 +44,24 @@
       </span>
       <svg-icon icon-name="right-arrow" />
     </div>
+    <div
+      class="choice"
+      @click="handleClickChoice('3')"
+    >
+      <span>
+        <span class="red">
+          {{ historyReceiveCount }} return tasks
+        </span> only need to receive
+      </span>
+      <svg-icon icon-name="right-arrow" />
+    </div>
   </div>
 
   <strong class="title">Today's new Tasks:</strong>
   <div class="choice-wrapper">
     <div
       class="choice"
-      @click="handleClickChoice('3')"
+      @click="handleClickChoice('4')"
     >
       <span>
         <span class="red">
@@ -88,6 +99,7 @@ const tasksProductFulQty = inject('tasksProductFulQty');
 
 const todayFulfillCount = ref(0);
 const historyRestockCount = ref(0);
+const historyReceiveCount = ref(0);
 
 const taskFulfilmentErrorCount = computed(() => {
   const historyFulfillCount = dataList.value.filter(task => !task.fulfilledAt).length;
@@ -119,9 +131,12 @@ const handleClickChoice = (pattern) => {
     emit('fetchList');
     ElMessage.warning('Default show past 15 days\'s tasks!');
   } else if (pattern === '2') {
-    setPackagePageListQuery();
+    setPackagePageListQuery('restock');
     router.push('package');
   } else if (pattern === '3') {
+    setPackagePageListQuery('receive');
+    router.push('package');
+  } else if (pattern === '4') {
     setTaskParams(1);
     emit('fetchList');
   }
@@ -155,6 +170,11 @@ const calRemainingTasks = () => {
         return packageItem.units.some(unit => !unit.restocked);
       });
     }).length;
+    historyReceiveCount.value = tasks.filter(task => {
+      return task.packages.some(packageItem => {
+        return !packageItem.units.length;
+      });
+    }).length;
   });
 
   setTaskParams(1);
@@ -167,14 +187,15 @@ const calRemainingTasks = () => {
   });
 };
 
-function setPackagePageListQuery () {
+function setPackagePageListQuery (type) {
   logisticStore.setListQuery({
     query: {
       page: 1,
       perPage: 10,
       search: '',
       onlyShowReturnTask: true,
-      onlyRestock: true
+      onlyNeedRestock: type === 'restock',
+      onlyNeedReceive: type === 'receive'
     },
     pageName: 'package',
   });
