@@ -129,7 +129,7 @@ const handleClickChoice = (pattern) => {
   if (pattern === '1') {
     setTaskParams(15);
     emit('fetchList');
-    ElMessage.warning('Default show past 15 days\'s tasks!');
+    ElMessage.warning('Default show past 15 days\' tasks!');
   } else if (pattern === '2') {
     setPackagePageListQuery('restock');
     router.push('package');
