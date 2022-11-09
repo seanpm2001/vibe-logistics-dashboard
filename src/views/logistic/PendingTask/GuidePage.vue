@@ -1,5 +1,5 @@
 <template>
-  <strong class="title">History Tasks:</strong>
+  <strong class="title">Past 15 days' History Tasks:</strong>
   <div class="choice-wrapper">
     <div
       class="choice border-bottom"
@@ -158,6 +158,7 @@ function setTaskParams(dayWindow) {
 
 const calRemainingTasks = () => {
   const historyParams = jsonClone(listQuery.value);
+  historyParams.start = parseTime(new Date().getTime() - 86400000 * 15, '{y}-{m}-{d}'),
   historyParams.perPage = 99999; // 拉取所有数据
   emit('fetchList', historyParams);
 
