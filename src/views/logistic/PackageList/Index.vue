@@ -70,7 +70,7 @@ import { UnitDescription, WarehousingDialog, FilterHeader, PackageTable, Receive
 import { OrderDescription } from '../components';
 import { jsonToHump, showFullScreenLoading, tryHideFullScreenLoading } from '@/utils';
 import { queryPackagesAPI, queryUnitsAPI, queryAssignedBatchOrdersAPI } from '@/api';
-import { useLogisticStore } from '@/store';
+import { useLogisticStore, useUserStore } from '@/store';
 import { formatAssignedOrderItem } from '@/utils/logistic';
 
 /* Start data */
@@ -97,12 +97,15 @@ const packageReceived = ref({});
 const taskSerialsAndSkus = ref([]);
 const taskAccessoriesCode = ref([]);
 
+const { warehouseId } = storeToRefs(useUserStore());
+
 const listQuery = ref({
   page: 1,
   perPage: 20,
   search: '',
   onlyNeedRestock: false,
   onlyNeedReceive: false,
+  warehouseId: warehouseId,
 });
 
 const dataList = shallowRef(null);
