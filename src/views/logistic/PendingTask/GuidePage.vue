@@ -17,7 +17,7 @@
       <span>
         <span class="red">
           {{ taskFulfilmentErrorCount.historyShipmentCount }} tasks
-        </span> need shipment info
+        </span> lack shipment info
       </span>
       
       <svg-icon icon-name="right-arrow" />
@@ -51,7 +51,7 @@
       <span>
         <span class="red">
           {{ historyReceiveCount }} return tasks
-        </span> only need to receive
+        </span> haven't received
       </span>
       <svg-icon icon-name="right-arrow" />
     </div>

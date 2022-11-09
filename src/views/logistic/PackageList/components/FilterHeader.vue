@@ -34,12 +34,12 @@
       </el-select>
       <el-select
         v-model="listQuery.onlyNeedReceive"
-        placeholder="Need Receive Packages"
+        placeholder="Haven't Received Packages"
         style="width: 240px"
         @change="fetchList"
       >
         <el-option
-          v-for="(item, key) in { 'Only Need Receive Packages': true, 'All Packages': false }"
+          v-for="(item, key) in { 'Haven\'t Received Packages': true, 'All Packages': false }"
           :key="item"
           :label="key"
           :value="item"
