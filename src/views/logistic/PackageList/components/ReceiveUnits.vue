@@ -166,6 +166,7 @@
 </template>
 
 <script setup>
+import { getUnitCode } from '@/utils';
 import { updatePackageAPI } from '@/api';
 import { packageStatusEnum, codeNameEnum } from '@/enums/logistic';
 
