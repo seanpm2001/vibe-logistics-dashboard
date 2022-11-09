@@ -86,7 +86,7 @@ export const jsonClone = (obj) :any => JSON.parse(JSON.stringify(obj));
 
 const isObj = target => Object.prototype.toString.call(target) === '[object Object]';
 export const getUnitCode = (unit) => {
-  let temp = skuCodeEnum[unit.sku];
+  let temp = skuCodeEnum[unit?.sku];
   if (isObj(temp)) { // true说明为 { condition: code }
     temp = temp[unit.condition || 'GOOD'];
   }
