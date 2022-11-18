@@ -72,6 +72,21 @@
       <svg-icon icon-name="right-arrow" />
     </div>
   </div>
+  <strong class="title">Past 30 days' On-hold Tasks:</strong>
+  <div class="choice-wrapper">
+    <div
+      class="choice"
+      @click="handleClickChoice('5')"
+    >
+      <span>
+        <span class="red">
+          {{ historyOnHoldCount }} tasks
+        </span> are on-hold
+      </span>
+      
+      <svg-icon icon-name="right-arrow" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -100,6 +115,7 @@ const tasksProductFulQty = inject('tasksProductFulQty');
 const todayFulfillCount = ref(0);
 const historyRestockCount = ref(0);
 const historyReceiveCount = ref(0);
+const historyOnHoldCount = ref(0);
 
 const taskFulfilmentErrorCount = computed(() => {
   const historyFulfillCount = dataList.value.filter(task => !task.fulfilledAt).length;
@@ -126,20 +142,34 @@ function _includes(str, targetArr) {
 }
 
 const handleClickChoice = (pattern) => {
-  if (pattern === '1') {
+  switch (pattern) {
+  case '1':
     setTaskParams(15);
     emit('fetchList');
     ElMessage.warning('Default show past 15 days\' tasks!');
-  } else if (pattern === '2') {
+    break;
+  case '2':
     setPackagePageListQuery('restock');
     router.push('package');
-  } else if (pattern === '3') {
+    break;
+  case '3':
     setPackagePageListQuery('receive');
     router.push('package');
-  } else if (pattern === '4') {
+    break;
+  case '4':
+    setTaskParams(1);
+    emit('fetchList');
+    break;
+  case '5':
+    setTaskParams(30);
+    listQuery.value.onHold = true;
+    break;
+  default:
+    ElMessage.error('Unkown error! Default show today\'s new task.');
     setTaskParams(1);
     emit('fetchList');
   }
+ 
   setTimeout(() => emit('update:guidePageVisible', false), 1000);
 };
 
@@ -185,6 +215,18 @@ const calRemainingTasks = () => {
   queryTasksAPI(todayParams).then(data => {
     const tasks = data?.items || [];
     todayFulfillCount.value = tasks.filter(task => !task.fulfilledAt).length;
+  });
+
+  setTaskParams(30);
+  let onHoldParams = jsonClone(listQuery.value);
+  onHoldParams.onHold = true;
+  onHoldParams = new URLSearchParams(onHoldParams);
+  onHoldParams.append('taskType', 'FULFILLMENT');
+  onHoldParams.append('taskType', 'REPLACE');
+
+  queryTasksAPI(onHoldParams).then(data => {
+    const tasks = data?.items || [];
+    historyOnHoldCount.value = tasks.length;
   });
 };
 
