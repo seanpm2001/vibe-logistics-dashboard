@@ -15,11 +15,26 @@
         </el-tag>
       </template>
     </el-descriptions-item>
-    <el-descriptions-item label="Task ID">
+    <el-descriptions-item label="Task ID & Type">
       {{ task.id }}
+      <el-tag>{{ task.taskType }}</el-tag>
     </el-descriptions-item>
-    <el-descriptions-item label="TaskType">
-      {{ task.taskType }}
+    <el-descriptions-item label="Task On-Hold">
+      On Hold:
+      <el-select
+        v-model="task.onHold"
+        :class="!notHighPermission && 'top-z-index'"
+        placeholder="Please select"
+        clearable
+        @change="onTaskChange"
+      >
+        <el-option
+          v-for="(ifHold, key) in onHoldEnum"
+          :key="key"
+          :label="key"
+          :value="ifHold"
+        />
+      </el-select>
     </el-descriptions-item>
     <el-descriptions-item
       width="30%"
@@ -96,7 +111,7 @@
         v-model="task.carrier"
         placeholder="Please select"
         clearable
-        @change="onCarrierChange()"
+        @change="onTaskChange"
       >
         <el-option
           v-for="(item, key) in transportCarrierEnum[task.transportMode]"
@@ -159,7 +174,7 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus';
 import OrderShipmentInfo from '../../components/OrderShipmentInfo.vue';
-import { transportEnum, transportCarrierEnum } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum, onHoldEnum } from '@/enums/logistic';
 import { updateTaskAPI, sendEmailAPI, syncLightningAPI, findTaskFileAPI } from '@/api';
 import { formatVBDate } from '@/utils/logistic';
 
@@ -205,19 +220,9 @@ watch(
 const emit = defineEmits(['fetchList']);
 const fetchList = () => emit('fetchList');
 
-const onCarrierChange = () => {
+const onTaskChange = () => {
   const taskItem = task.value;
-  ElMessageBox.confirm('Update it?', 'Warning', {
-    type: 'warning',
-    callback: (action) => {
-      if (action === 'confirm')
-        updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => emit('fetchList'));
-      else {
-        ElMessage.info('Update Canceled.');
-        emit('fetchList');
-      }
-    },
-  });
+  updateTaskAPI(taskItem.id, taskItem, { syncLightning: false }).then(() => emit('fetchList'));
 };
 
 const updateTaskFulfillTime = () => {
@@ -268,4 +273,6 @@ const downloadTaskFiles = (files) => {
 .el-textarea
   display: block
 
+.top-z-index
+  z-index: 9999
 </style>

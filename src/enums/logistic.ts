@@ -149,8 +149,12 @@ export const transportEnum = {
   FBA: 'FBA',
 };
 export const completionEnum = {
-  true: 'Complete',
-  false: 'Incomplete',
+  'Complete': 'true',
+  'Incomplete': 'false',
+};
+export const onHoldEnum = {
+  'On Hold': true,
+  'Not Hold': false,
 };
 export const transportCarrierEnum = {
   TRUCK: {

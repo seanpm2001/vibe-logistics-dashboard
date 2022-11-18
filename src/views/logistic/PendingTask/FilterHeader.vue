@@ -81,8 +81,22 @@
       <el-option
         v-for="(completion, key) in completionEnum"
         :key="key"
-        :label="completion"
-        :value="key"
+        :label="key"
+        :value="completion"
+      />
+    </el-select>
+    <el-select
+      v-model="listQuery.onHold"
+      placeholder="Not Hold"
+      style="width: 140px"
+      clearable
+      @change="handleFilter"
+    >
+      <el-option
+        v-for="(ifHold, key) in onHoldEnum"
+        :key="key"
+        :label="key"
+        :value="ifHold"
       />
     </el-select>
     <el-select
@@ -114,7 +128,7 @@
 
 <script setup>
 import { Search, CircleClose } from '@element-plus/icons-vue';
-import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum, completionEnum  } from '@/enums/logistic';
+import { transportEnum, transportCarrierEnum, dailyPendingTaskTypeEnum, completionEnum, onHoldEnum  } from '@/enums/logistic';
 import { parseTime, debounce, addNullOptionInEnumObject } from '@/utils';
 
 defineProps({

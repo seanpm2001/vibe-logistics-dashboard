@@ -205,6 +205,11 @@
     >
       Add Package
     </el-button>
+    
+    <div
+      v-if="task.onHold"
+      class="disable-task-mask"
+    />
   </el-card>
 </template>
 
@@ -734,5 +739,15 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
       width: 120px
 
 .el-card
+  position: relative
   overflow: scroll
+
+  .disable-task-mask
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 999
+    width: 100%
+    height: 100%
+    background-color: rgba(0, 0, 0, .1)
 </style>
