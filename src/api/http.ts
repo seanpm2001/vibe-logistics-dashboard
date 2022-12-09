@@ -55,11 +55,10 @@ requester.interceptors.response.use(
     return res;
   },
   error => {
-    // eslint-disable-next-line no-undef
     tryHideFullScreenLoading();
     console.log('http ' + error); // for debug
     ElMessage({
-      message: error.message,
+      message: error.message + ' or No data.',
       type: 'error',
       duration: 5 * 1000
     });

@@ -60,9 +60,17 @@
         <el-form-item label="Serial">
           <el-tag>#{{ warehousingItem.serial }}</el-tag>
         </el-form-item>
+        <el-checkbox v-model="warehousingItem.ifStylus">
+          Contain stylus
+        </el-checkbox>
+        <el-checkbox v-model="warehousingItem.ifPowercord">
+          Contain power cord
+        </el-checkbox>
         <el-checkbox v-model="warehousingItem.shipmentDamage">
           Shipping Damaged
         </el-checkbox>
+      </el-row>
+      <el-row justify="space-between">
         <el-form-item label="Package Box Condition">
           <el-select
             v-model="warehousingItem.packageBoxCondition"
