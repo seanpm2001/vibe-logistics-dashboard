@@ -35,6 +35,20 @@
           :value="ifHold"
         />
       </el-select>
+      <br>
+      <span v-if="task.onHold">
+        Hold schedule date:
+        <span :class="!notHighPermission && 'top-z-index'">
+          <el-date-picker
+            v-model="task.scheduledDate"
+            :disabled="notHighPermission"
+            type="date"
+            placeholder="Please pick a date"
+            value-format="YYYY-MM-DD"
+            @change="onTaskChange"
+          />
+        </span>
+      </span>
     </el-descriptions-item>
     <el-descriptions-item
       width="30%"
@@ -274,5 +288,6 @@ const downloadTaskFiles = (files) => {
   display: block
 
 .top-z-index
+  position: relative
   z-index: 9999
 </style>

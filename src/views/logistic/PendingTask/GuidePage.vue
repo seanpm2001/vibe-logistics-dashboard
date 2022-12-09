@@ -161,7 +161,7 @@ const handleClickChoice = (pattern) => {
     emit('fetchList');
     break;
   case '5':
-    setTaskParams(30);
+    setOnHoldTaskParams(30);
     listQuery.value.onHold = true;
     break;
   default:
@@ -184,6 +184,18 @@ function setTaskParams(dayWindow) {
     start.includes('T11:30:00') ? start : start + 'T11:30:00';
   listQuery.value.end = 
     end.includes('T11:30:00') ? end : end + 'T11:30:00';
+}
+
+function setOnHoldTaskParams(dayWindow) {
+  listQuery.value.fulfilled = 'false';
+  dateFilter.value = [
+    parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}'),
+    parseTime(new Date().getTime() + 86400000 * 30, '{y}-{m}-{d}')
+  ];
+  const [start, end] = dateFilter.value;
+  listQuery.value.start = 
+    start.includes('T11:30:00') ? start : start + 'T11:30:00';
+  listQuery.value.end = end.includes('T11:30:00') ? end : end + 'T11:30:00';
 }
 
 const calRemainingTasks = () => {
@@ -217,7 +229,7 @@ const calRemainingTasks = () => {
     todayFulfillCount.value = tasks.filter(task => !task.fulfilledAt).length;
   });
 
-  setTaskParams(30);
+  setOnHoldTaskParams(30);
   let onHoldParams = jsonClone(listQuery.value);
   onHoldParams.onHold = true;
   onHoldParams = new URLSearchParams(onHoldParams);

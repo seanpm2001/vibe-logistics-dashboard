@@ -64,7 +64,7 @@
             <el-select
               v-model="taskItem.returnDetails"
               :disabled="notCommonPermission"
-              placeholder="Please select category"
+              placeholder="Please select"
               clearable
               filterable
               default-first-option
@@ -77,6 +77,11 @@
               />
             </el-select>
           </el-form-item>
+        </el-row>
+        <el-row
+          justify="space-between"
+          align="middle"
+        >
           <el-form-item label="*Source Warehouse">
             <el-select
               v-model="taskItem.sourceId"
@@ -105,12 +110,6 @@
               />
             </el-select>
           </el-form-item>
-        </el-row>
-        <el-row
-          justify="space-between"
-          align="middle"
-          :gutter="3"
-        >
           <el-form-item label="New Address">
             <el-input
               v-model="taskItem.newAddress"
@@ -118,6 +117,32 @@
               placeholder="New Address"
             />
           </el-form-item>
+        </el-row>
+        
+        <el-row
+          justify="space-between"
+          align="middle"
+        >
+          <div class="f-row">
+            <el-form-item label="On hold">
+              <el-switch
+                v-model="taskItem.onHold"
+                :disabled="notCommonPermission"
+              >
+                On hold:
+              </el-switch>
+            </el-form-item>
+            &emsp;
+            <el-form-item label="Hold scheduled date">
+              <el-date-picker
+                v-model="taskItem.scheduledDate"
+                :disabled="(notCommonPermission || !taskItem.onHold)"
+                type="date"
+                placeholder="Please pick a date"
+                value-format="YYYY-MM-DD"
+              />
+            </el-form-item>
+          </div>
           <el-form-item label="Note">
             <el-input
               v-model="taskItem.note"
@@ -126,21 +151,6 @@
               placeholder="Note"
             />
           </el-form-item>
-          <el-form-item label="On hold">
-            <el-switch
-              v-model="taskItem.onHold"
-              :disabled="notCommonPermission"
-            >
-              On hold:
-            </el-switch>
-          </el-form-item>
-        </el-row>
-
-        <el-row
-          justify="space-between"
-          align="middle"
-          :gutter="1"
-        >
           <el-form-item label="Tracking Number Note">
             <el-input
               v-model="taskItem.trackingNumberNote"
@@ -149,6 +159,12 @@
               placeholder="Tracking Number Note"
             />
           </el-form-item>
+        </el-row>
+        <el-row
+          justify="end"
+          align="middle"
+          :gutter="1"
+        >
           <el-button
             type="primary"
             @click="showUploadFileDialog"
@@ -522,4 +538,6 @@ const handleDeleteFile = (file) => {
     margin-bottom: 0
   .el-row
     padding: 0 1rem 1rem
+:deep(.el-date-editor .el-input__inner)
+  padding-left: calc(5px + 14px + 12px) !important
 </style>
