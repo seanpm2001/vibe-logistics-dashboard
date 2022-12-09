@@ -270,9 +270,9 @@ provide('accessoryAllocation', accessoryAllocation);
 
 const isOnHoldTask = (task) => {
   const isOnHold = task.onHold;
-  const isOutDated = new Date() > new Date(task.scheduledDate);
+  const notOutDated = new Date() < new Date(task.scheduledDate);
 
-  return isOnHold && isOutDated;
+  return isOnHold && notOutDated;
 };
 
 const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
