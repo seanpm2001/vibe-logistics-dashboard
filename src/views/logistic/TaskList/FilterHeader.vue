@@ -30,7 +30,37 @@
           :value="key"
         />
       </el-select>
+      <el-select
+        v-model="listQuery.transportMode"
+        placeholder="Transport"
+        style="width: 120px"
+        clearable
+        @change="handleTransportChange"
+      >
+        <el-option
+          v-for="(transport, key) in transportEnum"
+          :key="key"
+          :label="transport"
+          :value="key"
+        />
+      </el-select>
+      <el-select
+        v-if="listQuery.transportMode"
+        v-model="listQuery.carrier"
+        placeholder="Carrier"
+        style="width: 120px"
+        clearable
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="(carrier, key) in addNullOptionInEnumObject(transportCarrierEnum[listQuery.transportMode])"
+          :key="key"
+          :label="carrier"
+          :value="key"
+        />
+      </el-select>
     </el-row>
+    
     
     <div class="right-subcontainer">
       <el-button
@@ -63,7 +93,8 @@
 <script setup>
 import { Delete } from '@element-plus/icons-vue';
 import { deleteTaskAPI } from '@/api';
-import { taskTypeEnum } from '@/enums/logistic';
+import { taskTypeEnum, transportEnum, transportCarrierEnum } from '@/enums/logistic';
+import { addNullOptionInEnumObject } from '@/utils';
 
 const listQuery = inject('listQuery') ;
 const typeArr = inject('typeArr');
@@ -92,6 +123,11 @@ const onTypeArrChange = (visible) => {
 const handleFilter = () => {
   listQuery.value.page = 1;
   fetchList();
+};
+
+const handleTransportChange = () => {
+  listQuery.value.carrier = '';
+  handleFilter();
 };
 
 const delSelectedTask = () => {

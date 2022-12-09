@@ -72,6 +72,23 @@
       />
     </el-select>
     <el-select
+      v-if="listQuery.transportMode"
+      v-model="listQuery.carrier"
+      placeholder="Carrier"
+      style="width: 120px"
+      clearable
+      @change="handleFilter"
+    >
+      <el-option
+        v-for="(carrier, key) in addNullOptionInEnumObject(transportCarrierEnum[listQuery.transportMode])"
+        :key="key"
+        :label="carrier"
+        :value="key"
+      />
+    </el-select>
+
+
+    <el-select
       v-model="listQuery.fulfilled"
       placeholder="Completion"
       style="width: 140px"
@@ -99,22 +116,6 @@
         :value="ifHold"
       />
     </el-select>
-    <el-select
-      v-if="listQuery.transportMode"
-      v-model="listQuery.carrier"
-      placeholder="Carrier"
-      style="width: 120px"
-      clearable
-      @change="handleFilter"
-    >
-      <el-option
-        v-for="(carrier, key) in addNullOptionInEnumObject(transportCarrierEnum[listQuery.transportMode])"
-        :key="key"
-        :label="carrier"
-        :value="key"
-      />
-    </el-select>
-
     <el-input
       v-model="scannedTrackingNumber"
       class="scan-label"

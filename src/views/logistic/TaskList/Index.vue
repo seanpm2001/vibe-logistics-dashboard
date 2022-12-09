@@ -107,7 +107,9 @@ const contrastData = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 10,
-  warehouseId: warehouseId
+  warehouseId: warehouseId,
+  transportMode: '',
+  carrier: '',
 });
 const typeArr = ref(['FULFILLMENT', 'REPLACE', 'RETURN']);
 const dataList = shallowRef(null);
