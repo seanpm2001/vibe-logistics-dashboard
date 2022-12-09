@@ -72,7 +72,7 @@
       <svg-icon icon-name="right-arrow" />
     </div>
   </div>
-  <strong class="title">Past 30 days' On-hold Tasks:</strong>
+  <strong class="title">Future 30 days' On-hold Tasks:</strong>
   <div class="choice-wrapper">
     <div
       class="choice"

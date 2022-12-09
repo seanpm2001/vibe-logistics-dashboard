@@ -207,7 +207,7 @@
     </el-button>
     
     <div
-      v-if="task.onHold"
+      v-if="isOnHoldTask(task)"
       class="disable-task-mask"
     />
   </el-card>
@@ -267,6 +267,13 @@ const accessoryAllocationVisible = ref(false);
 provide('accessoryAllocationVisible', accessoryAllocationVisible);
 provide('accessoryAllocation', accessoryAllocation);
 /* End Data */
+
+const isOnHoldTask = (task) => {
+  const isOnHold = task.onHold;
+  const isOutDated = new Date() > new Date(task.scheduledDate);
+
+  return isOnHold && isOutDated;
+};
 
 const inputTrackingNumber = (val, packageItem, task, packageIdx, taskIdx) => {
   if (val.endsWith(';')) {

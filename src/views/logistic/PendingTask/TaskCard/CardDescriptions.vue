@@ -37,7 +37,7 @@
       </el-select>
       <br>
       <span v-if="task.onHold">
-        Hold schedule date:
+        Scheduled fulfillment date:
         <span :class="!notHighPermission && 'top-z-index'">
           <el-date-picker
             v-model="task.scheduledDate"

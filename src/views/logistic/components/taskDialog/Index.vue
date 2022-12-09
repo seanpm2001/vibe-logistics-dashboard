@@ -133,7 +133,7 @@
               </el-switch>
             </el-form-item>
             &emsp;
-            <el-form-item label="Hold scheduled date">
+            <el-form-item label="Scheduled fulfillment date">
               <el-date-picker
                 v-model="taskItem.scheduledDate"
                 :disabled="(notCommonPermission || !taskItem.onHold)"
