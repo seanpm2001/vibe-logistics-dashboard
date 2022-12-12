@@ -173,7 +173,7 @@ const dateFilter = ref(null);
 const listQuery = ref({
   page: 1,
   perPage: 200,
-  onHold: false,
+  onHold: '',
   start: null,
   end: null,
   search: '',

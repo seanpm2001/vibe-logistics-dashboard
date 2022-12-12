@@ -198,9 +198,14 @@ function setOnHoldTaskParams(dayWindow) {
   listQuery.value.end = end.includes('T11:30:00') ? end : end + 'T11:30:00';
 }
 
+const getQueryStartEnd = (dayWindow) => {
+  return parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}') + 'T11:30:00';
+}
+
 const calRemainingTasks = () => {
   const historyParams = jsonClone(listQuery.value);
-  historyParams.start = parseTime(new Date().getTime() - 86400000 * 15, '{y}-{m}-{d}'),
+  historyParams.start = getQueryStartEnd(15);
+  historyParams.end = getQueryStartEnd(0);
   historyParams.perPage = 99999; // 拉取所有数据
   emit('fetchList', historyParams);
 

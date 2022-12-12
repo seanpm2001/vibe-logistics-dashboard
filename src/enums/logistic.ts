@@ -153,6 +153,7 @@ export const completionEnum = {
   'Incomplete': 'false',
 };
 export const onHoldEnum = {
+  'All': '',
   'On Hold': true,
   'Not Hold': false,
 };
