@@ -234,6 +234,10 @@ const showTaskTypeDialog = (orderId) => emit('showTaskTypeDialog', orderId);
 
 const handleSelectionChange = (selectedArr) => {
   disableAssign.value = selectedArr.some(order => (!isReviewedOrder(order) && !notFraudOrder(order)));
+
+  // TODO: just test, remember to remove
+  disableAssign.value = false;
+
   if (disableAssign.value) {
     return;
   }

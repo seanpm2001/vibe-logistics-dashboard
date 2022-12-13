@@ -200,7 +200,7 @@ function setOnHoldTaskParams(dayWindow) {
 
 const getQueryStartEnd = (dayWindow) => {
   return parseTime(new Date().getTime() - 86400000 * dayWindow, '{y}-{m}-{d}') + 'T11:30:00';
-}
+};
 
 const calRemainingTasks = () => {
   const historyParams = jsonClone(listQuery.value);
