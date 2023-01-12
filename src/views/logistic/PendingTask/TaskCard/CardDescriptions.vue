@@ -104,7 +104,7 @@
       </el-button>
       <el-button
         type="success"
-        :disabled="!isFulfilled"
+        :disabled="!isFulfilled || !orderEnum[task.orderId]?.email"
         @click="sendEmailAPI(task.id)"
       >
         Send Email
