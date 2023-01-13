@@ -345,6 +345,7 @@ export const skuCodeEnum = {
   },
   'S55T01BUS': '55S1B',
   'CA01A': 'CAM01A',
+  'CA01B': 'CAM01A',
   '55AS01': '55S1AS',
   'P55H301US': '55P1B'
 };
@@ -472,7 +473,8 @@ export const codeSkuArrEnum = {
     'S55T01BUS',
   ],
   'CAM01A': [
-    'CA01A'
+    'CA01A',
+    'CA01B',
   ],
   '55S1AS': [
     '55AS01'
