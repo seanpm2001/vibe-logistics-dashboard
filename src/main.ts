@@ -1,5 +1,6 @@
 
 import { createPinia } from 'pinia';
+import InfiniteScroll from 'element-plus'; 
 
 import App from './App.vue';
 import router from './router';
@@ -22,4 +23,5 @@ app
   .use(router)
   .use(vPermission)
   .use(vWave)
+  .use(InfiniteScroll)
   .mount('#app');

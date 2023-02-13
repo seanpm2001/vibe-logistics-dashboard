@@ -125,19 +125,23 @@
       </div>
       <el-divider />
 
-      <template
-        v-for="(task, taskIdx) in dataList"
-        :key="task.id"
+      <ul
+        v-infinite-scroll="loadMoreData"
+        class="infinite-list"
+        infinite-scroll-distance="1"
       >
-        <TaskCard
-          :task="task"
-          :task-idx="taskIdx"
-          :order-enum="orderEnum"
-          :warehouse-enum="warehouseEnum"
-          :role="role"
-        />
-      </template>
-      
+        <template
+          v-for="(task, taskIdx) in infiniteDataList"
+          :key="task.id"
+        >
+          <TaskCard
+            :task-idx="taskIdx"
+            :order-enum="orderEnum"
+            :warehouse-enum="warehouseEnum"
+            :role="role"
+          />
+        </template>
+      </ul>
 
       <ExportTasks />
 
@@ -185,6 +189,8 @@ const listQuery = ref({
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
+const infiniteCount = ref(0);
+const infiniteDataList = shallowRef([]);
 const total = ref(0);
 const dataList = shallowRef([]);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
@@ -241,6 +247,13 @@ const specifiedSerials = computed(() => {
 
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
+
+const loadMoreData = () => {
+  if (infiniteCount.value <= total.value) {
+    infiniteCount.value += 5;
+    infiniteDataList.value = dataList.value.slice(0, infiniteCount.value + 1);
+  }
+};
 
 const backGuidePage = () => {
   nextTick(() => {
@@ -475,7 +488,6 @@ provide('fetchList', fetchList);
 .page
   padding: 16px
   min-height: calc(100vh - 91px - 32px)
-
 .statistics
   .el-descriptions
     width: 100%
