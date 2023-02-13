@@ -49,7 +49,7 @@ export const useUserStore = defineStore({
     // get user info
     getInfo() {
       return new Promise((resolve, reject) => {
-        getInfoAPI().then(data => {
+        getInfoAPI().then((data: any) => {
           if (!data)
             reject('Verification failed, please Login again.');
 
@@ -59,6 +59,9 @@ export const useUserStore = defineStore({
           this.M_role(role);
           this.M_email(email);
           warehouseId && this.M_warehouseId(warehouseId);
+
+          const permissionStore = usePermissionStore();
+          permissionStore.M_isGetUserInfo(true);
           resolve(data);
         }).catch(error => {
           reject(error);

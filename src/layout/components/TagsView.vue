@@ -67,9 +67,7 @@ const visitedViews = computed(() => {
   return tagsViewStore.visitedViews;
 });
 const permissionStore = usePermissionStore();
-const routes = computed(() => {
-  return permissionStore.routes;
-});
+const routes = computed(() => permissionStore.routes);
 watch(
   () => $route.path,
   () => {
