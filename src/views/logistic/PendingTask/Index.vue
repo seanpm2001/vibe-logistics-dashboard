@@ -189,7 +189,7 @@ const listQuery = ref({
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
-const infiniteCount = ref(0);
+const infiniteCount = ref(5);
 const infiniteDataList = shallowRef([]);
 const total = ref(0);
 const dataList = shallowRef([]);
