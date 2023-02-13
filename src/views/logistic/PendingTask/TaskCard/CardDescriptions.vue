@@ -1,5 +1,6 @@
 <template>
   <el-descriptions
+    v-if="task?.id"
     :column="3"
     direction="vertical"
     border
@@ -8,7 +9,7 @@
       {{ orderEnum[task.orderId]?.id }}
       <template
         v-for="order in orderEnum[task.orderId]?.rawOrders"
-        :key="order.id"
+        :key="order?.id"
       >
         <el-tag size="small">
           {{ order?.id }}

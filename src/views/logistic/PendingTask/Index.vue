@@ -189,7 +189,7 @@ const listQuery = ref({
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
-const infiniteCount = ref(5);
+const infiniteCount = ref(0);
 const infiniteDataList = shallowRef([]);
 const total = ref(0);
 const dataList = shallowRef([]);
@@ -249,6 +249,7 @@ provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
 const loadMoreData = () => {
+  console.log(infiniteCount.value);
   if (infiniteCount.value <= total.value) {
     infiniteCount.value += 5;
     infiniteDataList.value = dataList.value.slice(0, infiniteCount.value + 1);
@@ -442,6 +443,8 @@ function queryTask (newParams) {
       if (!data.items.length) { // 找不到对应filter的task
         listQuery.value.search = '';
         ElMessage.warning('0 tasks found!');
+        dataList.value = [];
+        total.value = 0;
       }
 
       total.value = data.total;
@@ -465,6 +468,10 @@ function queryTask (newParams) {
           });
         });
       }
+    }).catch(err => {
+      console.log('err: ', err);
+      dataList.value = [];
+      total.value = 0;
     });
   }
 }

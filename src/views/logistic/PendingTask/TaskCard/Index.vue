@@ -1,6 +1,6 @@
 <template>
   <el-card
-    v-if="task?.id"
+    v-if="dataList.length"
     :class="tasksProductFulQty[task.id]?.error ? 'error-border-tip' : ''"
   >
     <CardDescriptions
