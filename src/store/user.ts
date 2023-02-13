@@ -1,7 +1,7 @@
 import { loginAPI, getInfoAPI } from '@/api';
 import { setToken, removeToken } from '@/utils/auth';
 import router, { asyncRoutes } from '@/router';
-import { useTagsViewStore, usePermissionStore } from './index';
+import { useTagsViewStore, usePermissionStore,  } from './index';
 
 const resetRouter = () => {
   const asyncRouterNameArr = asyncRoutes.map((mItem) => mItem.name);
@@ -39,6 +39,7 @@ export const useUserStore = defineStore({
       return new Promise((resolve, reject) => {
         loginAPI(userInfo).then(data => {
           setToken(data.accessToken);
+          this.getInfo();
           resolve(null);
         }).catch(error => {
           reject(error);
@@ -49,16 +50,20 @@ export const useUserStore = defineStore({
     // get user info
     getInfo() {
       return new Promise((resolve, reject) => {
-        getInfoAPI().then(data => {
+        getInfoAPI().then((data: any) => {
           if (!data)
             reject('Verification failed, please Login again.');
 
           const { role, username, email, warehouseId } = data;
+          console.log('role: ', role);
 
           this.M_username(username);
           this.M_role(role);
           this.M_email(email);
           warehouseId && this.M_warehouseId(warehouseId);
+
+          const permissionStore = usePermissionStore();
+          permissionStore.M_isGetUserInfo(true);
           resolve(data);
         }).catch(error => {
           reject(error);
