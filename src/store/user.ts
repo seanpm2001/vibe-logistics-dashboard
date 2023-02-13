@@ -55,7 +55,6 @@ export const useUserStore = defineStore({
             reject('Verification failed, please Login again.');
 
           const { role, username, email, warehouseId } = data;
-          console.log('role: ', role);
 
           this.M_username(username);
           this.M_role(role);
