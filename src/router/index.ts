@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: 'refactor',
         component: () => import('@/views/Dashboard/UiRefactor.vue'),
         name: 'UiRefactor',
-        meta: { title: 'Ui Refactor', icon: 'sidebar-dashboard', affix: true }
+        meta: { title: 'Ui Refactor', icon: 'sidebar-dashboard' }
       }
     ]
   },
