@@ -36,17 +36,21 @@ export const useAppStore = defineStore('app', {
 
     /*keepAlive缓存*/
     M_ADD_CACHED_VIEW(view) {
-      this.$patch((state) => {
-        if (state.cachedViews.includes(view)) return;
-        state.cachedViews.push(view);
-      });
+      // TODO: fix cachedView bug
+      return;
+      // this.$patch((state) => {
+      //   if (state.cachedViews.includes(view)) return;
+      //   state.cachedViews.push(view);
+      // });
     },
 
     M_DEL_CACHED_VIEW(view) {
-      this.$patch((state) => {
-        const index = state.cachedViews.indexOf(view);
-        index > -1 && state.cachedViews.splice(index, 1);
-      });
+      // TODO: fix cachedView bug
+      return;
+      // this.$patch((state) => {
+      //   const index = state.cachedViews.indexOf(view);
+      //   index > -1 && state.cachedViews.splice(index, 1);
+      // });
     },
     M_RESET_CACHED_VIEW() {
       this.$patch((state) => {
@@ -55,16 +59,20 @@ export const useAppStore = defineStore('app', {
     },
     /*third  keepAlive*/
     M_ADD_CACHED_VIEW_DEEP(view) {
-      this.$patch((state) => {
-        if (state.cachedViewsDeep.includes(view)) return;
-        state.cachedViewsDeep.push(view);
-      });
+      // TODO: fix cachedView bug
+      return;
+      // this.$patch((state) => {
+      //   if (state.cachedViewsDeep.includes(view)) return;
+      //   state.cachedViewsDeep.push(view);
+      // });
     },
     M_DEL_CACHED_VIEW_DEEP(view) {
-      this.$patch((state) => {
-        const index = state.cachedViewsDeep.indexOf(view);
-        index > -1 && state.cachedViewsDeep.splice(index, 1);
-      });
+      // TODO: fix cachedView bug
+      return;
+      // this.$patch((state) => {
+      //   const index = state.cachedViewsDeep.indexOf(view);
+      //   index > -1 && state.cachedViewsDeep.splice(index, 1);
+      // });
     },
     M_RESET_CACHED_VIEW_DEEP() {
       this.$patch((state) => {
