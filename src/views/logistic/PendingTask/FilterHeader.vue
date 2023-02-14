@@ -13,6 +13,8 @@
       v-model="typeArr"
       placeholder="Task Type"
       multiple
+      collapse-tags
+      collapse-tags-tooltip
       clearable
       @visible-change="onTypeArrChange"
       @remove-tag="fetchList"

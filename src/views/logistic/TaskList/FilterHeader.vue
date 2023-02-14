@@ -1,24 +1,12 @@
 <template>
   <div class="filter-container">
-    <el-row>
-      <el-select
-        v-model="showTaskPattern"
-        placeholder="Task type"
-        style="width: 155px"
-        disabled
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="(item, key) in taskPatternEnum"
-          :key="item"
-          :label="item"
-          :value="key"
-        />
-      </el-select>
+    <el-row align="middle">
       <el-select
         v-model="typeArr"
         placeholder="Task Type"
         multiple
+        collapse-tags
+        collapse-tags-tooltip
         clearable
         @visible-change="onTypeArrChange"
         @remove-tag="fetchList"

@@ -125,7 +125,7 @@
             :disabled="notCommonPermission"
             placeholder="Please select"
             filterable
-            style="width: 260px"
+            style="width: 335px"
             multiple
             :multiple-limit="product.quantity"
             remote
