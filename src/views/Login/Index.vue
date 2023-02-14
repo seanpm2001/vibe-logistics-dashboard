@@ -65,7 +65,8 @@
           <el-input
             ref="upUsername"
             v-model="signUpForm.email"
-            placeholder="username"
+            placeholder="Unsupported yet"
+            disabled
           />
         </div>
         <div>
@@ -76,7 +77,8 @@
             ref="upPassword"
             v-model="signUpForm.password"
             :type="passwordType"
-            placeholder="password"
+            placeholder="Unsupported yet"
+            disabled
           />
           <span @click="showPwd((signInPattern = false))">
             <svg-icon
@@ -88,6 +90,7 @@
         <el-button
           :loading="btnLoading"
           class="submit-btn"
+          disabled
           @click="handleLogin((signInPattern = false))"
         >
           Sign Up
