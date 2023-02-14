@@ -6,7 +6,10 @@
       v-for="route in logisticRoutes"
       :key="route.path"
     >
-      <router-link class="link" :to="resolveLogisticPath(route.path)" >
+      <router-link
+        class="link"
+        :to="resolveLogisticPath(route.path)"
+      >
         {{ route.meta.title }}
       </router-link>
     </template>
@@ -19,7 +22,7 @@ import { logisticRouter } from '@/router/modules/logistic';
 const logisticRouteBasePath = logisticRouter[0].path;
 const logisticRoutes = logisticRouter[0].children;
 
-const resolveLogisticPath = (routePath) => logisticRouteBasePath + "/" + routePath;
+const resolveLogisticPath = (routePath) => logisticRouteBasePath + '/' + routePath;
 </script>
 
 <style lang="sass">

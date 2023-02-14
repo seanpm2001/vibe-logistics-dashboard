@@ -20,7 +20,7 @@ const { role: currentRole } = storeToRefs(useUserStore());
 <style lang="sass" scoped>
 .dashboard-container
   position: relative
-  min-height: 100vh
+  min-height: calc(100vh - 91px - 64px)
   padding: 32px
   background-color: rgb(240, 242, 245)
 </style>
