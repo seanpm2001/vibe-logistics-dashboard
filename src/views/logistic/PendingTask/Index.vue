@@ -128,7 +128,7 @@
       <ul
         v-infinite-scroll="loadMoreData"
         class="infinite-list"
-        infinite-scroll-distance="1"
+        infinite-scroll-distance="300"
       >
         <template
           v-for="(task, taskIdx) in infiniteDataList"
@@ -468,6 +468,7 @@ function queryTask (newParams) {
           });
         });
       }
+      loadMoreData();
     }).catch(err => {
       console.log('err: ', err);
       dataList.value = [];

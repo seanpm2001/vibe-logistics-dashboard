@@ -265,7 +265,7 @@ function loginReq () {
   userStore
     .login(signInForm)
     .then(() => {
-      router.push({ path: state.redirect || '/', query: state.otherQuery });
+      router.push({ path: state.redirect || '/logistic/order', query: state.otherQuery });
     })
     .catch((err) => {
       console.log('login err: ', err);
