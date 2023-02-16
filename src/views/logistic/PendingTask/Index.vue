@@ -442,12 +442,12 @@ function queryTask (newParams) {
       total.value = data.total;
       savedTasks.value = JSON.parse(JSON.stringify(data.items));
       dataList.value = preprocessTasks(data.items);
-      // const orderIdArr = getTaskOrderIdArr(dataList.value);
-      // orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-      //   data.forEach(async order => {
-      //     orderEnum.value[order.id] = await formatAssignedOrderItem(order);
-      //   });
-      // });
+      const orderIdArr = getTaskOrderIdArr(dataList.value);
+      orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+        data.forEach(async order => {
+          orderEnum.value[order.id] = await formatAssignedOrderItem(order);
+        });
+      });
 
       specifiedUnits.value = {};
       specifiedSerials.value.forEach(serial => {
@@ -486,17 +486,11 @@ function queryInfiniteTask() {
     }
 
     infiniteDatalist.value = preprocessTasks(data.items);
-    const orderIdArr = getTaskOrderIdArr(infiniteDatalist.value);
-    orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-      data.forEach(async order => {
-        orderEnum.value[order.id] = await formatAssignedOrderItem(order);
-      });
-    });
   }).catch(err => {
     console.log('err: ', err);
     infiniteDatalist.value = [];
   });
-};
+}
 
 const fetchList = (newParams) => {
   setTimeout(() => queryTask(newParams), 350);
