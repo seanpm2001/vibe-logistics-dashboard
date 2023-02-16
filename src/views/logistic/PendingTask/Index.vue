@@ -128,10 +128,10 @@
       <ul
         v-infinite-scroll="debounce(loadMoreData, 100)"
         class="infinite-list"
-        infinite-scroll-distance="600"
+        infinite-scroll-distance="300"
       >
         <template
-          v-for="(task, taskIdx) in dataList"
+          v-for="(task, taskIdx) in infiniteDatalist"
           :key="task.id"
         >
           <TaskCard
@@ -164,7 +164,7 @@ import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr, getUnitCode } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI, findTaskFileAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
-import { debounce } from '@/utils';
+import { debounce, jsonClone } from '@/utils';
 import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start Data */
@@ -177,7 +177,7 @@ const dateFilter = ref(null);
 
 const listQuery = ref({
   page: 1,
-  perPage: 10,
+  perPage: 200,
   onHold: '',
   start: null,
   end: null,
@@ -247,14 +247,6 @@ const specifiedSerials = computed(() => {
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
-const loadMoreData = () => {
-  const perPageNow = listQuery.value.perPage;
-  console.log('perPageNow: ', perPageNow);
-  if (perPageNow < total.value) {
-    listQuery.value.perPage = perPageNow + 10;
-    fetchList();
-  }
-};
 
 const backGuidePage = () => {
   nextTick(() => {
@@ -450,12 +442,12 @@ function queryTask (newParams) {
       total.value = data.total;
       savedTasks.value = JSON.parse(JSON.stringify(data.items));
       dataList.value = preprocessTasks(data.items);
-      const orderIdArr = getTaskOrderIdArr(dataList.value);
-      orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
-        data.forEach(async order => {
-          orderEnum.value[order.id] = await formatAssignedOrderItem(order);
-        });
-      });
+      // const orderIdArr = getTaskOrderIdArr(dataList.value);
+      // orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      //   data.forEach(async order => {
+      //     orderEnum.value[order.id] = await formatAssignedOrderItem(order);
+      //   });
+      // });
 
       specifiedUnits.value = {};
       specifiedSerials.value.forEach(serial => {
@@ -476,6 +468,37 @@ function queryTask (newParams) {
   }
 }
 
+const infiniteCount = ref(1);
+const infiniteDatalist = shallowRef([]);
+const loadMoreData = () => {
+  console.log('infiniteCount.value : ', infiniteCount.value );
+  if (infiniteCount.value < total.value) {
+    infiniteCount.value += 1;
+    queryInfiniteTask();
+  }
+};
+function queryInfiniteTask() {
+  const newParams = jsonClone(listQuery.value);
+  newParams.perPage = infiniteCount.value;
+  console.log('newParams: ', newParams);
+  queryTasksAPI(newParams).then(data => {
+    if (!data.items.length) { // 找不到对应filter的task
+      infiniteDatalist.value = [];
+    }
+
+    infiniteDatalist.value = preprocessTasks(data.items);
+    const orderIdArr = getTaskOrderIdArr(infiniteDatalist.value);
+    orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      data.forEach(async order => {
+        orderEnum.value[order.id] = await formatAssignedOrderItem(order);
+      });
+    });
+  }).catch(err => {
+    console.log('err: ', err);
+    infiniteDatalist.value = [];
+  });
+};
+
 const fetchList = (newParams) => {
   setTimeout(() => queryTask(newParams), 350);
 };
@@ -489,6 +512,7 @@ useWarehouseEnumHook();
 /* Provide functions */
 provide('fetchList', fetchList);
 /* End of provide function */
+
 </script>
 
 <style lang="sass" scoped>
