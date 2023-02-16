@@ -468,19 +468,18 @@ function queryTask (newParams) {
   }
 }
 
-const infiniteCount = ref(1);
+const infiniteCount = ref(10);
 const infiniteDatalist = shallowRef([]);
 const loadMoreData = () => {
   console.log('infiniteCount.value : ', infiniteCount.value );
   if (infiniteCount.value < total.value) {
-    infiniteCount.value += 1;
+    infiniteCount.value += 10;
     queryInfiniteTask();
   }
 };
 function queryInfiniteTask() {
   const newParams = jsonClone(listQuery.value);
   newParams.perPage = infiniteCount.value;
-  console.log('newParams: ', newParams);
   queryTasksAPI(newParams).then(data => {
     if (!data.items.length) { // 找不到对应filter的task
       infiniteDatalist.value = [];
