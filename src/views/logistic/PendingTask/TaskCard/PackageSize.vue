@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { toNumber, debounce } from '@/utils';
+import { toNumber } from '@/utils';
 const props = defineProps({
   taskIdx: {
     type: Number,

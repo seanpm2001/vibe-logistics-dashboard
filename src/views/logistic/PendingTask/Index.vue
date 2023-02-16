@@ -126,12 +126,12 @@
       <el-divider />
 
       <ul
-        v-infinite-scroll="loadMoreData"
+        v-infinite-scroll="debounce(loadMoreData, 100)"
         class="infinite-list"
-        infinite-scroll-distance="300"
+        infinite-scroll-distance="600"
       >
         <template
-          v-for="(task, taskIdx) in infiniteDataList"
+          v-for="(task, taskIdx) in dataList"
           :key="task.id"
         >
           <TaskCard
@@ -164,6 +164,7 @@ import ExportTasks from './ExportTasks.vue';
 import { formatAssignedOrderItem, getTaskOrderIdArr, getUnitCode } from '@/utils/logistic';
 import { listUnitsAPI, queryTasksAPI, queryAssignedBatchOrdersAPI, findTaskFileAPI } from '@/api';
 import { skuCodeEnum, codeNameEnum, noSerialArr, taskFulfilmentErrorEnum } from '@/enums/logistic';
+import { debounce } from '@/utils';
 import { useUserStore, useLogisticStore } from '@/store';
 
 /* Start Data */
@@ -176,7 +177,7 @@ const dateFilter = ref(null);
 
 const listQuery = ref({
   page: 1,
-  perPage: 200,
+  perPage: 10,
   onHold: '',
   start: null,
   end: null,
@@ -189,8 +190,6 @@ const listQuery = ref({
 
 const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
-const infiniteCount = ref(0);
-const infiniteDataList = shallowRef([]);
 const total = ref(0);
 const dataList = shallowRef([]);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
@@ -249,10 +248,11 @@ provide('specifiedSerials', specifiedSerials);
 /* End Data */
 
 const loadMoreData = () => {
-  console.log(infiniteCount.value);
-  if (infiniteCount.value <= total.value) {
-    infiniteCount.value += 5;
-    infiniteDataList.value = dataList.value.slice(0, infiniteCount.value + 1);
+  const perPageNow = listQuery.value.perPage;
+  console.log('perPageNow: ', perPageNow);
+  if (perPageNow < total.value) {
+    listQuery.value.perPage = perPageNow + 10;
+    fetchList();
   }
 };
 
@@ -468,7 +468,6 @@ function queryTask (newParams) {
           });
         });
       }
-      loadMoreData();
     }).catch(err => {
       console.log('err: ', err);
       dataList.value = [];

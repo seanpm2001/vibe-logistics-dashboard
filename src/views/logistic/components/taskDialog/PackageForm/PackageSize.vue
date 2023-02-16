@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { toNumber, debounce } from '@/utils';
+import { toNumber } from '@/utils';
 const props = defineProps({
   packageItem: {
     type: Object,
