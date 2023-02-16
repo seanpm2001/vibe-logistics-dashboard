@@ -506,6 +506,9 @@ useWarehouseEnumHook();
 provide('fetchList', fetchList);
 /* End of provide function */
 
+onMounted(() => {
+  loadMoreData();
+});
 </script>
 
 <style lang="sass" scoped>
