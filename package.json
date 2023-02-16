@@ -28,6 +28,7 @@
     "screenfull": "^6.0.1",
     "vue": "^3.2.30",
     "vue-router": "^4.0.12",
+    "vue3-infinite-list": "^0.2.5",
     "vuex": "^4.0.2",
     "xlsx": "^0.17.4"
   },
@@ -61,7 +62,6 @@
       "es6": true,
       "node": true
     },
-
     "globals": {
       "defineEmits": true,
       "document": true,
@@ -82,7 +82,10 @@
       "ecmaVersion": 2020,
       "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint", "import"],
+    "plugins": [
+      "@typescript-eslint",
+      "import"
+    ],
     "rules": {
       "vue/multi-word-component-names": 0,
       "vue/no-deprecated-router-link-tag-prop": 0,
@@ -125,7 +128,9 @@
           "ignoreReadBeforeAssign": false
         }
       ],
-      "import/no-unresolved": [0],
+      "import/no-unresolved": [
+        0
+      ],
       "import/extensions": "off",
       "import/no-absolute-path": "off",
       "no-async-promise-executor": "off",
@@ -135,16 +140,36 @@
       "no-console": "off",
       "no-plusplus": "off",
       "no-bitwise": "off",
-      "@typescript-eslint/no-explicit-any": ["off"],
-      "@typescript-eslint/explicit-module-boundary-types": ["off"],
-      "@typescript-eslint/ban-ts-comment": ["off"],
-      "vue/no-setup-props-destructure": ["off"],
-      "@typescript-eslint/no-empty-function": ["off"],
-      "vue/script-setup-uses-vars": ["off"],
-      "@typescript-eslint/no-unused-vars": [0],
-      "no-param-reassign": ["off"],
-      "vue/v-on-event-hyphenation": ["off"],
-      "@typescript-eslint/no-this-alias": ["off"]
+      "@typescript-eslint/no-explicit-any": [
+        "off"
+      ],
+      "@typescript-eslint/explicit-module-boundary-types": [
+        "off"
+      ],
+      "@typescript-eslint/ban-ts-comment": [
+        "off"
+      ],
+      "vue/no-setup-props-destructure": [
+        "off"
+      ],
+      "@typescript-eslint/no-empty-function": [
+        "off"
+      ],
+      "vue/script-setup-uses-vars": [
+        "off"
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        0
+      ],
+      "no-param-reassign": [
+        "off"
+      ],
+      "vue/v-on-event-hyphenation": [
+        "off"
+      ],
+      "@typescript-eslint/no-this-alias": [
+        "off"
+      ]
     }
   },
   "browserslist": [

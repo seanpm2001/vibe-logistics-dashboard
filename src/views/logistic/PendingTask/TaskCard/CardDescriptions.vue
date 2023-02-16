@@ -1,6 +1,5 @@
 <template>
   <el-descriptions
-    v-if="task?.id"
     :column="3"
     direction="vertical"
     border

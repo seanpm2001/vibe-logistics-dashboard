@@ -125,23 +125,23 @@
       </div>
       <el-divider />
 
-      <ul
-        v-infinite-scroll="loadMoreData"
-        class="infinite-list"
-        infinite-scroll-distance="300"
+      <InfiniteList
+        v-slot="{ item, index }"
+        :item-size="getItemSize"
+        :data="dataList"
+        width="100%"
+        height="calc(100vh - 91px - 32px)"
+        :overscan-count="2"
       >
-        <template
-          v-for="(task, taskIdx) in infiniteDataList"
-          :key="task.id"
-        >
-          <TaskCard
-            :task-idx="taskIdx"
-            :order-enum="orderEnum"
-            :warehouse-enum="warehouseEnum"
-            :role="role"
-          />
-        </template>
-      </ul>
+        <TaskCard
+          :ref="setTaskCardRef"
+          :key="item.id"
+          :task-idx="index"
+          :order-enum="orderEnum"
+          :warehouse-enum="warehouseEnum"
+          :role="role"
+        />
+      </InfiniteList>
 
       <ExportTasks />
 
@@ -157,6 +157,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
+import InfiniteList from 'vue3-infinite-list';
 import GuidePage from './GuidePage.vue';
 import FilterHeader from './FilterHeader.vue';
 import TaskCard from './TaskCard/Index.vue';
@@ -170,6 +171,8 @@ import { useUserStore, useLogisticStore } from '@/store';
 const { warehouseId, role } = storeToRefs(useUserStore());
 const { warehouseEnum } = storeToRefs(useLogisticStore());
 const router = useRouter();
+const {proxy} = getCurrentInstance();
+const refs = computed(() => proxy.$refs);
 
 const guidePageVisible = ref(true);
 const dateFilter = ref(null);
@@ -247,14 +250,6 @@ const specifiedSerials = computed(() => {
 
 provide('specifiedSerials', specifiedSerials);
 /* End Data */
-
-const loadMoreData = () => {
-  console.log(infiniteCount.value);
-  if (infiniteCount.value <= total.value) {
-    infiniteCount.value += 5;
-    infiniteDataList.value = dataList.value.slice(0, infiniteCount.value + 1);
-  }
-};
 
 const backGuidePage = () => {
   nextTick(() => {
@@ -407,6 +402,10 @@ const downloadListedTaskFiles = () => {
   }
 };
 
+const getItemSize = (idx) => {
+  console.log('proxy', refs);
+  return 800;
+};
 
 const isObj = target => Object.prototype.toString.call(target) === '[object Object]';
 const getCodeBySkuAndCondition = (sku, condition) => {
@@ -468,7 +467,6 @@ function queryTask (newParams) {
           });
         });
       }
-      loadMoreData();
     }).catch(err => {
       console.log('err: ', err);
       dataList.value = [];

@@ -1,6 +1,5 @@
 <template>
   <el-card
-    v-if="dataList.length"
     :class="tasksProductFulQty[task.id]?.error ? 'error-border-tip' : ''"
   >
     <CardDescriptions
@@ -246,6 +245,9 @@ const props = defineProps({
 const dataList = inject('dataList') ;
 const fetchList = inject('fetchList') ;
 const task = ref(dataList.value[props.taskIdx]);
+console.log('props: ', props);
+console.log('dataList: ', dataList);
+console.log('task: ', task);
 
 /* Start Data */
 const { proxy } = getCurrentInstance();
