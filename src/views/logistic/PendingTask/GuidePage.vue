@@ -162,19 +162,16 @@ const handleClickChoice = (pattern) => {
     break;
   case '4':
     setTaskParams(1);
-    emit('fetchStatisticalList');
     emit('fetchList');
     break;
   case '5':
     setOnHoldTaskParams(0);
     listQuery.value.onHold = true;
-    emit('fetchStatisticalList');
     emit('fetchList');
     break;
   default:
     ElMessage.error('Unkown error! Default show today\'s new task.');
     setTaskParams(1);
-    emit('fetchStatisticalList');
     emit('fetchList');
   }
  
