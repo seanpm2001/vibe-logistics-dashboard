@@ -455,7 +455,7 @@ const loadMoreData = () => {
   if (listQuery.value.perPage < total.value) {
     listQuery.value.perPage += 10;
     console.log('listQuery.value.perPage: ', listQuery.value.perPage);
-    setTimeout(() => queryTask(), 150);
+    setTimeout(() => fetchList(), 150);
   }
 };
 
