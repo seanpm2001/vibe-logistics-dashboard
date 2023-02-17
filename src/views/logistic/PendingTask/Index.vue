@@ -17,7 +17,9 @@
     <GuidePage
       v-if="guidePageVisible"
       v-model:guidePageVisible="guidePageVisible"
+      :statistical-data-list="statisticalDataList"
       @fetch-list="fetchList"
+      @fetch-statistical-list="fetchStatisticalList"
     />
 
     <template v-else>
@@ -131,7 +133,7 @@
         infinite-scroll-distance="300"
       >
         <template
-          v-for="(task, taskIdx) in infiniteDatalist"
+          v-for="(task, taskIdx) in dataList"
           :key="task.id"
         >
           <TaskCard
@@ -177,7 +179,7 @@ const dateFilter = ref(null);
 
 const listQuery = ref({
   page: 1,
-  perPage: 200,
+  perPage: 10,
   onHold: '',
   start: null,
   end: null,
@@ -425,9 +427,9 @@ function preprocessTasks(originalTasks) {
   return tasks;
 }
 
-function queryTask (newParams) {
+function queryTask () {
   if (listQuery.value.end) {
-    const params = new URLSearchParams(newParams || listQuery.value);
+    const params = new URLSearchParams(listQuery.value);
     typeArr.value.forEach(type => {
       params.append('taskType', type);
     });
@@ -439,9 +441,43 @@ function queryTask (newParams) {
         total.value = 0;
       }
 
-      total.value = data.total;
-      savedTasks.value = JSON.parse(JSON.stringify(data.items));
       dataList.value = preprocessTasks(data.items);
+      total.value = data.total;
+    }).catch(err => {
+      console.log('err: ', err);
+      dataList.value = [];
+      total.value = 0;
+    });
+  }
+}
+
+const loadMoreData = () => {
+  if (listQuery.value.perPage < total.value) {
+    listQuery.value.perPage += 10;
+    console.log('listQuery.value.perPage: ', listQuery.value.perPage);
+    setTimeout(() => queryTask(), 150);
+  }
+};
+
+// 用于guide page统计以及pending task page最上面的数据计算
+const statisticalDataList = shallowRef([]);
+function queryStatisticalTask(newParams) {
+  if (listQuery.value.end) {
+    const params = new URLSearchParams(newParams || jsonClone(listQuery.value));
+    if (!newParams) {
+      params.set('perPage', 200);
+    }
+    typeArr.value.forEach(type => {
+      params.append('taskType', type);
+    });
+
+    queryTasksAPI(params).then(data => {
+      if (!data.items.length) { // 找不到对应filter的task
+        return;
+      }
+
+      statisticalDataList.value = preprocessTasks(data.items);
+      savedTasks.value = JSON.parse(JSON.stringify(data.items));
       const orderIdArr = getTaskOrderIdArr(dataList.value);
       orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         data.forEach(async order => {
@@ -462,38 +498,17 @@ function queryTask (newParams) {
       }
     }).catch(err => {
       console.log('err: ', err);
-      dataList.value = [];
-      total.value = 0;
     });
   }
 }
 
-const infiniteCount = ref(10);
-const infiniteDatalist = shallowRef([]);
-const loadMoreData = () => {
-  console.log('infiniteCount.value : ', infiniteCount.value );
-  if (infiniteCount.value < total.value) {
-    infiniteCount.value += 10;
-    queryInfiniteTask();
-  }
+const fetchStatisticalList = (newParams) => {
+  setTimeout(() => queryStatisticalTask(newParams), 350);
 };
-function queryInfiniteTask() {
-  const newParams = jsonClone(listQuery.value);
-  newParams.perPage = infiniteCount.value;
-  queryTasksAPI(newParams).then(data => {
-    if (!data.items.length) { // 找不到对应filter的task
-      infiniteDatalist.value = [];
-    }
 
-    infiniteDatalist.value = preprocessTasks(data.items);
-  }).catch(err => {
-    console.log('err: ', err);
-    infiniteDatalist.value = [];
-  });
-}
-
-const fetchList = (newParams) => {
-  setTimeout(() => queryTask(newParams), 350);
+const fetchList = () => {
+  setTimeout(() => queryStatisticalTask(), 350);
+  setTimeout(() => queryTask(), 350);
 };
 
 const scrollToTop = () => {
@@ -506,9 +521,7 @@ useWarehouseEnumHook();
 provide('fetchList', fetchList);
 /* End of provide function */
 
-onMounted(() => {
-  loadMoreData();
-});
+
 </script>
 
 <style lang="sass" scoped>

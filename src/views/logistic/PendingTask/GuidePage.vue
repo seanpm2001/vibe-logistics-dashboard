@@ -102,13 +102,16 @@ const props = defineProps({
   guidePageVisible: {
     type: Boolean,
     required: true
+  },
+  statisticalDataList: {
+    type: Array,
+    default: () => []
   }
 });
 
-const emit = defineEmits(['update:guidePageVisible', 'fetchList']);
+const emit = defineEmits(['update:guidePageVisible', 'fetchList', 'fetchStatisticalList']);
 
 const listQuery = inject('listQuery');
-const dataList = inject('dataList') ;
 const dateFilter = inject('dateFilter') ;
 const tasksProductFulQty = inject('tasksProductFulQty');
 
@@ -118,7 +121,7 @@ const historyReceiveCount = ref(0);
 const historyOnHoldCount = ref(0);
 
 const taskFulfilmentErrorCount = computed(() => {
-  const historyFulfillCount = dataList.value.filter(task => !task.fulfilledAt).length;
+  const historyFulfillCount = props.statisticalDataList.filter(task => !task.fulfilledAt).length;
   let historyShipmentCount = 0;
   let historyLackSerialCount = 0;
   for (const taskId in tasksProductFulQty.value) {
@@ -145,6 +148,7 @@ const handleClickChoice = (pattern) => {
   switch (pattern) {
   case '1':
     setTaskParams(15);
+    emit('fetchStatisticalList');
     emit('fetchList');
     ElMessage.warning('Default show past 15 days\' tasks!');
     break;
@@ -158,15 +162,19 @@ const handleClickChoice = (pattern) => {
     break;
   case '4':
     setTaskParams(1);
+    emit('fetchStatisticalList');
     emit('fetchList');
     break;
   case '5':
     setOnHoldTaskParams(0);
     listQuery.value.onHold = true;
+    emit('fetchStatisticalList');
+    emit('fetchList');
     break;
   default:
     ElMessage.error('Unkown error! Default show today\'s new task.');
     setTaskParams(1);
+    emit('fetchStatisticalList');
     emit('fetchList');
   }
  
@@ -207,7 +215,7 @@ const calRemainingTasks = () => {
   historyParams.start = getQueryStartEnd(15);
   historyParams.end = getQueryStartEnd(0);
   historyParams.perPage = 99999; // 拉取所有数据
-  emit('fetchList', historyParams);
+  emit('fetchStatisticalList', historyParams);
 
   // query return tasks
   historyParams.taskType = 'RETURN';

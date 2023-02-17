@@ -348,7 +348,7 @@ const checkPackageChanged = (packageItem, packageIdx, taskIdx) => {
   removeEmptyUnit(tempPackage);
   removeUnitErrorStatus(tempPackage);
 
-  return !compareIfEqual(tempPackage, savedTasks.value[taskIdx].packages[packageIdx]);
+  return !compareIfEqual(tempPackage, savedTasks.value[taskIdx]?.packages[packageIdx]);
 };
 
 const disableUpdatePackage = (packageItem, packageIdx, taskIdx) => {
