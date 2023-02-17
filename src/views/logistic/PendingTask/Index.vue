@@ -194,6 +194,7 @@ const typeArr = ref(['FULFILLMENT', 'REPLACE']);
 
 const total = ref(0);
 const dataList = shallowRef([]);
+const statisticalDataList = shallowRef([]);
 const orderEnum = ref({}); // [{ orderId : {...orderItem} }]
 const specifiedUnits = ref({});
 const savedTasks = ref(null); // 对比数据是否修改
@@ -210,7 +211,7 @@ provide('dateFilter', dateFilter);
 
 const fulSerials = computed(() => {
   const serials = {};
-  dataList.value?.forEach(task => {
+  statisticalDataList.value?.forEach(task => {
     task.packages?.forEach(packageItem => {
       packageItem.units.forEach(unit => {
         if (unit.serial) {
@@ -226,7 +227,7 @@ provide('fulSerials', fulSerials);
 
 const specifiedSerials = computed(() => {
   let serials = [];
-  dataList.value?.forEach(task => {
+  statisticalDataList.value?.forEach(task => {
     let taskSpecifiedSerials = [];
     task.products?.forEach(product => {
       if (product.serialNote) {
@@ -387,7 +388,7 @@ const downloadFile = file => {
 };
 const downloadListedTaskFiles = () => {
   const promiseArr = [];
-  const files = dataList.value?.reduce((arr, task) => {
+  const files = statisticalDataList.value?.reduce((arr, task) => {
     return arr.concat(task.files);
   }, []);
 
@@ -427,6 +428,15 @@ function preprocessTasks(originalTasks) {
   return tasks;
 }
 
+const resetData = () => {
+  statisticalDataList.value = [];
+  dataList.value = [];
+  total.value = 0;
+  savedTasks.value = [];
+  orderEnum.value = {};
+  specifiedUnits.value = {};
+}
+
 function queryTask () {
   if (listQuery.value.end) {
     const params = new URLSearchParams(listQuery.value);
@@ -435,18 +445,15 @@ function queryTask () {
     });
     queryTasksAPI(params).then(data => {
       if (!data.items.length) { // 找不到对应filter的task
-        listQuery.value.search = '';
-        ElMessage.warning('0 tasks found!');
-        dataList.value = [];
-        total.value = 0;
+        // `fetchList`的时候`queryStatisticalTask`一定会触发，所以这边不用再resetData
+        return;
       }
 
       dataList.value = preprocessTasks(data.items);
       total.value = data.total;
     }).catch(err => {
       console.log('err: ', err);
-      dataList.value = [];
-      total.value = 0;
+      resetData();
     });
   }
 }
@@ -460,7 +467,6 @@ const loadMoreData = () => {
 };
 
 // 用于guide page统计以及pending task page最上面的数据计算
-const statisticalDataList = shallowRef([]);
 function queryStatisticalTask(newParams) {
   if (listQuery.value.end) {
     const params = new URLSearchParams(newParams || jsonClone(listQuery.value));
@@ -473,13 +479,17 @@ function queryStatisticalTask(newParams) {
 
     queryTasksAPI(params).then(data => {
       if (!data.items.length) { // 找不到对应filter的task
+        ElMessage.warning('0 tasks found!');
+        resetData();
         return;
       }
 
-      statisticalDataList.value = preprocessTasks(data.items);
-      savedTasks.value = JSON.parse(JSON.stringify(data.items));
-      const orderIdArr = getTaskOrderIdArr(dataList.value);
+      const statisticalData = data.items;
+      statisticalDataList.value = preprocessTasks(statisticalData);
+      savedTasks.value = JSON.parse(JSON.stringify(statisticalData));
+      const orderIdArr = getTaskOrderIdArr(statisticalData);
       orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+        orderEnum.value = {};
         data.forEach(async order => {
           orderEnum.value[order.id] = await formatAssignedOrderItem(order);
         });
@@ -497,6 +507,8 @@ function queryStatisticalTask(newParams) {
         });
       }
     }).catch(err => {
+      resetData();
+      messages.error('Network err or error: ' + err.message);
       console.log('err: ', err);
     });
   }
