@@ -10,7 +10,7 @@ const baseURL = String(import.meta.env.VITE_API_DOMAIN);
 const requester = axios.create({
   baseURL: baseURL,
   // baseURL: '/api',
-  timeout: 25000, // 设置超时时间
+  timeout: 50000, // 设置超时时间
   withCredentials: true, // 允许携带cookie
   headers: { // 解决ie浏览器会自动缓存
     'cache-control': 'no-cache',
