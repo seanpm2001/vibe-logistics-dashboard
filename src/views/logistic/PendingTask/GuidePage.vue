@@ -211,7 +211,7 @@ const calRemainingTasks = () => {
   const historyParams = jsonClone(listQuery.value);
   historyParams.start = getQueryStartEnd(15);
   historyParams.end = getQueryStartEnd(0);
-  historyParams.perPage = 99999; // 拉取所有数据
+  historyParams.perPage = 9999; // 拉取所有数据
   emit('fetchStatisticalList', historyParams);
 
   // query return tasks

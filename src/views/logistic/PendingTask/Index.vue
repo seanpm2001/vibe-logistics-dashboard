@@ -435,7 +435,7 @@ const resetData = () => {
   savedTasks.value = [];
   orderEnum.value = {};
   specifiedUnits.value = {};
-}
+};
 
 function queryTask () {
   if (listQuery.value.end) {
@@ -488,7 +488,8 @@ function queryStatisticalTask(newParams) {
       statisticalDataList.value = preprocessTasks(statisticalData);
       savedTasks.value = JSON.parse(JSON.stringify(statisticalData));
       const orderIdArr = getTaskOrderIdArr(statisticalData);
-      orderIdArr.length && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
+      const isOrderEnumFetched = orderIdArr.every(orderId => !!orderEnum.value[orderId]);
+      orderIdArr.length && !isOrderEnumFetched && queryAssignedBatchOrdersAPI(orderIdArr).then(data => { // 获取所有task相关的order list
         orderEnum.value = {};
         data.forEach(async order => {
           orderEnum.value[order.id] = await formatAssignedOrderItem(order);
