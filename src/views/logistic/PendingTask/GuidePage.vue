@@ -109,7 +109,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:guidePageVisible', 'fetchList', 'fetchStatisticalList']);
+const emit = defineEmits(['update:guidePageVisible', 'fetchStatisticalList']);
 
 const listQuery = inject('listQuery');
 const dateFilter = inject('dateFilter') ;
@@ -144,12 +144,11 @@ function _includes(str, targetArr) {
   return targetArr.some(target => !!~str.indexOf(target));
 }
 
+// setParams 以后会在FilterHeader里对dateFilter进行处理并 fetchList
 const handleClickChoice = (pattern) => {
   switch (pattern) {
   case '1':
     setTaskParams(15);
-    emit('fetchStatisticalList');
-    emit('fetchList');
     ElMessage.warning('Default show past 15 days\' tasks!');
     break;
   case '2':
@@ -162,20 +161,17 @@ const handleClickChoice = (pattern) => {
     break;
   case '4':
     setTaskParams(1);
-    emit('fetchList');
     break;
   case '5':
     setOnHoldTaskParams(0);
     listQuery.value.onHold = true;
-    emit('fetchList');
     break;
   default:
     ElMessage.error('Unkown error! Default show today\'s new task.');
     setTaskParams(1);
-    emit('fetchList');
   }
  
-  setTimeout(() => emit('update:guidePageVisible', false), 1000);
+  setTimeout(() => emit('update:guidePageVisible', false), 500);
 };
 
 function setTaskParams(dayWindow) {

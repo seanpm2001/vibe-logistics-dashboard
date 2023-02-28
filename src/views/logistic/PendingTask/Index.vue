@@ -18,7 +18,6 @@
       v-if="guidePageVisible"
       v-model:guidePageVisible="guidePageVisible"
       :statistical-data-list="statisticalDataList"
-      @fetch-list="fetchList"
       @fetch-statistical-list="fetchStatisticalList"
     />
 
