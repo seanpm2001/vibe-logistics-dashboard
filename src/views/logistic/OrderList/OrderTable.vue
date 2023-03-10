@@ -51,7 +51,24 @@
           size="large"
           :type="isReviewedOrder(row) ? 'success' : 'danger'"
         >
-          {{ isReviewedOrder(row) ? 'Reviewed' : 'Reviewing' }}
+          <template v-if="isReviewedOrder(row)">
+            Reviewed
+          </template>
+          <template v-else>
+            <span
+              v-if="isAdminRole"
+              class="cursor-pointer"
+              @click="reviewOrderAnyway(row.id)"
+            >
+              <el-tooltip
+                content="Click to set it reviewed anyway?"
+                placement="top"
+              >
+                Reviewing
+              </el-tooltip>
+            </span>
+            <span v-else>Reviewing</span>
+          </template>
         </el-tag>
       </template>
     </el-table-column>
@@ -199,9 +216,10 @@
 </template>
 
 <script setup>
+import {ElMessageBox} from 'element-plus';
 import { AssignedOrderId, OrderShipmentInfo } from '../components';
 import { formatVBDate, combineSameProductQuantityArr } from '@/utils/logistic';
-import { deleteTaskAPI } from '@/api';
+import { deleteTaskAPI, updateOrderAttachment } from '@/api';
 import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 
 
@@ -264,14 +282,35 @@ const isReviewedOrder = order => {
   if (!attachment)
     return false;
 
+  const { businessVerified, financeVerified, csVerified } = attachment;
   if (order.businessVerificationRequired || order.financeVerificationRequired || order.csReviewRequired) {
     if (
-      attachment.businessVerified === order.businessVerificationRequired
-        && attachment.financeVerified === order.financeVerificationRequired
-          && attachment.csVerified === order.csReviewRequired
+      (businessVerified || !order.businessVerificationRequired)
+        && (financeVerified || !order.financeVerificationRequired)
+          && (csVerified || !order.csReviewRequired)
     ) return true;
   }
   return false;
+};
+
+const reviewOrderAnyway = (orderId) => {
+  ElMessageBox.confirm(`Are you sure to approve this order (${orderId}) to fulfill? Please note that you cannot undo this approval.`, 'Warning', {
+    type: 'warning',
+    callback: (action) => {
+      if (action === 'confirm') {
+        const attachment = {
+          business_verified: true,
+          finance_verified: true,
+          cs_verified: true,
+        };
+        updateOrderAttachment(orderId, attachment).then(() => {
+          fetchList();
+        });
+      } else if (action === 'cancel') {
+        ElMessage.info('Delete canceled');
+      }
+    },
+  });
 };
 </script>
 

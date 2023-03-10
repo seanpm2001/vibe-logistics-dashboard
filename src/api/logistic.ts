@@ -85,6 +85,11 @@ export async function queryOrdersAPI (params?) {
   });
   return res;
 }
+export async function updateOrderAttachment (orderId, attachment) {
+  handleReqElMsg(
+    requester.put(`/orders/raw/${orderId}/attachment`, attachment), 'Update', 'Order Attachment', orderId
+  );
+}
 export async function queryAssignedOrdersAPI (params?) {
   const res = await requester.get('orders/assigned', {
     params,
@@ -312,3 +317,4 @@ export async function getInfoAPI() {
 //     .then(() => ElMessage.success('Log out successfully.'))
 //     .catch(() => ElMessage.error('Log out failed, please contact developer.'));
 // }
+
