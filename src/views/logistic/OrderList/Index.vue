@@ -6,6 +6,7 @@
       @unassign-orders="unassignOrders"
     />
     <OrderTable
+      :role="role"
       :data-list="dataList"
       :warehouse-enum="warehouseEnum"
       @fetch-list="fetchList"

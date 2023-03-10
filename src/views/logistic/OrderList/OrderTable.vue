@@ -169,7 +169,7 @@
             v-show="!showAssignedOrder"
             type="primary"
             size="small"
-            :disabled="!isReviewedOrder(row) && !notFraudOrder(row)"
+            :disabled="!isAdminRole && !isReviewedOrder(row) && !notFraudOrder(row)"
             @click="showAssignDialog('assign', row.id)"
           >
             Assign & Add 1st WH Task
@@ -205,7 +205,11 @@ import { deleteTaskAPI } from '@/api';
 import { packageStatusEnum, codeNameEnum, codeIconEnum } from '@/enums/logistic';
 
 
-defineProps({
+const props = defineProps({
+  role: {
+    type: String,
+    required: true,
+  },
   dataList: {
     type: Array,
     default: () => []
@@ -221,6 +225,7 @@ const listQuery = inject('listQuery') ;
 const disableAssign = inject('disableAssign');
 
 const showAssignedOrder = computed(() => listQuery.value.showAssignedOrder);
+const isAdminRole = props.role === 'ADMIN';
 
 const tableKey = ref(0);
 const emit = defineEmits(['fetchList', 'showOrderDrawer', 'editWarehouseTask', 'showAssignDialog', 'unassignOrders', 'showTaskTypeDialog']);
