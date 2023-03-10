@@ -216,7 +216,7 @@
 </template>
 
 <script setup>
-import {ElMessageBox} from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { AssignedOrderId, OrderShipmentInfo } from '../components';
 import { formatVBDate, combineSameProductQuantityArr } from '@/utils/logistic';
 import { deleteTaskAPI, updateOrderAttachment } from '@/api';
@@ -307,7 +307,7 @@ const reviewOrderAnyway = (orderId) => {
           fetchList();
         });
       } else if (action === 'cancel') {
-        ElMessage.info('Delete canceled');
+        ElMessage.info('Approve canceled');
       }
     },
   });
