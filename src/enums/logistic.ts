@@ -169,6 +169,7 @@ export const transportCarrierEnum = {
     'C.H.ROBINSON': 'C.H.ROBINSON',
     DAY_ROSS: 'Day & Ross',
     YRC_FREIGHT: 'YRC Freight',
+    ONIXPORT: 'Onixport'
   },
   EXPRESS: {
     UPS: 'UPS',
