@@ -2,7 +2,7 @@ name: "Frontend"
 on:
   push:
     branches:
-      - *
+      - chuzui/fix-action
   deployment:
 permissions:
   id-token: write
