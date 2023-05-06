@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: loading style when update batch file  -->
   <div>
     <el-row
       justify="space-between"
@@ -160,8 +161,9 @@
 
 <script setup>
 import { UploadFilled } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';
+import { findArrRepeatedValue } from '@/utils';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api';
 
 // eslint-disable-next-line no-undef
@@ -188,6 +190,8 @@ const props = defineProps({
   }
 });
 
+const { proxy } = getCurrentInstance();
+const refs = computed(() => proxy.$refs);
 const batch = ref(props.batchItem);
 const previewExcelArr = ref([].concat(batch.value?.items));
 
@@ -258,7 +262,30 @@ const handleDeleteBatch = () => {
 const updateBatchProducts = (type, file) => {
   file2Xcel(file).then(dataArr => {
     if (dataArr && dataArr.length > 0) {
+      
+      if (type === 'add') {
+        let tempArr= [];
+        // check repeated serial
+        const serialArr = [];
+        dataArr.forEach(item => {
+          tempArr = tempArr.concat(item.sheet);
+        });
+        tempArr.forEach(item => {
+          const serial = (item['Serial Number'] || item['Serial number'] || item['serial number'] || '').trim() || ' ';
+          serialArr.push(serial);
+        });
+        
+        const repeatedBatchItems = findArrRepeatedValue(serialArr);
+        if (repeatedBatchItems?.length) {
+          ElMessage.error('Add failed, repeated serial ' + repeatedBatchItems.join(', '));
+          xmlFileList.value = xmlFileList.value.filter(xFile => xFile.uid !== file.uid);
+          return;
+        }
+      }
+      
+      // file2Xcel
       let tempArr= [];
+      tempArr = [];
       products.value = {};
       dataArr.forEach(item => {
         const sku = item.sheetName;
@@ -274,9 +301,10 @@ const updateBatchProducts = (type, file) => {
         }
       });
       tempArr.forEach(item => {
+        const serial = (item['Serial Number'] || item['Serial number'] || item['serial number'] || '').trim() || ' ';
         const batchCondition = (item['Batch Condition'] || item['Batch condition'] || item['batch condition'] || '').trim() || '';
         batch.value.items.push({
-          serial: (item['Serial Number'] || item['Serial number'] || item['serial number'] || '').trim() || ' ',
+          serial: serial,
           sku: item['SKU'],
           batchCondition: batchCondition.toUpperCase(),
         });
@@ -286,6 +314,7 @@ const updateBatchProducts = (type, file) => {
     }
   });
 };
+
 
 const handleBatch = (type) => {
   for (const key in products.value) { // 更新costs
