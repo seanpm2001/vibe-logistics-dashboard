@@ -161,7 +161,7 @@
 
 <script setup>
 import { UploadFilled } from '@element-plus/icons-vue';
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { file2Xcel } from '@/utils/excel';
 import { findArrRepeatedValue } from '@/utils';
 import { createBatchAPI, deleteBatchAPI, updateBatchAPI } from '@/api';
@@ -191,7 +191,6 @@ const props = defineProps({
 });
 
 const { proxy } = getCurrentInstance();
-const refs = computed(() => proxy.$refs);
 const batch = ref(props.batchItem);
 const previewExcelArr = ref([].concat(batch.value?.items));
 
