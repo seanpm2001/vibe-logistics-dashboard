@@ -44,7 +44,6 @@
             <el-select
               v-model="taskItem.returnReason"
               class="input-width-200"
-              :change="onTaskReturnReasonChange(taskItem)"
               :disabled="notCommonPermission"
               placeholder="Please select"
               clearable
