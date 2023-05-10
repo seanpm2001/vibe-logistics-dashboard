@@ -43,6 +43,7 @@
           >
             <el-select
               v-model="taskItem.returnReason"
+              class="input-width-200"
               :change="onTaskReturnReasonChange(taskItem)"
               :disabled="notCommonPermission"
               placeholder="Please select"
@@ -64,6 +65,7 @@
           >
             <el-select
               v-model="taskItem.returnDetails"
+              class="input-width-200"
               :disabled="notCommonPermission"
               placeholder="Please select"
               clearable
@@ -549,4 +551,7 @@ const handleDeleteFile = (file) => {
     padding: 0 1rem 1rem
 :deep(.el-date-editor .el-input__inner)
   padding-left: calc(5px + 14px + 12px) !important
+
+.input-width-200
+  width: 200px
 </style>
