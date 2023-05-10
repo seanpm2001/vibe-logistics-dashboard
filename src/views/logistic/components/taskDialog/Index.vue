@@ -43,6 +43,7 @@
           >
             <el-select
               v-model="taskItem.returnReason"
+              :change="onTaskReturnReasonChange(taskItem)"
               :disabled="notCommonPermission"
               placeholder="Please select"
               clearable
@@ -362,6 +363,14 @@ const isReturnOrRepalce = computed(() =>
 provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
+
+const onTaskReturnReasonChange = (task) => {
+  const returnDetailsArr = taskReasonDetailEnum[task.returnReason] || [];
+  if (!returnDetailsArr.includes(task.returnDetails)) {
+    taskItem.value.returnDetails = '';
+  }
+  console.log('askItem.value: ', taskItem.value);
+};
 
 const downloadFile = file => {
   const taskId = file.fileName.split('#')[1];
