@@ -366,14 +366,6 @@ provide('packageArr', packageArr);
 provide('taskItem', taskItem);
 /* End data */
 
-const onTaskReturnReasonChange = (task) => {
-  const returnDetailsArr = taskReasonDetailEnum[task.returnReason] || [];
-  if (!returnDetailsArr.includes(task.returnDetails)) {
-    taskItem.value.returnDetails = '';
-  }
-  console.log('askItem.value: ', taskItem.value);
-};
-
 const downloadFile = file => {
   const taskId = file.fileName.split('#')[1];
   findTaskFileAPI(taskId, file.fileId).then(data => {
