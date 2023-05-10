@@ -87,7 +87,7 @@ export enum taskReasonEnum {
   STAND_HARDWARE_DEFECT = 'Stand hardware defect',
   STYLUS_HARDWARE_DEFECT = 'Stylus hardware defect',
   CAREMA_HARDWARE_DEFECT = 'Camera hardware defect',
-  TAB_HARDWARE_DEFECT = 'Tab hardware defect',
+  TAP_HARDWARE_DEFECT = 'Tap hardware defect',
   SOFTWARE_DEFECT = 'Software defect',
   SHIPPING_DELIVERY_ISSUE = 'Shipping/delivery issue',
   UNKNOWN = 'Unknown',
