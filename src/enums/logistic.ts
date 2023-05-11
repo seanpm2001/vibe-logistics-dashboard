@@ -135,7 +135,10 @@ export const taskReasonDetailEnum = {
     'Shipping damage',
     'Non-delivery',
   ],
-  UNKNOWN: ['Unknown']
+  UNKNOWN: [
+    'Customer change mind',
+    'Unknown',
+  ]
 };
 export enum unitConditionEnum {
   GOOD = 'Good',
