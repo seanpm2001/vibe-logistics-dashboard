@@ -8,6 +8,7 @@ const endLoading = () => loadingInstance.close();
 
 export const showFullScreenLoading = () => {
   needLoadingRequestCount++ === 0 && startLoading();
+  console.log('needLoadingRequestCount: ', needLoadingRequestCount);
 };
 
 export const tryHideFullScreenLoading = () => {
