@@ -34,16 +34,20 @@ export function byteLength(str) {
   return s;
 }
 
-export function findArrRepeatedValue (arr: []) {
-  let fast = 1, slow = 1;
-	for (let i = 0, len = arr.length; i < len; i++) {
-		if (arr[fast] !== arr[fast - 1]) {
-      arr[slow] = arr[fast];
-      slow++;
+
+export function findArrRepeatedValue (arr: string[]) {
+  let set = new Set();
+  let result = [];
+
+  for (let i = 0, len = arr.length; i < len; i++) {
+    if (set.has(arr[i])) {
+      result.push(arr[i]);
+    } else {
+      set.add(arr[i]);
+    }
   }
-  fast++;
-	}
-	return [...new Set(arr.slice(slow))];
+
+  return result;
 }
 
 /**
