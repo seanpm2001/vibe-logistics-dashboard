@@ -190,7 +190,6 @@ const props = defineProps({
   }
 });
 
-const { proxy } = getCurrentInstance();
 const batch = ref(props.batchItem);
 const previewExcelArr = ref([].concat(batch.value?.items));
 
