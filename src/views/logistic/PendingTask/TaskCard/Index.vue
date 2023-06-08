@@ -423,9 +423,7 @@ function filterUnitList (unitList, task) {
 
   return unitList.filter(item => {
     for (const idx in taskProducts) {
-      if (getUnitCode(item) === taskProducts[idx].productCode) {
-        if (taskProducts[idx].sku && item.sku !== taskProducts[idx].sku)
-          return false;
+      if (taskProducts[idx].sku && item.sku === taskProducts[idx].sku) {
         return true;
       }
     }
