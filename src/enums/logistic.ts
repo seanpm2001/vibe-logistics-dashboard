@@ -385,8 +385,18 @@ export const skuCodeEnum = {
     'FIXED_B': '55S1UBSH',
     'FIXED_C': '55S1UB'
   },
-  'S55T01BUS': '55S1B',
-  'S55T01CUS': '55S1B',
+  'S55T01BUS': {
+    'GOOD': '55S1B',
+    'FIXED_A': '55S1UBSB',
+    'FIXED_B': '55S1UBSH',
+    'FIXED_C': '55S1UB',
+  },
+  'S55T01CUS': {
+    'GOOD': '55S1B',
+    'FIXED_A': '55S1UBSB',
+    'FIXED_B': '55S1UBSH',
+    'FIXED_C': '55S1UB',
+  },
   'S55T02AUS': '55S1BB',
   'CA01A': 'CAM01A',
   'CA01B': 'CAM01A',
@@ -447,12 +457,18 @@ export const codeSkuArrEnum = {
   ],
   '55S1UB': [
     'S55T01AUS',
+    'S55T01BUS',
+    'S55T01CUS'
   ],
   '55S1UBSH': [
-    'S55T01AUS'
+    'S55T01AUS',
+    'S55T01BUS',
+    'S55T01CUS'
   ],
   '55S1UBSB': [
-    'S55T01AUS'
+    'S55T01AUS',
+    'S55T01BUS',
+    'S55T01CUS'
   ],
   'TA01A': ['TA01A'],
   'CA02A': ['CA02A'],
