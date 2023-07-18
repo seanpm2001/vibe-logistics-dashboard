@@ -88,6 +88,7 @@
           <el-input-number
             v-model="product.quantity"
             :min="1"
+            :max="isLightningExpressTask ? 1 : 99"
             :disabled="notCommonPermission"
             placeholder="Quantity"
           />
@@ -150,7 +151,7 @@ import { debounce, getUnitCode } from '@/utils';
 import { noSerialArr, unitConditionEnum, codeNameEnum, codeSkuArrEnum } from '@/enums/logistic';
 import { queryUnitsAPI } from '@/api';
 
-defineProps({
+const props = defineProps({
   notCommonPermission: {
     type: Boolean,
     required: true
@@ -166,6 +167,12 @@ const taskOrderItem = inject('taskOrderItem') ;
 
 const checkedSpecifySerial = ref([]);
 const unitList = shallowRef(null);
+
+const isLightningExpressTask = computed(() => {
+  const sourceId = taskItem.value.sourceId;
+  const source = props.warehouseEnum[sourceId];
+  return source === 'Lightning' && taskItem.value.transportMode === 'EXPRESS';
+})
 
 const productNameScope = computed(() => {
   const type = taskItem.value.taskType;

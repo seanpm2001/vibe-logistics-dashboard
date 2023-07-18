@@ -377,15 +377,26 @@ const checkLightingTaskWrong = computed(() => {
   const source = props.warehouseEnum[sourceId];
   if (source !== 'Lightning') return false;
 
-  let flag = false;
-  const products = taskItem.value.products;
-  flag = products.some(
-    (product) => !product.sku || noSerialArr.includes(product.productCode)
-  );
-  if (flag)
-    ElMessage.error('Lightning Task Products can\'t be accessories and must have SKU.');
+  const products = taskItem.value.products || [];
 
-  return flag;
+  const transportMode = taskItem.value.transportMode;
+  if (transportMode === 'EXPRESS') {
+    const onlyHasOneProduct = products.length === 1  && products[0].quantity === 1;
+    if (!onlyHasOneProduct) {
+      ElMessage.error('Lightning task with Express can only have one quantity product.');
+      return true;
+    }
+  }
+
+  const hasAccessoryOrNoneSku = products.some(
+    (product) => !product.sku || noSerialArr.includes(product.productCode)
+    );
+  if (hasAccessoryOrNoneSku) {
+    ElMessage.error('Lightning Task Products can\'t be accessories and must have SKU.');
+    return true;
+  }
+    
+ 
 });
 
 function removeEmptyTask(products) {
