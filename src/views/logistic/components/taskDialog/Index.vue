@@ -238,7 +238,7 @@
           <el-button
             v-if="taskItem.id"
             type="primary"
-            :disabled="checkLightingTaskWrong || disableUnchangedTask"
+            :disabled="checkLightningTaskWrong || disableUnchangedTask"
             @click="handleWarehouseTask('update')"
           >
             Update Warehouse Task
@@ -246,7 +246,7 @@
           <el-button
             v-else
             type="primary"
-            :disabled="checkLightingTaskWrong"
+            :disabled="checkLightningTaskWrong"
             @click="handleWarehouseTask('create')"
           >
             Submit Warehouse Task
@@ -275,7 +275,8 @@
 </template>
 
 <script setup>
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
+import Message from '@/components/message';
 import ShipmentForm from './ShipmentForm.vue';
 import ProductCard from './ProductCard.vue';
 import OrderDescription from '../OrderDescription.vue';
@@ -336,7 +337,7 @@ watchEffect(() => {
     taskItem.value.taskType === 'RETURN'
   ) {
     taskItem.value.sourceId = customerId;
-    ElMessage.warning('Source has been set to Customer!');
+    Message.warning('Source has been set to Customer!');
   }
 });
 
@@ -372,7 +373,7 @@ const downloadFile = file => {
   });
 };
 
-const checkLightingTaskWrong = computed(() => {
+const checkLightningTaskWrong = computed(() => {
   const sourceId = taskItem.value.sourceId;
   const source = props.warehouseEnum[sourceId];
   if (source !== 'Lightning') return false;
@@ -383,16 +384,16 @@ const checkLightingTaskWrong = computed(() => {
   if (transportMode === 'EXPRESS') {
     const onlyHasOneProduct = products.length === 1  && products[0].quantity === 1;
     if (!onlyHasOneProduct) {
-      ElMessage.error('Lightning task with Express can only have one quantity product.');
+      Message.error('Lightning task with Express can only have one quantity product.');
       return true;
     }
   }
 
   const hasAccessoryOrNoneSku = products.some(
     (product) => !product.sku || noSerialArr.includes(product.productCode)
-    );
+  );
   if (hasAccessoryOrNoneSku) {
-    ElMessage.error('Lightning Task Products can\'t be accessories and must have SKU.');
+    Message.error('Lightning Task Products can\'t be accessories and must have SKU.');
     return true;
   }
     
@@ -427,7 +428,7 @@ const handleWarehouseTask = (type) => {
 function checkRequiredFilled () {
   const task = taskItem.value;
   if (!task.sourceId || !task.targetId) {
-    ElMessage.error('Please fill all required data!');
+    Message.error('Please fill all required data!');
     return false;
   }
   return true;
@@ -538,7 +539,7 @@ const handleDeleteFile = (file) => {
           emit('updateTaskItem');
         });
       } else if (action === 'cancel') {
-        ElMessage.info('Delete canceled');
+        Message.info('Delete canceled');
       }
     },
   });

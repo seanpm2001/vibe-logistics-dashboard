@@ -172,7 +172,7 @@ const isLightningExpressTask = computed(() => {
   const sourceId = taskItem.value.sourceId;
   const source = props.warehouseEnum[sourceId];
   return source === 'Lightning' && taskItem.value.transportMode === 'EXPRESS';
-})
+});
 
 const productNameScope = computed(() => {
   const type = taskItem.value.taskType;

@@ -218,7 +218,7 @@
 import CardDescriptions from './CardDescriptions.vue';
 import MetaData from './MetaData.vue';
 import PackageSize from './PackageSize.vue';
-import { ElMessage } from 'element-plus';
+import Message from '@/components/message';
 import { debounce, getWarehouseUnitSystem, jsonClone, getUnitCode } from '@/utils';
 import { codeNameEnum, unitSystemEnum, noSerialArr, packageErrorEnum, transportEnum } from '@/enums/logistic';
 import { queryUnitsAPI, createPackageAPI, updatePackageAPI, deletePackageAPI, findPackageAPI } from '@/api';
@@ -397,7 +397,7 @@ const handleUnitChange = (packageItem, packageIdx, unitIdx, type, task, taskIdx,
     handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
   } else {
     if (!checkAddable(task, 'unit') && packageItem.units.length > 0) {
-      warning && ElMessage.error('Exceed quantity limit');
+      warning && Message.error('Exceed quantity limit');
       hasChanged = false;
     } else {
       unitArr.push({ serial: null, status: 'DELIVERING' });
@@ -462,18 +462,18 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
           packageItem.scannedSerials = scannedSerials
             ? `${scannedSerials};${query}`
             : `${query}`;
-          ElMessage.error('Mismatched Scanned Serials: ' + query);
+          Message.error('Mismatched Scanned Serials: ' + query);
           handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
           return;
         }
       } else {
         if (data.length === 0) {
-          ElMessage.error('Serial can\'t be found.');
+          Message.error('Serial can\'t be found.');
           return;
         }
         unitList.value = filterUnitList(data, task);
         if (unitList.value.length === 0) {
-          ElMessage.error('Serial can\'t match specified product & sku & condition requirement.');
+          Message.error('Serial can\'t match specified product & sku & condition requirement.');
           return;
         }
       }
@@ -481,7 +481,7 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
       if (query && data.length === 1 && unitList.value.length === 1) { // 只有一个符合
         const uniqueSerial = data[0].serial;
         // if (checkExceedProductLimit(data[0].sku, task.id)) {
-        //   ElMessage.error('Exceeding the limit of product quantity: ' + query);
+        //   Message.error('Exceeding the limit of product quantity: ' + query);
         //   findPackageAPI(packageItem.id).then(data => {
         //     packageItem.units = data.units;
         //     unitList.value = [];
@@ -501,7 +501,7 @@ const remoteSerialMethod = (query, task, packageItem, taskIdx, packageIdx, unit)
         packageItem.scannedSerials = scannedSerials
           ? `${scannedSerials};${query}`
           : `${query}`;
-        ElMessage.error('Mismatched Scanned Serials: ' + query);
+        Message.error('Mismatched Scanned Serials: ' + query);
         handleSubmitPackage(packageItem, task, packageIdx, taskIdx);
         return;
       }
@@ -546,15 +546,15 @@ function reportUnitError (unit) {
   const condition = unit.condition;
   let hasError = false;
   if (!serial) {
-    ElMessage.error('Please delete empty unit.'); // This actually should not be reached. Make sure empty units are removed in code before submit/update package.
+    Message.error('Please delete empty unit.'); // This actually should not be reached. Make sure empty units are removed in code before submit/update package.
     hasError = true;
   }
   if (checkIfRepeated(serial)) {
-    ElMessage.error('Repeated Serial.');
+    Message.error('Repeated Serial.');
     hasError = true;
   }
   if (checkIfSpecifiedElseWhere(serial)) {
-    ElMessage.error('The serial is specified in other task.');
+    Message.error('The serial is specified in other task.');
     hasError = true;
   }
   return hasError;
@@ -563,7 +563,7 @@ function reportUnitError (unit) {
 function reportPackageError (packageItem) {
   // clean up hasError status and report the first error encountered
   if (disableEditOutboundTask.value) {
-    ElMessage.error('You can\'t edit outbound task');
+    Message.error('You can\'t edit outbound task');
     return packageErrorEnum.EDITING_OUTBOUND_TASK;
   }
   let unitError = false;
@@ -654,7 +654,7 @@ const onPackagesChange = (task, packages, type, packageIdx) => {
       packages[packages.length - 1].units.push({ serial: null, status: 'DELIVERING'});
     }
     if (!checkAddable(task, 'package')) {
-      ElMessage.error('Exceed quantity limit');
+      Message.error('Exceed quantity limit');
       return;
     }
     const unitSystem = getWarehouseUnitSystem(task.sourceId);
@@ -679,7 +679,7 @@ const onPackagesChange = (task, packages, type, packageIdx) => {
 
 const handleDeletePackage = (packageId) => {
   if (disableEditOutboundTask.value) {
-    ElMessage.error('You can\'t edit outbound task');
+    Message.error('You can\'t edit outbound task');
     return;
   }
   packageId && deletePackageAPI(packageId).then(() => {
