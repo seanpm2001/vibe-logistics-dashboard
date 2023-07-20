@@ -23,6 +23,7 @@
       :warehouse-enum="warehouseEnum"
       :dialog-status="dialogStatus"
       @update-task-item="updateTaskItem"
+      @fetch-list="fetchList"
     />
 
     <el-drawer

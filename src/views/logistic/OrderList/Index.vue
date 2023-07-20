@@ -80,6 +80,7 @@
       :empty-task-item="emptyTaskItem"
       :dialog-status="dialogStatus"
       @update-task-item="updateTaskItem"
+      @fetch-list="fetchList"
     />
 
     <el-drawer
