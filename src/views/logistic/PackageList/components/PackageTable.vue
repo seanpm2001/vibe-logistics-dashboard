@@ -444,7 +444,8 @@ const carrierUrlEnum = {
   DAY_ROSS: (trackNum) => `https://dayross.com/view-shipment-tracking?division=Sameday&probillNumber=${trackNum}`,
   DHL: (trackNum) => `https://www.dhl.com/us-en/home/tracking/tracking-express.html?submit=1&tracking-id=${trackNum}`,
   YRC_FREIGHT: (trackNum) => `https://my.yrc.com/tools/track/shipments?referenceNumber=${trackNum}`,
-  ONIXPORT: ''
+  ONIXPORT: '',
+  XPO: (trackNum) => `https://www.xpo.com/track/shipment/${trackNum}`
 };
 
 const getTrackingUrl = (carrier, trackingNumber) => {

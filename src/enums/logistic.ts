@@ -188,7 +188,8 @@ export const transportCarrierEnum = {
     'C.H.ROBINSON': 'C.H.ROBINSON',
     DAY_ROSS: 'Day & Ross',
     YRC_FREIGHT: 'YRC Freight',
-    ONIXPORT: 'Onixport'
+    ONIXPORT: 'Onixport',
+    XPO: 'XPO'
   },
   EXPRESS: {
     UPS: 'UPS',
@@ -571,7 +572,9 @@ export const fixedWarehouseEnum = {
   17: 'TPV',
   18: 'Customer',
   19: 'Customer Scrap',
-  20: 'Repair Center'
+  20: 'Avatek',
+  21: 'Vibe Calif',
+  22: 'Recycle Company'
 };
 
 export const BSUnitSystemWarehouseArr = [
