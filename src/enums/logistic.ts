@@ -106,6 +106,9 @@ export const taskReasonDetailEnum = {
     'No signal',
     'OPS Malfunction',
     'Missing accessories',
+    'Camera port issue',
+    'Firmware upgrade failed',
+    'Broken HDMI port',
     'Others',
   ],
   STAND_HARDWARE_DEFECT: [
