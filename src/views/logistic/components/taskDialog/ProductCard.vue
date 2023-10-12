@@ -171,8 +171,8 @@ const unitList = shallowRef(null);
 const isLightningExpressTask = computed(() => {
   const sourceId = taskItem.value.sourceId;
   const source = props.warehouseEnum[sourceId];
-  return source === 'Lightning';
-  // return source === 'Lightning' && taskItem.value.transportMode === 'EXPRESS';
+  const transportMode = taskItem.value.transportMode;
+  return source === 'Lightning' && transportMode !== 'TRUCK';
 });
 
 const productNameScope = computed(() => {

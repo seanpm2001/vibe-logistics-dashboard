@@ -380,14 +380,12 @@ const checkLightningTaskWrong = computed(() => {
 
   const products = taskItem.value.products || [];
 
-  // const transportMode = taskItem.value.transportMode;
-  // if (transportMode === 'EXPRESS') {
+  const transportMode = taskItem.value.transportMode;
   const onlyHasOneProduct = products.length === 1  && products[0].quantity === 1;
-  if (!onlyHasOneProduct) {
+  if (transportMode !== 'TRUCK' && !onlyHasOneProduct) {
     Message.error('Lightning task with Express can only have one quantity product.');
     return true;
   }
-  // }
 
   const hasAccessoryOrNoneSku = products.some(
     (product) => !product.sku || noSerialArr.includes(product.productCode)
