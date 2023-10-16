@@ -22,6 +22,9 @@
         Weight & Dimension & Unit System
       </div>
       <div class="col4 label w-180">
+        Package Fulfilled At
+      </div>
+      <div class="col5 label w-180">
         Operation
       </div>
 
@@ -153,6 +156,14 @@
             />
           </div>
           <div class="col4 cell w-180">
+            <el-date-picker
+              v-model="item.pkgFulfilledAt"
+              type="date"
+              placeholder="Please pick a date"
+              :disabled="notHighPermission"
+            />
+          </div>
+          <div class="col5 cell w-180">
             <el-button
               v-if="item.id"
               class="mgr-5"
@@ -254,6 +265,8 @@ const savedTasks = inject('savedTasks');
 const fulSerials = inject('fulSerials');
 const specifiedSerials = inject('specifiedSerials');
 const tasksProductFulQty = inject('tasksProductFulQty');
+
+const notHighPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(props.role));
 
 
 const accessoryAllocation = ref({
@@ -707,10 +720,14 @@ provide('onAccessoryAllocationChange', onAccessoryAllocationChange);
     grid-column-start: 3
   .col4
     grid-column-start: 4
+    .el-date-editor.el-input
+      width: 100%
+  .col5
+    grid-column-start: 5
   .col2.package-info
     display: grid
     grid-gap: 0
-    grid-column-end: 5
+    grid-column-end: 6
 
   .serial-cell, .serial-label
     width: 290px

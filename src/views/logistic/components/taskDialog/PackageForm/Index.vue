@@ -16,6 +16,7 @@
     
     <el-row
       justify="space-between"
+      align="middle"
       :gutter="3"
     >
       <el-form-item label="*Tracking Number">
@@ -25,12 +26,23 @@
           placeholder="Tracking Number"
         />
       </el-form-item>
+      <el-form-item label="Package Fulfilled At">
+        <el-date-picker
+          v-model="taskPackage.pkgFulfilledAt"
+          type="date"
+          placeholder="Please pick a date"
+          :disabled="notHighPermission"
+        />
+      </el-form-item>
+    </el-row>
+    <el-row>
       <PackageSize
         :package-item="taskPackage"
         :unit-system-enum="unitSystemEnum"
       />
     </el-row>
    
+    <div class="divider-16" />
 
     <template
       v-for="(item, index) in taskPackage.units"
@@ -222,7 +234,10 @@ const taskItem = inject('taskItem') ;
 const taskOrderItem = inject('taskOrderItem') ;
 
 const { role } = storeToRefs(useUserStore());
+console.log('role: ', role);
 const notPackagePermission = computed(() => !['ADMIN', 'VIBE_MANAGER', 'WAREHOUSE'].includes(role.value));
+const notHighPermission = computed(() => !['ADMIN', 'VIBE_MANAGER'].includes(role.value));
+
 
 const taskPackage = ref(props.packageItem);
 const ifPackageChanged =  ref(false);
@@ -362,4 +377,7 @@ watchEffect(() => {
     padding-left: 16px
     font-size: 16px
     font-weight: 500
+
+.divider-16 
+  height: 16px
 </style>
