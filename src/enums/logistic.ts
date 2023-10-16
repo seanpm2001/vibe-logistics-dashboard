@@ -555,29 +555,31 @@ export const codeSkuArrEnum = {
   ]
 };
 // API 获取失败的情况下，调用默认写死的warehouseEnum
+
 export const fixedWarehouseEnum = {
-  1: 'FBA-US',
-  2: 'FBA-CA',
-  3: 'FBA-DE',
-  4: 'FBA-UK',
-  5: 'FBA-JP',
-  6: 'IWIN',
-  7: 'RED STAG',
-  8: 'VIBE BEL',
-  9: 'FPL-CA',
-  10: 'FPL-AU',
-  11: 'TOYOND',
-  12: 'TCL',
-  13: 'SF (Fuqing)',
-  14: 'Jiguang',
-  15: 'HH',
-  16: 'Zhongao',
-  17: 'TPV',
-  18: 'Customer',
-  19: 'Customer Scrap',
-  20: 'Avatek',
-  21: 'Vibe Calif',
-  22: 'Recycle Company'
+  '1': 'FBA-US',
+  '2': 'FBA-CA',
+  '3': 'FBA-DE',
+  '4': 'FBA-UK',
+  '5': 'FBA-JP',
+  '6': 'IWIN',
+  '7': 'RED STAG',
+  '8': 'VIBE BEL',
+  '9': 'Lightning',
+  '10': 'FPL-CA',
+  '11': 'FPL-AU',
+  '12': 'TOYOND',
+  '13': 'TCL',
+  '14': 'SF (Fuqing)',
+  '15': 'Jiguang',
+  '16': 'HH',
+  '17': 'Zhongao',
+  '18': 'TPV',
+  '19': 'Customer',
+  '58': 'CustomerScrap',
+  '79': 'Avatek',
+  '101': 'Vibe Calif',
+  '124': 'Recycle Company'
 };
 
 export const BSUnitSystemWarehouseArr = [
