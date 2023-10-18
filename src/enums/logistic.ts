@@ -9,7 +9,8 @@ export enum forwarderEnum {
   FLEXPORT = 'FLEXPORT',
   LIGHTNING = 'LIGHTNING',
   AGL = 'AGL',
-  SF = 'SF'
+  SF = 'SF',
+  DHL = 'DHL'
 }
 export enum modeEnum {
   OCEAN = 'Ocean',
