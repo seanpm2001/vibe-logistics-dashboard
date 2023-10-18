@@ -74,8 +74,9 @@
           </el-upload>
           <el-row style="margin: .75rem 0 0 -1rem">
             <el-button
-              v-if="!batch?.id && isDialogPattern('edit')"
+              v-if="(!batch?.id) && isDialogPattern('edit')"
               type="primary"
+              :disabled="!batch?.sourceId"
               @click="handleBatch('create')"
             >
               Submit Sub-Batch
@@ -87,6 +88,20 @@
             >
               Update Sub-Batch
             </el-button>
+            
+            <el-tooltip
+              v-if="!batch?.sourceId"
+              class="tips"
+              effect="light"
+              content="You need to choose the source before 'Submit Sub-Batch'"
+              placement="right"
+            >
+              <svg-icon
+                class="mgl-5"
+                icon-name="tips"
+              />
+            </el-tooltip>
+            
             <el-button
               v-if="batch?.id"
               type="success"
